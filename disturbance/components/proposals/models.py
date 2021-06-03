@@ -1170,7 +1170,7 @@ class Proposal(RevisionedMixin):
                 self.customer_status = 'declined'
                 self.save()
 
-                if self.proposal_apiary:
+                if hasattr(self, 'proposal_apiary'):
                     # Update apiary site status
                     self.proposal_apiary.final_decline()
 
