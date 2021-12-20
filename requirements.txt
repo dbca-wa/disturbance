@@ -1,4 +1,4 @@
-Django==1.11.29
+Django==2.2.25
 django-extensions==1.9.8
 git+https://github.com/dbca-wa/ledger#egg=ledger
 #git+https://github.com/dbca-wa/ledger@4818666a1bda5fac274e9d0b48008797f04f6545
