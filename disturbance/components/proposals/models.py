@@ -1309,7 +1309,7 @@ class Proposal(DirtyFieldsMixin, RevisionedMixin):
         if qs:
             for r in qs:
                 email_list.append(r.referral.email)
-        separator=', '
+        separator=','
         email_list_string=separator.join(email_list)
         return email_list_string
 

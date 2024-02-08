@@ -227,7 +227,7 @@
                               <div class="form-group">
                                 <label for="" class="col-sm-2 control-label" >ABN/ACN</label>
                                 <div class="col-sm-6">
-                                    <input type="number" class="form-control" name="abn" v-model.number="newOrg.abn" placeholder="" style="width: 40%">
+                                    <input type="text" class="form-control" name="abn" v-model="newOrg.abn" placeholder="" style="width: 40%">
                                 </div>
                                 <div class="col-sm-2">
                                     <button :disabled="!isNewOrgDetails" @click.prevent="checkOrganisation()" class="btn btn-primary">Check Details</button>

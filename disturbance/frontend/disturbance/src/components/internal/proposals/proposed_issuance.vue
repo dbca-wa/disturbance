@@ -72,6 +72,11 @@
                                             <input type="text" class="form-control" name="approval_cc" style="width:70%;" ref="bcc_email" v-model="approval.cc_email">
                                     </div>
                                 </div>
+                                <div class="row" v-show="showApprovalCCError">
+                                    <alert  class="col-sm-12" type="danger"><strong>{{approvalCCErrorString}}</strong></alert>
+                    
+                                </div>
+
                             </div>
                             <div class="form-group">
                                 <div class="row">
@@ -87,6 +92,10 @@
                 </div>
             </div>
             <p v-if="can_preview">Click <a href="#" @click.prevent="preview">here</a> to preview the approval letter.</p>
+            <div class="row" v-show="showApplicantAddressError">
+                <alert  class="col-sm-12" type="danger"><strong>{{applicantAddressErrorString}}</strong></alert>
+
+            </div>
 
             <div slot="footer">
                 <button type="button" v-if="issuingApproval" disabled class="btn btn-default" @click="ok"><i class="fa fa-spinner fa-spin"></i> Processing</button>
@@ -133,6 +142,12 @@ export default {
             type: String,
             //default: ''
         },
+        relevant_applicant_address: {
+            type: Object,
+        },
+        relevant_applicant_name: {
+            type: String,
+        },
         reissued: {
             type: Boolean,
             default: false
@@ -148,6 +163,8 @@ export default {
             issuingApproval: false,
             validation_form: null,
             errors: false,
+            applicantAddressError: false,
+            applicantAddressErrorString:'',
             toDateError:false,
             startDateError:false,
             errorString: '',
@@ -155,6 +172,8 @@ export default {
             startDateErrorString:'',
             successString: '',
             success:false,
+            approvalCCError: false,
+            approvalCCErrorString: '',
             datepickerOptions:{
                 format: 'DD/MM/YYYY',
                 showClear:true,
@@ -171,6 +190,10 @@ export default {
             var vm = this;
             return vm.errors;
         },
+        showApplicantAddressError: function() {
+            var vm = this;
+            return vm.applicantAddressError;
+        },
         showtoDateError: function() {
             var vm = this;
             return vm.toDateError;
@@ -178,6 +201,10 @@ export default {
         showstartDateError: function() {
             var vm = this;
             return vm.startDateError;
+        },
+        showApprovalCCError: function() {
+            var vm = this;
+            return vm.approvalCCError;
         },
         title: function(){
             return this.processing_status == 'With Approver' ? 'Issue Approval' : 'Propose to issue approval';
@@ -189,7 +216,7 @@ export default {
           return helpers.getCookie('csrftoken')
         },
         can_preview: function(){
-            return this.processing_status == 'With Approver' ? true : false;
+            return this.processing_status == 'With Approver' && this.validateApplicantAddress() ? true : false;
         },
         preview_licence_url: function() {
           return (this.proposal_id) ? `/preview/licence-pdf/${this.proposal_id}` : '';
@@ -225,7 +252,7 @@ export default {
         },
         ok:function () {
             let vm =this;
-            if($(vm.form).valid()){
+            if(vm.validateApprovalCC() && !vm.applicantAddressError && $(vm.form).valid()){
                 vm.sendData();
                 //vm.$router.push({ path: '/internal' });
             }
@@ -287,6 +314,33 @@ export default {
                     });
             }
            
+        },
+        validateApprovalCC: function() {
+            let vm = this;
+            const ccRegex = new RegExp(/^(([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5}){1,25})+([,.](([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5}){1,25})+)*$/)
+            if (!vm.approval.cc_email || ccRegex.test(vm.approval.cc_email)) {
+                vm.approvalCCError = false;
+                vm.approvalCCErrorString = '';
+                return true;
+            }
+            else {
+                vm.approvalCCError = true;
+                vm.approvalCCErrorString = 'Please ensure each BCC email is valid and separated with a ,';
+                return false;
+            }
+        },
+        validateApplicantAddress: function() {
+            let vm = this;
+            if (vm.relevant_applicant_address.hasOwnProperty("id")) {
+                vm.applicantAddressError = false;
+                vm.applicantAddressErrorString = '';
+                return true;
+            }
+            else {
+                vm.applicantAddressError = true;
+                vm.applicantAddressErrorString = `The applicant needs to have set their postal address before approving this proposal. (Applicant: ${vm.relevant_applicant_name})`;
+                return false;
+            }
         },
         addFormValidations: function() {
             let vm = this;
