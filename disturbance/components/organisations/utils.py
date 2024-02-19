@@ -7,7 +7,7 @@ def can_manage_org(organisation,user):
     from ledger.accounts.models import EmailUser
     try:
         UserDelegation.objects.get(organisation=organisation,user=user)
-        return True
+        return can_admin_org(organisation, user)
     except UserDelegation.DoesNotExist:
         pass
     try:

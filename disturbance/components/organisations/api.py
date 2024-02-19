@@ -81,9 +81,10 @@ class OrganisationViewSet(viewsets.ModelViewSet):
         if is_internal(self.request) or self.allow_external:
             return Organisation.objects.all()
         elif is_customer(self.request):
-            org_contacts = OrganisationContact.objects.filter(is_admin=True).filter(email=user.email) #TODO: is there a better way than email?
-            user_admin_orgs = [org.organisation.id for org in org_contacts]
-            return Organisation.objects.filter(id__in=user_admin_orgs)
+            #org_contacts = OrganisationContact.objects.filter(is_admin=True).filter(email=user.email) #TODO: is there a better way than email?
+            #user_admin_orgs = [org.organisation.id for org in org_contacts]
+            #return Organisation.objects.filter(id__in=user_admin_orgs)
+            return user.disturbance_organisations.all()
         return Organisation.objects.none()
 
     @detail_route(methods=['GET',])
