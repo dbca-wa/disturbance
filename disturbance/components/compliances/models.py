@@ -39,6 +39,10 @@ from disturbance.components.compliances.email import (
                         send_apiary_submit_email_notification,
                         )
 
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+private_storage = FileSystemStorage(location=settings.BASE_DIR+"/private-media/", base_url='/private-media/')
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -266,7 +270,7 @@ def update_proposal_complaince_filename(instance, filename):
 
 class ComplianceDocument(Document):
     compliance = models.ForeignKey('Compliance',related_name='documents')
-    _file = models.FileField(upload_to=update_proposal_complaince_filename, max_length=500)
+    _file = models.FileField(upload_to=update_proposal_complaince_filename, max_length=500, storage=private_storage)
     can_delete = models.BooleanField(default=True) # after initial submit prevent document from being deleted
 
     def delete(self):
@@ -319,12 +323,12 @@ class ComplianceLogEntry(CommunicationsLogEntry):
         app_label = 'disturbance'
 
 def update_compliance_comms_log_filename(instance, filename):
-    return 'proposals/{}/compliance/{}/communications/{}/{}'.format(instance.log_entry.compliance.proposal.id,instance.log_entry.compliance.id,instance.id,filename)
+    return 'proposals/{}/compliance/{}/communications/{}/{}'.format(instance.log_entry.compliance.proposal.id,instance.log_entry.compliance.id,instance.log_entry.id,filename)
 
 
 class ComplianceLogDocument(Document):
     log_entry = models.ForeignKey('ComplianceLogEntry',related_name='documents')
-    _file = models.FileField(upload_to=update_compliance_comms_log_filename)
+    _file = models.FileField(upload_to=update_compliance_comms_log_filename, storage=private_storage)
 
     class Meta:
         app_label = 'disturbance'

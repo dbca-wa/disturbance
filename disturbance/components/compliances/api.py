@@ -532,10 +532,10 @@ class ComplianceViewSet(viewsets.ModelViewSet):
                 comms = serializer.save()
                 # Save the files
                 for f in request.FILES:
-                    document = comms.documents.create()
-                    document.name = str(request.FILES[f])
-                    document._file = request.FILES[f]
-                    document.save()
+                    document = comms.documents.create(
+                        name = str(request.FILES[f]),
+                        _file = request.FILES[f]
+                        )
                 # End Save Documents
 
                 return Response(serializer.data)

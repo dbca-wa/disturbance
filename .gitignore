@@ -87,6 +87,7 @@ target/
 # media
 media/
 spatial_data/
+private-media/
 
 # Database/fixture dumps
 *.pgdump

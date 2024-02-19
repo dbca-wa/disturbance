@@ -85,7 +85,7 @@ class BaseProposalSerializer(serializers.ModelSerializer):
         read_only_fields=('documents',)
 
     def get_documents_url(self,obj):
-        return '/media/proposals/{}/documents/'.format(obj.id)
+        return '/private-media/proposals/{}/documents/'.format(obj.id)
 
     def get_readonly(self,obj):
         return False

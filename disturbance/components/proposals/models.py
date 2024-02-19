@@ -69,6 +69,10 @@ from disturbance.settings import SITE_STATUS_DRAFT, SITE_STATUS_PENDING, SITE_ST
     SITE_STATUS_CURRENT, RESTRICTED_RADIUS, SITE_STATUS_TRANSFERRED, PAYMENT_SYSTEM_ID, PAYMENT_SYSTEM_PREFIX, \
     SITE_STATUS_SUSPENDED, SITE_STATUS_NOT_TO_BE_REISSUED
 
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+private_storage = FileSystemStorage(location=settings.BASE_DIR+"/private-media/", base_url='/private-media/')
+
 logger = logging.getLogger(__name__)
 
 
@@ -76,7 +80,7 @@ def update_proposal_doc_filename(instance, filename):
     return 'proposals/{}/documents/{}'.format(instance.proposal.id,filename)
 
 def update_proposal_comms_log_filename(instance, filename):
-    return 'proposals/{}/communications/{}/{}'.format(instance.log_entry.proposal.id,instance.id,filename)
+    return 'proposals/{}/communications/{}/{}'.format(instance.log_entry.proposal.id,instance.log_entry.id,filename)
 
 def update_amendment_request_doc_filename(instance, filename):
     return 'proposals/{}/amendment_request_documents/{}'.format(instance.amendment_request.proposal.id,filename)
@@ -268,7 +272,7 @@ class DefaultDocument(Document):
 
 class ProposalDocument(Document):
     proposal = models.ForeignKey('Proposal',related_name='documents')
-    _file = models.FileField(upload_to=update_proposal_doc_filename, max_length=500)
+    _file = models.FileField(upload_to=update_proposal_doc_filename, max_length=500, storage=private_storage)
     input_name = models.CharField(max_length=255,null=True,blank=True)
     can_delete = models.BooleanField(default=True) # after initial submit prevent document from being deleted
     can_hide= models.BooleanField(default=False) # after initial submit, document cannot be deleted but can be hidden
@@ -2375,7 +2379,7 @@ class Proposal(DirtyFieldsMixin, RevisionedMixin):
 
 class ProposalLogDocument(Document):
     log_entry = models.ForeignKey('ProposalLogEntry',related_name='documents')
-    _file = models.FileField(upload_to=update_proposal_comms_log_filename)
+    _file = models.FileField(upload_to=update_proposal_comms_log_filename, storage=private_storage)
 
     class Meta:
         app_label = 'disturbance'
@@ -2394,7 +2398,7 @@ class ProposalLogEntry(CommunicationsLogEntry):
 
 class AmendmentRequestDocument(Document):
     amendment_request = models.ForeignKey('AmendmentRequest',related_name='amendment_request_documents')
-    _file = models.FileField(upload_to=update_amendment_request_doc_filename, max_length=500)
+    _file = models.FileField(upload_to=update_amendment_request_doc_filename, max_length=500, storage=private_storage)
     input_name = models.CharField(max_length=255,null=True,blank=True)
     can_delete = models.BooleanField(default=True) # after initial submit prevent document from being deleted
     visible = models.BooleanField(default=True) # to prevent deletion on file system, hidden and still be available in history
@@ -4643,7 +4647,7 @@ class ApiarySiteApproval(models.Model):
 
 class ProposalApiaryDocument(DefaultDocument):
     proposal = models.ForeignKey('Proposal', related_name='apiary_documents')
-    _file = models.FileField(upload_to=update_apiary_doc_filename, max_length=512)
+    _file = models.FileField(upload_to=update_apiary_doc_filename, max_length=512, storage=private_storage)
 
     def delete(self):
         if self.can_delete:
@@ -4655,7 +4659,7 @@ class DeedPollDocument(Document):
 
     proposal = models.ForeignKey(ProposalApiary, related_name='deed_poll_documents', blank=True, null=True)
     base_proposal = models.ForeignKey(Proposal, related_name='deed_poll_documents', blank=True, null=True)
-    _file = models.FileField(max_length=255)
+    _file = models.FileField(max_length=255, storage=private_storage)
     input_name = models.CharField(max_length=255, blank=True, null=True)
     # after initial submit prevent document from being deleted
     can_delete = models.BooleanField(default=True)
@@ -4674,7 +4678,7 @@ class PublicLiabilityInsuranceDocument(Document):
     DOC_TYPE_NAME = 'public_liability_document'
 
     proposal = models.ForeignKey(ProposalApiary, related_name='public_liability_insurance_documents', blank=True, null=True)
-    _file = models.FileField(max_length=255)
+    _file = models.FileField(max_length=255, storage=private_storage)
     input_name = models.CharField(max_length=255, blank=True, null=True)
     can_delete = models.BooleanField(default=True)
     visible = models.BooleanField(default=True)
@@ -4687,7 +4691,7 @@ class TemporaryUsePublicLiabilityInsuranceDocument(Document):
     DOC_TYPE_NAME = 'public_liability_document'
 
     proposal = models.ForeignKey(ProposalApiaryTemporaryUse, related_name='public_liability_insurance_documents', blank=True, null=True)
-    _file = models.FileField(max_length=255)
+    _file = models.FileField(max_length=255, storage=private_storage)
     input_name = models.CharField(max_length=255, blank=True, null=True)
     can_delete = models.BooleanField(default=True)
     visible = models.BooleanField(default=True)
@@ -4701,7 +4705,7 @@ class SupportingApplicationDocument(Document):
     DOC_TYPE_NAME = 'supporting_application_document'
 
     proposal = models.ForeignKey(ProposalApiary, related_name='supporting_application_documents', blank=True, null=True)
-    _file = models.FileField(max_length=255)
+    _file = models.FileField(max_length=255, storage=private_storage)
     input_name = models.CharField(max_length=255, blank=True, null=True)
     can_delete = models.BooleanField(default=True)
     visible = models.BooleanField(default=True)

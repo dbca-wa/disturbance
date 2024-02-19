@@ -1,8 +1,8 @@
-from django.core.files.storage import default_storage 
 import os
 from django.core.files.base import ContentFile
 import traceback
 from disturbance.components.main.models import TemporaryDocument
+from disturbance.components.approvals import models #TODO: improvable - this should be imported from a common source instead of one of many models
 from django.conf import settings
 
 from disturbance.components.proposals.models import (
@@ -14,6 +14,7 @@ from disturbance.components.proposals.models import (
     SupportingApplicationDocument
     )
 
+private_storage = models.private_storage
 
 def process_generic_document(request, instance, document_type=None, *args, **kwargs):
     print("process_generic_document")
@@ -143,7 +144,8 @@ def save_document(request, instance, comms_instance, document_type, input_name=N
             else:
                 raise('Object type is wrong')
 
-            path = default_storage.save(path_format_string.format(settings.MEDIA_APIARY_DIR, id_number, filename), ContentFile(_file.read()))
+            print(path)
+            path = private_storage.save(path_format_string.format(settings.MEDIA_APIARY_DIR, id_number, filename), ContentFile(_file.read()))
             document._file = path
             document.save()
 
@@ -154,7 +156,7 @@ def save_document(request, instance, comms_instance, document_type, input_name=N
 
             document = comms_instance.documents.get_or_create(
                 name=filename)[0]
-            path = default_storage.save(
+            path = private_storage.save(
                 '{}/{}/communications/{}/documents/{}'.format(
                     instance._meta.model_name, instance.id, comms_instance.id, filename), ContentFile(
                     _file.read()))
@@ -169,7 +171,7 @@ def save_document(request, instance, comms_instance, document_type, input_name=N
 
             document = instance.documents.get_or_create(
                 name=filename)[0]
-            path = default_storage.save(
+            path = private_storage.save(
                 '{}/{}/documents/{}'.format(
                     instance._meta.model_name, instance.id, filename), ContentFile(
                     _file.read()))
@@ -182,7 +184,7 @@ def save_document(request, instance, comms_instance, document_type, input_name=N
 def save_comms_log_document_obj(instance, comms_instance, temp_document):
     document = comms_instance.documents.get_or_create(
         name=temp_document.name)[0]
-    path = default_storage.save(
+    path = private_storage.save(
         '{}/{}/communications/{}/documents/{}'.format(
             instance._meta.model_name, 
             instance.id, 
@@ -199,7 +201,7 @@ def save_comms_log_document_obj(instance, comms_instance, temp_document):
 def save_default_document_obj(instance, temp_document):
     document = instance.documents.get_or_create(
         name=temp_document.name)[0]
-    path = default_storage.save(
+    path = private_storage.save(
         '{}/{}/documents/{}'.format(
             instance._meta.model_name, 
             instance.id, 
@@ -216,7 +218,7 @@ def save_default_document_obj(instance, temp_document):
 #    document = instance.renderer_documents.get_or_create(
 #            input_name=input_name,
 #            name=temp_document.name)[0]
-#    path = default_storage.save(
+#    path = private_storage.save(
 #        'disturbance/{}/{}/renderer_documents/{}/{}'.format(
 #            instance._meta.model_name,
 #            instance.id,

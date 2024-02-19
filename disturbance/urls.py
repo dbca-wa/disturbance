@@ -166,6 +166,7 @@ urlpatterns = [
     url(r'^history/helppage/(?P<pk>\d+)/$', proposal_views.HelpPageHistoryCompareView.as_view(), name='helppage_history'),
     url(r'^history/organisation/(?P<pk>\d+)/$', organisation_views.OrganisationHistoryCompareView.as_view(), name='organisation_history'),
     url(r'^template_group$', views.TemplateGroupView.as_view(), name='template-group'),
+    url(r'^private-media/', views.getPrivateFile, name='view_private_file'),
 
                   # Reports
     url(r'^api/oracle_job$', main_api.OracleJob.as_view(), name='get-oracle'),
@@ -173,9 +174,10 @@ urlpatterns = [
         name='booking-settlements-report'),
 
                   # url(r'^external/proposal/(?P<proposal_pk>\d+)/submit_temp_use_success/$', success_view, name='external-proposal-temporary-use-submit-success'),
-] + ledger_patterns + media_serv_patterns
+] + ledger_patterns #+ media_serv_patterns
 
 if not are_migrations_running():
     DefaultDataManager()
 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

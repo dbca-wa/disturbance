@@ -1547,7 +1547,7 @@ class ProposalApiaryTypeSerializer(serializers.ModelSerializer):
         read_only_fields=('documents',)
 
     def get_documents_url(self,obj):
-        return '/media/{}/proposals/{}/documents/'.format(settings.MEDIA_APP_DIR, obj.id)
+        return '/private-media/{}/proposals/{}/documents/'.format(settings.MEDIA_APP_DIR, obj.id)
 
     def get_readonly(self,obj):
         return obj.can_user_view
