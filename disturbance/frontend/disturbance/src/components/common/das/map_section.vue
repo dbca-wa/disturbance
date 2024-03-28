@@ -255,31 +255,38 @@
 
                     //vm.prefilling=true;
                     swal({
-                            title: "Loading...",
-                            //text: "Loading...",
-                            allowOutsideClick: false,
-                            allowEscapeKey:false,
-                            onOpen: () =>{
-                                swal.showLoading()
-                            }
+                        title: "Loading...",
+                        //text: "Loading...",
+                        allowOutsideClick: false,
+                        allowEscapeKey:false,
+                        onOpen: () =>{
+                            swal.showLoading()
+                        }
                     })
                     await vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal.id+'/prefill_proposal')).then(res=>{
-                    //vm.proposal = res.body;
-                    //vm.refreshFromResponse(res);
-                    // swal.hideLoading();
-                    // swal.close();
-                    vm.$emit('refreshFromResponse',res);
-                    //vm.prefilling=false;
+                        swal.hideLoading();
+                        swal.close();
+                        vm.$emit('refreshFromResponse',res);
+                        console.log('URL:' + helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal.id+'/prefill_proposal'))
+                        //console.log('RES:' + JSON.stringify(res))
+                        let title = res['body']['message'].includes('updated') ? "Processing Proposal (UPDATED)" : "Processing Proposal"
+                        let queue_position = res['body']['position']
+	                swal({
+                            //title: "Processing Proposal",
+                            title: title,
+                            html: '<p><strong>Your proposal is in the process of being prefilled based on your uploaded shapefile.</strong><br>' +
+                                  '<span style="font-size:0.8em">You can close your browser and come back later. You will receive an email when it is complete. (' + queue_position+ ')</span>' +
+                                  '</p>',
+                        })
+		
                     },err=>{
-                    console.log(err);
-                    //vm.prefilling=false;
-                    vm.showError=true;
-                    vm.errorString=helpers.apiVueResourceError(err);
+                        console.log(err);
+                        vm.showError=true;
+                        vm.errorString=helpers.apiVueResourceError(err);
                     });
-                    swal.hideLoading();
-                    swal.close();
 
-                    },(error) => {
+                },(error) => {
+
                 });
                 
 //                vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal.id+'/prefill_proposal')).then(res=>{

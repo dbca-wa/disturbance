@@ -1,4 +1,5 @@
 import logging
+from django.utils import timezone
 from django.http import JsonResponse
 from rest_framework import serializers, status
 
@@ -34,6 +35,7 @@ from disturbance.components.proposals.serializers_apiary import ProposalApiarySe
 from disturbance.components.proposals.serializers_base import BaseProposalSerializer, ProposalReferralSerializer, \
     ProposalDeclinedDetailsSerializer, EmailUserSerializer, EmailSerializer
 from drf_writable_nested import UniqueFieldsMixin , WritableNestedModelSerializer
+from datetime import datetime
 from django.core.urlresolvers import reverse
 
 
@@ -274,6 +276,8 @@ class ProposalSerializer(BaseProposalSerializer):
     apiary_temporary_use = ProposalApiaryTemporaryUseSerializer(many=False, read_only=True)
     # apiary_temporary_use_set = ProposalApiaryTemporaryUseSerializer(many=True, read_only=True)
     apiary_group_application_type = serializers.SerializerMethodField()
+    # region_name=serializers.CharField(source='region.name', read_only=True)
+    # district_name=serializers.CharField(source='district.name', read_only=True)
 
     class Meta:
         model = Proposal
@@ -289,6 +293,8 @@ class ProposalSerializer(BaseProposalSerializer):
             'refresh_timestamp',
             'prefill_timestamp',
             'layer_data',
+            'region_name',
+            'district_name',
             # 'apiary_temporary_use_set',
         )
 
@@ -412,6 +418,8 @@ class InternalProposalSerializer(BaseProposalSerializer):
     apiary_temporary_use = ProposalApiaryTemporaryUseSerializer(many=False, read_only=True)
     requirements_completed=serializers.SerializerMethodField()
     reversion_history = serializers.SerializerMethodField()
+    # region_name=serializers.CharField(source='region.name', read_only=True)
+    # district_name=serializers.CharField(source='district.name', read_only=True)
     
     class Meta:
         model = Proposal
@@ -483,6 +491,8 @@ class InternalProposalSerializer(BaseProposalSerializer):
                 'reversion_history',
                 'shapefile_json',
                 'reissued',
+                'region_name',
+                'district_name',
                 )
         read_only_fields=('documents','requirements','gis_info',)
 
@@ -1205,8 +1215,8 @@ class SchemaQuestionSerializer(serializers.ModelSerializer):
             if option_list:
                 options = [
                     {
-                        'label': o.label,
-                        'value': o.value,
+                        'label': o["label"],
+                        'value': o["value"],
                         #'conditions': self.conditions
 
                     } for o in option_list
@@ -1371,6 +1381,8 @@ class DTSpatialQueryQuestionSerializer(UniqueFieldsMixin, WritableNestedModelSer
     group = CddpQuestionGroupSerializer()
     layer = DASMapLayerSqsSerializer()
     masterlist_question = serializers.SerializerMethodField(read_only=True)
+    #modified_date = serializers.SerializerMethodField(read_only=True)
+    modified_date = serializers.DateTimeField(required=False)
     #layer_name = serializers.SerializerMethodField()
     #layer_url = serializers.SerializerMethodField()
 
@@ -1379,6 +1391,7 @@ class DTSpatialQueryQuestionSerializer(UniqueFieldsMixin, WritableNestedModelSer
         #fields = '__all__'
         fields = (
           'id',
+          'modified_date',
           'masterlist_question',
           'question',
           'answer_mlq',
@@ -1397,6 +1410,7 @@ class DTSpatialQueryQuestionSerializer(UniqueFieldsMixin, WritableNestedModelSer
           'prefix_info',
           'no_polygons_assessor',
           'assessor_info',
+          'show_add_info_section_prop',
           'proponent_items',
           'assessor_items',
           'regions',
@@ -1404,6 +1418,10 @@ class DTSpatialQueryQuestionSerializer(UniqueFieldsMixin, WritableNestedModelSer
           'group',
         )
         datatables_always_serialize = fields
+
+#    def _get_modified_date(self, obj):
+#        dt = timezone.make_aware(datetime.now(),timezone.get_default_timezone())
+#        return datetime.strftime(dt, '%Y-%m-%dT%H:%M:%S%z')
 
     def create(self, validated_data):
         data = self.context['request'].data

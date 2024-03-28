@@ -33,6 +33,10 @@ class Command(BaseCommand):
         subprocess.call('python manage_ds.py send_annual_rental_fee_invoice' + stdout_redirect, shell=True)
         subprocess.call('python manage_ds.py save_apiary_sites' + stdout_redirect, shell=True)
 
+        # TaskMonitor jobs
+        subprocess.call('python manage_ds.py delete_old_tasks' + stdout_redirect, shell=True) 
+        subprocess.call('python manage_ds.py update_queued_tasks' + stdout_redirect, shell=True) 
+
         logger.info('Command {} completed'.format(__name__))
         self.send_email()
 

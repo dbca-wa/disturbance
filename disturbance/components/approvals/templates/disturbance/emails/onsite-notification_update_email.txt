@@ -16,4 +16,14 @@
 
     Departure date: {{ period_to }}
 
+    Comments: {{ comments }}
+
+    Hives location: {{ hives_loc }}
+
+    Hives number: {{ hives_num }}
+
+    People names: {{ people_names }}
+
+    Flora targeted: {{ flora }}
+
 {%  endblock %}

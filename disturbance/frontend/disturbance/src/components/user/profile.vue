@@ -772,7 +772,10 @@ export default {
                 showCancelButton: true,
                 confirmButtonText: 'Accept'
             }).then(() => {
-                vm.$http.post(helpers.add_endpoint_json(api_endpoints.organisations,org.id+'/unlink_user'),{'user':vm.profile.id},{
+                console.log(vm.profile.first_name);
+                vm.$http.post(helpers.add_endpoint_json(api_endpoints.organisations,org.id+'/unlink_user'),{'user':vm.profile.id,
+                'first_name':vm.profile.first_name,'last_name':vm.profile.last_name,'email':vm.profile.email,
+                'mobile_number':vm.profile.mobile_number, 'phone_number':vm.profile.phone_number},{
                     emulateJSON:true
                 }).then((response) => {
                     Vue.http.get(api_endpoints.profile).then((response) => {

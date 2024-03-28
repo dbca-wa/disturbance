@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 import os
+from datetime import date, datetime, timedelta
 
 from django.conf import settings
 from django.contrib.gis.db.models import MultiPolygonField
@@ -10,7 +11,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.core.exceptions import ValidationError
 from ledger.accounts.models import EmailUser, Document, RevisionedMixin
 from django.contrib.postgres.fields.jsonb import JSONField
-from datetime import date
+from django.utils import timezone
 from django.core.cache import cache
 
 from disturbance.components.main.utils import overwrite_regions_polygons, overwrite_districts_polygons
@@ -226,7 +227,7 @@ class ActivityMatrix(models.Model):
     class Meta:
         app_label = 'disturbance'
         unique_together = ('name', 'version')
-        verbose_name_plural = "Activity matrix"
+        verbose_name_plural = "Approval matrix"
 
     def __str__(self):
         return '{} - v{}'.format(self.name, self.version)
@@ -462,7 +463,55 @@ class TemporaryDocument(Document):
         app_label = 'disturbance'
 
 
+class ActiveTaskMonitorManager(models.Manager):
+    ''' filter queued tasks and omit old (stale) queued tasks '''
+    def get_queryset(self):
+        earliest_date = (datetime.now() - timedelta(days=7)).replace(tzinfo=timezone.utc)
+        return super().get_queryset().filter(status=TaskMonitor.STATUS_CREATED, created__gte=earliest_date)
+
+
+#class TaskMonitor(RevisionedMixin):
+class TaskMonitor(models.Model):
+    STATUS_FAILED = 'failed'
+    STATUS_CREATED = 'created'
+    STATUS_RUNNING = 'running'
+    STATUS_COMPLETED = 'completed'
+    STATUS_CANCELLED = 'cancelled'
+    STATUS_ERROR = 'error'
+    STATUS_MAX_QUEUE_TIME = 'max_queue_time'
+    STATUS_MAX_RETRIES_REACHED = 'max_retries'
+    STATUS_CHOICES = (
+        (STATUS_FAILED,    'Failed'),
+        (STATUS_CREATED,   'Created'),
+        (STATUS_RUNNING,   'Running'),
+        (STATUS_COMPLETED, 'Completed'),
+        (STATUS_CANCELLED, 'Cancelled'),
+        (STATUS_ERROR,     'Error'),
+        (STATUS_MAX_QUEUE_TIME, 'Max_Queue_Time_Reached'),
+        (STATUS_MAX_RETRIES_REACHED, 'Max_Retries_Reached'),
+    )
+
+    task_id = models.PositiveIntegerField()
+    status  = models.CharField('Task Status', choices=STATUS_CHOICES, default=STATUS_CREATED, max_length=32)
+    retries = models.PositiveSmallIntegerField(default=0)
+    proposal = models.ForeignKey('Proposal')
+    info = models.TextField(blank=True, null=True)
+    requester = models.ForeignKey(EmailUser, blank=False, null=False, related_name='+')
+    created = models.DateTimeField(default=timezone.now, editable=False)
+    
+    objects = models.Manager()
+    queued_jobs = ActiveTaskMonitorManager()
+
+    class Meta:
+        app_label = 'disturbance'
+        verbose_name_plural = "Task Monitor"
+
+    def __str__(self):
+        return f'Task {self.task_id}, Proposal: {self.proposal}'
+
 
 
 import reversion
 reversion.register(ApiaryGlobalSettings)
+reversion.register(TaskMonitor)
+

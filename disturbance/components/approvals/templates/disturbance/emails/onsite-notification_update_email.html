@@ -1,12 +1,17 @@
 {%  extends 'disturbance/emails/base_email_apiary.html' %}
 
 {%  block content %}
-    <The following on-site information has been re-submitted (updated):</p>
-    <p><strong>Approval : {{ approval.lodgement_number}}</strong></p>
+    <p>The following on-site information has been re-submitted (updated):</p>
+    <p><strong>Approval: {{ approval.lodgement_number}}</strong></p>
     <p><strong>Apiary site: {{ apiary_site.id }}</strong></p>
     <p><strong>Licence holder: {{ applicant }}</strong></p>
     <p><strong>Contact number: {{ contact }}</strong></p>
     <p><strong>Arrival date: {{ period_from }}</strong></p>
     <p><strong>Departure date: {{ period_to }}</strong></p>
+    <p><strong>Comments: {{ comments }}</strong></p>
+    <p><strong>The proposed location of the hives: {{ hives_loc }}</strong></p>
+    <p><strong>Number of hives proposed to be placed on the site: {{ hives_num }}</strong></p>
+    <p><strong>The names of the people who are expected to be entering the site: {{ people_names }}</strong></p>
+    <p><strong>Flora targeted: {{ people_names }}</strong></p>
 {%  endblock %}
 

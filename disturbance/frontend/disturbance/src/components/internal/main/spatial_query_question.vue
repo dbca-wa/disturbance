@@ -288,7 +288,10 @@
 			    <div class="col-md-3">
 			        <label><i>Proponent Section</i></label>
 			    </div>
-			    <div class="col-md-7" style="text-align: right;">
+			    <div class="col-md-5" style="text-align: right;">
+                                <input type="checkbox" :value="false" v-model="spatialquery.show_add_info_section_prop" >&nbsp;&nbsp;&nbsp;<label>Show additional info section?</label></input>
+			    </div>
+			    <div class="col-md-2" style="text-align: right;">
 				<button v-on:click="spatialquery.proponent_items.push({})" type="button">Add</button><br>
 			    </div>
 			</div>
@@ -781,6 +784,7 @@ export default {
 //                    answer_type: '',
 //                    options: null
 //                },
+		show_add_info_section_prop: '',
 		proponent_items: [
 		  {
 		    prefix: '',
@@ -1472,6 +1476,7 @@ export default {
 		this.spatialquery.id = '';
 		//this.spatialquery.proponent_items = [{'prefix': '', 'answer': ''}];
 		//this.spatialquery.assessor_items = [{'prefix': '', 'info': ''}];
+		this.spatialquery.show_add_info_section_prop = '';
 		this.spatialquery.proponent_items = [{'': '', '': ''}];
 		this.spatialquery.assessor_items = [{'': '', '': ''}];
 		this.addedHeaders = [];
@@ -1527,6 +1532,7 @@ export default {
 		    self.spatialquery.operator = self.$refs.spatial_query_question_table.row_of_data.data().operator;
 		    self.spatialquery.value = self.$refs.spatial_query_question_table.row_of_data.data().value;
 		    self.spatialquery.regions = self.$refs.spatial_query_question_table.row_of_data.data().regions;
+		    self.spatialquery.show_add_info_section_prop = self.$refs.spatial_query_question_table.row_of_data.data().show_add_info_section_prop;
 		    self.spatialquery.proponent_items = self.$refs.spatial_query_question_table.row_of_data.data().proponent_items;
 		    self.spatialquery.assessor_items = self.$refs.spatial_query_question_table.row_of_data.data().assessor_items;
 

@@ -35,7 +35,8 @@
         </div>
     </div>
 
-    <div class="row">
+    <!--TODO There is no user details dashboard and no working search functionality below - commenting this block out until both are available -->
+    <!--<div class="row">
         <div class="col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -69,7 +70,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
 
     <div class="row">
         <div class="col-sm-12">
@@ -127,8 +128,10 @@
                     <div class="row">
                       <div class="col-lg-12">
                         <div >
-                          <input type="button" @click.prevent="search" class="btn btn-primary" style="margin-bottom: 5px"value="Search"/>
-                          <input type="reset" @click.prevent="reset" class="btn btn-primary" style="margin-bottom: 5px"value="Clear"/>
+                          <button  v-if="searching" type="button" class="btn btn-primary" style="margin-bottom: 5px" value="Search" disabled>
+                            Search<i class="fa fa-circle-o-notch fa-spin fa-fw"></i></button>
+                          <input v-else type="button" @click.prevent="search" class="btn btn-primary" style="margin-bottom: 5px" value="Search"/>
+                          <input type="reset" @click.prevent="reset" class="btn btn-primary" style="margin-bottom: 5px" value="Clear"/>
 
                         </div>
                       </div> 
@@ -211,6 +214,7 @@ export default {
       keyWord: null,
       selected_organisation:'',
       organisations: null,
+      searching:false,
       results: [],
       errors: false,
       errorString: '',
@@ -396,7 +400,7 @@ export default {
           let vm = this;
           if(this.searchKeywords.length > 0)
           {
-            $('#loadingSpinner').show();
+            vm.searching=true;
             vm.$http.post('/api/search_keywords.json',{
               searchKeywords: vm.searchKeywords,
               searchProposal: vm.searchProposal,
@@ -408,14 +412,13 @@ export default {
               vm.$refs.proposal_datatable.vmDataTable.clear()
               vm.$refs.proposal_datatable.vmDataTable.rows.add(vm.results);
               vm.$refs.proposal_datatable.vmDataTable.draw();
-              $('#loadingSpinner').hide();
+              vm.searching=false;
             },
             err => {
               console.log(err);
-              $('#loadingSpinner').hide();
+              vm.searching=false;
             });
           }
-
         },
    
 

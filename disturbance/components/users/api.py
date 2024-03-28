@@ -40,6 +40,7 @@ from disturbance.components.users.serializers import   (
                                                 UserFilterSerializer,
 
                                             )
+from disturbance.helpers import is_customer, is_internal
 #from disturbance.components.main.utils import retrieve_department_users
 
 #class DepartmentUserList(views.APIView):
@@ -71,18 +72,27 @@ class GetProfile(views.APIView):
         return Response(serializer.data)
 
 from rest_framework import filters
-class UserListFilterView(generics.ListAPIView):
-    """ https://cop-internal.dbca.wa.gov.au/api/filtered_users?search=russell
-    """
-    queryset = EmailUser.objects.all()
-    serializer_class = UserFilterSerializer
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ('email', 'first_name', 'last_name')
+#class UserListFilterView(generics.ListAPIView):
+#    """ https://cop-internal.dbca.wa.gov.au/api/filtered_users?search=russell
+#    """
+#    queryset = EmailUser.objects.all()
+#    serializer_class = UserFilterSerializer
+#    filter_backends = (filters.SearchFilter,)
+#    search_fields = ('email', 'first_name', 'last_name')
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = EmailUser.objects.all()
+    queryset = EmailUser.objects.none()
     serializer_class = UserSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        if is_internal(self.request):
+            return EmailUser.objects.all()
+        elif is_customer(self.request):
+            qs = EmailUser.objects.filter(Q(id=user.id))
+            return qs
+        return EmailUser.objects.none()
 
     @list_route(methods=['GET',])
     def get_department_users(self, request, *args, **kwargs):
@@ -93,11 +103,8 @@ class UserViewSet(viewsets.ModelViewSet):
             #        many=True
             #        )
             #return Response(serializer.data)
-            # data = EmailUser.objects.filter(is_staff=True). \
-            #     filter(Q(first_name__icontains=search_term) | Q(last_name__icontains=search_term)). \
-            #     values('email', 'first_name', 'last_name')[:10]
-            data = EmailUser.objects.filter(is_staff=True). \
-                annotate(full_name=Concat('first_name', Value(' '), 'last_name')).filter(Q(first_name__icontains=search_term) | Q(last_name__icontains=search_term)| Q(full_name__icontains=search_term)). \
+            data = self.get_queryset().filter(is_staff=True). \
+                filter(Q(first_name__icontains=search_term) | Q(last_name__icontains=search_term)). \
                 values('email', 'first_name', 'last_name')[:10]
             data_transform = [{'id': person['email'], 'text': person['first_name'] + ' ' + person['last_name']} for person in data]
             return Response({"results": data_transform})

@@ -43,10 +43,30 @@
                             </div>
                         </div>
                     </div>
+                    <!--<div class="row">
+                        <div class="col-md-3">
+                            <label for="">Start date From</label>
+                            <div class="input-group date" ref="complianceStartDateFromPicker">
+                                <input type="text" class="form-control" placeholder="DD/MM/YYYY" v-model="filterComplianceStartFrom">
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="">Start date To</label>
+                            <div class="input-group date" ref="complianceStartDateToPicker">
+                                <input type="text" class="form-control" placeholder="DD/MM/YYYY" v-model="filterComplianceStartTo">
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>-->
                     <div class="row">
                         <div class="col-md-3">
                             <label for="">Due date From</label>
-                            <div class="input-group date" ref="complianceDateFromPicker">
+                            <div class="input-group date" ref="complianceDueDateFromPicker">
                                 <input type="text" class="form-control" placeholder="DD/MM/YYYY" v-model="filterComplianceDueFrom">
                                 <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-calendar"></span>
@@ -55,7 +75,7 @@
                         </div>
                         <div class="col-md-3">
                             <label for="">Due date To</label>
-                            <div class="input-group date" ref="complianceDateToPicker">
+                            <div class="input-group date" ref="complianceDueDateToPicker">
                                 <input type="text" class="form-control" placeholder="DD/MM/YYYY" v-model="filterComplianceDueTo">
                                 <span class="input-group-addon">
                                     <span class="glyphicon glyphicon-calendar"></span>
@@ -116,6 +136,8 @@ export default {
             filterProposalRegion: [],
             filterProposalActivity: 'All',
             filterComplianceStatus: 'All',
+            filterComplianceStartFrom: '',
+            filterComplianceStartTo: '',
             filterComplianceDueFrom: '',
             filterComplianceDueTo: '',
             filterProposalSubmitter: 'All',
@@ -184,6 +206,12 @@ export default {
         filterProposalSubmitter: function(){
             this.$refs.proposal_datatable.vmDataTable.draw();
         },
+        filterComplianceStartFrom: function(){
+            this.$refs.proposal_datatable.vmDataTable.draw();
+        },
+        filterComplianceStartTo: function(){
+            this.$refs.proposal_datatable.vmDataTable.draw();
+        },
         filterComplianceDueFrom: function(){
             this.$refs.proposal_datatable.vmDataTable.draw();
         },
@@ -213,6 +241,7 @@ export default {
         },
         proposal_headers: function() {
             let approval_or_licence = this.dasTemplateGroup ? 'Approval' : 'Licence';
+            let holder_or_organisation = this.dasTemplateGroup ? 'Organisation' : 'Holder';
             let columnHeaders = [
                 "Number"]
             if (this.dasTemplateGroup) {
@@ -225,13 +254,15 @@ export default {
             if (this.dasTemplateGroup) {
                 columnHeaders.push("Requirement");
             };
-             if (this.dasTemplateGroup) {
+            if (this.dasTemplateGroup) {
                 columnHeaders.push("Proposal");
             };
-            columnHeaders.push(approval_or_licence,
-                "Holder",
-                "Status",
+            columnHeaders.push(
                 "Due Date",
+                "District",
+                holder_or_organisation,
+                approval_or_licence,
+                "Status",
                 );
             if (!this.is_external) {
                 columnHeaders.push("Assigned To");
@@ -279,7 +310,7 @@ export default {
             if (this.dasTemplateGroup) {
                 columnList.push(
                     {
-                        // 4. Requirement
+                        // 5. Requirement
                         data: "requirement",
                         //name: "proposal__title",
                         //visible: false,
@@ -304,7 +335,6 @@ export default {
                                     text: value
                                 });
                             }
-
                             //return result;
                             return type=='export' ? value : result;
                         },
@@ -314,7 +344,7 @@ export default {
             if (this.dasTemplateGroup) {
                 columnList.push(
                     {
-                        // 4. Title
+                        // 6. Proposal
                         data: "proposal_lodgement_number",
                         name: "proposal__lodgement_number",
                         //visible: false,
@@ -322,7 +352,24 @@ export default {
             };
             columnList.push(
                     {
-                        // 5. Approval/Licence
+                        // 7. Due Date
+                        data: "due_date",
+                        mRender:function (data,type,full) {
+                            return data != '' && data != null ? moment(data).format(vm.dateFormat): '';
+                        }
+                    },
+                    {
+                        // 8. District
+                        data: "district",
+                        searchable: false,
+                    },
+                    {
+                        // 9. Holder
+                        data: "holder",
+                        name: "proposal__applicant__organisation__name"
+                    },
+                    {
+                        // 10. Approval/Licence
                         data: "approval_lodgement_number",
                         mRender:function (data,type,full) {
                             return `A${data}`;
@@ -330,26 +377,15 @@ export default {
                         name: "approval__lodgement_number"
                     },
                     {
-                        // 6. Holder
-                        data: "holder",
-                        name: "proposal__applicant__organisation__name"
-                    },
-                    {
-                        // 7. Status
+                        // 11. Status
                         data: vm.level == 'external'? "customer_status" : "processing_status",
                         searchable: false,  // There is a filter dropdown for 'Status'
                     },
-                    {
-                        // 8. Due Date
-                        data: "due_date",
-                        mRender:function (data,type,full) {
-                            return data != '' && data != null ? moment(data).format(vm.dateFormat): '';
-                        }
-                    });
+                    );
 
             if (!vm.is_external) {
                 columnList.push({
-                        // 9. Assigned To
+                        // 12. Assigned To
                         data: "assigned_to",
                         name: "assigned_to__first_name, assigned_to__last_name, assigned_to__email"
                         // visible: false
@@ -357,10 +393,10 @@ export default {
             }
             columnList.push(
                     {
-                        // 10. Action
+                        // 13. Action
                         data: '',
                         mRender:function (data,type,full) {
-                            console.log(full)
+                            //console.log(full)
                             let links = '';
                             if (!vm.is_external){
                                 if (full.processing_status=='With Assessor' && vm.check_assessor(full)) {
@@ -428,13 +464,19 @@ export default {
 
                     // adding extra GET params for Custom filtering
                     "data": function ( d ) {
-                        d.date_from = vm.filterComplianceDueFrom != '' && vm.filterComplianceDueFrom != null ? moment(vm.filterComplianceDueFrom, 'DD/MM/YYYY').format('YYYY-MM-DD'): '';
-                        d.date_to = vm.filterComplianceDueTo != '' && vm.filterComplianceDueTo != null ? moment(vm.filterComplianceDueTo, 'DD/MM/YYYY').format('YYYY-MM-DD'): '';
+                        //d.start_date_from = vm.filterComplianceStartFrom != '' && vm.filterComplianceStartFrom != null ? moment(vm.filterComplianceStartFrom, 'DD/MM/YYYY').format('YYYY-MM-DD'): '';
+                        //d.start_date_to = vm.filterComplianceStartTo != '' && vm.filterComplianceStartTo != null ? moment(vm.filterComplianceStartTo, 'DD/MM/YYYY').format('YYYY-MM-DD'): '';
+                        d.due_date_from = vm.filterComplianceDueFrom != '' && vm.filterComplianceDueFrom != null ? moment(vm.filterComplianceDueFrom, 'DD/MM/YYYY').format('YYYY-MM-DD'): '';
+                        d.due_date_to = vm.filterComplianceDueTo != '' && vm.filterComplianceDueTo != null ? moment(vm.filterComplianceDueTo, 'DD/MM/YYYY').format('YYYY-MM-DD'): '';
                         d.compliance_status = vm.filterComplianceStatus;
                         d.region = vm.filterProposalRegion;
                         d.proposal_activity = vm.filterProposalActivity;
                         d.is_external = vm.is_external;
                         d.regions = vm.filterProposalRegion.join();
+                        //Remove the extra unused parameters from the GET url to reduce the length of the url
+                        for (var i = 0; i < d.columns.length; i++) {
+                            delete d.columns[i].search.regex;
+                        }
                     }
 
                 },
@@ -503,22 +545,42 @@ export default {
         addEventListeners: function(){
             let vm = this;
             // Initialise Proposal Date Filters
-            $(vm.$refs.complianceDateToPicker).datetimepicker(vm.datepickerOptions);
-            $(vm.$refs.complianceDateToPicker).on('dp.change', function(e){
-                if ($(vm.$refs.complianceDateToPicker).data('DateTimePicker').date()) {
-                    vm.filterComplianceDueTo =  e.date.format('DD/MM/YYYY');
+            $(vm.$refs.complianceStartDateToPicker).datetimepicker(vm.datepickerOptions);
+            $(vm.$refs.complianceStartDateToPicker).on('dp.change', function(e){
+                if ($(vm.$refs.complianceStartDateToPicker).data('DateTimePicker').date()) {
+                    vm.filterComplianceStartTo =  e.date.format('DD/MM/YYYY');
                 }
-                else if ($(vm.$refs.complianceDateToPicker).data('date') === "") {
+                else if ($(vm.$refs.complianceStartDateToPicker).data('date') === "") {
                     vm.filterProposaLodgedTo = "";
                 }
              });
-            $(vm.$refs.complianceDateFromPicker).datetimepicker(vm.datepickerOptions);
-            $(vm.$refs.complianceDateFromPicker).on('dp.change',function (e) {
-                if ($(vm.$refs.complianceDateFromPicker).data('DateTimePicker').date()) {
-                    vm.filterComplianceDueFrom = e.date.format('DD/MM/YYYY');
-                    $(vm.$refs.complianceDateToPicker).data("DateTimePicker").minDate(e.date);
+            $(vm.$refs.complianceStartDateFromPicker).datetimepicker(vm.datepickerOptions);
+            $(vm.$refs.complianceStartDateFromPicker).on('dp.change',function (e) {
+                if ($(vm.$refs.complianceStartDateFromPicker).data('DateTimePicker').date()) {
+                    vm.filterComplianceStartFrom = e.date.format('DD/MM/YYYY');
+                    $(vm.$refs.complianceStartDateToPicker).data("DateTimePicker").minDate(e.date);
                 }
-                else if ($(vm.$refs.complianceDateFromPicker).data('date') === "") {
+                else if ($(vm.$refs.complianceStartDateFromPicker).data('date') === "") {
+                    vm.filterComplianceStartFrom = "";
+                }
+            });
+            
+            $(vm.$refs.complianceDueDateToPicker).datetimepicker(vm.datepickerOptions);
+            $(vm.$refs.complianceDueDateToPicker).on('dp.change', function(e){
+                if ($(vm.$refs.complianceDueDateToPicker).data('DateTimePicker').date()) {
+                    vm.filterComplianceDueTo =  e.date.format('DD/MM/YYYY');
+                }
+                else if ($(vm.$refs.complianceDueDateToPicker).data('date') === "") {
+                    vm.filterProposaLodgedTo = "";
+                }
+             });
+            $(vm.$refs.complianceDueDateFromPicker).datetimepicker(vm.datepickerOptions);
+            $(vm.$refs.complianceDueDateFromPicker).on('dp.change',function (e) {
+                if ($(vm.$refs.complianceDueDateFromPicker).data('DateTimePicker').date()) {
+                    vm.filterComplianceDueFrom = e.date.format('DD/MM/YYYY');
+                    $(vm.$refs.complianceDueDateToPicker).data("DateTimePicker").minDate(e.date);
+                }
+                else if ($(vm.$refs.complianceDueDateFromPicker).data('date') === "") {
                     vm.filterComplianceDueFrom = "";
                 }
             });
@@ -528,11 +590,11 @@ export default {
             //vm.applySelect2()
         },
         applySelect2: function(){
-            console.log('in applySelect2')
+            //console.log('in applySelect2')
             let vm = this
 
             if (!vm.select2Applied){
-                console.log('select2 is being applied')
+                //console.log('select2 is being applied')
                 $(vm.$refs.filterRegion).select2({
                     "theme": "bootstrap",
                     allowClear: true,
@@ -667,7 +729,7 @@ export default {
         });
     },
     mounted: function(){
-        console.log('in mounted')
+        //console.log('in mounted')
         let vm = this;
         vm.fetchFilterLists();
         vm.fetchProfile();

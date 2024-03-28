@@ -73,4 +73,6 @@ shapely==1.8.0
 geopandas==0.10.2
 rtree==0.9.7
 
+git+https://github.com/dbca-wa/appmonitor_client.git#egg=appmonitor_client
+python-decouple==3.8
 

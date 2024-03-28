@@ -208,16 +208,20 @@ def send_on_site_notification_email(request_data, sender, update=False):
     period_from = request_data.get('period_from')
     period_to = request_data.get('period_to')
     comments = request_data.get('comments')
+    hives_loc = request_data.get('hives_loc')
+    hives_num = request_data.get('hives_num')
+    people_names = request_data.get('people_names')
+    flora = request_data.get('flora')
     approval = asoa.approval
     proposal = asoa.approval.current_proposal
 
-    applicant = approval.relevant_applicant if isinstance(approval.relevant_applicant, Organisation) else approval.relevant_applicant.get_full_name(),
+    applicant = approval.relevant_applicant if isinstance(approval.relevant_applicant, Organisation) else approval.relevant_applicant.get_full_name()
     if isinstance(approval.relevant_applicant, Organisation):
         applicant = approval.relevant_applicant.name
         delegate = approval.relevant_applicant.delegates.all()[0]
         contact = delegate.phone_number if delegate.phone_number else delegate.mobile_number
     else:
-        applicant = approval.relevant_applicant.get_full_name(),
+        applicant = approval.relevant_applicant.get_full_name()
         contact = approval.relevant_applicant.phone_number if approval.relevant_applicant.phone_number else approval.relevant_applicant.mobile_number
 
     context = {
@@ -228,12 +232,17 @@ def send_on_site_notification_email(request_data, sender, update=False):
         'period_from': period_from,
         'period_to': period_to,
         'comments': comments,
+        'hives_loc': hives_loc,
+        'hives_num': hives_num,
+        'people_names': people_names,
+        'flora': flora,
         'sender': sender,
+        'licence_url': SITE_URL + f'{reverse("external")}approval/{approval.id}'
     }
 
     # sender = request.user if request else settings.DEFAULT_FROM_EMAIL
     #sender = settings.DEFAULT_FROM_EMAIL
-    cc = []
+    cc = [approval.relevant_applicant.email] if hasattr(approval.relevant_applicant, 'email') else []
     msg = email.send(get_recipients(), cc=cc, context=context)
     _log_approval_email(msg, approval, sender=sender)
     if proposal.applicant:

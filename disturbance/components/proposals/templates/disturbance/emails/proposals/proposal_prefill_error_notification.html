@@ -1,0 +1,6 @@
+{%  extends 'disturbance/emails/base_email.html' %}
+
+{%  block content %}
+	<p>There was an error processing your Disturbance proposal <strong>{{proposal.lodgement_number}}</strong>. (TaskID: {{task_id}})</p>
+       	<p>Please click <a href="{{url}}">here</a> to review and resubmit.</p>
+{%  endblock %}

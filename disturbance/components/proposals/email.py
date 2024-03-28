@@ -190,6 +190,15 @@ class ApiaryApproverSendBackNotificationEmail(TemplateEmailBase):
     html_template = 'disturbance/emails/proposals/apiary_send_approver_sendback_notification.html'
     txt_template = 'disturbance/emails/proposals/apiary_send_approver_sendback_notification.txt'
 
+class ProposalPrefillCompletedSendNotificationEmail(TemplateEmailBase):
+    subject = 'Proposal Prefill has completed.'
+    html_template = 'disturbance/emails/proposals/proposal_prefill_completed_notification.html'
+    txt_template = 'disturbance/emails/proposals/proposal_prefill_completed_notification.txt'
+
+class ProposalPrefillErrorSendNotificationEmail(TemplateEmailBase):
+    subject = 'ERROR: Proposal Prefill'
+    html_template = 'disturbance/emails/proposals/proposal_prefill_error_notification.html'
+    txt_template = 'disturbance/emails/proposals/proposal_prefill_error_notification.txt'
 
 def send_referral_email_notification(referral,request,reminder=False):
     email = ReferralSendNotificationEmail()
@@ -656,6 +665,57 @@ def send_assessment_reminder_email_notification(proposal):
     if proposal.applicant:
         _log_org_email(msg, proposal.applicant, proposal.submitter, sender=sender)
     return msg
+
+def send_proposal_prefill_completed_email_notification(proposal):
+    email = ProposalPrefillCompletedSendNotificationEmail()
+    #base_url = settings.BASE_URL if settings.BASE_URL.endswith('/') else settings.BASE_URL + '/'
+    #url = base_url + reverse('external-proposal-detail',kwargs={'proposal_pk': proposal.id})
+    url = settings.BASE_URL + reverse('external-proposal-detail',kwargs={'proposal_pk': proposal.id})
+    context = {
+        'proposal': proposal,
+        'url': url,
+    }
+
+    all_ccs = []
+    #if cc_list:
+    #    all_ccs = cc_list.split(',')
+
+    if proposal.applicant and proposal.applicant.email != proposal.submitter.email and proposal.applicant.email:
+        # if proposal.applicant.email:
+        all_ccs.append(proposal.applicant.email)
+
+    msg = email.send(proposal.submitter.email, bcc=all_ccs, attachments=[], context=context)
+    sender = get_sender_user()
+    _log_proposal_email(msg, proposal, sender=sender)
+    if proposal.applicant:
+        _log_org_email(msg, proposal.applicant, proposal.submitter, sender=sender)
+
+def send_proposal_prefill_error_email_notification(proposal, task_id):
+    email = ProposalPrefillErrorSendNotificationEmail()
+    #base_url = settings.BASE_URL if settings.BASE_URL.endswith('/') else settings.BASE_URL + '/'
+    #url = base_url + reverse('external-proposal-detail',kwargs={'proposal_pk': proposal.id})
+    url = settings.BASE_URL + reverse('external-proposal-detail',kwargs={'proposal_pk': proposal.id})
+    context = {
+        'proposal': proposal,
+        'task_id': task_id,
+        'greeting': 'Assessor',
+        'url': url,
+    }
+
+    all_ccs = []
+    #if cc_list:
+    #    all_ccs = cc_list.split(',')
+
+    if proposal.applicant and proposal.applicant.email != proposal.submitter.email and proposal.applicant.email:
+        # if proposal.applicant.email:
+        all_ccs.append(proposal.applicant.email)
+
+    msg = email.send(proposal.assessor_recipients, context=context)
+    sender = get_sender_user()
+    _log_proposal_email(msg, proposal, sender=sender)
+    if proposal.applicant:
+        _log_org_email(msg, proposal.applicant, proposal.submitter, sender=sender)
+
 
 def _log_proposal_referral_email(email_message, referral, sender=None):
     from disturbance.components.proposals.models import ProposalLogEntry

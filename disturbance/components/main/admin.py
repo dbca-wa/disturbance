@@ -4,7 +4,7 @@ from django.conf.urls import url
 from django.utils.html import format_html
 from django.core.urlresolvers import reverse
 
-from disturbance.components.main.models import MapLayer, MapColumn, RegionDbca, DistrictDbca, DASMapLayer
+from disturbance.components.main.models import MapLayer, MapColumn, RegionDbca, DistrictDbca, DASMapLayer, TaskMonitor
 from disturbance.settings import KMI_SERVER_URL
 
 
@@ -58,6 +58,22 @@ class DASMapLayerAdmin(admin.ModelAdmin):
     search_fields = ['layer_name',]
     form = DASMapLayerForm
 #    readonly_fields = ('create_update_layer_in_sqs',)
+
+
+@admin.register(TaskMonitor)
+class TaskMonitorAdmin(admin.ModelAdmin):
+    list_display = [
+        'task_id',
+        'status',
+        'retries',
+        'proposal',
+        'requester',
+        'created',
+    ]
+    list_filter = ["status"]
+    readonly_fields = ['info',]
+    search_fields = ['task_id', 'status', 'proposal__lodgement_number', 'requester__email']
+
 
 #    def get_urls(self):
 #        urls = super().get_urls()

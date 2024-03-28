@@ -1,0 +1,6 @@
+{%  extends 'disturbance/emails/base_email.txt' %}
+
+{%  block content %}
+	There was an error processing your Disturbance proposal {{proposal.lodgement_number}}. (TaskID: {{task_id}}).
+       	Please click here to review and resubmit.
+{%  endblock %}

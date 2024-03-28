@@ -217,6 +217,8 @@ def _create_approval(approval_buffer, approval, proposal, copied_to_permit, user
     list_of_bullets.append('The proponent accepts responsibility for supervising and monitoring implementation of activity/ies to ensure compliance with this proposal. {} reserves the right to request documents and records demonstrating compliance for departmental monitoring and auditing.'.format(settings.DEP_NAME_SHORT))
     list_of_bullets.append('Non-compliance with the conditions of the proposal may trigger a suspension or withdrawal of the approval for this activity.')
     list_of_bullets.append('Management actions listed in Appendix 1 are implemented.')
+    if 'thinning' in proposal.activity.lower():
+        list_of_bullets.append('For an ecological thinning activity on State forest or timber reserve, consistent with the Forest Management Plan 2024-2033 and the Forest Management Regulations 1999, the Forest Enhancement Area is allocated to the Forest Products Commission for the purpose of felling, salvage and removal of forest products.')
 
     understandingList = ListFlowable(
             [ListItem(Paragraph(a, styles['Left']), bulletColour='black', value='circle') for a in list_of_bullets],

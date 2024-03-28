@@ -234,7 +234,7 @@ export default {
                     */
                     {
                         data: "relevant_applicant_name",
-                        name: "proposal__relevant_applicant_name",
+                        name: "proposal__applicant__organisation__name",
                     },
                     {
                         data: "processing_status",
@@ -250,6 +250,7 @@ export default {
                             return ''
                         },
                         visible: false,
+                        searchable: false,
                     },
                     {
                         data: "proposal_lodgement_date",

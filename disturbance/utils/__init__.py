@@ -61,17 +61,23 @@ def search2(dictionary, search_list):
 def search_approval(approval, searchWords):
     qs=[]
     a = approval
+    name = ""
+    if a.applicant:
+        name = a.applicant.name
     if a.surrender_details:
         try:
             results = search(a.surrender_details, searchWords)
             if results:
-                result_str= ' '.join([value for d in results for value in d.values()])
+                final_results = {}
+                for r in results:
+                    for key, value in r.items():
+                        final_results.update({'key': key, 'value': value})   
                 res = {
                     'number': a.lodgement_number,
                     'id': a.id,
                     'type': 'Approval',
-                    'applicant': a.applicant.name,
-                    'text': result_str,
+                    'applicant': name,
+                    'text': final_results,
                     }
                 qs.append(res)
         except:
@@ -80,13 +86,16 @@ def search_approval(approval, searchWords):
         try:
             results = search(a.suspension_details, searchWords)
             if results:
-                result_str= ' '.join([value for d in results for value in d.values()])
+                final_results = {}
+                for r in results:
+                    for key, value in r.items():
+                        final_results.update({'key': key, 'value': value})
                 res = {
                     'number': a.lodgement_number,
                     'id': a.id,
                     'type': 'Approval',
-                    'applicant': a.applicant.name,
-                    'text': result_str,
+                    'applicant': name,
+                    'text': final_results,
                     }
                 qs.append(res)
         except:
@@ -102,7 +111,7 @@ def search_approval(approval, searchWords):
                     'number': a.lodgement_number,
                     'id': a.id,
                     'type': 'Approval',
-                    'applicant': a.applicant.name,
+                    'applicant': name,
                     'text': a.cancellation_details,
                     }
                 qs.append(res)
@@ -113,6 +122,9 @@ def search_approval(approval, searchWords):
 def search_compliance(compliance, searchWords):
     qs=[]
     c = compliance
+    name = ""
+    if c.proposal and c.proposal.applicant:
+        name = c.proposal.applicant.name
     if c.text:
         try:
             found = False
@@ -124,7 +136,7 @@ def search_compliance(compliance, searchWords):
                     'number': c.reference,
                     'id': c.id,
                     'type': 'Compliance',
-                    'applicant': c.proposal.applicant.name,
+                    'applicant': name,
                     'text': c.text,
                     }
                 qs.append(res)
@@ -141,7 +153,7 @@ def search_compliance(compliance, searchWords):
                     'number': c.reference,
                     'id': c.id,
                     'type': 'Compliance',
-                    'applicant': c.proposal.applicant.name,
+                    'applicant': name,
                     'text': c.requirement.requirement,
                     }
                 qs.append(res)

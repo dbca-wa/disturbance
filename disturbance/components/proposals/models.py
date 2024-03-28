@@ -20,7 +20,7 @@ from django.contrib.gis.measure import Distance
 from django.contrib.postgres.fields import ArrayField
 from django.db import models,transaction
 from django.contrib.gis.db import models as gis_models
-from django.db.models import Q, Max
+from django.db.models import Q, Max, F
 from django.dispatch import receiver
 from django.db.models.signals import pre_delete, post_save
 from django.utils.encoding import python_2_unicode_compatible
@@ -1490,7 +1490,7 @@ class Proposal(DirtyFieldsMixin, RevisionedMixin):
     def log_user_action(self, action, request):
         return ProposalUserAction.log_action(self, action, request.user)
 
-    def log_metrics(self, when, sqs_response, time_taken, response_cached):
+    def log_metrics(self, when, sqs_response, time_taken, response_cached=False):
         system = sqs_response['system'] if sqs_response and 'system' in sqs_response else 'Unknown'
         request_type = sqs_response['request_type'] if sqs_response and 'request_type' in sqs_response else 'Unknown'
         return SpatialQueryMetrics.objects.create(proposal=self, when=when, system=system, request_type=request_type, sqs_response=sqs_response, time_taken=time_taken, response_cached=response_cached)
@@ -1523,16 +1523,20 @@ class Proposal(DirtyFieldsMixin, RevisionedMixin):
                     shapefile_json=json.loads(shp_json)
                 else:
                     shapefile_json=shp_json
+
                 #The features id has to be unique for each shapefile_json
                 if shapefile_json and 'features' in shapefile_json:
-                    if len(shapefile_json['features']) < MAX_NO_POLYGONS:
+                    num_features = len(shapefile_json['features'])
+                    if num_features > 0 and num_features <= MAX_NO_POLYGONS:
                         if 'id' in shapefile_json['features'][0]:
                             shapefile_json['features'][0]['id']=self.id
                         self.shapefile_json=shapefile_json
                     else:
-                        raise ValidationError('Cannot upload a Shapefile - too many features (max 15)')
+                        msg = 'no features found in shapefile' if num_features == 0 else f'too many features: {num_features} (max {MAX_NO_POLYGONS})' 
+                        raise ValidationError(f'Cannot upload a Shapefile - {msg}')
                 else:
                     raise ValidationError('Please upload a valid shapefile')
+
                 self.save(version_comment='New Shapefile JSON saved.')
                 # else:
                 #     raise ValidationError('Please upload a valid shapefile')
@@ -2548,8 +2552,10 @@ class Proposal(DirtyFieldsMixin, RevisionedMixin):
                     previous_proposal = Proposal.objects.get(id=self.id)
                     proposal = clone_proposal_with_status_reset(previous_proposal)
                     #proposal.schema = ProposalType.objects.first().schema
-                    ptype = ProposalType.objects.filter(name=proposal.application_type).latest('version')
-                    proposal.schema = ptype.schema
+                    # Commented Below - USE existing proposal_type for consistency - section names can change between ptype's particularly with schema gen tool
+                    #ptype = ProposalType.objects.filter(name=proposal.application_type).latest('version')
+                    #proposal.schema = ptype.schema
+
                 proposal.proposal_type = 'renewal'
                 proposal.submitter = request.user
                 proposal.previous_application = self
@@ -2597,8 +2603,9 @@ class Proposal(DirtyFieldsMixin, RevisionedMixin):
                 proposal = clone_proposal_with_status_reset(previous_proposal)
                 proposal.proposal_type = 'amendment'
                 #proposal.schema = ProposalType.objects.first().schema
-                ptype = ProposalType.objects.filter(name=proposal.application_type).latest('version')
-                proposal.schema = ptype.schema
+                # Commented Below - USE existing proposal_type for consistency - section names can change between ptype's particularly with schema gen tool
+                #ptype = ProposalType.objects.filter(name=proposal.application_type).latest('version')
+                #proposal.schema = ptype.schema
                 proposal.submitter = request.user
                 proposal.previous_application = self
                 #copy all the requirements from the previous proposal
@@ -3309,9 +3316,40 @@ def searchKeyWords(searchWords, searchProposal, searchApproval, searchCompliance
         proposal_list = Proposal.objects.filter(application_type__name='Disturbance').exclude(processing_status__in=[Proposal.PROCESSING_STATUS_DISCARDED, Proposal.PROCESSING_STATUS_DRAFT])
         approval_list = Approval.objects.all().order_by('lodgement_number', '-issue_date').distinct('lodgement_number')
         compliance_list = Compliance.objects.all()
+
+        #print(proposal_list.count()+approval_list.count()+compliance_list.count())
+
     if searchWords:
+
+        search_words_regex = "(?:"
+        for i in range(0,len(searchWords)):
+            search_words_regex = search_words_regex + searchWords[i]
+            if i == len(searchWords)-1:
+                search_words_regex = search_words_regex + ")"
+            else:
+                search_words_regex = search_words_regex + "|"
+
+        filter_regex = ".*\".*\":\s\"(\\\\\"|[^\"])*"+search_words_regex+"(\\\\\"|[^\"])*\".*"
+        #extract_regex = "(?i)\'*\':\s\'(?:\\\\\'|[^\'])*"+search_words_regex+"(?:\\\\\'|[^\'])*\'" #attempted to further optimise but additional regex had a negligable impact at the cost of the data key
         if searchProposal:
+            
+            proposal_list = proposal_list.filter(data__iregex=filter_regex)
             for p in proposal_list:
+                name = ""
+                if p.applicant:
+                    name = p.applicant.name
+                #TODO consider below code and extract regex: it takes fewer lines and may be slightly(?) faster - but we lose the text dict key value (which is not currently in use, but may later be required)
+                #value = re.findall(extract_regex,str(p.data))
+                #if len(value):
+                #    value = value[-1][3:-1]
+                #res = {
+                #'number': p.lodgement_number,
+                #'id': p.id,
+                #'type': 'Proposal',
+                #'applicant': p.applicant.name,
+                #'text': {"key":"key","value":value},
+                #}
+                #qs.append(res)
                 if p.data:
                     try:
                         results = search(p.data[0], searchWords)
@@ -3319,18 +3357,19 @@ def searchKeyWords(searchWords, searchProposal, searchApproval, searchCompliance
                         if results:
                             for r in results:
                                 for key, value in r.items():
-                                    final_results.update({'key': key, 'value': value})
+                                    final_results.update({'key': key, 'value': value})                           
                             res = {
                                 'number': p.lodgement_number,
                                 'id': p.id,
                                 'type': 'Proposal',
-                                'applicant': p.applicant.name,
+                                'applicant': name,
                                 'text': final_results,
                                 }
                             qs.append(res)
                     except:
                         raise
         if searchApproval:
+            approval_list = approval_list.filter(Q(surrender_details__iregex=filter_regex) | Q(suspension_details__iregex=filter_regex) | Q(cancellation_details__iregex=search_words_regex))
             for a in approval_list:
                 try:
                     results = search_approval(a, searchWords)
@@ -3338,12 +3377,14 @@ def searchKeyWords(searchWords, searchProposal, searchApproval, searchCompliance
                 except:
                     raise
         if searchCompliance:
+            compliance_list = compliance_list.filter(Q(text__iregex=search_words_regex) | Q(requirement__free_requirement__iregex=search_words_regex) | Q(requirement__standard_requirement__text__iregex=search_words_regex))
             for c in compliance_list:
                 try:
                     results = search_compliance(c, searchWords)
                     qs.extend(results)
                 except:
                     raise
+    #print(len(qs))
     return qs
 
 def search_reference(reference_number):
@@ -5936,7 +5977,8 @@ class CurrentSpatialQueryQuestionManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().exclude(expiry__lt=datetime.datetime.now().date())
 
-class SpatialQueryQuestion(models.Model):
+#class SpatialQueryQuestion(models.Model):
+class SpatialQueryQuestion(RevisionedMixin):
     OVERLAPPING = 'Overlapping'
     OUTSIDE = 'Outside'
     HOW_CHOICES=(
@@ -6011,6 +6053,7 @@ class SpatialQueryQuestion(models.Model):
     no_polygons_assessor = models.IntegerField('No. of polygons to process (Assessor)', default=-1, blank=True)
     assessor_info = models.TextField(blank=True, null=True)
 
+    show_add_info_section_prop = models.BooleanField('Show additional info section (Proponent)', default=False)
     proponent_items = JSONField('Proponent response set', default=[{}])
     assessor_items = JSONField('Assessor response set', default=[{}])
 
@@ -6110,6 +6153,8 @@ class SpatialQueryMetrics(models.Model):
 
         except Exception as e:
             logger.error(f'Total Query Time not found in sqs_response: {e}')
+
+
 
 import reversion
 reversion.register(Proposal, follow=['requirements', 'documents', 'compliances', 'referrals', 'approvals', 'proposal_apiary'])

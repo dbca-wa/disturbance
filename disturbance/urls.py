@@ -28,54 +28,57 @@ from disturbance.utils import are_migrations_running
 from disturbance.views import LedgerPayView
 
 router = routers.DefaultRouter()
-router.register(r'organisations',org_api.OrganisationViewSet)
-router.register(r'proposal',proposal_api.ProposalViewSet)
-router.register(r'proposal_apiary', proposal_api.ProposalApiaryViewSet)
-router.register(r'on_site_information', proposal_api.OnSiteInformationViewSet)
-router.register(r'apiary_site', proposal_api.ApiarySiteViewSet)
-router.register(r'proposal_paginated',proposal_api.ProposalPaginatedViewSet)
-router.register(r'approval_paginated',approval_api.ApprovalPaginatedViewSet)
-router.register(r'compliance_paginated',compliances_api.CompliancePaginatedViewSet)
-router.register(r'referrals',proposal_api.ReferralViewSet)
-router.register(r'approvals',approval_api.ApprovalViewSet)
-router.register(r'compliances',compliances_api.ComplianceViewSet)
-router.register(r'proposal_requirements',proposal_api.ProposalRequirementViewSet)
-router.register(r'proposal_standard_requirements',proposal_api.ProposalStandardRequirementViewSet)
-router.register(r'organisation_requests',org_api.OrganisationRequestsViewSet)
-router.register(r'organisation_contacts',org_api.OrganisationContactViewSet)
-router.register(r'my_organisations',org_api.MyOrganisationsViewSet)
-router.register(r'users',users_api.UserViewSet)
-router.register(r'amendment_request',proposal_api.AmendmentRequestViewSet)
-router.register(r'compliance_amendment_request',compliances_api.ComplianceAmendmentRequestViewSet)
-router.register(r'regions', main_api.RegionViewSet)
-router.register(r'activity_matrix', main_api.ActivityMatrixViewSet)
+router.include_root_view = settings.SHOW_ROOT_API
+
+router.register(r'organisations',org_api.OrganisationViewSet,"organisations")
+router.register(r'proposal',proposal_api.ProposalViewSet,"proposal")
+router.register(r'proposal_apiary', proposal_api.ProposalApiaryViewSet,"proposal_apiary")
+router.register(r'on_site_information', proposal_api.OnSiteInformationViewSet,"on_site_information")
+router.register(r'apiary_site', proposal_api.ApiarySiteViewSet,"apiary_site")
+router.register(r'proposal_paginated',proposal_api.ProposalPaginatedViewSet,"proposal_paginated")
+router.register(r'approval_paginated',approval_api.ApprovalPaginatedViewSet,"approval_paginated_view")
+router.register(r'compliance_paginated',compliances_api.CompliancePaginatedViewSet,"compliance_paginated")
+router.register(r'referrals',proposal_api.ReferralViewSet,"referrals")
+router.register(r'approvals',approval_api.ApprovalViewSet,"approvals")
+router.register(r'compliances',compliances_api.ComplianceViewSet,"compliances")
+router.register(r'proposal_requirements',proposal_api.ProposalRequirementViewSet,"proposal_requirements")
+router.register(r'proposal_standard_requirements',proposal_api.ProposalStandardRequirementViewSet,"proposal_standard_requirements")
+router.register(r'organisation_requests',org_api.OrganisationRequestsViewSet,"organisation_requests")
+router.register(r'organisation_contacts',org_api.OrganisationContactViewSet,"organisation_contacts")
+router.register(r'my_organisations',org_api.MyOrganisationsViewSet,"my_organisations")
+router.register(r'users',users_api.UserViewSet,"users")
+router.register(r'amendment_request',proposal_api.AmendmentRequestViewSet,"amendment_request")
+router.register(r'compliance_amendment_request',compliances_api.ComplianceAmendmentRequestViewSet,"compliance_amendment_request")
+router.register(r'regions', main_api.RegionViewSet,"regions")
+router.register(r'activity_matrix', main_api.ActivityMatrixViewSet,"activity_matrix")
 #router.register(r'tenure', main_api.TenureViewSet)
-router.register(r'application_types', main_api.ApplicationTypeViewSet)
-router.register(r'global_settings', main_api.GlobalSettingsViewSet)
-router.register(r'apiary_referral_groups', proposal_api.ApiaryReferralGroupViewSet)
-router.register(r'apiary_referrals',proposal_api.ApiaryReferralViewSet)
-router.register(r'apiary_site_fees',proposal_api.ApiarySiteFeeViewSet)
+router.register(r'global_settings', main_api.GlobalSettingsViewSet, "global_settings")
+router.register(r'application_types', main_api.ApplicationTypeViewSet,"application_types")
+router.register(r'apiary_referral_groups', proposal_api.ApiaryReferralGroupViewSet,"apiary_referral_groups")
+router.register(r'apiary_referrals',proposal_api.ApiaryReferralViewSet,"apiary_referrals")
+router.register(r'apiary_site_fees',proposal_api.ApiarySiteFeeViewSet,"apiary_site_fees")
 #router.register(r'payment',payment_api.PaymentViewSet)
-router.register(r'proposal_type_sections', proposal_api.ProposalTypeSectionViewSet)
+router.register(r'proposal_type_sections', proposal_api.ProposalTypeSectionViewSet,"proposal_type_sections")
 router.register(r'search_proposal_types', proposal_api.SearchProposalTypeViewSet)
 
 router.register(
-    r'schema_question_paginated', proposal_api.SchemaQuestionPaginatedViewSet)
+    r'schema_question_paginated', proposal_api.SchemaQuestionPaginatedViewSet,"schema_question_paginated")
 
 router.register(
-    r'schema_question', proposal_api.SchemaQuestionViewSet)
+    r'schema_question', proposal_api.SchemaQuestionViewSet,"schema_question")
 
 router.register(
     r'schema_masterlist',
-    proposal_api.SchemaMasterlistViewSet
+    proposal_api.SchemaMasterlistViewSet,
+    "schema_masterlist"
 )
 router.register(
-    r'schema_masterlist_paginated', proposal_api.SchemaMasterlistPaginatedViewSet)
+    r'schema_masterlist_paginated', proposal_api.SchemaMasterlistPaginatedViewSet,"schema_masterlist_paginated")
 router.register(
-    r'schema_proposal_type', proposal_api.SchemaProposalTypeViewSet)
+    r'schema_proposal_type', proposal_api.SchemaProposalTypeViewSet,"schema_proposal_type")
 router.register(
-    r'schema_proposal_type_paginated', proposal_api.SchemaProposalTypePaginatedViewSet)
-router.register(r'map_layers', main_api.MapLayerViewSet)
+    r'schema_proposal_type_paginated', proposal_api.SchemaProposalTypePaginatedViewSet,"schema_proposal_type_paginated")
+router.register(r'map_layers', main_api.MapLayerViewSet,"map_layers")
 router.register(r'das_map_layers', main_api.DASMapLayerViewSet)
 
 router.register(

@@ -32,6 +32,8 @@ class BaseProposalSerializer(serializers.ModelSerializer):
     documents_url = serializers.SerializerMethodField()
     proposal_type = serializers.SerializerMethodField()
     allowed_assessors = EmailUserSerializer(many=True)
+    region_name=serializers.CharField(source='region.name', read_only=True)
+    district_name=serializers.CharField(source='district.name', read_only=True)
 
     get_history = serializers.ReadOnlyField()
 

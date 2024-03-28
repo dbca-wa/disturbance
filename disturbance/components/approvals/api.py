@@ -95,12 +95,19 @@ class ApprovalFilterBackend(DatatablesFilterBackend):
 #            if queryset.model is Referral:
 #                #processing_status_id = [i for i in Proposal.PROCESSING_STATUS_CHOICES if i[1]==processing_status][0][0]
 #                queryset = queryset.filter(processing_status=processing_status)
-        date_from = request.GET.get('date_from')
-        date_to = request.GET.get('date_to')
-        if date_from:
-            queryset = queryset.filter(start_date__gte=date_from)
-        if date_to:
-            queryset = queryset.filter(expiry_date__lte=date_to)
+        start_date_from = request.GET.get('start_date_from')
+        start_date_to = request.GET.get('start_date_to')
+        if start_date_from:
+            queryset = queryset.filter(start_date__gte=start_date_from)
+        if start_date_to:
+            queryset = queryset.filter(start_date__lte=start_date_to)
+        
+        expiry_date_from = request.GET.get('expiry_date_from')
+        expiry_date_to = request.GET.get('expiry_date_to')
+        if expiry_date_from:
+            queryset = queryset.filter(expiry_date__gte=expiry_date_from)
+        if expiry_date_to:
+            queryset = queryset.filter(expiry_date__lte=expiry_date_to)
 
         getter = request.query_params.get
         fields = self.get_fields(getter)
@@ -122,19 +129,19 @@ class ApprovalFilterBackend(DatatablesFilterBackend):
         return queryset
 
 
-class ApprovalRenderer(DatatablesRenderer):
-    def render(self, data, accepted_media_type=None, renderer_context=None):
-        if 'view' in renderer_context and hasattr(renderer_context['view'], '_datatables_total_count'):
-            data['recordsTotal'] = renderer_context['view']._datatables_total_count
-            #data.pop('recordsTotal')
-            #data.pop('recordsFiltered')
-        return super(ApprovalRenderer, self).render(data, accepted_media_type, renderer_context)
+#class ApprovalRenderer(DatatablesRenderer):
+#    def render(self, data, accepted_media_type=None, renderer_context=None):
+#        if 'view' in renderer_context and hasattr(renderer_context['view'], '_datatables_total_count'):
+#            data['recordsTotal'] = renderer_context['view']._datatables_total_count
+#            #data.pop('recordsTotal')
+#            #data.pop('recordsFiltered')
+#        return super(ApprovalRenderer, self).render(data, accepted_media_type, renderer_context)
 
 
 class ApprovalPaginatedViewSet(viewsets.ModelViewSet):
     filter_backends = (ApprovalFilterBackend,)
     pagination_class = DatatablesPageNumberPagination
-    renderer_classes = (ApprovalRenderer,)
+    #renderer_classes = (ApprovalRenderer,)
     page_size = 10
     queryset = Approval.objects.none()
     serializer_class = ApprovalSerializer
@@ -257,6 +264,20 @@ class ApprovalViewSet(viewsets.ModelViewSet):
             queryset =  Approval.objects.filter(Q(applicant_id__in = user_orgs)|Q(proxy_applicant_id=self.request.user.id))
             return queryset
         return Approval.objects.none()
+
+    #TODO: review this - seems like a workaround at the moment
+    def get_serializer_class(self):
+        try:
+            approval = self.get_object()
+            return ApprovalSerializer
+        except serializers.ValidationError:
+            print(traceback.print_exc())
+            raise
+        except ValidationError as e:
+            handle_validation_error(e)
+        except Exception as e:
+            print(traceback.print_exc())
+            raise serializers.ValidationError(str(e))
 
     def list(self, request, *args, **kwargs):
         #queryset = self.get_queryset()

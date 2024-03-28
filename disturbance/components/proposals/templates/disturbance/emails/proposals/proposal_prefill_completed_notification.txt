@@ -1,0 +1,6 @@
+{%  extends 'disturbance/emails/base_email.txt' %}
+
+{%  block content %}
+       	Prefill for proposal {{proposal.lodgement_number}} has been completed. 
+        Please click here to review and submit.
+{%  endblock %}

@@ -30,8 +30,14 @@ class DistrictViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class RegionViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Region.objects.all().order_by('id')
+    queryset = Region.objects.none() 
     serializer_class = RegionSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_authenticated():
+            return Region.objects.all().order_by('id')
+        return Region.objects.none()
 
 
 class ActivityMatrixViewSet(viewsets.ReadOnlyModelViewSet):
@@ -62,8 +68,10 @@ class ApplicationTypeViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ApplicationTypeSerializer
 
     def get_queryset(self):
-        my_list = ApplicationType.objects.order_by('order').filter(visible=True)
-        return my_list
+        user = self.request.user
+        if user.is_authenticated():
+            return ApplicationType.objects.order_by('order').filter(visible=True)
+        return ApplicationType.objects.none()
 
     @list_route(methods=['GET',])
     def searchable_application_types(self, request, *args, **kwargs):
