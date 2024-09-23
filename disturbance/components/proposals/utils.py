@@ -10,6 +10,7 @@ from django.conf import settings
 from django.contrib.gis.geos import Point, GEOSGeometry
 from django.db.models import Q
 from django.urls import reverse
+from django.core.paginator import Paginator
 from ledger.accounts.models import EmailUser, Document
 from rest_framework import serializers
 
@@ -2191,38 +2192,38 @@ def gen_shapefile(user, qs=Proposal.objects.none(), filter_kwargs={}, geojson=Fa
         qs = qs.exclude(Q(processing_status__in=status_exc) | Q(shapefile_json__isnull=True)).filter(**filter_kwargs)
     else:
         qs = Proposal.objects.exclude(Q(processing_status__in=status_exc) | Q(shapefile_json__isnull=True)).filter(**filter_kwargs)
-    p_ids = qs.values_list('id', flat=True)
+    paginator = Paginator(qs, settings.QS_PAGINATOR_SIZE) # chunks
 
     t0 = time.time()
     logger.info('create_shapefile: 0')
 
     columns = ['org','app_no','prop_title','appissdate','appstadate','appexpdate','appstatus','assocprop','proptype','propurl','prop_activ','geometry']
     gdf_concat = gpd.GeoDataFrame(columns=["geometry"], crs=settings.CRS, geometry="geometry")
-    for p_id in p_ids:
-        try: 
-            p = Proposal.objects.get(id=p_id)
-            gdf = gpd.GeoDataFrame.from_features(p.shapefile_json)
-            gdf.set_crs = settings.CRS
-            #gdf['geometry'] = gdf['geometry']
+    for page_num in paginator.page_range:
+        for p in paginator.page(page_num).object_list:
+            try: 
+                gdf = gpd.GeoDataFrame.from_features(p.shapefile_json)
+                gdf.set_crs = settings.CRS
+                #gdf['geometry'] = gdf['geometry']
 
-            gdf['org']        = p.applicant.name if p.applicant else None
-            gdf['app_no']     = p.approval.lodgement_number if p.approval else None
-            gdf['prop_title'] = p.title
-            gdf['appissdate'] = p.approval.issue_date.strftime("%Y-%d-%d") if p.approval else None
-            gdf['appstadate'] = p.approval.start_date.strftime("%Y-%d-%d") if p.approval else None
-            gdf['appexpdate'] = p.approval.expiry_date.strftime("%Y-%d-%d") if p.approval else None
-            gdf['appstatus']  =  p.approval.status if p.approval else None
-            gdf['assocprop']  = list(Proposal.objects.filter(approval__lodgement_number=p.approval.lodgement_number).values_list('lodgement_number', flat=True)) if p.approval else None
-            gdf['proptype']   = p.proposal_type
-            #gdf['propurl']    = request.build_absolute_uri(reverse('internal-proposal-detail',kwargs={'proposal_pk': p.id}))
-            gdf['propurl']    = settings.BASE_URL + reverse('internal-proposal-detail',kwargs={'proposal_pk': p.id})
-            gdf['prop_activ'] = p.activity
+                gdf['org']        = p.applicant.name if p.applicant else None
+                gdf['app_no']     = p.approval.lodgement_number if p.approval else None
+                gdf['prop_title'] = p.title
+                gdf['appissdate'] = p.approval.issue_date.strftime("%Y-%d-%d") if p.approval else None
+                gdf['appstadate'] = p.approval.start_date.strftime("%Y-%d-%d") if p.approval else None
+                gdf['appexpdate'] = p.approval.expiry_date.strftime("%Y-%d-%d") if p.approval else None
+                gdf['appstatus']  =  p.approval.status if p.approval else None
+                gdf['assocprop']  = list(Proposal.objects.filter(approval__lodgement_number=p.approval.lodgement_number).values_list('lodgement_number', flat=True)) if p.approval else None
+                gdf['proptype']   = p.proposal_type
+                #gdf['propurl']    = request.build_absolute_uri(reverse('internal-proposal-detail',kwargs={'proposal_pk': p.id}))
+                gdf['propurl']    = settings.BASE_URL + reverse('internal-proposal-detail',kwargs={'proposal_pk': p.id})
+                gdf['prop_activ'] = p.activity
 
-            #gdf.set_crs = settings.CRS
-            gdf_concat = pd.concat([gdf_concat, gdf[columns]], ignore_index=True)
+                #gdf.set_crs = settings.CRS
+                gdf_concat = pd.concat([gdf_concat, gdf[columns]], ignore_index=True)
 
-        except Exception as ge:
-            logger.error(f'Cannot append proposal {p_id} to shapefile: {ge}')
+            except Exception as ge:
+                logger.error(f'Cannot append proposal {p} to shapefile: {ge}')
 
     t1 = time.time()
     logger.info(f'create_shapefile: 1 - {t1 - t0}')

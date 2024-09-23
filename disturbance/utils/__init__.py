@@ -719,15 +719,17 @@ def find_and_remove_keys(data, target_keys):
    return data
 
 def remove_prefilled_data(proposal):
+
     try:
-        data_keys=[]
-        if proposal and proposal.layer_data:
-            for layer in proposal.layer_data:
-                if 'name' in layer:
-                    data_keys.append(layer['name'])
-        if data_keys:
-            new_data=find_and_remove_keys(proposal.data[0], data_keys)
-            proposal.data=[new_data]
+        if proposal.data:
+            data_keys=[]
+            if proposal and proposal.layer_data:
+                for layer in proposal.layer_data:
+                    if 'name' in layer:
+                        data_keys.append(layer['name'])
+            if data_keys:
+                new_data=find_and_remove_keys(proposal.data[0], data_keys)
+                proposal.data=[new_data]
         return proposal
     except:
         raise

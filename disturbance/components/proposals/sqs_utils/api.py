@@ -14,6 +14,7 @@ from ledger.settings_base import TIME_ZONE, DATABASES
 from django.conf import settings
 from django.db.models import F, Q
 from django.db import transaction, connection
+from django.core.paginator import Paginator
 from django.core.exceptions import ValidationError
 from rest_framework import viewsets, serializers, status, views
 from rest_framework.decorators import detail_route, list_route, renderer_classes
@@ -154,9 +155,46 @@ class ProposalSqsViewSet(viewsets.ModelViewSet):
             print(traceback.print_exc())
             raise serializers.ValidationError(str(e))
 
+
     @list_route(methods=['GET', ])
     @api_exception_handler
     def layers_used(self, request, *args, **kwargs):
+        if not is_internal(self.request):
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        response = cache.get(f'layers_used')
+
+        if response:
+            logger.info('Export Layers Used: Retrieved from cache.')
+        else:
+
+            qs = Proposal.objects.filter(layer_data__isnull=False)
+            paginator = Paginator(qs, settings.QS_PAGINATOR_SIZE) # chunks 
+
+            rows = []
+            rows.append(('Proposal Number', 'Proposal Submitter', 'Proposal Section', 'Layer Name', 'Layer Version', 'Layer Modified Date', 'SQS Timestamp'))
+            #for p_id in p_ids:
+            for page_num in paginator.page_range:
+                for proposal in paginator.page(page_num).object_list:
+                    for data in proposal.layer_data:
+                        rows.append((proposal.lodgement_number, proposal.submitter, data['name'], data['layer_name'], data['layer_version'], data['layer_modified_date'], data['sqs_timestamp']))
+
+            filename = f'layers_used_{datetime.now().strftime("%Y%m%dT%H%M")}.csv'
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = f'attachment; filename={filename}'
+            response['filename'] = filename 
+            writer = csv.writer(response)
+            for row in rows:
+                writer.writerow(row)
+
+            cache.set(f'layers_used', response, settings.LAYERS_USED_CACHE_TIMEOUT)
+
+        return response
+
+
+    @list_route(methods=['GET', ])
+    @api_exception_handler
+    def __layers_used(self, request, *args, **kwargs):
         if not is_internal(self.request):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 

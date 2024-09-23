@@ -1,5 +1,3 @@
-
-
 import logging
 import copy
 import subprocess
@@ -27,6 +25,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.core.exceptions import ValidationError
 from django.contrib.postgres.fields.jsonb import JSONField
 from django.utils import timezone
+from django.core.paginator import Paginator
 
 from dirtyfields import DirtyFieldsMixin
 from reversion.models import Version
@@ -3515,13 +3514,14 @@ def search_reference(reference_number):
 def search_sections(proposal_type_id, section_label,question_id,option_label,is_internal= True, region=None,district=None,activity=None):
     from disturbance.utils import search_section
     #print(application_type_name, section_label,question_label,option_label,is_internal)
-    qs = []
+    res_qs = []
     if is_internal:
         if(not proposal_type_id or not section_label or not question_id or not option_label):
             raise ValidationError('Some of the mandatory fields are missing')
         proposal_type=ProposalType.objects.get(id=proposal_type_id)
         proposal_type_name=proposal_type.name
-        proposal_list = Proposal.objects.filter(application_type__name=proposal_type_name, data__isnull=False).exclude(processing_status__in=[Proposal.PROCESSING_STATUS_DISCARDED, Proposal.PROCESSING_STATUS_DRAFT])
+        qs = Proposal.objects.filter(application_type__name=proposal_type_name, data__isnull=False).exclude(processing_status__in=[Proposal.PROCESSING_STATUS_DISCARDED, Proposal.PROCESSING_STATUS_DRAFT])
+
         question=MasterlistQuestion.objects.get(id=question_id)
         filter_conditions={}
         if region:
@@ -3531,16 +3531,15 @@ def search_sections(proposal_type_id, section_label,question_id,option_label,is_
         if activity:
             filter_conditions['activity']=activity
         if filter_conditions:
-            proposal_list=proposal_list.filter(**filter_conditions)
+            qs=qs.filter(**filter_conditions)
 
-        p_ids = proposal_list.values_list('id', flat=True)
-        if p_ids:
-            for idx, p_id in enumerate(p_ids):
-                p = Proposal.objects.get(id=p_id)
+        paginator = Paginator(qs, settings.QS_PAGINATOR_SIZE) # chunks
+        for page_num in paginator.page_range:
+            for p in paginator.page(page_num).object_list:
                 if p.data:
                     try:
                         results = search_section(p.schema, section_label, question, p.data, option_label)
-                        print(f'{idx}: {p} - {results}')
+                        #print(f'{idx}: {p} - {results}')
                         final_results = {}
                         if results:
                             # for r in results:
@@ -3553,13 +3552,12 @@ def search_sections(proposal_type_id, section_label,question_id,option_label,is_
                                 'applicant': p.applicant.name,
                                 'text': results[0],
                                 }
-                            qs.append(res)
+                            res_qs.append(res)
                     except Exception as e:
                         print(e)
                         raise
 
-
-    return qs
+    return res_qs
 
 def add_properties_to_feature(features, proposal, request):
     new_properties={}

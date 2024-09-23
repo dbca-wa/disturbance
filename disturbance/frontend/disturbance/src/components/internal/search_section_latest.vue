@@ -161,9 +161,20 @@
                     <div class="row">
                       <div class="col-lg-12">
                         <div >
-                          <input type="button" @click.prevent="search" class="btn btn-primary" style="margin-bottom: 5px"value="Search"/>
-                          <input type="reset" @click.prevent="reset" class="btn btn-primary" style="margin-bottom: 5px"value="Clear"/>
-                          <input type="geoJsonButtonClicked" @click.prevent="geoJsonButtonClicked" class="btn btn-primary" style="margin-bottom: 5px"value="Get Spatial File"/>
+                          <button type="button" class="btn btn-primary" @click.prevent="search()" :disabled="search_btn_disabled">
+                              <i v-if="search_btn_disabled" class="fa fa-search fa-spinner fa-spin"></i>
+                              <i v-else class="fa fa-search"></i>
+                              Search
+                          </button>
+                          <button type="button" class="btn btn-primary" @click.prevent="reset">
+                              <i class="fa fa-eraser"></i>
+                              Clear
+                          </button>
+                          <button type="button" class="btn btn-primary" @click.prevent="geoJsonButtonClicked" :disabled="get_spatialfile_btn_disabled">
+                              <i v-if="get_spatialfile_btn_disabled" class="fa fa-download fa-spinner fa-spin"></i>
+                              <i v-else class="fa fa-download"></i>
+                              Get Spatial File
+                          </button>
                         </div>
                       </div> 
                     </div>
@@ -211,6 +222,8 @@ export default {
       searchProposal: true,
       searchApproval: false,
       searchCompliance: false,
+      search_btn_disabled: false,
+      get_spatialfile_btn_disabled: false,
       referenceWord: '',
       keyWord: null,
       selected_organisation:'',
@@ -414,7 +427,8 @@ export default {
           }
           else
           {
-            $('#loadingSpinner2').show();
+            //$('#loadingSpinner2').show();
+            vm.search_btn_disabled = true;
             vm.$http.post('/api/search_sections.json',{
               proposal_type_id: vm.selected_proposal_type_id,
               region: vm.selected_region,
@@ -429,11 +443,13 @@ export default {
               vm.$refs.proposal_datatable.vmDataTable.clear()
               vm.$refs.proposal_datatable.vmDataTable.rows.add(vm.results);
               vm.$refs.proposal_datatable.vmDataTable.draw();
-               $('#loadingSpinner2').hide();
+              //$('#loadingSpinner2').hide();
+              vm.search_btn_disabled = false;
             },
             err => {
               console.log(err);
-               $('#loadingSpinner2').hide();
+              //$('#loadingSpinner2').hide();
+              vm.search_btn_disabled = false;
             });
           }
 
@@ -694,6 +710,7 @@ export default {
        geoJsonButtonClicked: function () {
                 let vm = this
                 //let proposal_lodgement_numbers=[];
+                vm.get_spatialfile_btn_disabled = true;
                 let proposal_lodgement_numbers=vm.$refs.proposal_datatable.vmDataTable.columns(0).data().toArray()
                 if(proposal_lodgement_numbers[0].length>0){
                     vm.$http.post('/api/get_search_geojson.json',{
@@ -708,11 +725,13 @@ export default {
                     //vm.download_content(res.body.search_geojson, 'DAS_layers.geojson', 'text/plain');
                     vm.errors = false; 
                     vm.errorString = '';
+                    vm.get_spatialfile_btn_disabled = false;
                     },
                   error => {
                     console.log(error);
                     vm.errors = true;
                     vm.errorString = helpers.apiVueResourceError(error);
+                    vm.get_spatialfile_btn_disabled = false;
                   });
                 }
                 else{
@@ -721,6 +740,7 @@ export default {
                       'No search results to include in the Spatial file',
                       'error'
                   );
+                  vm.get_spatialfile_btn_disabled = false;
                 }
                 
             },

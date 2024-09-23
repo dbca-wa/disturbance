@@ -1188,10 +1188,10 @@ export default {
 	    //self.spatial_query_question_id = null;
             self.missing_fields = [];
              
-//            if (self.has_form_errors()) {
-//                self.isModalOpen = true;
-//                return;
-//            }
+            if (self.has_form_errors()) {
+                self.isModalOpen = true;
+                return;
+            }
 
             if (data.id === '') {
                 // Add New Question
@@ -1248,10 +1248,10 @@ export default {
             self.missing_fields = [];
             console.log(data);
              
-//            if (self.has_form_errors()) {
-//                self.isModalOpen = true;
-//                return;
-//            }
+            if (self.has_layer_form_errors()) {
+                self.isModalOpen = true;
+                return;
+            }
 
 
             if (data.id === '') {
@@ -1614,35 +1614,37 @@ export default {
         },
 
         has_form_errors: function () {
-            console.log
             if (!this.spatialquery.question) { this.missing_fields.push({'label':'Question field is required'}); }
             if ((!this.spatialquery.answer_mlq || this.spatialquery.answer_mlq==-1) && this.masterlistQuestionOptions) { this.missing_fields.push({'label':'Answer field is required'}); }
-            if (!this.spatialquery.layer) { this.missing_fields.push({'label':'Layer Name field is required'}); }
-            //if (this.spatialquery.layer_url==='') { this.missing_fields.push({'label':'Layer URL field is required'}); }
             if (!this.spatialquery.group) { this.missing_fields.push({'label':'Spatial Question Group field is required'}); }
-            if (!this.spatialquery.how) { this.missing_fields.push({'label':'Intersector operator field is required'}); }
-            if (!this.spatialquery.column_name) { this.missing_fields.push({'label':'Column name field is required'}); }
-            if (!this.spatialquery.operator) { this.missing_fields.push({'label':'Operator field is required'}); }
-            if (!this.spatialquery.buffer) { this.spatialquery.buffer=0 }
 
-//            if (!this.spatialquery.answer && ['text', 'text_area'].includes(this.spatialquery.answer_type)) { this.missing_fields.push({'label':'Answer (Proponent Section) field is required'}); }
-	    if (!this.spatialquery.proponent_items[0]['answer'] && ['text', 'text_area'].includes(this.spatialquery.answer_type)) { 
+            if (this.missing_fields.length>0) {
+                return true;
+            } 
+            return false
+        },
+
+
+        has_layer_form_errors: function () {
+            if (!this.spatialquerylayer.layer) { this.missing_fields.push({'label':'Layer Name field is required'}); }
+            //if (this.spatialquerylayer.layer_url==='') { this.missing_fields.push({'label':'Layer URL field is required'}); }
+            if (!this.spatialquerylayer.how) { this.missing_fields.push({'label':'Intersector operator field is required'}); }
+            if (!this.spatialquerylayer.column_name) { this.missing_fields.push({'label':'Column name field is required'}); }
+            if (!this.spatialquerylayer.operator) { this.missing_fields.push({'label':'Operator field is required'}); }
+            if (!this.spatialquerylayer.buffer) { this.spatialquerylayer.buffer=0 }
+
+	    if (!this.spatialquerylayer.proponent_items[0]['answer'] && ['text', 'text_area'].includes(this.spatialquery.answer_type)) { 
                 this.missing_fields.push({'label':'Answer (Proponent Section) field is required'}); 
             }
 
-//	    for (let i = 0; i < this.spatialquery.proponent_items.length; i++) {
-//	        if (this.spatialquery.proponent_items[i])
-//	    }
-
-            //if (this.spatialquery.operator && (this.spatialquery.operator == 'Equals' || this.spatialquery.operator != 'GreaterThan' || this.spatialquery.operator != 'LessThan')) { 
-            if(['Equals','GreaterThan','LessThan'].includes(this.spatialquery.operator)) {
-                if (!this.spatialquery.value) { 
-                    this.missing_fields.push({'label':'Value field is required (for Equals/GreaterThan/LessThan operators)'}); 
+            if(['Equals','GreaterThan','LessThan','Contains', 'OR', 'Like'].includes(this.spatialquerylayer.operator)) {
+                if (!this.spatialquerylayer.value) { 
+                    this.missing_fields.push({'label':'Value field is required (for Equals/GreaterThan/LessThan/Contains/OR/Like operators)'}); 
                 }
             }
 
-            if (!this.spatialquery.visible_to_proponent && !this.masterlistQuestionOptions) { this.missing_fields.push({'label':'Visible to Proponent field is required'}); }
-            if (!this.spatialquery.visible_to_proponent && this.masterlistQuestionOptions) { this.spatialquery.visible_to_proponent=true; }
+            //if (!this.spatialquery.visible_to_proponent && !this.masterlistQuestionOptions) { this.missing_fields.push({'label':'Visible to Proponent field is required'}); }
+            //if (!this.spatialquery.visible_to_proponent && this.masterlistQuestionOptions) { this.spatialquery.visible_to_proponent=true; }
 
             if (this.missing_fields.length>0) {
                 return true;
@@ -1660,6 +1662,7 @@ export default {
 		this.spatialquery.id = '';
 		this.spatialquery.other_data = {'show_add_info_section_prop': false};
                 this.filterMasterlistQuestion = ''
+                //self.filterMasterlistOption = ''
 
 		//this.addedHeaders = [];
 		//this.addedExpanders = [];
