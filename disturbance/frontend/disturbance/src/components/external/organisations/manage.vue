@@ -1053,19 +1053,23 @@ export default {
     mounted: function(){
         this.personal_form = document.forms.personal_form;
         let vm=this;
-         let initialisers = [
-             utils.fetchCountries(),
-             utils.fetchOrganisation(vm.org_id),
-             utils.fetchOrganisationPermissions(vm.org_id)
-         ]
-         Promise.all(initialisers).then(data => {
-                 vm.countries = data[0];
-                 vm.org = data[1];
-                 vm.myorgperms = data[2];
-                 vm.org.address = vm.org.address != null ? vm.org.address : {};
-                 vm.org.pins = vm.org.pins != null ? vm.org.pins : {};
+        let initialisers = [
+            utils.fetchCountries(),
+            utils.fetchOrganisation(vm.org_id),
+            utils.fetchOrganisationPermissions(vm.org_id)
+        ]
+        Promise.all(initialisers).then(data => {
+                vm.countries = data[0];
+                vm.org = data[1];
+                vm.myorgperms = data[2];
+                vm.org.address = vm.org.address != null ? vm.org.address : {};
+                vm.org.pins = vm.org.pins != null ? vm.org.pins : {};
             
-         });
+        })
+        .catch(error => {
+            console.error("Error fetching organisation details:", error);
+        });
+
     },
     updated: function(){
         let vm = this;
