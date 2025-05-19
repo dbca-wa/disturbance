@@ -130,7 +130,8 @@ export default {
                         data:"lodgement_date",
                         mRender:function(data,type,full){
                             return moment(data).format('DD/MM/YYYY')
-                        }
+                        },
+                        orderable: false,
                     },
                     {
                         data:"assigned_officer",
@@ -151,7 +152,8 @@ export default {
                                 //var column = "<a href='/internal/organisations/access/\__ID__\'> Process </a>";
                             }
                             return column.replace(/__ID__/g, data);
-                        }
+                        },
+                        orderable: false,
                     },
                 ],
                 initComplete: function(){

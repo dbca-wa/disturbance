@@ -1,4 +1,4 @@
-<tmplate lang="html">
+<template lang="html">
     <div v-if="proposal" class="container" id="internalProposal">
         <template v-if="is_local">
         </template>

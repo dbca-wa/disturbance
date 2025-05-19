@@ -267,6 +267,7 @@ export default {
                             return data != '' && data != null ? moment(data).format(vm.dateFormat): '';
                         },
                         name: "proposal__lodgement_date",
+                        orderable: false,
                         defaultContent: '',
                     },
                     {
