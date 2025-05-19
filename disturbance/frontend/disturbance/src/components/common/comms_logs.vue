@@ -95,7 +95,6 @@ export default {
                         data:"when",
                         orderable: false,
                         mRender:function(data,type,full){
-                            //return moment(data).format(vm.DATE_TIME_FORMAT)
                             return moment(data).format(vm.dateFormat);
                         }
                     },
@@ -124,8 +123,6 @@ export default {
                         title: 'Date',
                         data: 'created',
                         render: function (date) {
-                            //return moment(date).format("DD-MMM-YYYY HH:mm:ss");
-                            //return moment(date).format(vm.DATE_TIME_FORMAT);
                             return moment(date).format(vm.dateFormat);
                         }
                     },
@@ -133,14 +130,9 @@ export default {
                         title: 'Type',
                         data: 'type'
                     },
-                    /*{
-                        title: 'Reference',
-                        data: 'reference'
-                    },*/
                     {
                         title: 'To',
                         data: 'to',
-                        //render: vm.commaToNewline
                         'render': function (value) {
                             var ellipsis = '...',
                                 truncated = _.truncate(value, {
@@ -174,8 +166,7 @@ export default {
                     {
                         title: 'CC',
                         data: 'cc',
-                        //render: vm.commaToNewline
-                          'render': function (value) {
+                        'render': function (value) {
                             var ellipsis = '...',
                                 truncated = _.truncate(value, {
                                     length: 25,
@@ -334,6 +325,7 @@ export default {
                     <table id="${commsLogId}" class="hover table table-striped table-bordered dt-responsive " cellspacing="0" width="100%">
                     </table>`
                 },
+                sanitize:false,
                 html: true,
                 title: 'Communications Log',
                 container: 'body',
@@ -342,7 +334,6 @@ export default {
                 template: `<div class="popover ${popover_name}" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>`,
             }).on('inserted.bs.popover', function () {
                 table = $('#'+commsLogId).DataTable(datatable_options);
-
                 // activate popover when table is drawn.
                 table.on('draw.dt', function () {
                     var $tablePopover = $(this).find('[data-toggle="popover"]');
@@ -357,18 +348,11 @@ export default {
                 });
             }).on('shown.bs.popover', function () {
                 var el = ref;
-                var popoverheight = parseInt($('.'+popover_name).height());
-
                 var popover_bounding_top = parseInt($('.'+popover_name)[0].getBoundingClientRect().top);
-                var popover_bounding_bottom = parseInt($('.'+popover_name)[0].getBoundingClientRect().bottom);
-
+                
                 var el_bounding_top = parseInt($(el)[0].getBoundingClientRect().top);
-                var el_bounding_bottom = parseInt($(el)[0].getBoundingClientRect().top);
                 
                 var diff = el_bounding_top - popover_bounding_top;
-
-                var position = parseInt($('.'+popover_name).position().top);
-                var pos2 = parseInt($(el).position().top) - 5;
 
                 var x = diff + 5;
                 $('.'+popover_name).children('.arrow').css('top', x + 'px');
@@ -394,6 +378,7 @@ export default {
                         </tbody>
                     </table>`
                 },
+                sanitize:false,
                 html: true,
                 title: 'Action Log',
                 container: 'body',
@@ -404,18 +389,12 @@ export default {
                 table = $('#'+actionLogId).DataTable(datatable_options);
             }).on('shown.bs.popover', function () {
                 var el = ref;
-                var popoverheight = parseInt($('.'+popover_name).height());
-
+                
                 var popover_bounding_top = parseInt($('.'+popover_name)[0].getBoundingClientRect().top);
-                var popover_bounding_bottom = parseInt($('.'+popover_name)[0].getBoundingClientRect().bottom);
-
+                
                 var el_bounding_top = parseInt($(el)[0].getBoundingClientRect().top);
-                var el_bounding_bottom = parseInt($(el)[0].getBoundingClientRect().top);
                 
                 var diff = el_bounding_top - popover_bounding_top;
-
-                var position = parseInt($('.'+popover_name).position().top);
-                var pos2 = parseInt($(el).position().top) - 5;
 
                 var x = diff + 5;
                 $('.'+popover_name).children('.arrow').css('top', x + 'px');
