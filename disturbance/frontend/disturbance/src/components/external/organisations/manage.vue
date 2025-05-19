@@ -250,34 +250,41 @@ export default {
                         data: 'created',
                         render: function (date) {
                             return moment(date).format(vm.DATE_TIME_FORMAT);
-                        }
+                        },
+                        defaultContent: '',
                     },
                     {
                         title: 'Type',
-                        data: 'type'
+                        data: 'type',
+                        defaultContent: '',
                     },
                     {
                         title: 'Reference',
-                        data: 'reference'
+                        data: 'reference',
+                        defaultContent: '',
                     },
                     {
                         title: 'To',
                         data: 'to',
-                        render: vm.commaToNewline
+                        render: vm.commaToNewline,
+                        defaultContent: '',
                     },
                     {
                         title: 'CC',
                         data: 'cc',
-                        render: vm.commaToNewline
+                        render: vm.commaToNewline,
+                        defaultContent: '',
                     },
                     {
                         title: 'From',
                         data: 'fromm',
-                        render: vm.commaToNewline
+                        render: vm.commaToNewline,
+                        defaultContent: '',
                     },
                     {
                         title: 'Subject/Desc.',
-                        data: 'subject'
+                        data: 'subject',
+                        defaultContent: '',
                     },
                     {
                         title: 'Text',
@@ -310,7 +317,8 @@ export default {
                             //TODO why this is not working?
                             // the call to popover is done in the 'draw' event
                             $(cell).popover();
-                        }
+                        },
+                        defaultContent: '',
                     },
                     {
                         title: 'Documents',
@@ -339,7 +347,8 @@ export default {
                                 result += '<a href="' + url + '" target="_blank"><p>' + docName+ '</p></a><br>';
                             });
                             return result;
-                        }
+                        },
+                        defaultContent: '',
                     }
                 ]
             },
@@ -367,7 +376,8 @@ export default {
                             } else {
                                 return full.first_name + " " + full.last_name;
                             }
-                        }
+                        },
+                        defaultContent: '',
                     },
                     {data:'phone_number'},
                     {data:'mobile_number'},
@@ -382,7 +392,8 @@ export default {
                             }
                             links +=  `<a data-email-edit='${full.email}' data-name-edit='${name}' data-edit-id='${full.id}' class="edit-contact">Edit</a><br/>`;
                             return links;
-                        }
+                        },
+                        defaultContent: '',
                     }
                   ],
                   processing: true
@@ -403,7 +414,8 @@ export default {
                     {
                         mRender:function (data,type,full) {
                             return full.first_name + " " + full.last_name;
-                        }
+                        },
+                        defaultContent: '',
                     },
                     {data:'user_role'},
                     {data:'email'},
@@ -432,12 +444,15 @@ export default {
                                 }
                             }        
                             return links;
-                        }
+                        },
+                        defaultContent: '',
                     }
                   ],
                   processing: true,
                                   
-            }
+            },
+             // Note: Had to add this variable, it didn't exist. It is the model of the datatable component. What is it for?
+            filterOrgContactStatus: null,
         }
     },
     components: {
