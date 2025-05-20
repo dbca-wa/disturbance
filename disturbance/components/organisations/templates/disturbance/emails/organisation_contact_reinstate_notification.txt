@@ -1,4 +1,4 @@
-{%  extends base_email_html %}
+{%  extends base_email_text %}
 
 {%  block content %}
      Your have been reinstated to:
