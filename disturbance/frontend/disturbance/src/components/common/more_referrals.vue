@@ -210,6 +210,7 @@ export default {
                     </table>`
                 },
                 template: `<div class="popover ${popover_name}" role="tooltip"><div class="arrow" style="top:110px;"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>`,
+                sanitize:false,
                 html: true,
                 title: 'Referrals',
                 container: 'body',
