@@ -600,7 +600,6 @@ class ProfileListener(object):
 
         # delete the profile's email from email identity and social auth
         EmailIdentity.objects.filter(email=instance.email, user=instance.user).delete()
-        UserSocialAuth.objects.filter(provider="email", uid=instance.email, user=instance.user).delete()
 
     @staticmethod
     @receiver(pre_save, sender=Profile)
@@ -627,15 +626,10 @@ class ProfileListener(object):
         if auth_identity:
             # add email to email identity and social auth if not exist
             EmailIdentity.objects.get_or_create(email=instance.email, user=instance.user)
-            if not UserSocialAuth.objects.filter(user=instance.user, provider="email", uid=instance.email).exists():
-                user_social_auth = UserSocialAuth.create_social_auth(instance.user, instance.email, 'email')
-                user_social_auth.extra_data = {'email': [instance.email]}
-                user_social_auth.save()
 
         if original_instance and (original_instance.email != instance.email or not auth_identity):
             # delete the profile's email from email identity and social auth
             EmailIdentity.objects.filter(email=original_instance.email, user=original_instance.user).delete()
-            UserSocialAuth.objects.filter(provider="email", uid=original_instance.email, user=original_instance.user).delete()
 
         if not original_instance:
             address = instance.postal_address
@@ -739,3 +733,43 @@ class AddressListener(object):
                     raise ValidationError('Multiple profiles cannot have the same address.')
                 else:
                     raise
+
+class EmailUserListener(object):
+    """
+    Event listener for EmailUser
+
+    """
+    @staticmethod
+    @receiver(post_delete, sender=EmailUser)
+    def _post_delete(sender, instance, **kwargs):
+        # delete the profile's email from email identity and social auth
+        if not instance.is_dummy_user:
+            EmailIdentity.objects.filter(email=instance.email, user=instance).delete()
+
+    @staticmethod
+    @receiver(pre_save, sender=EmailUser)
+    def _pre_save(sender, instance, **kwargs):
+        if instance.pk:
+            original_instance = EmailUser.objects.get(pk=instance.pk)
+            setattr(instance, "_original_instance", original_instance)
+        elif hasattr(instance, "_original_instance"):
+            delattr(instance, "_original_instance")
+
+    @staticmethod
+    @receiver(post_save, sender=EmailUser)
+    def _post_save(sender, instance, **kwargs):
+        original_instance = getattr(instance, "_original_instance") if hasattr(instance, "_original_instance") else None
+        # add user's email to email identity and social auth if not exist
+        if not instance.is_dummy_user:
+            EmailIdentity.objects.get_or_create(email=instance.email, user=instance)
+            
+        if original_instance and original_instance.email != instance.email:
+            if not original_instance.is_dummy_user:
+                # delete the user's email from email identity and social auth
+                EmailIdentity.objects.filter(email=original_instance.email, user=original_instance).delete()
+            # update profile's email if profile's email is original email
+            Profile.objects.filter(email=original_instance.email, user=instance).update(email=instance.email)
+
+        if original_instance and any([original_instance.first_name != instance.first_name, original_instance.last_name != instance.last_name]):
+            # user changed first name or last name, send a named_changed signal.
+            name_changed.send(sender=instance.__class__, user=instance)
