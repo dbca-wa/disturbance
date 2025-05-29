@@ -39,7 +39,7 @@ stages:
         command: buildAndPush
         dockerfile: '$(Build.SourcesDirectory)/dockerdev/Dockerfile'
         tags: | 
-              disturbance_dev_latest
-              disturbance_dev_$(tagDate)              
+              disturbance_django_5_dev_latest
+              disturbance_django_5_dev_$(tagDate)              
         containerRegistry: DockerHub
         repository: dbcawa/docker_app_dev   
