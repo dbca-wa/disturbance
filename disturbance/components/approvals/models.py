@@ -242,8 +242,6 @@ class Approval(RevisionedMixin):
 
     @property
     def relevant_applicant_name(self):
-        logger.info(f'in relevant_applicant_name')
-        logger.info(f'self: {self}')
         if self.applicant:
             return self.applicant.name
         elif self.proxy_applicant:
