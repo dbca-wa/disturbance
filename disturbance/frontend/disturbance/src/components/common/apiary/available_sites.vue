@@ -656,7 +656,8 @@
                 let requested_availability = current_availability === 'true' ? false : true
                 e.stopPropagation()
 
-                vm.$http.patch('/api/apiary_site/' + apiary_site_id + '/', { 'available': requested_availability }).then(
+                // vm.$http.patch('/api/apiary_site/' + apiary_site_id + '/', { 'available': requested_availability }).then(
+                vm.$http.patch('/api/apiary_site/' + apiary_site_id, { 'available': requested_availability }).then(
                     async function(accept){
                         // Update the site in the table
                         let site_updated = accept.body

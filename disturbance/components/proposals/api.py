@@ -600,6 +600,17 @@ class ApiarySiteViewSet(viewsets.ModelViewSet):
     queryset = ApiarySite.objects.none()
     serializer_class = ApiarySiteSerializer
 
+    def get_queryset(self):
+        if is_internal(self.request):
+            return ApiarySite.objects.all()
+        elif is_customer(self.request):
+            user_orgs = [org.id for org in self.request.user.disturbance_organisations.all()]
+            approval_queryset =  Approval.objects.filter(Q(applicant_id__in = user_orgs)|Q(proxy_applicant_id=self.request.user.id)).exclude(status='hidden')
+            apiary_sites = ApiarySite.objects.filter(approval_set__in=approval_queryset).distinct()
+            return apiary_sites
+        else:
+            return ApiarySite.objects.none()
+
     def is_internal_system(self, request):
         apiary_site_list_token = request.query_params.get(ApiaryGlobalSettings.KEY_APIARY_SITES_LIST_TOKEN, None)
         if apiary_site_list_token:
@@ -627,18 +638,18 @@ class ApiarySiteViewSet(viewsets.ModelViewSet):
         relevant_applicant = apiary_site.get_relevant_applicant_name()
         return Response({'relevant_applicant': relevant_applicant})
 
-    def get_queryset(self):
-        user = self.request.user
+    # def get_queryset(self):
+    #     user = self.request.user
 
-        # Only internal user is supposed to access here
-        if is_internal(self.request):  # user.is_authenticated():
-            return ApiarySite.objects.all()
-        #elif is_customer(self.request):
-            # qs = qs.exclude(status=ApiarySite.STATUS_DRAFT)
-            #pass
-        else:
-            #logger.warn("User is neither internal user nor customer: {} <{}>".format(user.get_full_name(), user.email))
-            return ApiarySite.objects.none()
+    #     # Only internal user is supposed to access here
+    #     if is_internal(self.request):  # user.is_authenticated():
+    #         return ApiarySite.objects.all()
+    #     #elif is_customer(self.request):
+    #         # qs = qs.exclude(status=ApiarySite.STATUS_DRAFT)
+    #         #pass
+    #     else:
+    #         #logger.warn("User is neither internal user nor customer: {} <{}>".format(user.get_full_name(), user.email))
+    #         return ApiarySite.objects.none()
         
     @detail_route(methods=['POST',])
     @basic_exception_handler
@@ -850,7 +861,7 @@ class ApiarySiteViewSet(viewsets.ModelViewSet):
         serializer_proposal.data['features'].extend(serializer_approval.data['features'])
         return Response(serializer_proposal.data)
 
-    @basic_exception_handler
+    #@basic_exception_handler
     def partial_update(self, request, *args, **kwargs):
         with transaction.atomic():
             apiary_site = self.get_object()
@@ -884,17 +895,6 @@ class ApiarySiteViewSet(viewsets.ModelViewSet):
                 print(serializer.data['properties']['available'])
                 return Response(serializer.data)
 
-            # instance = self.get_object()
-            #
-            # new_status = request.data.get('status', None)
-            # all_statuses = list(map(lambda x: x[0], ApiarySite.STATUS_CHOICES))
-            # if new_status and new_status in all_statuses:
-            #     instance.status = new_status
-            #     instance.save()
-            #
-            # serializer = ApiarySiteSerializer(instance)
-            #
-            # return Response(serializer.data)
 
 
 class ProposalApiaryViewSet(viewsets.ModelViewSet):

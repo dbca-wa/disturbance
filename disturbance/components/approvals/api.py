@@ -359,7 +359,8 @@ class ApprovalViewSet(viewsets.ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         approval = self.get_object()
         serializer = self.get_serializer(approval, context={'request': request})
-        return Response(serializer.data)
+        res = Response(serializer.data)
+        return res
 
     @detail_route(methods=['GET',])
     def approval_wrapper(self, request, *args, **kwargs):
@@ -369,7 +370,8 @@ class ApprovalViewSet(viewsets.ModelViewSet):
         serializer_class = ApprovalWrapperSerializer #self.internal_serializer_class()
         #serializer = serializer_class(instance,context={'request':request})
         serializer = serializer_class(instance)
-        return Response(serializer.data)
+        res = Response(serializer.data)
+        return res
 
     @detail_route(methods=['GET',])
     @basic_exception_handler
