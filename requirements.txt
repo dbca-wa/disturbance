@@ -77,3 +77,4 @@ rtree==0.9.7
 
 git+https://github.com/dbca-wa/appmonitor_client.git#egg=appmonitor_client
 python-decouple==3.8
+setuptools>=78.1.1 # not directly required, pinned by Snyk to avoid a vulnerability
