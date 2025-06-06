@@ -825,7 +825,8 @@ export default {
                     blank_fields.push(' You must select at least one site to transfer')
                 }
              }
-             else{
+             //else{
+             if(vm.proposal.application_type == 'Disturbance'){
                 if((!vm.proposal.region) || (!vm.proposal.district) || (vm.proposal.approval_level=='')) {
                     if(vm.$refs.proposal_apply.sub_activities1.length>0 && vm.proposal.sub_activity_level1=='') {
                         blank_fields.push('Sub Activity-1 cannot be blank')
