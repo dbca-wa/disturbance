@@ -597,6 +597,7 @@ def getPrivateFile(request):
             if extension == 'eml':
                 return HttpResponse(the_data, content_type="application/vnd.ms-outlook")
 
+            mimetypes.types_map.update({'.prj': 'application/octet-stream'})
             return HttpResponse(the_data, content_type=mimetypes.types_map['.'+str(extension.lower())])
        
     return HttpResponse()
