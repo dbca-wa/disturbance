@@ -824,18 +824,18 @@ export default {
                     blank_fields.push(' You must select at least one site to transfer')
                 }
              }
-             else{
-                if((!vm.proposal.region) || (!vm.proposal.district) || (vm.proposal.approval_level=='')) {
-                    if(vm.$refs.proposal_apply.sub_activities1.length>0 && vm.proposal.sub_activity_level1=='') {
-                        blank_fields.push('Sub Activity-1 cannot be blank')
+             if(vm.proposal.application_type == 'Disturbance'){
+                    if((!vm.proposal.region) || (!vm.proposal.district) || (vm.proposal.approval_level=='')) {
+                        if(vm.$refs.proposal_apply.sub_activities1.length>0 && vm.proposal.sub_activity_level1=='') {
+                            blank_fields.push('Sub Activity-1 cannot be blank')
+                        }
+                        if(vm.$refs.proposal_apply.sub_activities2.length>0 && vm.proposal.sub_activity_level2=='') {
+                            blank_fields.push('Sub Activity-2 cannot be blank')
+                        }
+                        if(vm.$refs.proposal_apply.categories.length>0 && vm.proposal.management_area=='') {
+                            blank_fields.push('Category/Management Area cannot be blank')
+                        }
                     }
-                    if(vm.$refs.proposal_apply.sub_activities2.length>0 && vm.proposal.sub_activity_level2=='') {
-                        blank_fields.push('Sub Activity-2 cannot be blank')
-                    }
-                    if(vm.$refs.proposal_apply.categories.length>0 && vm.proposal.management_area=='') {
-                        blank_fields.push('Category/Management Area cannot be blank')
-                    }
-                }
              }
 
              if(vm.proposal.application_type == 'Disturbance'){
