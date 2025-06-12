@@ -513,3 +513,17 @@ def getPrivateFile(request):
             return HttpResponse(the_data, content_type=mimetypes.types_map['.'+str(extension.lower())])
        
     return HttpResponse()
+
+class EmailExportsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
+    template_name = 'disturbance/email_exports.html'
+
+    def test_func(self):
+        return is_internal(self.request)
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        return self.render_to_response(context)
+
+    def post(self, request):
+        data = {}
+        return render(request, self.template_name, data)
