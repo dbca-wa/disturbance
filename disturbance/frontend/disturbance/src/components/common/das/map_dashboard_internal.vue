@@ -1785,6 +1785,8 @@
     }
     .layer_options {
         position: absolute;
+        max-height: 400px;
+        overflow-y: auto;
         top: 0;
         left: 0;
         z-index: 410;
