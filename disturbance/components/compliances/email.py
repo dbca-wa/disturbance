@@ -340,7 +340,7 @@ def send_apiary_internal_due_email_notification(compliance):
 
 
 def send_compliance_accept_email_notification(compliance,request):
-    email = ApiaryComplianceAcceptNotificationEmail()
+    email = ComplianceAcceptNotificationEmail()
 
     context = {
         'compliance': compliance
@@ -357,7 +357,7 @@ def send_compliance_accept_email_notification(compliance,request):
     _log_org_email(msg, compliance.proposal.applicant, compliance.submitter, sender=sender)
 
 def send_apiary_compliance_accept_email_notification(compliance,request):
-    email = ComplianceAcceptNotificationEmail()
+    email = ApiaryComplianceAcceptNotificationEmail()
 
     context = {
         'compliance': compliance
