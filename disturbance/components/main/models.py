@@ -423,7 +423,24 @@ class TaskMonitor(models.Model):
     def __str__(self):
         return f'Task {self.task_id}, Proposal: {self.proposal}'
 
+class JobQueue(models.Model):
+    STATUS = (
+       (0, 'Pending'),
+       (1, 'Running'),
+       (2, 'Completed'),
+       (3, 'Failed'),
+    )
 
+    job_cmd = models.CharField(max_length=1000, null=True, blank=True)
+    system_id = models.CharField(max_length=4, null=True, blank=True)
+    status = models.SmallIntegerField(choices=STATUS, default=0) 
+    parameters_json = models.JSONField(null=True, blank=True)
+    processed_dt = models.DateTimeField(default=None,null=True, blank=True )
+    user = models.IntegerField(blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.job_cmd  
 
 import reversion
 reversion.register(TaskMonitor)

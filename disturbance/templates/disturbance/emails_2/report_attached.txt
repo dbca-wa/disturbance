@@ -1,0 +1,6 @@
+{%  extends 'disturbance/emails/base_email.txt' %}
+
+{% block content %}
+The requested {{model}} report is attached to this email.
+
+{% endblock %}

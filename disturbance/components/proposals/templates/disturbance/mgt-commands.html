@@ -46,6 +46,9 @@
             <div class="row">
                 <button type="submit" name="script" value="poll_sqs_tasks" {% if poll_sqs_tasks == 'true' %}style="color:green" {% endif %} title="Run Poll SQS Tasks script.">Run Script 'poll_sqs_tasks'</button>
             </div>
+            <div class="row">
+                <button type="submit" name="script" value="run_queue_job" {% if run_queue_job == 'true' %}style="color:green" {% endif %} title="Run Queue Job (Email Reports)">Run Script 'run_queue_job' (Generate and Email Reports)</button>
+            </div>
 
         </form>
     </div>
