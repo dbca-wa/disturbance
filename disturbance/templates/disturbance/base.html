@@ -161,6 +161,9 @@
                                                     {% if is_payment_admin %}
                                                         <li><a href="/internal/reports">Reports</a></li>
                                                     {% endif %}
+                                                    {% comment %} {% if is_internal_login %}
+                                                        <li><a href="{% url 'email-exports' %}">Email Exports</a></li>
+                                                    {% endif %} {% endcomment %}
 
                                                     <li><a href="{% url 'accounts:logout' %}?next=/">Logout</a></li>
                                                 </ul>

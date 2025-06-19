@@ -1,0 +1,7 @@
+
+{%  extends 'disturbance/emails/base_email.html' %}
+
+{% block content %}
+{% comment %} {% include "disturbance/emails_2/salutation.html" %} {% endcomment %}
+<p>The requested {{model}} report is attached to this email.</p>
+{% endblock %}
