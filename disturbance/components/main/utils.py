@@ -24,13 +24,16 @@ from disturbance.settings import SITE_STATUS_DRAFT, SITE_STATUS_APPROVED, SITE_S
 # from disturbance.components.approvals.models import Approval
 # from disturbance.components.compliances.models import Compliance
 from disturbance.settings import MAX_NUM_ROWS_MODEL_EXPORT
-from django.db.models import Case, Value, When, CharField, Count
+from django.db.models import Case, Value, When, CharField, Count, F
 from django.db.models.functions import Concat, Cast
 import csv
 import xlsxwriter
 import datetime
 import uuid
 from django.contrib.postgres.aggregates import ArrayAgg
+from django.db.models import Subquery, OuterRef
+
+# from disturbance.components.proposals.models import Proposal
 
 import logging
 logger = logging.getLogger(__name__)
@@ -223,15 +226,11 @@ def custom_strftime(format_str, t):
 
 def getProposalExport(filters, num):
     from disturbance.components.proposals.models import Proposal
-    qs = Proposal.objects.order_by("-lodgement_date")
+    qs = Proposal.objects.order_by("-lodgement_date").exclude(processing_status='hidden')
     if filters:
         #type
-        # if "type" in filters and filters["type"] and not filters["type"].lower() == 'all':
-        #     if filters["type"].lower() == 'mla':
-        #         qs = qs.filter(lodgement_number__startswith="ML")
-        #     if filters["type"].lower() == 'aua':
-        #         qs = qs.filter(lodgement_number__startswith="AU")
-            
+        if "type" in filters and filters["type"] and not filters["type"].lower() == 'all':
+            qs = qs.filter(application_type=filters["type"])
         #lodged_on_from
         if "lodged_on_from" in filters and filters["lodged_on_from"]:
             qs = qs.filter(lodgement_date__gte=filters["lodged_on_from"])
@@ -249,19 +248,29 @@ def getProposalExport(filters, num):
     
 def getApprovalExport(filters, num):
     from disturbance.components.approvals.models import Approval
-    qs = Approval.objects.order_by("-issue_date").exclude(lodgement_number__startswith='WLA')
+    qs = Approval.objects.all().exclude(status='hidden')
+    ids = qs.order_by('lodgement_number', '-issue_date').distinct('lodgement_number').values_list('id', flat=True)
+    qs = qs.filter(id__in=ids)
+    
+    # for obj in qs:
+    #     if hasattr(obj.proxy_applicant, 'get_full_name') and obj.proxy_applicant.get_full_name():
+    #         name = obj.proxy_applicant.get_full_name()
+    #     elif hasattr(obj.applicant, 'name'):
+    #         name = obj.applicant.name
+    #     else:
+    #         name = str(obj.applicant)
 
     if filters:
         #type
-        if "type" in filters and filters["type"] and not filters["type"].lower() == 'all':
-            if filters["type"].lower() == 'ml':
-                qs = qs.filter(lodgement_number__startswith="MOL")
-        #issued_from
-        if "issued_from" in filters and filters["issued_from"]:
-            qs = qs.filter(issue_date__gte=filters["issued_from"])
+        # if "type" in filters and filters["type"] and not filters["type"].lower() == 'all':
+        #     if filters["type"].lower() == 'ml':
+        #         qs = qs.filter(lodgement_number__startswith="MOL")
+        #expiry_from
+        if "expiry_from" in filters and filters["expiry_from"]:
+            qs = qs.filter(expiry_date__gte=filters["expiry_from"])
         #issued_to
-        if "issued_to" in filters and filters["issued_to"]:
-            qs = qs.filter(issue_date__lte=filters["issued_to"])
+        if "expiry_to" in filters and filters["expiry_to"]:
+            qs = qs.filter(expiry_date__lte=filters["expiry_to"])
         #status
         if "status" in filters and filters["status"] and not filters["status"].lower() == 'all':
             qs = qs.filter(status=filters["status"])
@@ -345,104 +354,56 @@ def excelExportData(model, header, columns):
     return excel_file
 
 def getProposalExportFields(data):
-    header = ["Lodgement Number", "Status", "Lodged On"]
+    header = ["Lodgement Number", "Proposal Type", "Region", "District", "Activity", "Title", "Submitter", "Proponent", "Lodged On", "Approval", "Status"]
 
-    # columns = list(data.annotate(type=
-    #     Case(
-    #         When(
-    #             lodgement_number__startswith='ML',
-    #             then=Value("Mooring Site Licence Application")
-    #         ),
-    #         When(
-    #             lodgement_number__startswith='WL',
-    #             then=Value("Waiting List Application")
-    #         ),
-    #         When(
-    #             lodgement_number__startswith='AA',
-    #             then=Value("Annual Admission Application")
-    #         ),
-    #         When(
-    #             lodgement_number__startswith='AU',
-    #             then=Value("Authorised User Application")
-    #         ),
-    #         default=Value(''),
-    #         output_field=CharField(),     
-    #     )
-    # ).annotate(
-    #     applicantt=Concat(
-    #         'proposal_applicant__first_name',
-    #         Value(" "),
-    #         'proposal_applicant__last_name'
-    #         ),
-    # ).values_list(
-    #     "lodgement_number",
-    #     "type",
-    #     "proposal_type__description",
-    #     "applicantt",
-    #     "processing_status",
-    #     "lodgement_date",
-    #     "invoice_property_cache",
-    #     )
-    # )
-    columns = list(data.values_list(
+    columns = list(data.annotate(
+        submitter_name=Concat(
+            'submitter__first_name',
+            Value(" "),
+            'submitter__last_name'
+            ),
+        ).values_list(
         "lodgement_number",
-        # "type",
-        # "proposal_type__description",
-        # "applicantt",
-        "processing_status",
+        "application_type__name",
+        "region__name",
+        "district__name",
+        "activity",
+        "title",
+        "submitter_name",
+        "applicant__organisation__name",
         "lodgement_date",
-        # "invoice_property_cache",
+        "approval__lodgement_number",
+        "processing_status",
         )
     )
     
     return header, columns
 
 def getApprovalExportFields(data):
-    header = ["Lodgement Number", "Type", "Sticker Number/s" , "Sticker Mailed Date/s", "Holder", "Status", "Mooring", "Issue Date", "Start Date", "Expiry Date", "Vessel Registration"]
-
-    columns = list(data.annotate(type=
-        Case(
-            When(
-                lodgement_number__startswith='MOL',
-                then=Value("Mooring Site Licence")
-            ),
-            When(
-                lodgement_number__startswith='AAP',
-                then=Value("Annual Admission Permit")
-            ),
-            When(
-                lodgement_number__startswith='AUP',
-                then=Value("Authorised User Permit")
-            ),
-            default=Value(''),
-            output_field=CharField(),     
-        )
-    ).annotate(
-        holder=Concat(
-            'proposal__proposal_applicant__first_name',
-            Value(" "),
-            'proposal__proposal_applicant__last_name'
-            ),
-    ).annotate(
-        mooring_number=ArrayAgg(
-            'moorings__name',
-            filter=(
-                ~Q(moorings__name=None)
-            ),
-            distinct=True
-        ), 
-    ).values_list(
+    from disturbance.components.proposals.models import Proposal
+    # header = ["Lodgement Number", "Region" , "Activity", "Title", "Holder", "Associated Proposals", "Status", "Start Date", "Expiry Date"]
+    header = ["Lodgement Number", "Region" , "Activity", "Title",  "Associated Proposals", "Status", "Start Date", "Expiry Date"]
+    columns = list(data
+    # .annotate(
+    #     associated_proposals=Subquery(Proposal.objects.filter(approval__lodgement_number=OuterRef("lodgement_number")).values_list('lodgement_number', flat=True))
+    # )
+    .annotate(
+        associated_proposals=Subquery(
+            Proposal.objects.filter(approval__lodgement_number=OuterRef("lodgement_number"))
+            .order_by()
+            .annotate(proposals=ArrayAgg('lodgement_number'))
+            .values('proposals')[:1],
+            )
+    )
+    .values_list(
         "lodgement_number",
-        "type",
-        "sticker_numbers",
-        "sticker_mailing_date",
-        "holder",
+        "current_proposal__region__name",
+        "current_proposal__activity",
+        "current_proposal__title",
+        "associated_proposals",
         "status",
-        "mooring_number",
-        "issue_date",
         "start_date",
         "expiry_date",
-        "current_proposal__rego_no"
         )
     )
     
@@ -490,7 +451,7 @@ def formatExportData(model, data, format):
 
     if model == "proposal":
         header, columns = getProposalExportFields(data)
-    elif model == "approval": #exclude waiting list
+    elif model == "approval": 
         header, columns = getApprovalExportFields(data)
     elif model == "compliance":
         header, columns = getComplianceExportFields(data)

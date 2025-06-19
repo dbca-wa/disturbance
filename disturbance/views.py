@@ -524,7 +524,7 @@ class EmailExportsView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context=super().get_context_data(**kwargs)
-        # context["proposal_type_options"] = Proposal.application_types_dict(apply_page=False)
+        context["proposal_type_options"] = Proposal.application_type_dict()
         context["proposal_status_options"] = [{'code': i[0], 'description': i[1]} for i in Proposal.PROCESSING_STATUS_CHOICES]
         # context["approval_type_options"] = Approval.approval_types_dict(['ml','aap','aup'])
         context["approval_status_options"] = [{'code': i[0], 'description': i[1]} for i in Approval.STATUS_CHOICES]

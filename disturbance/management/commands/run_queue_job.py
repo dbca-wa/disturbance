@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand
 from disturbance.components.main.models import JobQueue
 from django.core import management
 from datetime import datetime
+from django.utils import timezone
 from disturbance.settings import NUMBER_OF_QUEUE_JOBS
 import json
 
@@ -27,7 +28,7 @@ class Command(BaseCommand):
             try:     
                 management.call_command(jq.job_cmd, parameters, jq.user)
                 print("Job Completed {}".format(str(jq.id)))                
-                jq.processed_dt = datetime.now()
+                jq.processed_dt = timezone.now()
                 jq.status = 2
                 jq.save()
             except Exception as e:                

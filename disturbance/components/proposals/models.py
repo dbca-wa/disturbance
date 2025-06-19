@@ -799,6 +799,12 @@ class Proposal(DirtyFieldsMixin, RevisionedMixin):
         qs =AmendmentRequest.objects.filter(proposal = self)
         return qs
 
+    @classmethod
+    def application_type_dict(cls):
+        application_types=Proposal.objects.filter(region__isnull=False,application_type__isnull=False).distinct('application_type__id').values_list('application_type__id','application_type__name')
+        type_list = [dict(code=i[0], description=i[1]) for i in application_types]
+        return type_list
+
     def get_revision(self, version_number):
         """
         Gets a full Proposal version to show when the View button is clicked.

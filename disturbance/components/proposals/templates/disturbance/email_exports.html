@@ -58,7 +58,7 @@
                 </div>
                 <div class="panel-body collapse show">
                     {% csrf_token %}
-                    {% comment %} <div class="row">
+                    <div class="row">
                         <label class="col-sm-3 control-label">Proposal Type</label>
                         <div class="col-sm-6">
                         <select class="proposal_field form-control" id="proposal_type_select" name="type">
@@ -68,7 +68,7 @@
                             {% endfor %}
                         </select>
                         </div>
-                    </div> {% endcomment %}
+                    </div>
                     {% comment %} <div class="row">
                         <label class="col-sm-3 control-label">Proposal Category</label>
                         <div class="col-sm-6">
@@ -124,7 +124,7 @@
                 </div>
                 <div class="panel-body collapse show">
                     {% csrf_token %}
-                    <div class="row">
+                    {% comment %} <div class="row">
                         <label class="col-sm-3 control-label">Approval Type</label>
                         <div class="col-sm-6">
                             <select class="approval_field form-control" id="approval_type_select" name="type">
@@ -134,7 +134,7 @@
                                 {% endfor %}
                             </select>
                         </div>
-                    </div>
+                    </div> {% endcomment %}
                     <div class="row">
                         <label class="col-sm-3 control-label">Approval Status</label>
                         <div class="col-sm-6">
@@ -147,13 +147,13 @@
                         </div>
                     </div>
                     <div class="row">
-                        <label class="col-sm-3 control-label">Issued From</label>
+                        <label class="col-sm-3 control-label">Expiry From</label>
                         <div class="col-sm-3">
-                        <input class="approval_field form-control" type="date" id="approval_issued_from" name="issued_from">
+                        <input class="approval_field form-control" type="date" id="approval_expiry_from" name="expiry_from">
                         </div>
-                        <label class="col-sm-3 control-label">Issued To</label>
+                        <label class="col-sm-3 control-label">Expiry To</label>
                         <div class="col-sm-3">
-                        <input class="approval_field form-control" type="date" id="approval_issued_to" name="issued_to">
+                        <input class="approval_field form-control" type="date" id="approval_expiry_to" name="expiry_to">
                         </div>
                     </div>
                     <div class="row">
