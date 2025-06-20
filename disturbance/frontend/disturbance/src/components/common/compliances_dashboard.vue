@@ -383,7 +383,7 @@ export default {
                         // 10. Approval/Licence
                         data: "approval_lodgement_number",
                         mRender:function (data,type,full) {
-                            return `A${data}`;
+                            return `${data}`;
                         },
                         name: "approval__lodgement_number",
                         defaultContent: '',

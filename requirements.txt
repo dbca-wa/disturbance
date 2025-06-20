@@ -65,8 +65,6 @@ django-taggit==6.1.0
 # geojson==3.1.0
 geojson==3.2.0
 unicodecsv==0.14.1
-# PyPDF2==1.26.0
-PyPDF2==3.0.1
 # django-extra-fields==0.9
 django-extra-fields==3.0.2
 # django-crispy-forms==1.7.0
