@@ -89,7 +89,8 @@ def send_approval_cancel_email_notification(approval, future_cancel=False):
 
     context = {
         'approval': approval,
-        'future_cancel': future_cancel
+        'future_cancel': future_cancel,
+        'proposal': proposal,
         
     }
 
