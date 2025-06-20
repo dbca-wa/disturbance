@@ -440,7 +440,10 @@ class JobQueue(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.job_cmd  
+        return self.job_cmd 
+
+    class Meta:
+        app_label = 'disturbance' 
 
 import reversion
 reversion.register(TaskMonitor)
