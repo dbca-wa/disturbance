@@ -39,6 +39,7 @@ from disturbance.components.compliances.models import (
  #       Proposal
   #      )
 from disturbance.components.compliances.serializers import (
+    DTComplianceSerializer,
     ComplianceSerializer,
     SaveComplianceSerializer,
     ComplianceActionSerializer,
@@ -132,7 +133,7 @@ class CompliancePaginatedViewSet(viewsets.ModelViewSet):
     #renderer_classes = (ComplianceRenderer,)
     page_size = 10
     queryset = Compliance.objects.none()
-    serializer_class = ComplianceSerializer
+    serializer_class = DTComplianceSerializer
 
     def get_queryset(self):
         if is_internal(self.request):
@@ -168,7 +169,7 @@ class CompliancePaginatedViewSet(viewsets.ModelViewSet):
 
         self.paginator.page_size = qs.count()
         result_page = self.paginator.paginate_queryset(qs, request)
-        serializer = ComplianceSerializer(result_page, context={'request':request}, many=True)
+        serializer = DTComplianceSerializer(result_page, context={'request':request}, many=True)
         return self.paginator.get_paginated_response(serializer.data)
 
 

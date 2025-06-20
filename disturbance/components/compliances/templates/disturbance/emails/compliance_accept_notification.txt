@@ -5,7 +5,7 @@
 
     Compliance : {{ compliance.reference}}
 
-    Proposal : {{ compliance.proposal.lodgement_number}}
+    Approval : {{ compliance.approval.lodgement_number}}
 
     
 
