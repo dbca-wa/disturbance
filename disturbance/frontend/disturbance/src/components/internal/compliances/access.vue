@@ -49,7 +49,7 @@
                                     <select v-show="isLoading" class="form-control">
                                         <option value="">Loading...</option>
                                     </select>
-                                    <select @change="assignTo" :disabled="canViewonly || !check_assessor()" v-if="!isLoading" class="form-control" v-model="compliance.assigned_to_id">
+                                    <select @change="assignTo" :disabled="canViewonly || !check_assessor()" v-if="!isLoading" class="form-control" v-model="compliance.assigned_to">
                                         <option value="null">Unassigned</option>
                                         <option v-for="member in compliance.allowed_assessors" :value="member.id">{{member.first_name}} {{member.last_name}}</option>
                                     </select>
@@ -184,7 +184,7 @@ export default {
     assignTo: function(){
         let vm = this;
         if ( vm.compliance.assigned_to != 'null'){
-            let data = {'user_id': vm.compliance.assigned_to_id};
+            let data = {'user_id': vm.compliance.assigned_to};
             vm.$http.post(helpers.add_endpoint_json(api_endpoints.compliances,(vm.compliance.id+'/assign_to')),JSON.stringify(data),{
                 emulateJSON:true
             }).then((response) => {                
