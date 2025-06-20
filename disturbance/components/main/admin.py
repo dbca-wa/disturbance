@@ -3,7 +3,7 @@ from django.forms import ModelForm
 from django.utils.html import format_html
 from django.urls import reverse
 
-from disturbance.components.main.models import MapLayer, MapColumn, DASMapLayer, TaskMonitor
+from disturbance.components.main.models import MapLayer, MapColumn, DASMapLayer, TaskMonitor, JobQueue
 from disturbance.settings import KB_SERVER_URL
 
 
@@ -73,6 +73,10 @@ class TaskMonitorAdmin(admin.ModelAdmin):
     list_filter = ['status', 'request_type']
     readonly_fields = ['info',]
     search_fields = ['task_id', 'status', 'request_type', 'proposal__lodgement_number', 'requester__email']
+
+@admin.register(JobQueue)
+class JobQueueAdmin(admin.ModelAdmin):
+    pass
 
 
 #    def get_urls(self):
@@ -161,4 +165,3 @@ class TaskMonitorAdmin(admin.ModelAdmin):
 #     list_display = ['id', 'district_name', 'office', 'enabled']
 #     list_filter = ['enabled',]
 #     readonly_fields = ['district_name', 'office', 'enabled', 'object_id',]
-
