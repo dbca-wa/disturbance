@@ -1,5 +1,20 @@
 <template>
 <div class="container" id="externalDash">
+    <div v-if="show_das_change_msg && dasTemplateGroup" class="row">
+        <div class="col-sm-12">
+            <div class="alert alert-info">
+                <div class="col-md-9">
+                    <span v-html="dasChangeMsg"></span>
+                </div>
+                <div class="row">
+                   
+                </div>
+                <!--p>
+                    Welcome to the {{system_name}} online system dashboard.<br/><br/> Here you can access your existing approvals/licences, view any proposals/applications in progress, lodge new<br/> proposals/applications or submit information required to comply with requirements listed on your approval/license
+                </p-->
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-sm-12">
             <div class="well well-sm">
@@ -17,6 +32,7 @@
             </div>
         </div>
     </div>
+    
     <MapDashboard  v-if="show_das_map && !apiaryTemplateGroup" level="external" :is_external="true"/>
     <ProposalDashTable level='external' :url='proposals_url'/>
     <ApprovalDashTable level='external' :url='approvals_url'/>
@@ -79,13 +95,29 @@ export default {
             }
             return welcomeText;
         },
+        dasChangeMsg: function() {
+            let dasChangeText = ``;
+            if (this.dasTemplateGroup) {
+                dasChangeText = `Welcome to DAS Phase II. For more information and FAQ's please visit <a href="https://www.dbca.wa.gov.au/licences-and-permits/online-disturbance-approval-system" target="_blank">Online Disturbance Approval System </a>
+                    for all external users and <a href="https://dpaw.sharepoint.com/Divisions/pws/cem/SitePages/Disturbance-Approval-System-(DAS).aspx" target="_blank">Disturbance Approval System (DAS) </a>
+                    for all internal users or you can email <a href="mailto:das@dbca.wa.gov.au">das@dbca.wa.gov.au.</a> <p/><p/>`
+            }
+            return dasChangeText;
+        },
         show_das_map : function(){
                 if (env && env['show_das_map'] &&  env['show_das_map'].toLowerCase()=="true"  ){
                     return true;
                 } else {
                     return false;
                 }
-            }
+            },
+        show_das_change_msg : function(){
+                if (env && env['show_das_change_msg'] &&  env['show_das_change_msg'].toLowerCase()=="true"  ){
+                    return true;
+                } else {
+                    return false;
+                }
+            },
 
     },
     methods: {
