@@ -1105,11 +1105,9 @@
                 let fullScreenControl = new FullScreenControl()
                 fullScreenControl.on('enterfullscreen', function(){
                     vm.fullscreen = true
-                    vm.toggleFilterSearchRow('enter')
                 })
                 fullScreenControl.on('leavefullscreen', function(){
                     vm.fullscreen = false
-                    vm.toggleFilterSearchRow('leave')
                 })
                 vm.map.addControl(fullScreenControl)
 
