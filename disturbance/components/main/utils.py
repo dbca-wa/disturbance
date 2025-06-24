@@ -279,15 +279,15 @@ def getApprovalExport(filters, num):
     
 def getComplianceExport(filters, num):
     from disturbance.components.compliances.models import Compliance
-    qs = Compliance.objects.order_by("-lodgement_date")
+    qs = Compliance.objects.all().exclude(processing_status='discarded').order_by("-due_date")
 
     if filters:
-        #lodged_on_from
-        if "lodged_on_from" in filters and filters["lodged_on_from"]:
-            qs = qs.filter(lodgement_date__gte=filters["lodged_on_from"])
-        #lodged_on_to
-        if "lodged_on_to" in filters and filters["lodged_on_to"]:
-            qs = qs.filter(lodgement_date__lte=filters["lodged_on_to"])
+        #due_date_from
+        if "due_date_from" in filters and filters["due_date_from"]:
+            qs = qs.filter(due_date__gte=filters["due_date_from"])
+        #due_date_to
+        if "due_date_to" in filters and filters["due_date_to"]:
+            qs = qs.filter(due_date__lte=filters["due_date_to"])
         #status
         if "status" in filters and filters["status"] and not filters["status"].lower() == 'all':
             qs = qs.filter(processing_status=filters["status"])
@@ -380,68 +380,62 @@ def getProposalExportFields(data):
     return header, columns
 
 def getApprovalExportFields(data):
-    from disturbance.components.proposals.models import Proposal
-    # header = ["Lodgement Number", "Region" , "Activity", "Title", "Holder", "Associated Proposals", "Status", "Start Date", "Expiry Date"]
-    header = ["Lodgement Number", "Region" , "Activity", "Title",  "Associated Proposals", "Status", "Start Date", "Expiry Date"]
-    columns = list(data
-    # .annotate(
-    #     associated_proposals=Subquery(Proposal.objects.filter(approval__lodgement_number=OuterRef("lodgement_number")).values_list('lodgement_number', flat=True))
+    from disturbance.components.approvals.serializers import ApprovalExportSerializer
+    header = ["Lodgement Number", "Region" , "Activity", "Title", "Holder", "Associated Proposals", "Status", "Start Date", "Expiry Date"]
+    
+    serializer = ApprovalExportSerializer(data, many=True)
+    result = serializer.data
+    columns = list(item.values() for item in result)
+
+    # columns = list(data1
+    # # .annotate(
+    # #     associated_proposals=Subquery(
+    # #         Proposal.objects.filter(approval__lodgement_number=OuterRef("lodgement_number"))
+    # #         .order_by()
+    # #         .annotate(proposals=ArrayAgg('lodgement_number'))
+    # #         .values('proposals')[:1],
+    # #         )
+    # # )
     # )
-    .annotate(
-        associated_proposals=Subquery(
-            Proposal.objects.filter(approval__lodgement_number=OuterRef("lodgement_number"))
-            .order_by()
-            .annotate(proposals=ArrayAgg('lodgement_number'))
-            .values('proposals')[:1],
-            )
-    )
-    .values_list(
-        "lodgement_number",
-        "current_proposal__region__name",
-        "current_proposal__activity",
-        "current_proposal__title",
-        "associated_proposals",
-        "status",
-        "start_date",
-        "expiry_date",
-        )
-    )
     
     return header, columns
 
 def getComplianceExportFields(data):
-    header = ["Lodgement Number", "Type", "Approval Number", "Holder", "Status", "Due Date"]
+    header = ["Lodgement Number", "Region", "District", "Activity", "Title", "Requirement", "Proposal", "Due Date", "Organisation", "Approval", "Status", "Assigned To"]
 
-    columns = list(data.annotate(type=
+    columns = list(data.annotate(
+        assigned_to_name=Concat(
+            'assigned_to__first_name',
+            Value(" "),
+            'assigned_to__last_name'
+            ),
+    ).annotate(
+        requirement_text=
         Case(
             When(
-                approval__lodgement_number__startswith='MOL',
-                then=Value("Mooring Site Licence")
+                requirement__standard=True,
+                then="requirement__standard_requirement__text"
             ),
             When(
-                approval__lodgement_number__startswith='AAP',
-                then=Value("Annual Admission Permit")
-            ),
-            When(
-                approval__lodgement_number__startswith='AUP',
-                then=Value("Authorised User Permit")
+                requirement__standard=False,
+                then="requirement__free_requirement"
             ),
             default=Value(''),
             output_field=CharField(),     
         )
-    ).annotate(
-        holder=Concat(
-            'proposal__proposal_applicant__first_name',
-            Value(" "),
-            'proposal__proposal_applicant__last_name'
-            ),
     ).values_list(
         "lodgement_number",
-        "type",
-        "approval__lodgement_number",
-        "holder",
-        "processing_status",
+        "proposal__region__name",
+        "proposal__district__name",
+        "proposal__activity",
+        "proposal__title",
+        "requirement_text",
+        "proposal__lodgement_number",
         "due_date",
+        "proposal__applicant__organisation__name",
+        "approval__lodgement_number",
+        "processing_status",
+        "assigned_to_name",
         )
     )
 

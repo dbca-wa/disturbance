@@ -454,3 +454,43 @@ class ApprovalLogEntrySerializer(CommunicationLogEntrySerializer):
         return [[d.name,d._file.url] for d in obj.documents.all()]
 
 
+class ApprovalExportSerializer(serializers.ModelSerializer):
+    status = serializers.CharField(source='get_status_display')
+    region = serializers.CharField(source='current_proposal.region')
+    activity = serializers.CharField(source='current_proposal.activity')
+    title = serializers.CharField(source='current_proposal.title')
+    applicant = serializers.SerializerMethodField(read_only=True)
+    associated_proposals= serializers.SerializerMethodField(read_only=True)
+    class Meta:
+        model = Approval
+        fields = (
+            'lodgement_number',
+            'region',
+            'activity',
+            'title',
+            'applicant',
+            'associated_proposals',
+            'status',
+            'start_date',
+            'expiry_date',
+        )
+    
+    def get_applicant(self,obj):
+        try:
+            if obj.proxy_applicant and obj.proxy_applicant.get_full_name():
+                return obj.proxy_applicant.get_full_name()
+            else:
+                return obj.applicant.name if isinstance(obj.applicant, Organisation) else obj.applicant
+        except:
+            return None
+    
+    def get_associated_proposals(self,obj):
+        
+        if obj.current_proposal:
+            qs=Proposal.objects.filter(approval__lodgement_number=obj.lodgement_number).values_list('lodgement_number', flat=True)
+            if qs:
+                # result= [proposal for proposal in qs]
+                result = ','.join(proposal for proposal in qs)
+                return result
+        return None
+
