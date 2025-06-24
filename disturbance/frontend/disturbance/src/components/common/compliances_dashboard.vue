@@ -441,6 +441,7 @@ export default {
                         visible: false,
                         className: "noexport",
                         defaultContent: '',
+                        searchable: false,
                     },
                     {
                         data: "customer_status", 
@@ -453,12 +454,14 @@ export default {
                         visible: false,
                         className: "noexport",
                         defaultContent: '',
+                        searchable: false,
                     },
                     {
                         data: "allowed_assessors", 
                         visible: false,
                         className: "noexport",
                         defaultContent: '',
+                        searchable: false,
                     }
             );
             return columnList;
