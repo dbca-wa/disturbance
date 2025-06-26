@@ -385,6 +385,7 @@ export default {
                         //visible: false,
                         searchable: false,
                         defaultContent: '',
+                        orderable: false,
                     });
                 }
                 

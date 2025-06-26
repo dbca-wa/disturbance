@@ -456,7 +456,7 @@ export default {
                     },
                     defaultContent: '',
                     searchable: false,
-                    name: 'status',
+                    name: vm.is_external? "customer_status":"processing_status",
                 },
                 {
                     // 7. Lodged on

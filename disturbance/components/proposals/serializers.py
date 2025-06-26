@@ -100,7 +100,7 @@ class DTProposalSerializer(BaseProposalSerializer):
 
 class ListProposalSerializer(BaseProposalSerializer):
     submitter = EmailUserSerializer()
-    applicant = serializers.CharField(source='applicant.organisation.name')
+    applicant = serializers.SerializerMethodField(read_only=True)
     processing_status = serializers.SerializerMethodField(read_only=True)
     review_status = serializers.SerializerMethodField(read_only=True)
     customer_status = serializers.SerializerMethodField(read_only=True)
@@ -256,6 +256,10 @@ class ListProposalSerializer(BaseProposalSerializer):
     def get_approval(self, obj):
         if obj.approval:
             return obj.approval.lodgement_number
+        return None
+    def get_applicant(self, obj):
+        if obj.applicant:
+            return obj.applicant.organisation.name
         return None
 
 

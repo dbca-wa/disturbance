@@ -15,7 +15,7 @@ class DTComplianceSerializer(serializers.ModelSerializer):
     regions = serializers.CharField(source='proposal.region')
     activity = serializers.CharField(source='proposal.activity')
     title = serializers.CharField(source='proposal.title')
-    holder = serializers.CharField(source='proposal.applicant.name')
+    holder = serializers.SerializerMethodField()
     processing_status = serializers.CharField(source='get_processing_status_display')
     customer_status = serializers.CharField(source='get_customer_status_display')
     submitter = serializers.SerializerMethodField(read_only=True)
@@ -83,6 +83,11 @@ class DTComplianceSerializer(serializers.ModelSerializer):
     def get_submitter(self,obj):
         if obj.submitter:
             return obj.submitter.get_full_name()
+        return None
+    
+    def get_holder(self, obj):
+        if obj.proposal.applicant:
+            return obj.proposal.applicant.name
         return None
 
 class ComplianceSerializer(serializers.ModelSerializer):
