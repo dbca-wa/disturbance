@@ -302,6 +302,8 @@ class ProposalPaginatedViewSet(viewsets.ModelViewSet):
         if is_internal(self.request): #user.is_authenticated():
             #return Proposal.objects.all().order_by('-id')
             return Proposal.objects.exclude(processing_status='hidden')
+            #TODO will need to exclude apiary proposals
+            # return Proposal.objects.exclude(processing_status='hidden').filter(~Q(application_type__name__in=apiary_proposal_types))
         elif is_customer(self.request):
             user_orgs = [org.id for org in user.disturbance_organisations.all()]
             #return  Proposal.objects.filter( Q(applicant_id__in = user_orgs) | Q(submitter = user) )
