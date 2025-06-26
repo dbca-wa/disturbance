@@ -370,7 +370,7 @@ export default {
                     {
                         // 8. District
                         data: "district",
-                        searchable: false,
+                        name:"proposal__district__name",
                         defaultContent: '',
                     },
                     {
