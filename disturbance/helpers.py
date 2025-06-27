@@ -3,11 +3,12 @@ from ledger.accounts.models import EmailUser
 from django.conf import settings
 
 import logging
+import json
 
 from rest_framework import serializers
 
 from disturbance.components.organisations.models import Organisation
-from disturbance.components.main.models import DASMapLayer
+from disturbance.components.main.models import DASMapLayer, Notice
 from django.core.cache import cache
 
 logger = logging.getLogger(__name__)
@@ -176,5 +177,23 @@ def get_proxy_cache():
 def log_request(msg=''):
     if settings.LOG_REQUEST_STATS:
         logger_stats.info(msg)
+
+def get_notices():
+    notices_dumped_data = cache.get('helpers.get_notices()')
+
+    if notices_dumped_data is None:
+        notices_obj = {}
+
+        notices_query = Notice.objects.all().order_by("order")
+
+        notices_array = []
+        for nq in notices_query:
+               notices_array.append({'id': nq.id, 'notice_type' : nq.notice_type, 'message': nq.message, 'active': nq.active})
+
+        notices_obj['notices'] = notices_array
+        cache.set('helpers.get_notices()', json.dumps(notices_obj), 86400)
+    else:
+       notices_obj = json.loads(notices_dumped_data)
+    return notices_obj
 
 

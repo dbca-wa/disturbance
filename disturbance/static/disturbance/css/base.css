@@ -76,3 +76,19 @@
 .btn-margin {
     margin-right: 3px;
 }
+
+.round-box {
+    border-radius: 5px;
+    border: 1px solid #eaeaea;
+    width: 100%;
+    background-color: #f5f5f5;
+    padding-left: 0px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 25px;
+    margin-bottom: 10px;
+}
+
+.round-box h5 {
+    font-weight: bold;
+}
