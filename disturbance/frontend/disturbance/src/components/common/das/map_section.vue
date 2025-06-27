@@ -424,7 +424,10 @@
     }
     .button-sec {
         position: relative;
-        z-index: 11100;
+        z-index: 1100;
+    }
+    .swal2-container {
+        z-index: 15000 !important;
     }
 </style>
 
