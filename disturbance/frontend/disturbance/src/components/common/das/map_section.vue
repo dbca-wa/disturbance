@@ -16,8 +16,20 @@
                         
                     />
                 </div>
-                <div class="noPrint button-sec">  
-                     <File 
+                <div class="noPrint">
+                    <div button-sec>
+                        <File 
+                            ref="map_doc"
+                            :name="map_doc_name" 
+                            label="Upload Shapefile" :id="map_doc_id"  
+                            :isRepeatable="true" 
+                            :readonly="proposal.readonly"   
+                            :proposal_id="proposal.id" 
+                            :isRequired="true"
+                            :key="fileKey">
+                        </File>
+                    </div>
+                     <!-- <File 
                         ref="map_doc"
                         :name="map_doc_name" 
                         label="Upload Shapefile" :id="map_doc_id"  
@@ -26,7 +38,7 @@
                         :proposal_id="proposal.id" 
                         :isRequired="true"
                         :key="fileKey">
-                    </File>
+                    </File> -->
                     <ul>
                             <li>
                                 Upload a shapefile identifying the maximum area affected by the proposal, including all associated activities.
