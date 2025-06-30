@@ -86,10 +86,10 @@
                                             {% if request.user.is_authenticated %}
                                                  {% if is_internal_login %}
                                                     {% if TEMPLATE_GROUP == 'apiary' %}
-                                                        <li><a href="{% url 'ds_home' %}">Applications</a></li>
+                                                        <li><a href="/internal">Applications</a></li>
                                                         <li><a href="/internal/approvals">Licences</a></li>
                                                     {% else %}
-                                                        <li><a href="{% url 'ds_home' %}">Proposals</a></li>
+                                                        <li><a href="/internal">Proposals</a></li>
                                                         <li><a href="/internal/approvals">Approvals</a></li>
                                                     {% endif %}
                                                     <li><a href="/internal/compliances">Compliance with Requirements</a></li>
