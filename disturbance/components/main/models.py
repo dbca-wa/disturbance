@@ -13,6 +13,7 @@ from ledger.accounts.models import EmailUser, Document, RevisionedMixin
 from django.db.models import JSONField
 from django.utils import timezone
 from django.core.cache import cache
+from django.utils.html import strip_tags
 
 class MapLayer(models.Model):
     display_name = models.CharField(max_length=100, blank=True, null=True)
@@ -444,6 +445,33 @@ class JobQueue(models.Model):
 
     class Meta:
         app_label = 'disturbance' 
+
+
+class Notice(models.Model):
+
+    NOTICE_TYPE_CHOICES = (
+        (0, 'Red Warning'),
+        (1, 'Orange Warning'),
+        (2, 'Blue Warning') ,
+        (3, 'Green Warning')   
+        )
+
+    notice_type = models.IntegerField(choices=NOTICE_TYPE_CHOICES,default=0)
+    message = models.TextField(null=True, blank=True, default='')
+    order = models.IntegerField(default=1)
+    active = models.BooleanField(default=True)
+    created = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        app_label = 'disturbance'
+
+    def __str__(self):
+           return '{}'.format(strip_tags(self.message).replace('&nbsp;', ' '))
+    
+    def save(self, *args, **kwargs):
+        cache.delete('helpers.get_notices()')
+        self.full_clean()
+        super(Notice, self).save(*args, **kwargs)
 
 import reversion
 reversion.register(TaskMonitor)

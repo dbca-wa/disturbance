@@ -80,6 +80,7 @@ INSTALLED_APPS += [
     'smart_selects',
     'crispy_forms',
     'appmonitor_client',
+    'django_summernote',
 ]
 
 ADD_REVERSION_ADMIN=True

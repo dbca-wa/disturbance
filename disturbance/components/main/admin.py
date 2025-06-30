@@ -2,8 +2,11 @@ from django.contrib import admin
 from django.forms import ModelForm
 from django.utils.html import format_html
 from django.urls import reverse
+from django.utils.html import strip_tags
+from django import forms
+from django_summernote.widgets import SummernoteWidget
 
-from disturbance.components.main.models import MapLayer, MapColumn, DASMapLayer, TaskMonitor, JobQueue
+from disturbance.components.main.models import MapLayer, MapColumn, DASMapLayer, TaskMonitor, JobQueue, Notice
 from disturbance.settings import KB_SERVER_URL
 
 
@@ -74,9 +77,29 @@ class TaskMonitorAdmin(admin.ModelAdmin):
     readonly_fields = ['info',]
     search_fields = ['task_id', 'status', 'request_type', 'proposal__lodgement_number', 'requester__email']
 
+
 @admin.register(JobQueue)
 class JobQueueAdmin(admin.ModelAdmin):
     pass
+
+
+class NoticeForm(forms.ModelForm):
+    message = forms.CharField(widget=SummernoteWidget(attrs={'summernote': {'toolbar': [['style', ['bold', 'italic', 'underline', 'strikethrough', 'fontsize']], ['insert', ['link']]]}}))
+    
+    class Meta:
+        model = Notice
+        fields = '__all__'
+
+
+@admin.register(Notice)
+class NoticeAdmin(admin.ModelAdmin):
+    form = NoticeForm
+    list_display = ('formatted_message', 'notice_type', 'order', 'created', 'active')
+    readonly_fields = ['created',]
+
+    def formatted_message(self, obj):
+        return f"{strip_tags(obj.message).replace('&nbsp;', ' ')}"
+    formatted_message.short_description = 'Message'
 
 
 #    def get_urls(self):
