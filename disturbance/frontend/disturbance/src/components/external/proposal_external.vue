@@ -5,6 +5,11 @@
         </template>
         <form :action="proposal_form_url" method="post" name="new_proposal" enctype="multipart/form-data">
             <div v-if="!proposal_readonly">
+                <div v-if="!proposal.apiary_group_application_type && !proposal.shapefile_json" class="row">
+                    <div class="col-lg-12 alert alert-danger" >
+                        <alert type="danger"><strong>Your Proposal is currently missing a shapefile. Please upload a shapefile, validate and prefill the Proposal</strong></alert>
+                    </div>
+                </div>
               <div v-if="hasAmendmentRequest" class="row" style="color:red;">
                 <div class="col-lg-12 pull-right">
                     <div class="panel panel-default">

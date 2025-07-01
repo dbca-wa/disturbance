@@ -186,7 +186,7 @@ class Command(BaseCommand):
 
             raise CommandError("Unknown serialization format: %s" % format)
  
-         def get_objects(count_only=False):
+        def get_objects(count_only=False):
             from itertools import chain
             from disturbance.components.proposals.models import ProposalType, ProposalTypeSection, QuestionOption, SectionQuestion, MasterlistQuestion
             # Assuming 19 is the current pk of proposal_type on das_uat for Ecological Thinning. 

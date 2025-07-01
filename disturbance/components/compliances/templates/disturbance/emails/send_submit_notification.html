@@ -11,12 +11,12 @@
 		{% else %}
 			District: -<br>
 		{% endif %}
-        Approval No: {{ approval.lodgement_number}}
-        Proposal No: {{proposal.lodgement_number}}
+        Approval No: {{ approval.lodgement_number}}<br>
+        Proposal No: {{proposal.lodgement_number}}<br>
 		Title: {{proposal.title}}<br>
 		Activity: {{proposal.activity}}<br>
 		Assessor: {{ assessor_name}}<br>
-        Compliance No: {{ compliance.reference }}<br>
+        Compliance No: {{ compliance.reference }} - {{ compliance.requirement.requirement }}<br>
 	</p>
 
 	<p>

@@ -409,6 +409,7 @@ class InternalProposalSerializer(BaseProposalSerializer):
     approval_level_document = serializers.SerializerMethodField()
     application_type = serializers.CharField(source='application_type.name', read_only=True)
     referral_email_list=serializers.SerializerMethodField()
+    draft_assessor_mode=serializers.SerializerMethodField()
     #region = serializers.CharField(source='region.name', read_only=True)
     #district = serializers.CharField(source='district.name', read_only=True)
     #tenure = serializers.CharField(source='tenure.name', read_only=True)
@@ -492,6 +493,7 @@ class InternalProposalSerializer(BaseProposalSerializer):
                 'reissued',
                 'region_name',
                 'district_name',
+                'draft_assessor_mode',
                 )
         read_only_fields=('documents','requirements','gis_info',)
 
@@ -561,6 +563,14 @@ class InternalProposalSerializer(BaseProposalSerializer):
 
     def get_requirements_completed(self,obj):
         return True
+    
+    def get_draft_assessor_mode(self, obj):
+        """
+        Returns the draft assessor mode information.
+        """
+        request = self.context['request']
+        user = request.user._wrapped if hasattr(request.user,'_wrapped') else request.user
+        return obj.draft_assessor_mode(user)
 
 
 class ReferralProposalSerializer(InternalProposalSerializer):

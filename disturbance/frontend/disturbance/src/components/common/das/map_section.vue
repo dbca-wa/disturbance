@@ -17,7 +17,8 @@
                     />
                 </div>
                 <div class="noPrint">  
-                     <File 
+                    <div button-sec>
+                    <File 
                         ref="map_doc"
                         :name="map_doc_name" 
                         label="Upload Shapefile" :id="map_doc_id"  
@@ -27,6 +28,7 @@
                         :isRequired="true"
                         :key="fileKey">
                     </File>
+                    </div>
                     <ul>
                             <li>
                                 Upload a shapefile identifying the maximum area affected by the proposal, including all associated activities.
@@ -53,7 +55,7 @@
                 </div>
 
                 <alert :show.sync="showError" type="danger" style="color: red" class="noPrint"><strong>{{errorString}}</strong></alert>
-                <div class="noPrint">
+                <div class="noPrint button-sec">
                     <div class="row">
                         <div class="col-sm-2">
                             <span v-if="validating">
@@ -182,7 +184,10 @@
                 return "proposal_map_doc"
             },
             valid_button_disabled: function(){
-                if(this.is_external && this.proposal && !this.proposal.readonly){
+                 if(this.is_external && this.proposal && !this.proposal.readonly){
+                    return false;
+                }
+                if(this.is_internal && this.proposal && this.proposal.draft_assessor_mode){
                     return false;
                 }
                 return true;
@@ -201,6 +206,9 @@
             },
             prefill_button_disabled: function(){
                 if(this.is_external && this.proposal && !this.proposal.readonly && this.proposal.shapefile_json){
+                    return false;
+                }
+                if(this.is_internal && this.proposal && this.proposal.draft_assessor_mode && this.proposal.shapefile_json){
                     return false;
                 }
                 return true;
@@ -415,6 +423,13 @@
         .panel-default {
             margin-top: 30px;
         }
+    }
+     .button-sec {
+        position: relative;
+        z-index: 1100;
+    }
+    .swal2-container {
+        z-index: 15000 !important;
     }
 </style>
 

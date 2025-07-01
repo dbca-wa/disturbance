@@ -10,12 +10,12 @@
 		{% else %}
 			District: -
 		{% endif %}
-        Approval No: {{ approval.lodgement_number}}
-        Proposal No: {{proposal.lodgement_number}}
+        Approval No: {{ approval.lodgement_number}}<br>
+        Proposal No: {{proposal.lodgement_number}}<br>
 		Title: {{proposal.title}}
 		Activity: {{proposal.activity}}
 		Assessor: {{ assessor_name}}
-        Compliance No: {{ compliance.reference }}
+        Compliance No: {{ compliance.reference }} - {{ compliance.requirement.requirement }}<br>
     
     
     You can access this Compliance using the following link:
