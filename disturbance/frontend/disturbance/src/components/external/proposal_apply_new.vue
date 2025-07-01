@@ -184,6 +184,7 @@ export default {
         regions: [],
         districts: [],
         activity_matrix: [],
+        all_activity_matrices: [],
         activities: [],
         sub_activities1: [],
         sub_activities2: [],
@@ -486,6 +487,35 @@ export default {
 			console.log(error);
 		})
 	},
+    fetchAllActivityMatrices: async function(){
+		let vm = this;
+        vm.sub_activities1 = [];
+        vm.sub_activities2 = [];
+        vm.categories = [];
+        vm.approval_level = '';
+		await vm.$http.get(api_endpoints.activity_matrix).then((response) => {
+				this.all_activity_matrices = response.body;
+                vm.fetchRegions();
+		},(error) => {
+			console.log(error);
+		})
+	},
+    getSelectedAppActivityMatrix: function(selected_app){
+		let vm = this;
+        vm.activities=[];
+        vm.sub_activities1 = [];
+        vm.sub_activities2 = [];
+        vm.categories = [];
+        vm.approval_level = '';
+        let activity_matrix_obj = [...this.all_activity_matrices.filter(matrix => matrix.name == selected_app)]        
+        this.activity_matrix = activity_matrix_obj[0].schema[0];
+        this.keys_ordered = activity_matrix_obj[0].ordered;
+        var keys = this.keys_ordered ? Object.keys(this.activity_matrix).sort() : Object.keys(this.activity_matrix)
+        for (var i = 0; i < keys.length; i++) {
+            this.activities.push( {text: keys[i], value: keys[i]} );
+        }
+       
+	},
     chainedSelectSubActivities1: function(activity_name, set_data=false){
 		let vm = this;
         
@@ -655,6 +685,7 @@ export default {
                 vm.display_region_selectbox = false;
                 vm.display_activity_matrix_selectbox = false;
             }  else {
+                vm.getSelectedAppActivityMatrix(vm.selected_application_name);
                 vm.display_region_selectbox = true;
                 vm.display_activity_matrix_selectbox = true;
             }
@@ -685,6 +716,7 @@ export default {
                 vm.display_region_selectbox = false;
                 vm.display_activity_matrix_selectbox = false;
             }  else {
+                vm.getSelectedAppActivityMatrix(vm.selected_application_name);
                 vm.display_region_selectbox = true;
                 vm.display_activity_matrix_selectbox = true;
             }
@@ -709,8 +741,9 @@ export default {
   },
   mounted: function() {
     let vm = this;
-    vm.fetchActivityMatrix();
+    // vm.fetchActivityMatrix();
     //vm.fetchRegions();
+    vm.fetchAllActivityMatrices();
     vm.fetchApplicationTypes();
     //vm.fetchActivityMatrix();
     vm.fetchGlobalSettings();
