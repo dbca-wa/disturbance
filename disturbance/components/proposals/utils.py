@@ -1304,7 +1304,7 @@ def create_region_help():
     global richtext_assessor
 
     #Get the keys to add help text into help page
-    help_keys = [ 'region_help_url', 'district_help_url', 'activity_type_help_url','sub_activity_1_help_url','sub_activity_2_help_url','category_help_url']
+    help_keys = [ 'region_help_url', 'district_help_url', 'activity_type_help_url','sub_activity_1_help_url','sub_activity_2_help_url','category_help_url', 'shapefile_info']
     
     #Convert the Globale settings keys to dict so its easier to get value of the key for title'
     gs_keys_dict= dict(GlobalSettings.keys)
