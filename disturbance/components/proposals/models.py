@@ -1432,6 +1432,22 @@ class Proposal(DirtyFieldsMixin, RevisionedMixin):
                     return False
             else:
                 return self.__assessor_group() in user.proposalassessorgroup_set.all()
+    
+    def draft_assessor_mode(self,user):
+        status_without_assessor = ['with_approver','approved','declined','with_assessor', 'discarded']
+        draft_status = ['draft']
+        if self.processing_status not in draft_status:
+            return False
+        else:
+            if self.assigned_officer:
+                if self.assigned_officer == user:
+                    # Proposal logic
+                    return self.__assessor_group() in user.proposalassessorgroup_set.all()
+                else:
+                    return False
+            else:
+                # Proposal logic
+                return self.__assessor_group() in user.proposalassessorgroup_set.all()
 
     def log_user_action(self, action, request):
         return ProposalUserAction.log_action(self, action, request.user)
