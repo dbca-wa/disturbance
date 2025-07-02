@@ -33,7 +33,10 @@
         </div>
     </div>
     
-    <MapDashboard  v-if="show_das_map && !apiaryTemplateGroup" level="external" :is_external="true"/>
+    <template v-if="show_das_map && !apiaryTemplateGroup">
+        <MapDashboard level="external" :is_external="true"/>
+    </template>
+    <!-- <MapDashboard  v-if="show_das_map && !apiaryTemplateGroup" level="external" :is_external="true"/> -->
     <ProposalDashTable level='external' :url='proposals_url'/>
     <ApprovalDashTable level='external' :url='approvals_url'/>
     <ComplianceDashTable level='external' :url='compliances_url'/>
@@ -72,6 +75,7 @@ export default {
             // from env var?
             apiarySystemName: 'Apiary System',
             dasSystemName: 'Disturbance Approval System',
+            show_das_map: false,
         }
     },
     components:{
@@ -104,13 +108,13 @@ export default {
             }
             return dasChangeText;
         },
-        show_das_map : function(){
-                if (env && env['show_das_map'] &&  env['show_das_map'].toLowerCase()=="true"  ){
-                    return true;
-                } else {
-                    return false;
-                }
-            },
+        // show_das_map : function(){
+        //         if (env && env['show_das_map'] &&  env['show_das_map'].toLowerCase()=="true"  ){
+        //             return true;
+        //         } else {
+        //             return false;
+        //         }
+        //     },
         show_das_change_msg : function(){
                 if (env && env['show_das_change_msg'] &&  env['show_das_change_msg'].toLowerCase()=="true"  ){
                     return true;
@@ -138,7 +142,14 @@ export default {
         },err=>{
         console.log(err);
         });
+        
+        if (env && env['show_das_map'] &&  env['show_das_map'].toLowerCase()=="true"  ){
+            this.show_das_map = true;
+        } else {
+            this.show_das_map = false;
+        }
     },
+    
 
 }
 </script>
