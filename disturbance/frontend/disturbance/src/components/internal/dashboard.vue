@@ -43,6 +43,7 @@ export default {
             referrals_url: api_endpoints.referrals_paginated_internal,
             apiaryTemplateGroup: false,
             dasTemplateGroup: false,
+            show_das_map: false,
         }
     
     },
@@ -62,13 +63,13 @@ export default {
             }
             return dasChangeText;
         },
-        show_das_map : function(){
-                if (env && env['show_das_map'] &&  env['show_das_map'].toLowerCase()=="true"  ){
-                    return true;
-                } else {
-                    return false;
-                }
-            },
+        // show_das_map : function(){
+        //         if (env && env['show_das_map'] &&  env['show_das_map'].toLowerCase()=="true"  ){
+        //             return true;
+        //         } else {
+        //             return false;
+        //         }
+        //     },
         show_das_change_msg : function(){
                 if (env && env['show_das_change_msg'] &&  env['show_das_change_msg'].toLowerCase()=="true"  ){
                     return true;
@@ -96,6 +97,11 @@ export default {
         },err=>{
         console.log(err);
         });
+        if (env && env['show_das_map'] &&  env['show_das_map'].toLowerCase()=="true"  ){
+            this.show_das_map = true;
+        } else {
+            this.show_das_map = false;
+        }
     },
 
 }

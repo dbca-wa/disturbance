@@ -1616,6 +1616,7 @@ class ProposalViewSet(viewsets.ModelViewSet):
         activity_qs = []
         application_type_qs = []
         applicant_qs = []
+        district_qs = []
         if template_group == 'apiary':
             qs = self.get_queryset().filter(
                 application_type__name__in=[ApplicationType.APIARY, ApplicationType.SITE_TRANSFER, ApplicationType.TEMPORARY_USE]
@@ -4174,6 +4175,7 @@ class DASMapFilterViewSet(viewsets.ReadOnlyModelViewSet):
         region_qs = []
         activity_qs = []
         application_type_qs = []
+        applicant_qs = []
         if template_group == 'apiary':
             qs = self.get_queryset().filter(
                 application_type__name__in=[ApplicationType.APIARY, ApplicationType.SITE_TRANSFER, ApplicationType.TEMPORARY_USE]
