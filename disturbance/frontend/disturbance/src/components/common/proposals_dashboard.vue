@@ -72,7 +72,7 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label for="">Proponent</label>
+                                <label for="" >{{ proponentFilterLabel }}</label>
                                 <select class="form-control" v-model="filterProposalApplicant">
                                         <option value="All">All</option>
                                         <option v-for="s in proposal_applicants" :value="s.id">{{s.search_term}}</option>
@@ -232,6 +232,7 @@ export default {
             proposal_districts: [],
             proposal_submitters: [],
             proposal_status: [],
+            proposal_applicants: [],
             is_local: helpers.is_local(),
             select2Applied: false,
             select2bApplied: false,
@@ -324,6 +325,15 @@ export default {
                 label = 'Application Type';
             } else {
                 label = 'Activity';
+            }
+            return label;
+        },
+        proponentFilterLabel: function() {
+            let label = ''
+            if (this.apiaryTemplateGroup) {
+                label = 'Applicant';
+            } else {
+                label = 'Proposal';
             }
             return label;
         },
