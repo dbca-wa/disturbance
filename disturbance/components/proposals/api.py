@@ -1630,6 +1630,8 @@ class ProposalViewSet(viewsets.ModelViewSet):
                         #ApplicationType.TEMPORARY_USE
                         ]).values_list(
                         'name', flat=True).distinct()
+            applicant_qs = qs.filter(applicant__isnull=False).distinct(
+                            'applicant_id').values_list('applicant_id','applicant__organisation__name',)
         else:
             qs = self.get_queryset().exclude(
                 application_type__name__in=[ApplicationType.APIARY, ApplicationType.SITE_TRANSFER, ApplicationType.TEMPORARY_USE])
