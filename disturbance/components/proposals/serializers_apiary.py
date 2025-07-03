@@ -784,7 +784,8 @@ class ApiarySiteOnProposalDraftGeometrySaveSerializer(GeoFeatureModelSerializer)
                 )])
 
         apiary_sites_to_exclude = [self.instance.apiary_site,] if self.instance.apiary_site else None
-        validate_buffer(wkb_geometry, apiary_sites_to_exclude)
+        if not self.instance.apiary_site.exempt_from_radius_restriction:
+            validate_buffer(wkb_geometry, apiary_sites_to_exclude)
 
         site_category = get_category(attrs['wkb_geometry_draft'])
         attrs['site_category_draft'] = site_category

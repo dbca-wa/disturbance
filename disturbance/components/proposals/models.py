@@ -4904,6 +4904,8 @@ class ApiarySite(models.Model):
     approval_link_for_vacant = models.ForeignKey('disturbance.ApiarySiteOnApproval', blank=True, null=True, related_name='vacant_apiary_site', on_delete=models.SET_NULL)
     is_vacant = models.BooleanField(default=False)
 
+    exempt_from_radius_restriction = models.BooleanField(default=False) #does not require restricted radius validation on proposal
+
     def get_relevant_applicant_name(self):
         relevant_name = ''
 
