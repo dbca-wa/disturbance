@@ -1,6 +1,6 @@
 {
 	"name": "Disturbance Development",
-	"image": "dbcawa/docker_app_dev:disturbance_dev_latest",
+	"image": "dbcawa/docker_app_dev:disturbance_django_5_dev_latest",
 	"remoteUser": "container",
 	"workspaceFolder": "/data/data/projects/disturbance",
 	"mounts": ["type=bind,source=/data/,target=/data/",
