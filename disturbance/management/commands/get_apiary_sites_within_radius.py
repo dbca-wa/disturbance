@@ -67,21 +67,28 @@ class Command(BaseCommand):
                 if i.latest_approval_link.created_at >= i.latest_proposal_link.created_at:
                     check_approval.append(i.id)
                     details_dict[i.id] = {
+                        "id": i.id,
                         "name":"site: {}".format(i.id), 
                         "status": i.latest_approval_link.site_status, 
                         "geo": i.a_geo,
                         "coords": i.latest_approval_link.wkb_geometry.coords,
                         "licence": i.latest_approval_link.approval.lodgement_number,
+                        "holder": i.latest_approval_link.approval.relevant_applicant_name,
+                        "category": i.latest_approval_link.site_category.name
                     }
                 else:
-                    check_proposal.append(i.id)
-                    details_dict[i.id] = {
-                        "name":"site: {}".format(i.id), 
-                        "status": i.latest_proposal_link.site_status, 
-                        "geo": i.p_geo,
-                        "coords": i.latest_proposal_link.wkb_geometry_processed.coords,
-                        "proposal": i.latest_proposal_link.proposal_apiary.proposal.lodgement_number,
-                    }
+                    if i.latest_proposal_link.wkb_geometry_processed:
+                        check_proposal.append(i.id)
+                        details_dict[i.id] = {
+                            "id": i.id,
+                            "name":"site: {}".format(i.id), 
+                            "status": i.latest_proposal_link.site_status, 
+                            "geo": i.p_geo,
+                            "coords": i.latest_proposal_link.wkb_geometry_processed.coords,
+                            "proposal": i.latest_proposal_link.proposal_apiary.proposal.lodgement_number,
+                            "applicant": i.latest_proposal_link.proposal_apiary.proposal.relevant_applicant_name,
+                            "category": i.latest_proposal_link.site_category_processed.name
+                        }
 
         for i in site_query:
             site_ids = []
@@ -151,16 +158,19 @@ class Command(BaseCommand):
         csv_file = str(settings.BASE_DIR)+'/tmp/{}_{}_{}.csv'.format("Apiary_Sites_Report",uuid.uuid4(),int(datetime.datetime.now().timestamp()*100000))
         with open(csv_file, 'w', newline='') as new_file:
             writer = csv.writer(new_file)
-            writer.writerow(["Site Number","Status","Coords", "Approval/Proposal", "Sites within Restricted Radius"])
+            writer.writerow(["ID","Site Number","Status","Coords","Approval/Proposal","Holder/Applicant","Category","Sites within Restricted Radius"])
             for i in details_dict:
                 if "licence" in details_dict[i]:
                     details_dict[i]["record"] = details_dict[i]["licence"]
+                    details_dict[i]["person"] = details_dict[i]["holder"]
                 elif "proposal" in details_dict[i]:
                     details_dict[i]["record"] = details_dict[i]["proposal"]
+                    details_dict[i]["person"] = details_dict[i]["applicant"]
                 else:
                     details_dict[i]["record"] = ""
+                    details_dict[i]["person"] = ""
 
                 if "site_within_restricted_radius" in details_dict[i]:
                     details_dict[i]["sites"] = details_dict[i]["site_within_restricted_radius"]
-                    writer.writerow([details_dict[i]["name"],details_dict[i]["status"],details_dict[i]["coords"],details_dict[i]["record"],details_dict[i]["sites"]])
+                    writer.writerow([details_dict[i]["id"],details_dict[i]["name"],details_dict[i]["status"],details_dict[i]["coords"],details_dict[i]["record"],details_dict[i]["person"],details_dict[i]["category"],details_dict[i]["sites"]])
         
