@@ -4972,6 +4972,30 @@ class ApiarySite(models.Model):
         current_fee = self.site_category.current_application_fee_per_site
         return current_fee
 
+    #latest relevant coords
+    @property
+    def coordinates(self):
+        latest_link = None
+        latest_link_date = None
+
+        if self.latest_proposal_link and self.latest_proposal_link.wkb_geometry_processed:
+            latest_link_date = self.latest_proposal_link.created_at
+            latest_link = self.latest_proposal_link.wkb_geometry_processed.coords
+
+        if self.latest_approval_link and self.latest_approval_link.wkb_geometry and (not latest_link_date or self.latest_approval_link.created_at >= latest_link_date):
+            latest_link_date = self.latest_approval_link.created_at
+            latest_link = self.latest_approval_link.wkb_geometry.coords
+
+        if self.proposal_link_for_vacant and self.latest_proposal_link.wkb_geometry_processed and (not latest_link_date or self.proposal_link_for_vacant.created_at >= latest_link_date):
+            latest_link_date = self.proposal_link_for_vacant.created_at
+            latest_link = self.proposal_link_for_vacant.wkb_geometry_processed.coords
+
+        if self.approval_link_for_vacant and self.latest_approval_link.wkb_geometry and (not latest_link_date or self.approval_link_for_vacant.created_at >= latest_link_date):
+            latest_link_date = self.approval_link_for_vacant.created_at
+            latest_link = self.approval_link_for_vacant.wkb_geometry.coords
+
+        return latest_link
+
     class Meta:
         app_label = 'disturbance'
 
