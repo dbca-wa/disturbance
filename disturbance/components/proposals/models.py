@@ -335,6 +335,14 @@ class ProposalDocument(Document):
 def fee_invoice_references_default():
     return []
 
+
+class DASProposalManager(models.Manager):
+   ''' Return queryset with only das application types Proposals '''
+   def get_queryset(self):
+       apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
+       return super().get_queryset().exclude(application_type__name__in=apiary_proposal_types)
+
+
 class Proposal(DirtyFieldsMixin, RevisionedMixin):
     CUSTOMER_STATUS_TEMP = 'temp'
     CUSTOMER_STATUS_DRAFT = 'draft'
@@ -499,6 +507,8 @@ class Proposal(DirtyFieldsMixin, RevisionedMixin):
     shapefile_geom = MultiPolygonField('Source/Submitter gdf.exploded (multi) polygon geometry', srid=4326, blank=True, null=True) # for 'pgsql2shp' from KB
     reissued = models.BooleanField(default=False)  
     prefill_requested = models.BooleanField(default=False)           
+
+    objects = DASProposalManager()
 
     class Meta:
         app_label = 'disturbance'
