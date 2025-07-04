@@ -1202,7 +1202,7 @@ def proposal_submit_apiary(proposal, request):
             ret2 = send_external_submit_email_notification(request, proposal)
 
             #proposal.save_form_tabs(request)
-            if ret1 and ret2:
+            if (ret1 and ret2) or settings.DEBUG:
                 proposal.processing_status = Proposal.PROCESSING_STATUS_WITH_ASSESSOR
                 proposal.customer_status = Proposal.CUSTOMER_STATUS_WITH_ASSESSOR
                 proposal.documents.all().update(can_delete=False)

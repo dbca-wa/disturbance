@@ -142,6 +142,7 @@ class Approval(RevisionedMixin):
     replaced_by = models.ForeignKey('self', blank=True, null=True)
     #current_proposal = models.ForeignKey(Proposal,related_name = '+')
     current_proposal = models.ForeignKey(Proposal,related_name='approvals')
+    #TODO we have a renewal document model and a field here - one of these is not needed
     renewal_document = models.ForeignKey(ApprovalDocument, blank=True, null=True, related_name='renewal_document')
     # apiary_renewal_document = models.ForeignKey(RenewalDocument, blank=True, null=True, related_name='apiary_renewal_document')
     renewal_sent = models.BooleanField(default=False)
