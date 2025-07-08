@@ -109,7 +109,8 @@ def convert_utc_time_to_local(utc_time_str_with_z):
 
 
 def get_template_group(request):
-    return 'das'
+    # return 'das'
+    return settings.DOMAIN_DETECTED
 
 
 def _get_params(layer_name, coords):
@@ -226,7 +227,11 @@ def custom_strftime(format_str, t):
 
 def getProposalExport(filters, num):
     from disturbance.components.proposals.models import Proposal
-    qs = Proposal.objects.order_by("-lodgement_date").exclude(processing_status='hidden')
+    template_group = settings.DOMAIN_DETECTED
+    if template_group == 'das':
+        apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
+        qs = Proposal.objects.order_by("-lodgement_date").exclude(processing_status='hidden')
+        qs = qs.exclude(application_type__name__in=apiary_proposal_types).exclude(processing_status=Proposal.PROCESSING_STATUS_DISCARDED)
     if filters:
         #type
         if "type" in filters and filters["type"] and not filters["type"].lower() == 'all':
@@ -248,9 +253,12 @@ def getProposalExport(filters, num):
     
 def getApprovalExport(filters, num):
     from disturbance.components.approvals.models import Approval
-    qs = Approval.objects.all().exclude(status='hidden')
-    ids = qs.order_by('lodgement_number', '-issue_date').distinct('lodgement_number').values_list('id', flat=True)
-    qs = qs.filter(id__in=ids)
+    template_group = settings.DOMAIN_DETECTED
+    if template_group == 'das':
+        apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
+        qs = Approval.objects.all().exclude(status='hidden')
+        ids = qs.order_by('lodgement_number', '-issue_date').distinct('lodgement_number').values_list('id', flat=True)
+        qs = qs.exclude(current_proposal__application_type__name__in=apiary_proposal_types).filter(id__in=ids)
     
     # for obj in qs:
     #     if hasattr(obj.proxy_applicant, 'get_full_name') and obj.proxy_applicant.get_full_name():
@@ -261,11 +269,6 @@ def getApprovalExport(filters, num):
     #         name = str(obj.applicant)
 
     if filters:
-        #type
-        # if "type" in filters and filters["type"] and not filters["type"].lower() == 'all':
-        #     if filters["type"].lower() == 'ml':
-        #         qs = qs.filter(lodgement_number__startswith="MOL")
-        #expiry_from
         if "expiry_from" in filters and filters["expiry_from"]:
             qs = qs.filter(expiry_date__gte=filters["expiry_from"])
         #issued_to
@@ -279,7 +282,11 @@ def getApprovalExport(filters, num):
     
 def getComplianceExport(filters, num):
     from disturbance.components.compliances.models import Compliance
-    qs = Compliance.objects.all().exclude(processing_status='discarded').order_by("-due_date")
+    template_group = settings.DOMAIN_DETECTED
+    if template_group == 'das':
+        apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
+        qs = Compliance.objects.all().exclude(processing_status='discarded')
+        qs = qs.exclude(proposal__application_type__name__in=apiary_proposal_types).order_by("-due_date")
 
     if filters:
         #due_date_from

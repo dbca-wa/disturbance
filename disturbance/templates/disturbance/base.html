@@ -131,18 +131,18 @@
                                                 <ul class="dropdown-menu" style="z-index:99999">
                                                     {% if is_disturbance_admin_user or is_apiary_admin_user or request.user.is_superuser %}
                                                         <li><a href="{% url 'admin:index' %}">Admin</a></li>
-							{% if DOMAIN_DETECTED != 'apiary' %}
-                                                            <li><a href="/internal/schema">Manage Application Schema</a></li>
-							    <!-- <li><a href="/filelist">View Export Files</a></li> -->
-                                                        {% endif %}
-							{% comment %}
+							                        {% if DOMAIN_DETECTED != 'apiary' %}
+                                                        <li><a href="/internal/schema">Manage Application Schema</a></li>
+							                            <!-- <li><a href="/filelist">View Export Files</a></li> -->
+                                                    {% endif %}
+							                        {% comment %}
                                                         {% if is_apiary_admin_user and DOMAIN_DETECTED == 'apiary' %}
                                                             <li><a href="{% url 'apiary_admin' %}">Apiary Update Panel</a></li>
                                                         {% endif %}
                                                         {% if is_disturbance_admin_user and DOMAIN_DETECTED != 'apiary' %}
                                                             <li><a href="{% url 'apiary_admin' %}">Disturbance Update Panel</a></li>
                                                         {% endif %}
-							{% endcomment %}
+							                        {% endcomment %}
                                                         <li role="separator" class="divider"></li>
                                                     {% endif %}
                                                     {% if request.user.is_superuser %}
@@ -152,10 +152,10 @@
                                                     {% for org in request.user.disturbance_organisations.all %}
                                                         {% if request.user.is_superuser or org.id|is_org_admin:request.user %}
                                                             <li><a href="/external/organisations/manage/{{org.id}}">Manage {{org.organisation.name}}</a></li>
-                                    {% comment %} --> DAS does not have Org Consultants
+                                                    {% comment %} --> DAS does not have Org Consultants
                                                         {% elif org.id|is_org_consultant:request.user %}
                                                             <li><a href="/external/organisations/manage/{{org.id}}">Manage {{ org.organisation.name}}</a></li>
-                                    {% endcomment %}
+                                                    {% endcomment %}
                                                         {% endif %}
                                                     {% endfor %}
 

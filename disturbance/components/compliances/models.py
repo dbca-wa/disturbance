@@ -39,12 +39,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class DASComplianceManager(models.Manager):
-   ''' Return queryset with only das application types proposals Compliances'''
-   def get_queryset(self):
-       apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
-       return super().get_queryset().exclude(proposal__application_type__name__in=apiary_proposal_types)
-
 #class Compliance(models.Model):
 class Compliance(RevisionedMixin):
 
@@ -78,8 +72,6 @@ class Compliance(RevisionedMixin):
     reminder_sent = models.BooleanField(default=False)
     post_reminder_sent = models.BooleanField(default=False)
 
-
-    objects = DASComplianceManager()
 
     class Meta:
         app_label = 'disturbance'

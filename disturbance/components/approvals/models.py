@@ -71,13 +71,6 @@ class RenewalDocument(Document):
         app_label = 'disturbance'
 
 
-class DASApprovalManager(models.Manager):
-   ''' Return queryset with only das application types proposals Approvals'''
-   def get_queryset(self):
-       apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
-       return super().get_queryset().exclude(current_proposal__application_type__name__in=apiary_proposal_types)
-
-
 class Approval(RevisionedMixin):
     STATUS_CURRENT = 'current'
     STATUS_EXPIRED = 'expired'
@@ -117,8 +110,6 @@ class Approval(RevisionedMixin):
     set_to_surrender = models.BooleanField(default=False)
     reissued= models.BooleanField(default=False)
     migrated = models.BooleanField(default=False)
-
-    objects = DASApprovalManager()
 
     class Meta:
         app_label = 'disturbance'
