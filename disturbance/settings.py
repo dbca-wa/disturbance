@@ -221,9 +221,9 @@ VERSION_NO="1.0.1"
 
 BASE_URL='https://' + SITE_PREFIX + '.' + SITE_DOMAIN
 
-CRON_CLASSES = [
-    'appmonitor_client.cron.CronJobAppMonitorClient',
-]
+# CRON_CLASSES = [
+#     'appmonitor_client.cron.CronJobAppMonitorClient',
+# ]
 
 
 CKEDITOR_CONFIGS = {
