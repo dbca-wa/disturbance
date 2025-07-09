@@ -6,9 +6,9 @@
         <form :action="proposal_form_url" method="post" name="new_proposal" enctype="multipart/form-data">
             <div v-if="!proposal_readonly">
                 <div v-if="!proposal.apiary_group_application_type && !proposal.shapefile_json" class="row">
-                    <div class="col-lg-12 alert alert-danger" >
+                    <!-- <div class="col-lg-12 alert alert-danger" > -->
                         <alert type="danger"><strong>Your Proposal is currently missing a shapefile. Please upload a shapefile, validate and prefill the Proposal</strong></alert>
-                    </div>
+                    <!-- </div> -->
                 </div>
               <div v-if="hasAmendmentRequest" class="row" style="color:red;">
                 <div class="col-lg-12 pull-right">
@@ -258,6 +258,7 @@ import ProposalApiary from '../form_apiary.vue'
 import ApiarySiteTransfer from '../form_apiary_site_transfer.vue'
 import NewApply from './proposal_apply_new.vue'
 import MapSection from '@/components/common/das/map_section.vue'
+import alert from '@/utils/vue/alert.vue'
 import Vue from 'vue'
 import {
   api_endpoints,
@@ -319,6 +320,7 @@ export default {
         NewApply,
         ApiarySiteTransfer,
         MapSection,
+        alert,
     },
     computed: {
         show_das_map : function(){

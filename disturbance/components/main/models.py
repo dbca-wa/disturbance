@@ -107,6 +107,11 @@ class District(models.Model):
     def __str__(self):
         return self.name
 
+class DASApplicationTypeManager(models.Manager):
+   ''' Return queryset with only das application types '''
+   def get_queryset(self):
+       apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
+       return super().get_queryset().exclude(name__in=apiary_proposal_types)
 
 class ApplicationType(models.Model):
     DISTURBANCE = 'Disturbance'
@@ -140,6 +145,8 @@ class ApplicationType(models.Model):
     visible = models.BooleanField(default=True)
     domain_used = models.CharField(max_length=40, choices=DOMAIN_USED_CHOICES, default=DOMAIN_USED_CHOICES[0][0])
     searchable = models.BooleanField(default=True)
+
+    objects = DASApplicationTypeManager()
 
     class Meta:
         ordering = ['order', 'name']

@@ -201,7 +201,11 @@ class ApprovalPaginatedViewSet(viewsets.ModelViewSet):
         #qs = Approval.objects.filter(id__in=ids)
         #web_url = request.META.get('HTTP_HOST', None)
         template_group = get_template_group(request)
-        qs = self.get_queryset().filter(id__in=ids)
+        if template_group == 'das':
+            # TODO as apiary_approval field is removed from migrations, changed the qurery
+            # qs = self.get_queryset().exclude(apiary_approval=True).filter(id__in=ids)
+            apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
+            qs = self.get_queryset().exclude(current_proposal__application_type__name__in=apiary_proposal_types).filter(id__in=ids)
         qs = self.filter_queryset(qs)
 
         # on the internal organisations dashboard, filter the Proposal/Approval/Compliance datatables by applicant/organisation

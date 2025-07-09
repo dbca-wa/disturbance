@@ -47,7 +47,7 @@ from disturbance.components.compliances.serializers import (
     ComplianceAmendmentRequestSerializer,
     CompAmendmentRequestDisplaySerializer
 )
-from disturbance.components.main.utils import handle_validation_error
+from disturbance.components.main.utils import get_template_group,handle_validation_error
 from disturbance.helpers import is_customer, is_internal
 from rest_framework_datatables.pagination import DatatablesPageNumberPagination
 from disturbance.components.proposals.api import ProposalFilterBackend #, ProposalRenderer
@@ -160,7 +160,10 @@ class CompliancePaginatedViewSet(viewsets.ModelViewSet):
         To test:
             http://localhost:8000/api/compliance_paginated/compliances_external/?format=datatables&draw=1&length=2
         """
-        qs = self.get_queryset()
+        template_group  =  get_template_group(request)
+        if template_group == 'das':
+            apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
+            qs = self.get_queryset().exclude(proposal__application_type__name__in=apiary_proposal_types)
         qs = self.filter_queryset(qs)
 
         applicant_id = request.GET.get('org_id')

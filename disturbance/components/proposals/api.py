@@ -43,7 +43,7 @@ from disturbance.utils import search_tenure, search_label, get_schema_questions
 from disturbance.components.main.utils import (
     check_db_connection,
     handle_validation_error,
-
+    get_template_group,
 )
 
 from django.urls import reverse
@@ -320,7 +320,12 @@ class ProposalPaginatedViewSet(viewsets.ModelViewSet):
 
         http://localhost:8499/api/proposal_paginated/proposal_paginated_internal/?format=datatables&draw=1&length=2
         """
-        qs = self.get_queryset()
+        template_group  =  get_template_group(request)
+        if template_group == 'das':
+            apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
+            qs = self.get_queryset().exclude(
+                        application_type__name__in=apiary_proposal_types
+                    )
         qs = self.filter_queryset(qs)
 
         # on the internal organisations dashboard, filter the Proposal/Approval/Compliance datatables by applicant/organisation
@@ -345,7 +350,9 @@ class ProposalPaginatedViewSet(viewsets.ModelViewSet):
         http://localhost:8499/api/proposal_paginated/referrals_internal/?format=datatables&draw=1&length=2
         """
         #self.serializer_class = ReferralSerializer
-        qs = Referral.objects.filter(referral=request.user) if is_internal(self.request) else Referral.objects.none()
+        template_group = get_template_group(request)
+        if template_group == 'das':
+            qs = Referral.objects.filter(referral=request.user) if is_internal(self.request) else Referral.objects.none()
         #for r in qs_r:
          #   referral_id_list.append(r.id)
         #qs = self.filter_queryset(self.request, qs, self)
@@ -374,7 +381,11 @@ class ProposalPaginatedViewSet(viewsets.ModelViewSet):
 
         http://localhost:8499/api/proposal_paginated/proposal_paginated_external/?format=datatables&draw=1&length=2
         """
-        qs = self.get_queryset().exclude(processing_status=Proposal.PROCESSING_STATUS_DISCARDED)
+        template_group = get_template_group(request)
+        if template_group == 'das':
+            apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
+            qs = self.get_queryset().exclude(application_type__name__in=apiary_proposal_types
+                                             ).exclude(processing_status=Proposal.PROCESSING_STATUS_DISCARDED)
         qs = self.filter_queryset(qs)
 
         # on the internal organisations dashboard, filter the Proposal/Approval/Compliance datatables by applicant/organisation
@@ -623,17 +634,23 @@ class ProposalViewSet(viewsets.ModelViewSet):
     @action(methods=['GET',], detail=False)
     def filter_list(self, request, *args, **kwargs):
         """ Used by the internal/external dashboard filters """
+        template_group = get_template_group(request)
         region_qs = []
         activity_qs = []
         application_type_qs = []
         applicant_qs = []
 
-        qs = self.get_queryset()
-        region_qs =  qs.filter(region__isnull=False).values_list('region__name', flat=True).distinct()
-        district_qs =  qs.filter(district__isnull=False).values_list('district__name', flat=True).distinct()
-        submitter_qs = qs.filter(submitter__isnull=False).distinct(
-                        'submitter__email').values_list('submitter__first_name','submitter__last_name','submitter__email')
-        applicant_qs = qs.filter(applicant__isnull=False).distinct(
+        if template_group == 'das':
+            apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
+            qs = self.get_queryset().exclude(
+                        application_type__name__in=apiary_proposal_types
+                    )
+            qs = self.get_queryset()
+            region_qs =  qs.filter(region__isnull=False).values_list('region__name', flat=True).distinct()
+            district_qs =  qs.filter(district__isnull=False).values_list('district__name', flat=True).distinct()
+            submitter_qs = qs.filter(submitter__isnull=False).distinct(
+                            'submitter__email').values_list('submitter__first_name','submitter__last_name','submitter__email')
+            applicant_qs = qs.filter(applicant__isnull=False).distinct(
                         'applicant_id').values_list('applicant_id','applicant__organisation__name',)
 
 
@@ -1712,16 +1729,17 @@ class ReferralViewSet(viewsets.ModelViewSet):
     @action(methods=['GET',], detail=False)
     def filter_list(self, request, *args, **kwargs):
         """ Used by the external dashboard filters """
+        template_group = get_template_group(request)
         region_qs = []
         application_type_qs = []
         activity_qs = []
-
-        qs =  self.get_queryset().filter(referral=request.user)
-        region_qs =  qs.filter(proposal__region__isnull=False).values_list('proposal__region__name', flat=True).distinct()
-        #district_qs =  qs.filter(proposal__district__isnull=False).values_list('proposal__district__name', flat=True).distinct()
-        activity_qs =  qs.filter(proposal__activity__isnull=False).order_by('proposal__activity').distinct('proposal__activity').values_list('proposal__activity', flat=True).distinct()
-        submitter_qs = qs.filter(proposal__submitter__isnull=False).order_by('proposal__submitter').distinct('proposal__submitter').values_list(
-                'proposal__submitter__first_name','proposal__submitter__last_name','proposal__submitter__email')
+        if template_group == 'das':
+            qs =  self.get_queryset().filter(referral=request.user)
+            region_qs =  qs.filter(proposal__region__isnull=False).values_list('proposal__region__name', flat=True).distinct()
+            #district_qs =  qs.filter(proposal__district__isnull=False).values_list('proposal__district__name', flat=True).distinct()
+            activity_qs =  qs.filter(proposal__activity__isnull=False).order_by('proposal__activity').distinct('proposal__activity').values_list('proposal__activity', flat=True).distinct()
+            submitter_qs = qs.filter(proposal__submitter__isnull=False).order_by('proposal__submitter').distinct('proposal__submitter').values_list(
+                    'proposal__submitter__first_name','proposal__submitter__last_name','proposal__submitter__email')
 
         #submitter_qs = qs.filter(proposal__submitter__isnull=False).order_by('proposal__submitter').distinct('proposal__submitter').values_list('proposal__submitter__first_name','proposal__submitter__last_name','proposal__submitter__email')
         submitters = [dict(email=i[2], search_term='{} {} ({})'.format(i[0], i[1], i[2])) for i in submitter_qs]
@@ -2997,9 +3015,11 @@ class DASMapFilterViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
+        apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
         if is_internal(self.request):
             return Proposal.objects.filter(
-                Q(region__isnull=False)).exclude(shapefile_json__isnull=True)
+                Q(region__isnull=False) | 
+                Q(application_type__name__in=apiary_proposal_types)).exclude(shapefile_json__isnull=True)
         elif is_customer(self.request):
             user_orgs = [org.id for org in user.disturbance_organisations.all()]
             queryset = Proposal.objects.filter(region__isnull=False).filter(
@@ -3083,14 +3103,19 @@ class DASMapFilterViewSet(viewsets.ReadOnlyModelViewSet):
     @action(methods=['GET',], detail=False)
     def filter_list(self, request, *args, **kwargs):
         """ Used by the internal/external dashboard filters """
+        template_group = get_template_group(request)
         region_qs = []
         activity_qs = []
         application_type_qs = []
-        qs = self.get_queryset()
-        region_qs =  qs.filter(region__isnull=False).values_list('region_id', 'region__name').distinct()
-        submitter_qs = qs.filter(submitter__isnull=False).distinct(
-                        'submitter__email').values_list('submitter__first_name','submitter__last_name','submitter__email')
-        applicant_qs = qs.filter(applicant__isnull=False).distinct(
+        applicant_qs = []
+        apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
+        if template_group == 'das':
+            qs = self.get_queryset().exclude(
+                application_type__name__in=apiary_proposal_types)
+            region_qs =  qs.filter(region__isnull=False).values_list('region_id', 'region__name').distinct()
+            submitter_qs = qs.filter(submitter__isnull=False).distinct(
+                            'submitter__email').values_list('submitter__first_name','submitter__last_name','submitter__email')
+            applicant_qs = qs.filter(applicant__isnull=False).distinct(
                         'applicant_id').values_list('applicant_id','applicant__organisation__name',)
 
         application_type_qs =  qs.filter(application_type__isnull=False).values_list('application_type__name', flat=True).distinct()

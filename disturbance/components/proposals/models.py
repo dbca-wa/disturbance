@@ -335,6 +335,7 @@ class ProposalDocument(Document):
 def fee_invoice_references_default():
     return []
 
+
 class Proposal(DirtyFieldsMixin, RevisionedMixin):
     CUSTOMER_STATUS_TEMP = 'temp'
     CUSTOMER_STATUS_DRAFT = 'draft'
