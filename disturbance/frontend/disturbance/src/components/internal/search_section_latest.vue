@@ -252,6 +252,7 @@ export default {
       api_sections:[],
       api_proposal_types:[],
       activity_matrix: [],
+      all_activity_matrices: [],
       activities: [],
       display_region_selectbox: true,
       display_activity_matrix_selectbox: true,
@@ -528,6 +529,9 @@ export default {
             vm.date_type=false;
             vm.select_type=false;
             vm.api_sections=[];
+            vm.activity_matrix=[];
+            vm.selected_application_name = this.searchList(proposal_type_id, vm.proposal_types).name;
+            vm.getSelectedAppActivityMatrix(vm.selected_application_name);
             vm.api_sections = this.searchList(proposal_type_id, vm.proposal_types).sections;
             if (vm.api_sections.length > 0) {
                 for (var i = 0; i < vm.api_sections.length; i++) {
@@ -535,10 +539,7 @@ export default {
 
                   }
                 }
-
-           
-
-        },
+      },
       chainedSelectDistricts: function(region_id){
         let vm = this;
             vm.districts = [];
@@ -620,6 +621,35 @@ export default {
           console.log(error);
         })
       },
+      fetchAllActivityMatrices: async function(){
+        let vm = this;
+        vm.sub_activities1 = [];
+        vm.sub_activities2 = [];
+        vm.categories = [];
+        vm.approval_level = '';
+        await vm.$http.get(api_endpoints.activity_matrix).then((response) => {
+            this.all_activity_matrices = response.body;
+                    //vm.fetchRegions();
+        },(error) => {
+          console.log(error);
+        })
+      },
+      getSelectedAppActivityMatrix: function(selected_app){
+		    let vm = this;
+        vm.activities=[];
+        vm.sub_activities1 = [];
+        vm.sub_activities2 = [];
+        vm.categories = [];
+        vm.approval_level = '';
+        let activity_matrix_obj = [...this.all_activity_matrices.filter(matrix => matrix.name == selected_app)]        
+        this.activity_matrix = activity_matrix_obj[0].schema[0];
+        this.keys_ordered = activity_matrix_obj[0].ordered;
+        var keys = this.keys_ordered ? Object.keys(this.activity_matrix).sort() : Object.keys(this.activity_matrix)
+        for (var i = 0; i < keys.length; i++) {
+            this.activities.push( {text: keys[i], value: keys[i]} );
+        }
+       
+      },
       chainedSelectSubActivities1: function(activity_name){
         let vm = this;
             vm.sub_activities1 = [];
@@ -675,6 +705,7 @@ export default {
                             text: vm.api_proposal_types[i].name_with_version,
                             value: vm.api_proposal_types[i].id,
                             sections: vm.api_proposal_types[i].sections,
+                            name: vm.api_proposal_types[i].name,
                             //domain_used: vm.api_proposal_types[i].domain_used,
                             //activities: (vm.api_proposal_types[i].activity_app_types.length > 0) ? vm.api_proposal_types[i].activity_app_types : [],
                             //tenures: (vm.api_proposal_types[i].tenure_app_types.length > 0) ? vm.api_proposal_types[i].tenure_app_types : [],
@@ -748,7 +779,8 @@ export default {
         let vm = this;
         vm.fetchRegions();
         vm.fetchProposalTypes();
-        vm.fetchActivityMatrix();
+        // vm.fetchActivityMatrix();
+        vm.fetchAllActivityMatrices();
         vm.fetchSections();
         vm.proposal_options.data = vm.results;
         vm.$refs.proposal_datatable.vmDataTable.draw();
