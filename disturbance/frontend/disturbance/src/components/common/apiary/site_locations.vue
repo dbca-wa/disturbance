@@ -120,13 +120,6 @@
             <div :id="popup_content_id" class="text-center"></div>
         </div>
 
-
-        <div class="row col-sm-12">
-            <label>
-                Click <a href="/external/available_sites/">here</a> if you are interested in existing sites that are available by the site licence holder.
-            </label>
-        </div>
-
     </div>
 </template>
 
