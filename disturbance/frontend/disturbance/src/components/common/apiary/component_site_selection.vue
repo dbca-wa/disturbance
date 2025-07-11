@@ -37,7 +37,6 @@
 <script>
     import datatable from '@vue-utils/datatable.vue'
     import { v4 as uuidv4 } from 'uuid';
-    import ComponentMap from '@/components/common/apiary/component_map.vue'
     import { getDisplayNameFromStatus, getStatusForColour, SiteColours } from '@/components/common/apiary/site_colours.js'
 
     export default {
@@ -482,7 +481,6 @@
             vm.$emit('apiary_sites_updated', vm.apiary_sites_local)
         },
         components: {
-            ComponentMap,
             datatable,
         },
         computed: {

@@ -683,7 +683,6 @@
             mouseLeave: function(e){
                 let vm = this;
                 if (!vm.not_close_popup_by_mouseleave){
-                    //vm.$refs.component_map.closePopup()
                     vm.closePopup()
                 }
             },
