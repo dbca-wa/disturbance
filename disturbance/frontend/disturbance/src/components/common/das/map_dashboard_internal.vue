@@ -189,7 +189,6 @@
 
 <script>
     import FormSection from "@/components/forms/section_toggle.vue"
-    import ContactLicenceHolderModal from "@/components/common/apiary/contact_licence_holder_modal.vue"
     import {v4 as uuidv4 } from 'uuid';
     import 'ol/ol.css';
     import 'ol-layerswitcher/dist/ol-layerswitcher.css'
@@ -306,7 +305,6 @@
         },
         components: {
             FormSection,
-            ContactLicenceHolderModal,
             Datatable
         },
         props: {
@@ -1606,40 +1604,11 @@
                 }
             },
 
-            // Existed methods before merging
-            contactLicenceHolderClicked: function(apiary_site_id){
-                this.openOnSiteInformationModal(apiary_site_id)
-            },
             contactLicenceHolder: function(e){
                 let vm = this;
                 //let apiary_site_id = e.target.getAttribute("data-apiary-site-id");
                 let apiary_site_id = e.target.getAttribute("data-contact-licence-holder");
-                this.contactLicenceHolderClicked(apiary_site_id)
                 e.stopPropagation()
-            },
-            contactLicenceHolderOK: function(obj){
-                this.$http.post('/api/apiary_site/' + obj.apiary_site_id + '/contact_licence_holder/', obj).then(
-                    res => {
-                        this.$refs.contact_licence_holder_modal.close();
-                    },
-                    err => {
-
-                    }
-                )
-            },
-            openOnSiteInformationModal: async function(apiary_site_id) {
-                this.modalBindId = uuidv4()
-
-                try {
-                    this.$nextTick(() => {
-                        if (this.$refs.contact_licence_holder_modal){
-                            this.$refs.contact_licence_holder_modal.apiary_site_id = apiary_site_id
-                            this.$refs.contact_licence_holder_modal.openMe();
-                        }
-                    });
-                } catch (err) {
-
-                }
             },
             fetchFilterLists: function(){
                 let vm = this;

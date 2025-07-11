@@ -1,16 +1,10 @@
 <template>
     <div class="container">
-        <ContactLicenceHolderModal
-            ref="contact_licence_holder_modal"
-            :key="modalBindId"
-            @contact_licence_holder="contactLicenceHolder"
-        />
     </div>
 </template>
 
 <script>
     import FormSection from "@/components/forms/section_toggle.vue"
-    import ContactLicenceHolderModal from "@/components/common/apiary/contact_licence_holder_modal.vue"
     import uuid from 'uuid'
 
     export default {
@@ -24,7 +18,6 @@
         },
         components: {
             FormSection,
-            ContactLicenceHolderModal
         },
         props: {
 
@@ -42,7 +35,6 @@
             contactLicenceHolder: function(obj){
                 this.$http.post('/api/apiary_site/' + obj.apiary_site_id + '/contact_licence_holder/', obj).then(
                     res => {
-                        this.$refs.contact_licence_holder_modal.close();
                     },
                     err => {
 
@@ -54,10 +46,6 @@
 
                 try {
                     this.$nextTick(() => {
-                        if (this.$refs.contact_licence_holder_modal){
-                            this.$refs.contact_licence_holder_modal.apiary_site_id = apiary_site_id
-                            this.$refs.contact_licence_holder_modal.openMe();
-                        }
                     });
                 } catch (err) {
 
