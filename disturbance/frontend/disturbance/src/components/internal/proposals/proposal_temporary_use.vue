@@ -284,13 +284,7 @@
                             </FormSection>
 
                             <div v-if="proposal">
-                                <SectionsProposalTemporaryUse 
-                                    :proposal="proposal"
-                                    :is_internal="true"
-                                    :is_external="false"
-                                />
                             </div>
-
                         </div>
                     </div>
                 </template>
@@ -326,7 +320,6 @@ import ProposedApproval from './proposed_apiary_issuance.vue'
 import ApprovalScreen from './proposal_approval.vue'
 import CommsLogs from '@common-utils/comms_logs.vue'
 import { api_endpoints, helpers } from '@/utils/hooks'
-import SectionsProposalTemporaryUse from '@/components/common/apiary/sections_proposal_temporary_use.vue'
 import FormSection from "@/components/forms/section_toggle.vue"
 import ApprovalScreenSiteTransferTemporaryUse from './proposal_approval_site_transfer_temporary_use.vue'
 
@@ -415,7 +408,6 @@ export default {
         //MoreReferrals,
         NewApply,
         FormSection,
-        SectionsProposalTemporaryUse,
     },
     filters: {
         formatDate: function(data){

@@ -236,12 +236,6 @@
             <div class="row">
                 <FormSection :formCollapse="false" label="Temporary Use" Index="temporary_use">
                     <template v-if="approval && approval.id">
-                        <TemporaryUse
-                            :approval_id="approval.id"
-                            :is_internal="true"
-                            :is_external="false"
-                            ref="tempoary_use"
-                        />
                     </template>
                 </FormSection>
             </div>
@@ -261,7 +255,6 @@ import datatable from '@vue-utils/datatable.vue'
 import CommsLogs from '@common-utils/comms_logs.vue'
 import FormSection from "@/components/forms/section_toggle.vue"
 import { api_endpoints, helpers } from '@/utils/hooks'
-import TemporaryUse from '@/components/common/apiary/section_temporary_use.vue'
 export default {
   name: 'ApiaryApproval',
   data() {
@@ -320,7 +313,6 @@ export default {
         datatable,
         CommsLogs,
         FormSection,
-        TemporaryUse,
   },
   computed: {
     isLoading: function () {

@@ -7,11 +7,6 @@
 
         <div class="col-md-9 sections-proposal-temporary-use">
             <div>
-                <SectionsProposalTemporaryUse
-                    :is_internal="false"
-                    :is_external="true"
-                    :proposal="proposal"
-                />
             </div>
         </div>
 
@@ -36,7 +31,6 @@
 <script>
     import {v4 as uuidv4 } from 'uuid';
     import { helpers } from '@/utils/hooks'
-    import SectionsProposalTemporaryUse from '@/components/common/apiary/sections_proposal_temporary_use.vue'
 
     export default {
         name: 'ExternalProposalTemporaryUse',
@@ -64,7 +58,6 @@
             }
         },
         components:{
-            SectionsProposalTemporaryUse,
         },
         computed: {
             csrf_token: function() {

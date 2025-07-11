@@ -22,39 +22,6 @@
                 ref="mu_details" 
             />
 
-            <FormSection :formCollapse="false" label="Site Locations" Index="site_locations">
-                <div v-if="draftApiaryApplication">
-
-                    <SiteLocations
-                        :proposal="proposal"
-                        id="site_locations"
-                        ref="apiary_site_locations"
-                        :is_external="is_external"
-                        :is_internal="is_internal"
-                        @button_text="button_text"
-                        @total_fee_south_west="total_fee_south_west"
-                        @total_fee_remote="total_fee_remote"
-                        @total_fee_south_west_renewal="total_fee_south_west_renewal"
-                        @total_fee_remote_renewal="total_fee_remote_renewal"
-                        @num_of_sites_remain_south_west="num_of_sites_remain_south_west"
-                        @num_of_sites_remain_remote="num_of_sites_remain_remote"
-                        @num_of_sites_remain_south_west_renewal="num_of_sites_remain_south_west_renewal"
-                        @num_of_sites_remain_remote_renewal="num_of_sites_remain_remote_renewal"
-                        @num_of_sites_south_west_to_add_as_remainder="num_of_sites_south_west_to_add_as_remainder"
-                        @num_of_sites_remote_to_add_as_remainder="num_of_sites_remote_to_add_as_remainder"
-                        @num_of_sites_south_west_renewal_to_add_as_remainder="num_of_sites_south_west_renewal_to_add_as_remainder"
-                        @num_of_sites_remote_renewal_to_add_as_remainder="num_of_sites_remote_renewal_to_add_as_remainder"
-                        @total_num_of_sites_on_map_unpaid="total_num_of_sites_on_map_unpaid"
-                        @total_num_of_sites_on_map="total_num_of_sites_on_map"
-                        @fee_remote_renewal="fee_remote_renewal"
-                        @fee_south_west_renewal="fee_south_west_renewal"
-                    />
-
-                </div>
-                <div v-else>
-                </div>
-            </FormSection>
-
             <FormSection :formCollapse="false" label="Supporting Application Documents" Index="supporting_application_documents">
                 <div class="row">
                     <div class="col-sm-12">
@@ -158,7 +125,6 @@
     import ManageUser from '@/components/external/organisations/manage.vue'
     import FileField from '@/components/forms/filefield_immediate.vue'
     import FormSection from "@/components/forms/section_toggle.vue"
-    import SiteLocations from '@/components/common/apiary/site_locations.vue'
     import {v4 as uuidv4 } from 'uuid';
     import { api_endpoints, helpers }from '@/utils/hooks'
     export default {
@@ -217,7 +183,6 @@
             }
         },
         components: {
-            SiteLocations,
             FileField,
             FormSection,
             ManageUser,

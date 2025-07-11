@@ -9,16 +9,6 @@
         </div>
 
         <div :class="apiary_sections_classname">
-            <!--FormSection :formCollapse="false" label="Site Locations" Index="site_locations">
-                <SiteLocations
-                    :proposal="proposal"
-                    id="site_locations"
-                    ref="apiary_site_locations"
-                    :is_external="is_external"
-                    :is_internal="is_internal"
-                    @button_text="button_text"
-                />
-            </FormSection-->
             <FormSection :formCollapse="false" label="Transferee" Index="transferee">
                 <!--span class="row col-sm-12"-->
                 <div v-if="is_external" class="row col-sm-12">
@@ -239,7 +229,6 @@
             }
         },
         components: {
-            //SiteLocations,
             FileField,
             FormSection,
         },

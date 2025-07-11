@@ -18,11 +18,6 @@
         </template>
 
         <template v-else-if="proposal.apiary_temporary_use">
-            <SectionsProposalTemporaryUse
-                :is_internal="true"
-                :is_external="false"
-                :proposal="proposal"
-            />
         </template>
 
         <template v-else>
@@ -144,7 +139,6 @@ import datatable from '@vue-utils/datatable.vue'
 import RequirementDetail from './proposal_add_requirement.vue'
 import FormSection from "@/components/forms/section_toggle.vue"
 import {v4 as uuidv4} from 'uuid';
-import SectionsProposalTemporaryUse from '@/components/common/apiary/sections_proposal_temporary_use.vue'
 
 export default {
     name: 'ApprovalScreenSiteTransferTemporaryUse',
@@ -164,7 +158,6 @@ export default {
     },
     components:{
         FormSection,
-        SectionsProposalTemporaryUse,
     },
     computed:{
         originatingApprovalName: function() {
