@@ -249,12 +249,6 @@
             <div class="row">
                 <FormSection :formCollapse="false" label="On Site" Index="on_site">
                     <template v-if="approval && approval.id">
-                        <OnSiteInformation
-                            :approval_id="approval.id"
-                            :is_internal="true"
-                            :is_external="false"
-                            ref="on_site_information"
-                        />
                     </template>
                 </FormSection>
             </div>
@@ -267,7 +261,6 @@ import datatable from '@vue-utils/datatable.vue'
 import CommsLogs from '@common-utils/comms_logs.vue'
 import FormSection from "@/components/forms/section_toggle.vue"
 import { api_endpoints, helpers } from '@/utils/hooks'
-import OnSiteInformation from '@/components/common/apiary/section_on_site_information.vue'
 import TemporaryUse from '@/components/common/apiary/section_temporary_use.vue'
 export default {
   name: 'ApiaryApproval',
@@ -327,7 +320,6 @@ export default {
         datatable,
         CommsLogs,
         FormSection,
-        OnSiteInformation,
         TemporaryUse,
   },
   computed: {
