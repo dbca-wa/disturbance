@@ -16,13 +16,6 @@
         </div>
 
         <template v-if="approval_id">
-            <OnSiteInformationModal
-                ref="on_site_information_modal"
-                :on_site_information="on_site_information_to_edit"
-                :approval_id="approval_id"
-                :key="modalBindId"
-                @on_site_information_added="onSiteInformationAdded"
-            />
         </template>
     </div>
 </template>
@@ -31,7 +24,6 @@
     import datatable from '@vue-utils/datatable.vue'
     import { v4 as uuidv4 } from 'uuid';
     import { helpers, } from '@/utils/hooks'
-    import OnSiteInformationModal from './on_site_information_modal'
 
     export default {
         props:{
@@ -294,9 +286,6 @@
 
                 try {
                     this.$nextTick(() => {
-                        if (this.$refs.on_site_information_modal){
-                            this.$refs.on_site_information_modal.openMe();
-                        }
                     });
                 } catch (err) {
                     helpers.processError(err)
