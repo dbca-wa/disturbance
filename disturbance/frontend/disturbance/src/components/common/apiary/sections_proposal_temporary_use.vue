@@ -79,12 +79,6 @@
 
         <FormSection :formCollapse="false" label="Deed Poll" Index="deed_poll">
             <template v-if="proposal && proposal.apiary_temporary_use && documentActionUrl">
-                <DeedPoll
-
-                    :isRepeatable="false"
-                    :isReadonly="is_readonly"
-                    :documentActionUrl="documentActionUrl"
-                />
             </template>
         </FormSection>
 <!--
@@ -113,7 +107,6 @@
     import FormSection from "@/components/forms/section_toggle.vue"
     import PeriodAndSites from "@/components/common/apiary/section_period_and_sites.vue"
     import TemporaryOccupier from "@/components/common/apiary/section_temporary_occupier.vue"
-    import DeedPoll from "@/components/common/apiary/section_deed_poll.vue"
     import FileField from '@/components/forms/filefield_immediate.vue'
 
     export default {
@@ -149,7 +142,6 @@
             }
         },
         components: {
-            DeedPoll,
             FileField,
             FormSection,
             datatable,

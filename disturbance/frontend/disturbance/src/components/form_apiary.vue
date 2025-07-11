@@ -115,12 +115,6 @@
             </FormSection>
 
             <FormSection :formCollapse="false" label="Deed Poll" Index="deed_poll">
-                <DeedPoll
-                    ref="deed_poll_component"
-                    :isRepeatable="false"
-                    :isReadonly="readonly"
-                    :documentActionUrl="deedPollDocumentUrl"
-                />
             </FormSection>
 
             <div v-if="assessorChecklistVisibility">
@@ -166,7 +160,6 @@
     import FormSection from "@/components/forms/section_toggle.vue"
     import SiteLocations from '@/components/common/apiary/site_locations.vue'
     import {v4 as uuidv4 } from 'uuid';
-    import DeedPoll from "@/components/common/apiary/section_deed_poll.vue"
     import { api_endpoints, helpers }from '@/utils/hooks'
     export default {
         name: 'ApiaryForm',
@@ -227,7 +220,6 @@
             SiteLocations,
             FileField,
             FormSection,
-            DeedPoll,
             ManageUser,
         },
         computed:{
