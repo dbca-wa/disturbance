@@ -123,50 +123,15 @@
                 />
             </FormSection>
 
-            <ApiaryChecklist
-                :checklist="applicantChecklistAnswers"
-                section_title="Applicant Checklist"
-                :readonly="readonly"
-                ref="applicant_checklist"
-                index="1"
-            />
             <div v-if="assessorChecklistVisibility">
-                <ApiaryChecklist
-                :checklist="assessorChecklistAnswers"
-                section_title="Assessor Checklist"
-                :readonly="assessorChecklistReadonly"
-                ref="assessor_checklist"
-                index="2"
-                />
                 <div v-for="site in apiary_sites">
-                    <ApiaryChecklist
-                    :checklist="assessorChecklistAnswersPerSite(site.id)"
-                    :section_title="'Assessor checklist for site ' + site.id"
-                    :readonly="assessorChecklistReadonly"
-                    v-bind:key="'assessor_checklist_per_site_' + site.id"
-                    :index="'2_' + site.id"
-                    />
                 </div>
             </div>
             <div v-for="r in referrerChecklistAnswers">
                 <!--div v-if="(referral && r.referral_id === referral.id) || (assessorChecklistVisibility && proposal.processing_status === 'With Assessor')"-->
                 <div v-if="(referral && r.referral_id === referral.id) || (assessorChecklistVisibility)">
                 <!--div v-if="r.id = referral.id"-->
-                    <ApiaryChecklist
-                    :checklist="r.referral_data"
-                    :section_title="'Referral Checklist: ' + r.referrer_group_name"
-                    :readonly="referrerChecklistReadonly"
-                    ref="referrer_checklist"
-                    index="3"
-                    />
                     <div v-for="site in apiary_sites">
-                        <ApiaryChecklist
-                        :checklist="referrerChecklistAnswersPerSite(r.apiary_referral_id, site.id)"
-                        :section_title="'Referral Checklist: ' + r.referrer_group_name + ' for site ' + site.id"
-                        :readonly="referrerChecklistReadonly"
-                        v-bind:key="'referrer_checklist_per_site_' + r.apiary_referral_id + site.id"
-                        :index="'3_' + r.apiary_referral_id + '_' + site.id"
-                        />
                     </div>
                 </div>
             </div>
@@ -200,7 +165,6 @@
     import FileField from '@/components/forms/filefield_immediate.vue'
     import FormSection from "@/components/forms/section_toggle.vue"
     import SiteLocations from '@/components/common/apiary/site_locations.vue'
-    import ApiaryChecklist from '@/components/common/apiary/section_checklist.vue'
     import {v4 as uuidv4 } from 'uuid';
     import DeedPoll from "@/components/common/apiary/section_deed_poll.vue"
     import { api_endpoints, helpers }from '@/utils/hooks'
@@ -263,7 +227,6 @@
             SiteLocations,
             FileField,
             FormSection,
-            ApiaryChecklist,
             DeedPoll,
             ManageUser,
         },
