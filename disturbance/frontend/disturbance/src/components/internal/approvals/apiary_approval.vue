@@ -229,14 +229,6 @@
             <div class="row">
                 <FormSection :formCollapse="false" label="Annual Site Fee" Index="annual_rental_fee">
                     <template v-if="approval && approval.id">
-                        <SectionAnnualRentalFee
-                            :is_readonly="false"
-                            :is_internal="true"
-                            :is_external="false"
-                            :approval_id="approval.id"
-                            :annual_rental_fee_periods="approval.annual_rental_fee_periods"
-                            :no_annual_rental_fee_until="approval.no_annual_rental_fee_until"
-                        />
                     </template>
                 </FormSection>
             </div>
@@ -277,7 +269,6 @@ import FormSection from "@/components/forms/section_toggle.vue"
 import { api_endpoints, helpers } from '@/utils/hooks'
 import OnSiteInformation from '@/components/common/apiary/section_on_site_information.vue'
 import TemporaryUse from '@/components/common/apiary/section_temporary_use.vue'
-import SectionAnnualRentalFee from '@/components/common/apiary/section_annual_rental_fee.vue'
 export default {
   name: 'ApiaryApproval',
   data() {
@@ -333,7 +324,6 @@ export default {
     )
   },
   components: {
-        SectionAnnualRentalFee,
         datatable,
         CommsLogs,
         FormSection,
