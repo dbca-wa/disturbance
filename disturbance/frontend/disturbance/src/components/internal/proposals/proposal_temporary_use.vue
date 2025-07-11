@@ -96,7 +96,6 @@
                                     <template>
 
                                     </template>
-                                    <ApiaryReferralsForProposal @refreshFromResponse="refreshFromResponse" :proposal="proposal" :canAction="canLimitedAction" :isFinalised="isFinalised" :referral_url="referralListURL"/>
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="separator"></div>
@@ -317,10 +316,8 @@
 </template>
 <script>
 import ProposalDisturbance from '../../form.vue'
-//import ProposalApiary from '../../form_apiary.vue'
 import ProposalApiary from '@/components/form_apiary.vue'
 import NewApply from '../../external/proposal_apply_new.vue'
-import Vue from 'vue'
 import ProposedDecline from './proposal_proposed_decline.vue'
 import AmendmentRequest from './amendment_request.vue'
 import datatable from '@vue-utils/datatable.vue'
@@ -328,9 +325,6 @@ import Requirements from './proposal_requirements.vue'
 import ProposedApproval from './proposed_apiary_issuance.vue'
 import ApprovalScreen from './proposal_approval.vue'
 import CommsLogs from '@common-utils/comms_logs.vue'
-//import MoreReferrals from '@common-utils/more_referrals.vue'
-import ApiaryReferralsForProposal from '@common-utils/apiary/apiary_referrals_for_proposal.vue'
-// import ResponsiveDatatablesHelper from "@/utils/responsive_datatable_helper.js"
 import { api_endpoints, helpers } from '@/utils/hooks'
 import SectionsProposalTemporaryUse from '@/components/common/apiary/sections_proposal_temporary_use.vue'
 import FormSection from "@/components/forms/section_toggle.vue"
@@ -419,7 +413,6 @@ export default {
         ApprovalScreenSiteTransferTemporaryUse,
         CommsLogs,
         //MoreReferrals,
-        ApiaryReferralsForProposal,
         NewApply,
         FormSection,
         SectionsProposalTemporaryUse,

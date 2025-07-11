@@ -143,7 +143,6 @@
     </div>
 </template>
 <script>
-import Vue from 'vue'
 import {
   api_endpoints,
   helpers

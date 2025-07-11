@@ -28,10 +28,9 @@
 </template>
 
 <script>
-    import Vue from 'vue'
     import datatable from '@vue-utils/datatable.vue'
     import { v4 as uuidv4 } from 'uuid';
-    import { api_endpoints, helpers, } from '@/utils/hooks'
+    import { helpers, } from '@/utils/hooks'
     import OnSiteInformationModal from './on_site_information_modal'
 
     export default {

@@ -49,10 +49,6 @@ import {
   helpers
 }
 from '@/utils/hooks';
-//import CommentBlock from './comment_block.vue';
-//import HelpText from './help_text.vue';
-import Vue from 'vue';
-//import { mapGetters } from 'vuex';
 export default {
     name: "FileField",
     props:{

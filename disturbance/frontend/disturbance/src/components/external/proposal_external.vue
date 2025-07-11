@@ -259,7 +259,6 @@ import ApiarySiteTransfer from '../form_apiary_site_transfer.vue'
 import NewApply from './proposal_apply_new.vue'
 import MapSection from '@/components/common/das/map_section.vue'
 import alert from '@/utils/vue/alert.vue'
-import Vue from 'vue'
 import {
   api_endpoints,
   helpers

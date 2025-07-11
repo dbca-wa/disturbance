@@ -34,9 +34,8 @@
 </template>
 
 <script>
-    import Vue from 'vue'
     import {v4 as uuidv4 } from 'uuid';
-    import { api_endpoints, helpers } from '@/utils/hooks'
+    import { helpers } from '@/utils/hooks'
     import SectionsProposalTemporaryUse from '@/components/common/apiary/sections_proposal_temporary_use.vue'
 
     export default {

@@ -191,34 +191,24 @@
     import FormSection from "@/components/forms/section_toggle.vue"
     import ContactLicenceHolderModal from "@/components/common/apiary/contact_licence_holder_modal.vue"
     import {v4 as uuidv4 } from 'uuid';
-    import Vue from 'vue'
-    // import proj from 'ol/proj'
     import 'ol/ol.css';
     import 'ol-layerswitcher/dist/ol-layerswitcher.css'
     import Map from 'ol/Map';
     import View from 'ol/View';
-    import Extent from 'ol/interaction/Extent';
-    import WMTSCapabilities from 'ol/format/WMTSCapabilities';
     import formatWKT  from 'ol/format/WKT';
     import TileLayer from 'ol/layer/Tile';
-    import OSM from 'ol/source/OSM';
     import TileWMS from 'ol/source/TileWMS';
-    import WMTS, {optionsFromCapabilities} from 'ol/source/WMTS';
+    import WMTS from 'ol/source/WMTS';
     import WMTSTilegrid from 'ol/tilegrid/WMTS';
-    import Collection from 'ol/Collection';
-    import { Draw, Modify, Snap } from 'ol/interaction';
+    import { Draw, Modify } from 'ol/interaction';
     import VectorLayer from 'ol/layer/Vector';
     import VectorSource from 'ol/source/Vector';
     import { Circle as CircleStyle, Fill, Stroke, Style, Text, RegularShape } from 'ol/style';
     import { FullScreen as FullScreenControl, MousePosition as MousePositionControl, SelectFeature } from 'ol/control';
-    import { Feature } from 'ol';
     import { LineString, Point } from 'ol/geom';
-    import { getDistance } from 'ol/sphere';
-    import { circular} from 'ol/geom/Polygon';
     import GeoJSON from 'ol/format/GeoJSON';
     import Overlay from 'ol/Overlay';
-    import { getDisplayNameFromStatus, getDisplayNameOfCategory, getStatusForColour, getApiaryFeatureStyle, zoomToCoordinates, checkIfValidlatitudeAndlongitude } from '@/components/common/apiary/site_colours.js'
-    import { getArea, getLength } from 'ol/sphere'
+    import { zoomToCoordinates } from '@/components/common/apiary/site_colours.js'
     import MeasureStyles, { formatLength } from '@/components/common/apiary/measure.js'
     import Datatable from '@vue-utils/datatable.vue'
     import Cluster from 'ol/source/Cluster';
@@ -226,7 +216,6 @@
     import 'select2-bootstrap-theme/dist/select2-bootstrap.min.css'
     import Awesomplete from 'awesomplete'
     import { api_endpoints, helpers } from '@/utils/hooks'
-    import { fromLonLat } from 'ol/proj'
     import {getCenter} from 'ol/extent'
     import {get as getProjection} from 'ol/proj';
     import {getTopLeft, getWidth} from 'ol/extent'
@@ -234,9 +223,6 @@
     export default {
         name: 'MapDashboard',
         data: function(){
-            let vm = this
-            let default_show_statuses = ['vacant', 'pending', 'denied', 'current', 'not_to_be_reissued', 'suspended']
-            let default_show_availabilities = ['available', 'unavailable']
 
             return {
                 newVectorLayer: null,

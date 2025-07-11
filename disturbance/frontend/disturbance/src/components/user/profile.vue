@@ -291,7 +291,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import $ from 'jquery'
 import { api_endpoints, helpers } from '@/utils/hooks'
 export default {

@@ -596,7 +596,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import datatable from '@/utils/vue/datatable.vue'
 import modal from '@vue-utils/bootstrap-modal2.vue'
 import alert from '@vue-utils/alert.vue'
@@ -608,7 +607,6 @@ import {
 }
 from '@/utils/hooks'
 
-var select2 = require('select2');
 require("select2/dist/css/select2.min.css");
 require("select2-bootstrap-theme/dist/select2-bootstrap.min.css");
 

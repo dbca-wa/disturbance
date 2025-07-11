@@ -122,8 +122,6 @@
 </template>
 
 <script>
-//import $ from 'jquery'
-import Vue from 'vue'
 import { api_endpoints, helpers } from '@/utils/hooks'
 import datatable from '@vue-utils/datatable.vue'
 import utils from '../utils'

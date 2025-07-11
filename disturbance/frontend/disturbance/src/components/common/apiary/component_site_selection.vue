@@ -35,7 +35,6 @@
 </template>
 
 <script>
-    import Vue from 'vue'
     import datatable from '@vue-utils/datatable.vue'
     import { v4 as uuidv4 } from 'uuid';
     import ComponentMap from '@/components/common/apiary/component_map.vue'

@@ -15,12 +15,6 @@
 
 import ApiaryApproval from './apiary_approval.vue';
 import Approval from './approval.vue';
-import Vue from 'vue';
-import {
-  api_endpoints,
-  helpers
-}
-from '@/utils/hooks'
 export default {
     name: 'ApprovalWrapper',
     data() {

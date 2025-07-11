@@ -31,6 +31,13 @@ module.exports = defineConfig({
             'easing',
             path.resolve(__dirname, 'jquery.easing')
         );
+        config.resolve.alias.set("vue", "@vue/compat");
+        config.module
+            .rule("vue")
+            .use("vue-loader")
+            .tap((options) => {
+                return { ...options, compilerOptions: { compatConfig: { MODE: 2 } } };
+            });
         // config.resolve.alias.set(
         //     'datetimepicker',
         //     path.resolve(__dirname, 'eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js')

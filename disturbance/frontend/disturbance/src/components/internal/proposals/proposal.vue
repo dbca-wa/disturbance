@@ -394,14 +394,12 @@
     
 </template>
 <script>
-var select2 = require('select2');
 require("select2/dist/css/select2.min.css");
 require("select2-bootstrap-theme/dist/select2-bootstrap.min.css");
 import ProposalDisturbance from '../../form.vue'
 import ProposalApiary from '@/components/form_apiary.vue'
 import NewApply from '../../external/proposal_apply_new.vue'
 import MapSection from '@/components/common/das/map_section.vue'
-import Vue from 'vue'
 import ProposedDecline from './proposal_proposed_decline.vue'
 import AmendmentRequest from './amendment_request.vue'
 import datatable from '@vue-utils/datatable.vue'
@@ -411,7 +409,6 @@ import ApprovalScreen from './proposal_approval.vue'
 import CommsLogs from '@common-utils/comms_logs.vue'
 import RevisionHistory from '@common-utils/revision_history.vue'
 import MoreReferrals from '@common-utils/more_referrals.vue'
-// import ResponsiveDatatablesHelper from "@/utils/responsive_datatable_helper.js"
 import { api_endpoints, helpers } from '@/utils/hooks'
 export default {
     name: 'InternalProposal',

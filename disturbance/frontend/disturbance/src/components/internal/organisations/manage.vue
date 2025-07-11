@@ -229,8 +229,6 @@
 </template>
 
 <script>
-//import $ from 'jquery'
-import Vue from 'vue'
 import { api_endpoints, helpers } from '@/utils/hooks'
 import datatable from '@vue-utils/datatable.vue'
 import AddContact from '@common-utils/add_contact.vue'
@@ -239,7 +237,6 @@ import ApprovalDashTable from '@common-utils/approvals_dashboard.vue'
 import ComplianceDashTable from '@common-utils/compliances_dashboard.vue'
 import CommsLogs from '@common-utils/comms_logs.vue'
 import utils from '../utils'
-import api from '../api'
 export default {
     name: 'Organisation',
     data () {

@@ -280,7 +280,7 @@
                                 :is_internal="true" 
                                 :hasAssessorMode="hasAssessorMode"
                                 :referral="referral"
-                                />
+                                >
                                     <!--NewApply v-if="proposal" :proposal="proposal"></NewApply>
                                     <input type="hidden" name="csrfmiddlewaretoken" :value="csrf_token"/>
                                     <input type='hidden' name="schema" :value="JSON.stringify(proposal)" />
@@ -308,7 +308,7 @@
                                     :is_external="false" 
                                     :is_internal="true" 
                                     :referral="referral"
-                                />
+                                >
                                     <input type='hidden' name="referrer_checklist_answers" :value="JSON.stringify(siteTransferProposalApiaryReferrerChecklistAnswers)" />
                                     <input type='hidden' name="referrer_checklist_answers_per_site" :value="JSON.stringify(siteTransferProposalApiaryReferrerChecklistAnswersPerSite)" />
                                     <div class="navbar navbar-fixed-bottom" v-if="!proposal.can_user_edit && !isFinalised" style="background-color: #f5f5f5 ">
@@ -334,14 +334,8 @@
 import ProposalApiary from '../../form_apiary.vue'
 import ApiarySiteTransfer from '../../form_apiary_site_transfer.vue'
 import NewApply from '../../external/proposal_apply_new.vue'
-import Vue from 'vue'
 import datatable from '@vue-utils/datatable.vue'
 import CommsLogs from '@common-utils/comms_logs.vue'
-//import MoreReferrals from '@common-utils/more_referrals.vue'
-import ApiaryReferralsForProposal from '@common-utils/apiary/apiary_referrals_for_proposal.vue'
-// import ResponsiveDatatablesHelper from "@/utils/responsive_datatable_helper.js"
-//import OriginatingApprovalRequirements from '../proposals/originating_approval_requirements.vue'
-//import TargetApprovalRequirements from '../proposals/target_approval_requirements.vue'
 
 import {
     api_endpoints,
@@ -421,7 +415,6 @@ export default {
         CommsLogs,
         //MoreReferrals,
         NewApply,
-        ApiaryReferralsForProposal,
         ApiarySiteTransfer,
         //OriginatingApprovalRequirements,
         //TargetApprovalRequirements,

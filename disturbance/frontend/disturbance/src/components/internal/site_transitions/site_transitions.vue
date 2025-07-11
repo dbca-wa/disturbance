@@ -23,7 +23,6 @@
     import FormSection from "@/components/forms/section_toggle.vue"
     import ComponentSiteSelection from '@/components/common/apiary/component_site_selection.vue'
     import {v4 as uuidv4} from 'uuid';
-    import Vue from 'vue'
     import { helpers, } from "@/utils/hooks.js"
 
     export default {

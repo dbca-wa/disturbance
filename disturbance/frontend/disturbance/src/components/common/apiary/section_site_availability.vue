@@ -25,9 +25,7 @@
 </template>
 
 <script>
-    import Vue from 'vue'
     import { v4 as uuidv4 } from 'uuid';
-    import { api_endpoints, helpers, } from '@/utils/hooks'
     import ComponentSiteSelection from '@/components/common/apiary/component_site_selection.vue'
 
     export default {

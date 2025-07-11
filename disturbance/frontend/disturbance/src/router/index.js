@@ -1,6 +1,4 @@
-import Vue from 'vue'
 import Router from 'vue-router'
-import Hello from '@/components/Hello'
 import LedgerPay from '@/components/ledgerpay'
 import Profile from '@/components/user/profile.vue'
 import external_routes from '@/components/external/routes'

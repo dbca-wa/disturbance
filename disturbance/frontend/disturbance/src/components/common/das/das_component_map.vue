@@ -70,31 +70,21 @@
     import 'ol/ol.css';
     import 'ol-layerswitcher/dist/ol-layerswitcher.css'
     //import 'index.css';  // copy-and-pasted the contents of this file at the <style> section below in this file
-    // import proj from 'ol/proj'
-    import Extent from 'ol/interaction/Extent';
     import WMTSTilegrid from 'ol/tilegrid/WMTS';
     import Map from 'ol/Map';
     import View from 'ol/View';
-    import WMTSCapabilities from 'ol/format/WMTSCapabilities';
     import TileLayer from 'ol/layer/Tile';
-    import OSM from 'ol/source/OSM';
     import TileWMS from 'ol/source/TileWMS';
-    import WMTS, {optionsFromCapabilities} from 'ol/source/WMTS';
-    import Collection from 'ol/Collection';
-    import { Draw, Modify, Snap } from 'ol/interaction';
+    import WMTS from 'ol/source/WMTS';
+    import { Draw, Modify } from 'ol/interaction';
     import VectorLayer from 'ol/layer/Vector';
     import VectorSource from 'ol/source/Vector';
-    import { Circle as CircleStyle, Fill, Stroke, Style, Text, RegularShape } from 'ol/style';
+    import { Circle as CircleStyle, Fill, Style } from 'ol/style';
     import { FullScreen as FullScreenControl, MousePosition as MousePositionControl } from 'ol/control';
-    import Vue from 'vue/dist/vue';
-    import { Feature } from 'ol';
     import { LineString, Point } from 'ol/geom';
-    import { getDistance } from 'ol/sphere';
-    import { circular} from 'ol/geom/Polygon';
     import GeoJSON from 'ol/format/GeoJSON';
     import Overlay from 'ol/Overlay';
     import { getDisplayNameFromStatus, getDisplayNameOfCategory, getStatusForColour, getApiaryFeatureStyle } from '@/components/common/apiary/site_colours.js'
-    import { getArea, getLength } from 'ol/sphere'
     import MeasureStyles, { formatLength } from '@/components/common/apiary/measure.js'
     import {get as getProjection} from 'ol/proj';
     import {getTopLeft, getWidth} from 'ol/extent';

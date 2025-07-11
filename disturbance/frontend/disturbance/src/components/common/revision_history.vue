@@ -38,11 +38,6 @@
     </div>
 </template>
 <script>
-import {
-    api_endpoints,
-    helpers
-} from '@/utils/hooks'
-import Vue from 'vue'
 export default {
     name: 'RevisionHistorySection',
     props: {

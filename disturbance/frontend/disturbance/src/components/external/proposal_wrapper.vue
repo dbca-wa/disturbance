@@ -16,8 +16,6 @@
 </template>
 
 <script>
-import Vue from 'vue';
-import { api_endpoints, helpers } from '@/utils/hooks'
 import ProposalTemporaryUse from '@/components/external/proposal_temporary_use.vue'
 import Proposal from '@/components/external/proposal_external.vue'
 

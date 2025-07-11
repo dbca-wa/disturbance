@@ -32,12 +32,6 @@ import ReturnDashTable from '@common-components/returns_dashboard.vue'
 import ProposalApiary from './proposal_apiary.vue';
 import ProposalTemporaryUse from '@/components/internal/proposals/proposal_temporary_use.vue'
 import Proposal from './proposal.vue';
-import Vue from 'vue';
-import {
-  api_endpoints,
-  helpers
-}
-from '@/utils/hooks'
 export default {
     name: 'InternalProposalWrapper',
     data() {

@@ -135,11 +135,9 @@
     import 'ol-layerswitcher/dist/ol-layerswitcher.css'
     import Map from 'ol/Map';
     import View from 'ol/View';
-    import WMTSCapabilities from 'ol/format/WMTSCapabilities';
     import TileLayer from 'ol/layer/Tile';
     import OSM from 'ol/source/OSM';
     import TileWMS from 'ol/source/TileWMS';
-    import Collection from 'ol/Collection';
     import {Draw, Modify, Snap, Select} from 'ol/interaction';
     import {pointerMove} from 'ol/events/condition';
     import VectorLayer from 'ol/layer/Vector';
@@ -147,7 +145,6 @@
     import Cluster from 'ol/source/Cluster';
     import {Circle as CircleStyle, Fill, Stroke, Style, Icon, Text, RegularShape} from 'ol/style';
     import {FullScreen as FullScreenControl, MousePosition as MousePositionControl} from 'ol/control';
-    import Vue from 'vue/dist/vue';
     import { Feature } from 'ol';
     import { Point, LineString } from 'ol/geom';
     import { getDistance } from 'ol/sphere';

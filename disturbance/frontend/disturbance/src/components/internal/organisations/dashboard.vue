@@ -70,7 +70,6 @@
 </div>
 </template>
 <script>
-import Vue from 'vue'
 import $ from 'jquery'
 import datatable from '@vue-utils/datatable.vue'
 import {

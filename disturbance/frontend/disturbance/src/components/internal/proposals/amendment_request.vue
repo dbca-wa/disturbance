@@ -56,13 +56,11 @@
 </template>
 
 <script>
-//import $ from 'jquery'
-import Vue from 'vue'
 import modal from '@vue-utils/bootstrap-modal.vue'
 import alert from '@vue-utils/alert.vue'
 import FileField from '@/components/forms/filefield.vue'
 
-import {helpers, api_endpoints} from "@/utils/hooks.js"
+import { helpers } from "@/utils/hooks.js"
 export default {
     name:'amendment-request',
     components:{

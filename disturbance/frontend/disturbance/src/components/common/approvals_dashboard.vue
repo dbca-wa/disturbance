@@ -124,7 +124,6 @@
 </template>
 <script>
 import datatable from '@/utils/vue/datatable.vue'
-import Vue from 'vue'
 import ApprovalCancellation from '../internal/approvals/approval_cancellation.vue'
 import ApprovalSuspension from '../internal/approvals/approval_suspension.vue'
 import ApprovalSurrender from '../internal/approvals/approval_surrender.vue'

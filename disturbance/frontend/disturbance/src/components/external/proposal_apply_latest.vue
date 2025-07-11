@@ -207,10 +207,8 @@
     </div>
 </template>
 <script>
-import Vue from 'vue'
 import {
   api_endpoints,
-  helpers
 }
 from '@/utils/hooks'
 import utils from './utils'
