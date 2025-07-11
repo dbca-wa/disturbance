@@ -3,21 +3,6 @@
 
         <FormSection :formCollapse="false" label="Period and Site(s)" Index="period_and_sites">
             <template v-if="proposal && proposal.apiary_temporary_use">
-                <PeriodAndSites 
-                    :is_external="is_external" 
-                    :is_internal="is_internal" 
-                    :is_readonly="is_readonly"
-                    :customer_status="proposal.customer_status"
-                    :processing_status="proposal.processing_status"
-                    :from_date="proposal.apiary_temporary_use.from_date"
-                    :to_date="proposal.apiary_temporary_use.to_date"
-                    :temporary_use_apiary_sites="proposal.apiary_temporary_use.temporary_use_apiary_sites"
-                    :existing_temporary_uses="existing_temporary_uses"
-                    @from_date_changed="fromDateChanged"
-                    @to_date_changed="toDateChanged"
-                    @apiary_sites_updated="apiarySitesUpdated"
-                    :key="period_and_sites_key"
-                />
             </template>
         </FormSection>
 
@@ -105,7 +90,6 @@
     import datatable from '@vue-utils/datatable.vue'
     import { helpers, } from '@/utils/hooks'
     import FormSection from "@/components/forms/section_toggle.vue"
-    import PeriodAndSites from "@/components/common/apiary/section_period_and_sites.vue"
     import TemporaryOccupier from "@/components/common/apiary/section_temporary_occupier.vue"
     import FileField from '@/components/forms/filefield_immediate.vue'
 
@@ -145,7 +129,6 @@
             FileField,
             FormSection,
             datatable,
-            PeriodAndSites,
             TemporaryOccupier,
         },
         computed:{
