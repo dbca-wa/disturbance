@@ -4,24 +4,12 @@
             site_transitions.vue
         </template>
         <FormSection :formCollapse="false" label="Site(s)" Index="site_avaiability">
-            <ComponentSiteSelection
-                :apiary_sites="apiary_sites"
-                :is_internal="true"
-                :is_external="false"
-                :show_col_checkbox="false"
-                :show_col_status="true"
-                :show_col_previous_site_holder="true"
-                :show_action_make_vacant="true"
-                :key="component_site_selection_key"
-                @apiary_sites_updated="apiarySitesUpdated"
-            />
         </FormSection>
     </div>
 </template>
 
 <script>
     import FormSection from "@/components/forms/section_toggle.vue"
-    import ComponentSiteSelection from '@/components/common/apiary/component_site_selection.vue'
     import {v4 as uuidv4} from 'uuid';
     import { helpers, } from "@/utils/hooks.js"
 
@@ -35,7 +23,6 @@
             }
         },
         components: {
-            ComponentSiteSelection,
             FormSection,
         },
         props: {

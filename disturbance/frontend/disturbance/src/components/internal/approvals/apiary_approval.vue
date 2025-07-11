@@ -222,12 +222,6 @@
             <div class="row">
                 <FormSection :formCollapse="false" label="Site(s)" Index="site_avaiability">
                     <template v-if="approval && approval.id">
-                        <ComponentSiteSelection
-                            :apiary_sites="approval.apiary_sites"
-                            :show_col_checkbox="false"
-                            :show_col_status="true"
-                            :apiary_approval_id="approval.id"
-                        />
                     </template>
                 </FormSection>
             </div>
@@ -283,7 +277,6 @@ import FormSection from "@/components/forms/section_toggle.vue"
 import { api_endpoints, helpers } from '@/utils/hooks'
 import OnSiteInformation from '@/components/common/apiary/section_on_site_information.vue'
 import TemporaryUse from '@/components/common/apiary/section_temporary_use.vue'
-import ComponentSiteSelection from '@/components/common/apiary/component_site_selection.vue'
 import SectionAnnualRentalFee from '@/components/common/apiary/section_annual_rental_fee.vue'
 export default {
   name: 'ApiaryApproval',
@@ -346,7 +339,6 @@ export default {
         FormSection,
         OnSiteInformation,
         TemporaryUse,
-        ComponentSiteSelection,
   },
   computed: {
     isLoading: function () {

@@ -52,19 +52,6 @@
 
                 </div>
                 <div v-else>
-                    <ComponentSiteSelection
-                        :apiary_sites="apiary_sites"
-                        :is_internal="is_internal"
-                        :is_external="is_external"
-                        :show_col_site="false"
-                        :show_col_site_when_submitted="true"
-                        :show_col_checkbox="false"
-                        :show_action_available_unavailable="showActionAvailableUnavailable"
-                        :show_col_status="false"
-                        :show_col_status_when_submitted="true"
-                        :show_col_vacant_when_submitted="show_col_vacant_when_submitted"
-                        :key="component_site_selection_key"
-                      />
                 </div>
             </FormSection>
 
@@ -210,7 +197,6 @@
 
 <script>
     import ManageUser from '@/components/external/organisations/manage.vue'
-    import ComponentSiteSelection from '@/components/common/apiary/component_site_selection.vue'
     import FileField from '@/components/forms/filefield_immediate.vue'
     import FormSection from "@/components/forms/section_toggle.vue"
     import SiteLocations from '@/components/common/apiary/site_locations.vue'
@@ -275,7 +261,6 @@
         },
         components: {
             SiteLocations,
-            ComponentSiteSelection,
             FileField,
             FormSection,
             ApiaryChecklist,

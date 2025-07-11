@@ -11,22 +11,11 @@
                 </button-->
             </template>
         </div>
-
-        <ComponentSiteSelection
-            :apiary_sites="apiary_sites"
-            :is_internal="false"
-            :is_external="true"
-            :key="component_site_selection_key"
-            :show_col_checkbox="false"
-            :show_col_status="true"
-            :show_action_available_unavailable="show_action_available_unavailable"
-        />
     </div>
 </template>
 
 <script>
     import { v4 as uuidv4 } from 'uuid';
-    import ComponentSiteSelection from '@/components/common/apiary/component_site_selection.vue'
 
     export default {
         name: 'ApiarySiteAvailability',
@@ -60,7 +49,6 @@
             }
         },
         components: {
-            ComponentSiteSelection,
         },
         computed:{
             show_action_available_unavailable: function() {

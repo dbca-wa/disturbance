@@ -106,20 +106,7 @@
                 </div-->
 
             </FormSection>
-            <FormSection :formCollapse="false" label="Site" Index="site_locations">
-                <ComponentSiteSelection
-                    :apiary_sites="apiary_sites"
-                    :is_internal="is_internal"
-                    :is_external="is_external"
-                    :key="component_site_selection_key"
-                    :show_col_checkbox="showColCheckbox"
-                    :enable_col_checkbox="is_external"
-
-                    ref="component_site_selection"
-                    @apiary_sites_updated="apiarySitesUpdated"
-                  />
-            </FormSection>
-
+           
             <!--
             <FormSection :formCollapse="false" label="Deed Poll" Index="deed_poll">
                 <div class="row">
@@ -229,7 +216,6 @@
 
     import FileField from '@/components/forms/filefield_immediate.vue'
     import FormSection from "@/components/forms/section_toggle.vue"
-    import ComponentSiteSelection from '@/components/common/apiary/component_site_selection.vue'
     import ApiaryChecklist from '@/components/common/apiary/section_checklist.vue'
     import {v4 as uuidv4 } from 'uuid';
     import DeedPoll from "@/components/common/apiary/section_deed_poll.vue"
@@ -297,7 +283,6 @@
         },
         components: {
             //SiteLocations,
-            ComponentSiteSelection,
             FileField,
             FormSection,
             ApiaryChecklist,

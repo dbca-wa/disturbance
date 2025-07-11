@@ -23,21 +23,10 @@
                 </div>
             </div>
         </div></div>
-
-        <ComponentSiteSelection
-            :apiary_sites="apiary_sites"
-            :is_internal="false"
-            :is_external="true"
-            :enable_col_checkbox="is_checkbox_enabled"
-            :key="component_site_selection_key"
-            @apiary_sites_updated="apiarySitesUpdated"
-        />
-
     </div>
 </template>
 
 <script>
-    import ComponentSiteSelection from '@/components/common/apiary/component_site_selection.vue'
     import { v4 as uuidv4 } from 'uuid';
 
     export default {
@@ -138,7 +127,6 @@
             this.component_site_selection_key = uuidv4()
         },
         components: {
-            ComponentSiteSelection,
         },
         computed:{
             is_checkbox_enabled: function() {

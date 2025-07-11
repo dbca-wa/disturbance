@@ -281,23 +281,6 @@
                 </div>
 
                 <template v-if="proposal && proposal.proposal_apiary.apiary_sites">
-                    <ComponentSiteSelection
-                        :apiary_sites="apiary_sites_prop"
-                        :is_internal="true"
-                        :is_external="false"
-                        :show_col_site="false"
-                        :show_col_site_when_submitted="true"
-                        :show_col_checkbox="true"
-                        :show_col_status_when_submitted="true"
-                        :show_col_decision="false"
-                        :show_col_licensed_site="true"
-                        :show_col_licensed_site_checkbox="true"
-                        :key="component_site_selection_key"
-                        :can_modify="true"
-                        ref="component_site_selection"
-                        @apiary_sites_updated="apiarySitesUpdated"
-                        @featureGeometryUpdated="featureGeometryUpdated"
-                    />
                 </template>
 
             </div>
@@ -343,14 +326,12 @@ import {v4 as uuidv4} from 'uuid';
 import modal from '@vue-utils/bootstrap-modal.vue'
 import alert from '@vue-utils/alert.vue'
 import {helpers,api_endpoints} from "@/utils/hooks.js"
-import ComponentSiteSelection from '@/components/common/apiary/component_site_selection.vue'
 import moment from 'moment'
 export default {
     name:'ProposedApiaryIssuance',
     components:{
         modal,
         alert,
-        ComponentSiteSelection,
     },
     props:{
         proposal_apiary_id: {
@@ -612,9 +593,6 @@ export default {
         },
 
         forceToRefreshMap: function() {
-            if (this.$refs.component_site_selection){
-                this.$refs.component_site_selection.forceToRefreshMap()
-            }
         },
         /*
         preview:function () {

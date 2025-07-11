@@ -14,14 +14,6 @@
 
         <template v-if="proposal.proposal_apiary">
             <FormSection :formCollapse="false" label="Site(s)" Index="sites">
-                <ComponentSiteSelection
-                    :apiary_sites="apiary_sites_prop"
-                    :is_internal="true"
-                    :is_external="false"
-                    :key="component_site_selection_key"
-                    :show_col_checkbox="showColCheckbox"
-                    :enable_col_checkbox="false"
-                />
             </FormSection>
         </template>
 
@@ -150,7 +142,6 @@ import {
 from '@/utils/hooks'
 import datatable from '@vue-utils/datatable.vue'
 import RequirementDetail from './proposal_add_requirement.vue'
-import ComponentSiteSelection from '@/components/common/apiary/component_site_selection.vue'
 import FormSection from "@/components/forms/section_toggle.vue"
 import {v4 as uuidv4} from 'uuid';
 import SectionsProposalTemporaryUse from '@/components/common/apiary/sections_proposal_temporary_use.vue'
@@ -174,7 +165,6 @@ export default {
     components:{
         FormSection,
         SectionsProposalTemporaryUse,
-        ComponentSiteSelection,
     },
     computed:{
         originatingApprovalName: function() {

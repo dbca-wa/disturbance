@@ -4,12 +4,12 @@
             <div class="col-md-12 alert alert-success" v-if="proposal.processing_status == 'Approved'">
                 <div v-if="proposal.proposal_apiary">
                     <p>The licence has been issued and has been emailed to {{proposal.applicant.name}}</p>
-                    <p>Expiry date: {{approvalExpiryDate}}
+                    <p>Expiry date: {{approvalExpiryDate}}</p>
                     <p>Licence: <a target="_blank" :href="proposal.permit">licence.pdf</a></p>
                 </div>
                 <div v-else>
                     <p>The approval has been issued and has been emailed to {{proposal.applicant.name}}</p>
-                    <p>Expiry date: {{approvalExpiryDate}}
+                    <p>Expiry date: {{approvalExpiryDate}}</p>
                     <p>Permit: <a target="_blank" :href="proposal.permit">approval.pdf</a></p>
                 </div>
             </div>
@@ -24,20 +24,6 @@
         </template>
 
         <template v-if="proposal.proposal_apiary">
-            <FormSection :formCollapse="false" label="Site(s)" Index="sites">
-                <ComponentSiteSelection
-                    :apiary_sites="apiary_sites_prop"
-                    :is_internal="true"
-                    :is_external="false"
-                    :key="component_site_selection_key"
-                    :show_col_checkbox="showColCheckbox"
-                    :enable_col_checkbox="false"
-                    :show_col_site="false"
-                    :show_col_site_when_submitted="true"
-                    :show_col_status_when_submitted="true"
-                    :apiary_proposal_id="proposal.proposal_apiary.id"
-                />
-            </FormSection>
         </template>
         <template v-else>
             <div class="col-md-12">
@@ -154,11 +140,7 @@ import {
     helpers
 }
 from '@/utils/hooks'
-import datatable from '@vue-utils/datatable.vue'
-import RequirementDetail from './proposal_add_requirement.vue'
-import ComponentSiteSelection from '@/components/common/apiary/component_site_selection.vue'
 import FormSection from "@/components/forms/section_toggle.vue"
-import {v4 as uuidv4} from 'uuid';
 
 export default {
     name: 'InternalProposalRequirements',
@@ -171,14 +153,12 @@ export default {
             proposedDecision: "proposal-decision-"+vm._uid,
             proposedLevel: "proposal-level-"+vm._uid,
             uploadedFile: null,
-            component_site_selection_key: '',
         }
     },
     watch:{
     },
     components:{
         FormSection,
-        ComponentSiteSelection,
     },
     computed:{
         /*
@@ -234,10 +214,6 @@ export default {
 
     },
     methods:{
-        updateComponentSiteSelectionKey: function(){
-            console.log('in updateComponentSiteSelectionKey')
-            this.component_site_selection_key = uuidv4()
-        },
         readFile: function() {
             let vm = this;
             let _file = null;
@@ -309,7 +285,6 @@ export default {
     },
     mounted: function(){
         let vm = this;
-        this.updateComponentSiteSelectionKey()
     }
 }
 </script>

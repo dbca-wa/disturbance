@@ -1,21 +1,5 @@
 <template>
     <div class="container">
-        <FormSection :formCollapse="false" label="Sites" Index="available_sites">
-            <ComponentSiteSelection
-                :apiary_sites="apiary_sites"
-                :is_internal="true"
-                :is_external="false"
-                :show_col_checkbox="false"
-                :show_col_status="false"
-                :show_col_previous_site_holder="false"
-                :key="component_site_selection_key"
-                :table_and_map_in_a_row="true"
-                :show_action_contact_licence_holder="true"
-                @apiary_sites_updated="apiarySitesUpdated"
-                @contact-licence-holder-clicked="contactLicenceHolderClicked"
-            />
-        </FormSection>
-
         <ContactLicenceHolderModal
             ref="contact_licence_holder_modal"
             :key="modalBindId"
@@ -25,7 +9,6 @@
 </template>
 
 <script>
-    import ComponentSiteSelection from '@/components/common/apiary/component_site_selection.vue'
     import FormSection from "@/components/forms/section_toggle.vue"
     import ContactLicenceHolderModal from "@/components/common/apiary/contact_licence_holder_modal.vue"
     import uuid from 'uuid'
@@ -40,7 +23,6 @@
             }
         },
         components: {
-            ComponentSiteSelection,
             FormSection,
             ContactLicenceHolderModal
         },
