@@ -2,7 +2,6 @@
 <div class="container">
     <div v-if="referralId">
         <div v-if="apiaryReferral">
-            <ApiaryReferral :referralId="referralId"/>
         </div>
         <div v-else>
             <Referral :referralId="referralId"/>
@@ -14,7 +13,6 @@
 <script>
 
 import Referral from './referral.vue';
-import ApiaryReferral from './apiary_referral.vue';
 export default {
     name: 'ReferralWrapper',
     data() {
@@ -26,7 +24,6 @@ export default {
     },
     components:{
         Referral,
-        ApiaryReferral
     },
     watch: {},
     computed: {
@@ -40,7 +37,7 @@ export default {
           //Vue.http.get(helpers.add_endpoint_json(api_endpoints.referrals,to.params.referral_id)).then(res => {
               next(vm => {
                   vm.referralId = res.body.id;
-                  vm.apiaryReferral = res.body.apiary_referral_exists;
+                //   vm.apiaryReferral = res.body.apiary_referral_exists;
               });
             },
             err => {

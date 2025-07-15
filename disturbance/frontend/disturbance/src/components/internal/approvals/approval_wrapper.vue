@@ -2,7 +2,6 @@
 <div class="container">
     <div v-if="approvalId">
         <div v-if="apiaryApproval">
-            <ApiaryApproval :approvalId="approvalId"/>
         </div>
         <div v-else>
             <Approval :approvalId="approvalId"/>
@@ -13,7 +12,6 @@
 </template>
 <script>
 
-import ApiaryApproval from './apiary_approval.vue';
 import Approval from './approval.vue';
 export default {
     name: 'ApprovalWrapper',
@@ -26,7 +24,6 @@ export default {
     },
     components:{
         Approval,
-        ApiaryApproval,
     },
     watch: {},
     computed: {
@@ -39,7 +36,7 @@ export default {
           Vue.http.get(`/api/approvals/${to.params.approval_id}/approval_wrapper.json`).then(res => {
               next(vm => {
                   vm.approvalId = res.body.id;
-                  vm.apiaryApproval = res.body.apiary_approval;
+                //   vm.apiaryApproval = res.body.apiary_approval;
               });
             },
             err => {
