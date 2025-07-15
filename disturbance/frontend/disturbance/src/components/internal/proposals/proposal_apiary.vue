@@ -486,18 +486,6 @@
         :is_apiary_proposal="isApiaryProposal"
         @refreshFromResponse="refreshFromResponse"
         />
-        <ProposedApiaryIssuance
-            ref="proposed_approval"
-            :processing_status="proposal.processing_status"
-            :proposal_apiary_id="apiaryProposal.id"
-            :proposal_id="proposalId"
-            :proposal="proposal"
-            :proposal_type='proposal.proposal_type'
-            :isApprovalLevelDocument="isApprovalLevelDocument"
-            :submitter_email="proposal.submitter_email"
-            :applicant_email="applicant_email"
-            @refreshFromResponse="refreshFromResponse"
-        />
     </div>
 </template>
 <script>
@@ -510,7 +498,6 @@ import datatable from '@vue-utils/datatable.vue'
 import Requirements from './proposal_requirements.vue'
 import OriginatingApprovalRequirements from './originating_approval_requirements.vue'
 import TargetApprovalRequirements from './target_approval_requirements.vue'
-import ProposedApiaryIssuance from './proposed_apiary_issuance.vue'
 import ApprovalScreen from './proposal_approval.vue'
 import ApprovalScreenSiteTransferTemporaryUse from './proposal_approval_site_transfer_temporary_use.vue'
 import CommsLogs from '@common-utils/comms_logs.vue'
@@ -601,7 +588,6 @@ export default {
         Requirements,
         OriginatingApprovalRequirements,
         TargetApprovalRequirements,
-        ProposedApiaryIssuance,
         ApprovalScreen,
         ApprovalScreenSiteTransferTemporaryUse,
         CommsLogs,

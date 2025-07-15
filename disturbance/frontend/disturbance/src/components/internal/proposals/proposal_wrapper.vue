@@ -11,7 +11,6 @@
             <ProposalApiary :proposalId="proposalId"/>
         </div>
         <div v-else-if="temporaryUseApplication">
-            <ProposalTemporaryUse :proposalId="proposalId" />
         </div>
         <div v-else>
             <Proposal :proposalId="proposalId"/>
@@ -22,15 +21,7 @@
 </template>
 <script>
 
-/*import datatable from '@/utils/vue/datatable.vue'
-import ApplicationDashTable from '@common-components/applications_dashboard.vue'
-import LicenceDashTable from '@common-components/licences_dashboard.vue'
-import ReturnDashTable from '@common-components/returns_dashboard.vue'
-*/
-//import Referral from './referral.vue';
-//import ApiaryReferral from './apiary_referral.vue';
 import ProposalApiary from './proposal_apiary.vue';
-import ProposalTemporaryUse from '@/components/internal/proposals/proposal_temporary_use.vue'
 import Proposal from './proposal.vue';
 export default {
     name: 'InternalProposalWrapper',
@@ -40,24 +31,11 @@ export default {
             //proposal: {},
             proposalId: null,
             applicationTypeName: '',
-            //apiaryApplication: false,
-            /*
-            applications_url: helpers.add_endpoint_join(api_endpoints.applications_paginated,'external_datatable_list/?format=datatables'),
-            licences_url: helpers.add_endpoint_join(api_endpoints.licences_paginated,'external_datatable_list/?format=datatables'),
-            returns_url: helpers.add_endpoint_join(api_endpoints.returns_paginated,'user_datatable_list/?format=datatables'),
-            empty_list: '/api/empty_list',
-            */
         }
     },
     components:{
-        /*
-        ApplicationDashTable,
-        LicenceDashTable,
-        ReturnDashTable,
-        */
         Proposal,
         ProposalApiary,
-        ProposalTemporaryUse,
     },
     watch: {},
     computed: {

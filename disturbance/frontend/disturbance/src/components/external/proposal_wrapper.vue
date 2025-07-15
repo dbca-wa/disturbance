@@ -2,11 +2,6 @@
 <div class="container">
     <div v-if="proposalId">
         <div v-if="temporaryProposal">
-            <ProposalTemporaryUse 
-                :proposalId="proposalId"
-                :is_internal="false"
-                :is_external="true"
-            />
         </div>
         <div v-else>
             <Proposal :proposalId="proposalId"/>
@@ -16,7 +11,6 @@
 </template>
 
 <script>
-import ProposalTemporaryUse from '@/components/external/proposal_temporary_use.vue'
 import Proposal from '@/components/external/proposal_external.vue'
 
 export default {
@@ -29,7 +23,6 @@ export default {
         }
     },
     components:{
-        ProposalTemporaryUse,
         Proposal,
     },
     computed: {
