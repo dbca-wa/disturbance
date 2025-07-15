@@ -256,11 +256,11 @@
             <div class="row">
                 <template v-if="proposal.processing_status == 'With Approver' || isFinalised">
                     <div v-if="siteTransferTemporaryUse">
-                        <ApprovalScreenSiteTransferTemporaryUse
+                        <!-- <ApprovalScreenSiteTransferTemporaryUse
                             :proposal="proposal"
                             ref="approval_screen"
                             @refreshFromResponse="refreshFromResponse"
-                        />
+                        /> -->
                     </div>
                     <div v-else>
                         <ApprovalScreen
@@ -499,7 +499,7 @@ import Requirements from './proposal_requirements.vue'
 import OriginatingApprovalRequirements from './originating_approval_requirements.vue'
 import TargetApprovalRequirements from './target_approval_requirements.vue'
 import ApprovalScreen from './proposal_approval.vue'
-import ApprovalScreenSiteTransferTemporaryUse from './proposal_approval_site_transfer_temporary_use.vue'
+// import ApprovalScreenSiteTransferTemporaryUse from './proposal_approval_site_transfer_temporary_use.vue'
 import CommsLogs from '@common-utils/comms_logs.vue'
 import { api_endpoints, helpers } from '@/utils/hooks'
 import ApiarySiteTransfer from '@/components/form_apiary_site_transfer.vue'
@@ -589,7 +589,7 @@ export default {
         OriginatingApprovalRequirements,
         TargetApprovalRequirements,
         ApprovalScreen,
-        ApprovalScreenSiteTransferTemporaryUse,
+        // ApprovalScreenSiteTransferTemporaryUse,
         CommsLogs,
         //MoreReferrals,
         NewApply,
