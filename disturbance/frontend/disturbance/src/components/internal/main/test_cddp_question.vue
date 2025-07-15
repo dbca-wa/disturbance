@@ -30,10 +30,9 @@
 </template>
 
 <script>
-//import $ from 'jquery'
 import modal from '@vue-utils/bootstrap-modal.vue'
 import alert from '@vue-utils/alert.vue'
-import {helpers,api_endpoints} from "@/utils/hooks.js"
+import {helpers} from "@/utils/hooks.js"
 export default {
     name:'Test-CDDP-Question',
     components:{

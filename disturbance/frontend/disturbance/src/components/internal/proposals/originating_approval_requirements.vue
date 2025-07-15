@@ -19,11 +19,6 @@
                 </div>
             </div>
         </div>
-        <!--RequirementDetail 
-        ref="originating_requirement_detail" 
-        :proposal_id="proposal.id" 
-        :requirements="requirements"
-        :approval_id="originatingApprovalId"/-->
     </div>
 </template>
 <script>
@@ -33,7 +28,6 @@ import {
 }
 from '@/utils/hooks'
 import datatable from '@vue-utils/datatable.vue'
-//import RequirementDetail from './proposal_add_requirement.vue'
 export default {
     name: 'OriginatingApprovalRequirements',
     props: {
@@ -187,7 +181,6 @@ export default {
     },
     components:{
         datatable,
-        //RequirementDetail
     },
     computed:{
         hasAssessorMode(){

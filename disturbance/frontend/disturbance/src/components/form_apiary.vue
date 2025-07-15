@@ -126,7 +126,7 @@
     import FileField from '@/components/forms/filefield_immediate.vue'
     import FormSection from "@/components/forms/section_toggle.vue"
     import {v4 as uuidv4 } from 'uuid';
-    import { api_endpoints, helpers }from '@/utils/hooks'
+    import { helpers }from '@/utils/hooks'
     export default {
         name: 'ApiaryForm',
         props:{

@@ -196,7 +196,6 @@
 </template>
 <script>
 import $ from 'jquery'
-//import alert from '@vue-utils/alert.vue'
 import datatable from '@/utils/vue/datatable.vue'
 import {
   api_endpoints,

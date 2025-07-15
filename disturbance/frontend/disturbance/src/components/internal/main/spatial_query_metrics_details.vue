@@ -22,10 +22,8 @@
 </template>
 
 <script>
-//import $ from 'jquery'
 import datatable from '@/utils/vue/datatable.vue'
 import modal from '@vue-utils/bootstrap-modal.vue'
-import {helpers,api_endpoints} from "@/utils/hooks.js"
 export default {
     name:'Requirement-Detail',
     components:{

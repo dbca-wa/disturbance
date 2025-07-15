@@ -1,6 +1,5 @@
 <template>
     <div class="">
-        <!-- <div @click="fixCanvasCss">Fix</div> -->
         <FormSection :formCollapse="false" label="Proposals Map" Index="available_sites">
             <div class="map-wrapper">
                 <div v-show="!fullscreen" id="filter_search_row_wrapper">
@@ -203,7 +202,7 @@
     import VectorLayer from 'ol/layer/Vector';
     import VectorSource from 'ol/source/Vector';
     import { Circle as CircleStyle, Fill, Stroke, Style, Text, RegularShape } from 'ol/style';
-    import { FullScreen as FullScreenControl, MousePosition as MousePositionControl, SelectFeature } from 'ol/control';
+    import { FullScreen as FullScreenControl, MousePosition as MousePositionControl } from 'ol/control';
     import { LineString, Point } from 'ol/geom';
     import GeoJSON from 'ol/format/GeoJSON';
     import Overlay from 'ol/Overlay';

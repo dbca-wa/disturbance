@@ -7,7 +7,6 @@
 import ComplianceDashTable from '@common-utils/compliances_dashboard.vue'
 import {
   api_endpoints,
-  helpers
 }
 from '@/utils/hooks'
 export default {

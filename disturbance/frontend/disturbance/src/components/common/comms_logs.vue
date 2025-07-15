@@ -34,10 +34,6 @@
 </template>
 <script>
 import AddCommLog from './add_comm_log.vue'
-import {
-    api_endpoints,
-    helpers
-}from '@/utils/hooks'
 export default {
     name: 'CommsLogSection',
     props: {

@@ -7,7 +7,6 @@
 import ApprovalDashTable from '@common-utils/approvals_dashboard.vue'
 import {
   api_endpoints,
-  helpers
 }
 from '@/utils/hooks'
 export default {

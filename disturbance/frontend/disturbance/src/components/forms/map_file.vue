@@ -39,7 +39,6 @@
 
 <script>
 import {
-  api_endpoints,
   helpers
 }
 from '@/utils/hooks'

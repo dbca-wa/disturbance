@@ -137,8 +137,6 @@ import datatable from '@/utils/vue/datatable.vue'
 import modal from '@vue-utils/bootstrap-modal.vue'
 import alert from '@vue-utils/alert.vue'
 import SchemaOption from './schema_add_option.vue'
-// import SchemaHeader from './schema_add_header.vue'
-// import SchemaExpander from './schema_add_expander.vue'
 import {
   api_endpoints,
   helpers

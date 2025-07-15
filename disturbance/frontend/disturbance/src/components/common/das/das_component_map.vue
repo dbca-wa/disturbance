@@ -69,7 +69,6 @@
     
     import 'ol/ol.css';
     import 'ol-layerswitcher/dist/ol-layerswitcher.css'
-    //import 'index.css';  // copy-and-pasted the contents of this file at the <style> section below in this file
     import WMTSTilegrid from 'ol/tilegrid/WMTS';
     import Map from 'ol/Map';
     import View from 'ol/View';

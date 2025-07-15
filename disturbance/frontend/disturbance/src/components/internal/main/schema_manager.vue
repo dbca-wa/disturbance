@@ -23,7 +23,6 @@ import SchemaMasterlist from '@/components/internal/main/schema_masterlist.vue'
 import SchemaProposalType from '@/components/internal/main/schema_proposal_type.vue'
 import SpatialQueryQuestion from '@/components/internal/main/spatial_query_question.vue'
 import SpatialQueryMetrics from '@/components/internal/main/spatial_query_metrics.vue'
-// import SchemaGroup from '@/components/internal/main/schema_group.vue'
 
 export default {
     name: 'schema-manager',

@@ -97,7 +97,6 @@
     import FileField from '@/components/forms/filefield_immediate.vue'
     import FormSection from "@/components/forms/section_toggle.vue"
     import ComponentMap from '@/components/common/das/das_component_map.vue'
-    import uuid from 'uuid'
     import { api_endpoints, helpers }from '@/utils/hooks'
     import alert from '@vue-utils/alert.vue'
     export default {

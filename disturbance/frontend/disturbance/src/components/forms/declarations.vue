@@ -15,7 +15,6 @@
 </template>
 
 <script>
-import HelpText from './help_text.vue'
 import HelpTextUrl from './help_text_url.vue'
 export default {
     props:['name','label', 'id', 'help_text',"handleDeclaration", "isRequired", "help_text_url"],
