@@ -55,14 +55,14 @@ module.exports = {
           test: /jquery.easing.+\.(js)$/,
           loader: 'imports-loader?jQuery=jquery,$=jquery,this=>window'
       },
-      {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        include: [resolve('src'), resolve('test'), resolve('node_modules/ckeditor4'),
-        resolve('node_modules/ckeditor4-vue') ]
-        // include: [resolve('src'), resolve('test'),
-        //  ]
-      },
+      // {
+      //   test: /\.js$/,
+      //   loader: 'babel-loader',
+      //   include: [resolve('src'), resolve('test'), resolve('node_modules/ckeditor4'),
+      //   resolve('node_modules/ckeditor4-vue') ]
+      //   // include: [resolve('src'), resolve('test'),
+      //   //  ]
+      // },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',

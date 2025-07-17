@@ -57,7 +57,6 @@ module.exports = defineConfig({
                 moment: 'moment',
                 swal: 'sweetalert2',
                 _: 'lodash',
-                // datetimepicker:"../node_modules/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"
             }),
             new MomentLocalesPlugin(),
             new webpack.ProvidePlugin({
@@ -96,12 +95,12 @@ module.exports = defineConfig({
                         filename: 'fonts/[name][ext]',
                     },
                 },
-                {
-                    test: /\.js$/,
-                    loader: 'babel-loader',
-                    include: [path.resolve('src'), path.resolve('test'), path.resolve('node_modules/ckeditor4'),
-                    path.resolve('node_modules/ckeditor4-vue') ]
-                },
+                // {
+                //     test: /\.js$/,
+                //     loader: 'babel-loader',
+                //     include: [path.resolve('src'), path.resolve('test'), path.resolve('node_modules/ckeditor4'),
+                //     path.resolve('node_modules/ckeditor4-vue') ]
+                // },
             ],
         },
         performance: {

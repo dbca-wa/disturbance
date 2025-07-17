@@ -10,11 +10,41 @@
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
   },
   "dependencies": {
+    "@vue/cli-service": "^5.0.8",
+    "@vue/compat": "^3.5.17",
+    "awesomplete": "^1.1.7",
+    "bootstrap": "^5.3.7",
+    "buffer": "^6.0.3",
+    "datatables.net-bs": "^2.3.2",
+    "datatables.net-buttons": "^3.2.4",
+    "datatables.net-responsive-bs": "^3.0.5",
+    "eonasdan-bootstrap-datetimepicker": "^4.17.49",
+    "file-saver": "^2.0.5",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.7.1",
+    "jquery.easing": "^1.4.1",
+    "jszip": "^3.10.1",
+    "moment-locales-webpack-plugin": "^1.2.0",
+    "ol": "^10.6.1",
+    "ol-layerswitcher": "^4.1.2",
+    "select2": "^4.1.0-rc.0",
+    "select2-bootstrap-theme": "0.1.0-beta.10",
+    "sweetalert2": "11.4.8",
+    "uuid": "^11.1.0",
     "vue": "^3.5.17",
-    "@vue/compat": "^3.5.17"
+    "vue-router": "^4.5.1"
   },
   "devDependencies": {
-    
+    "@babel/plugin-transform-runtime": "^7.25.9",
+    "@babel/preset-env": "^7.26.0",
+    "@vue/babel-plugin-transform-vue-jsx": "^1.4.0",
+    "@vue/compiler-sfc": "^3.5.13",
+    "babel-loader": "^10.0.0",
+    "eslint": "^9.16.0",
+    "eslint-config-prettier": "^10.1.4",
+    "eslint-plugin-prettier": "^5.0.1",
+    "eslint-plugin-vue": "^10.1",
+    "prettier": "^3.3"
   },
   "engines": {
     "node": ">= 4.0.0",
