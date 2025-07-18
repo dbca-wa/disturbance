@@ -145,7 +145,9 @@
                             <div class="col-md-4">
                                 <!-- <select class="form-control" ref="select_group" name="select-group" v-model="spatialquery.group" :disabled="sqq_is_disabled()"> -->
                                 <select class="form-control" ref="select_group" name="select-group" v-model="spatialquery.group">
-                                    <option v-if="group.can_user_edit" v-for="group in spatialquery_selects.cddp_groups" :value="group" >{{group.name}}</option>
+                                    <template v-if="group.can_user_edit">
+                                        <option v-for="group in spatialquery_selects.cddp_groups" :value="group" >{{group.name}}</option>
+                                    </template>
                                 </select>     
                             </div>
                             <div class="col-md-1"></div>
@@ -238,7 +240,7 @@
                         <div class="row">
                             <div class="col-md-1"></div>
                             <div class="col-md-10">
-				<input type="text" class="form-control" name="select-question" v-model="spatialquery.question" style="width:100%;" disabled></input>
+				<input type="text" class="form-control" name="select-question" v-model="spatialquery.question" style="width:100%;" disabled/>
                                 <i>{{spatialquery.answer_type}}</i>
                             </div>
                         </div>

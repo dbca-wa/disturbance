@@ -121,9 +121,6 @@
                                             </td>
                                         </tr>
                                     </table>
-                                    <template>
-
-                                    </template>
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="separator"></div>
@@ -489,7 +486,6 @@
     </div>
 </template>
 <script>
-import ProposalDisturbance from '../../form.vue'
 import ApiaryForm from '@/components/form_apiary.vue'
 import NewApply from '../../external/proposal_apply_new.vue'
 import ProposedDecline from './proposal_proposed_decline.vue'
@@ -579,7 +575,6 @@ export default {
         }
     },
     components: {
-        ProposalDisturbance,
         //ProposalApiary,
         ApiaryForm,
         datatable,

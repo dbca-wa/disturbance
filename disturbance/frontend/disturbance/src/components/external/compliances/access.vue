@@ -42,7 +42,7 @@
                         <div class="row">
                            <div class="col-md-12"> 
                             <form class="form-horizontal" name="complianceForm" method="post">
-                                <alert :show.sync="showError" type="danger">
+                                <alert v-if="showError" type="danger">
                                     <strong>{{errorString}}</strong>
                                 </alert>
                                 <div class="row">

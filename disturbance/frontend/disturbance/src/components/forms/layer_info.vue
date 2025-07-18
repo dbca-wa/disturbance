@@ -7,13 +7,13 @@
  
                   <div class="row">
                       <div class="col-md-6" style="color:blue">Layer last updated: <span p style="color:blue" v-html="layer_date"></span></div>
-                        <p class="col-md-6" style="color:blue" v-html="layer_name"></p></p>
+                        <p class="col-md-6" style="color:blue" v-html="layer_name"></p>
 
                   </div>
                   <div v-if="new_layer_updated && new_layer_name" class="row">
                         <div class="col-md-12" style="color:red">Layer has expired.</div>
                         <div class="col-md-6" style="color:red">New layer available: <span p style="color:red" v-html="new_layer_updated"></span></div>
-                        <p class="col-md-6" style="color:red" v-html="new_layer_name"></p></p>
+                        <p class="col-md-6" style="color:red" v-html="new_layer_name"></p>
                   </div>
                   
 

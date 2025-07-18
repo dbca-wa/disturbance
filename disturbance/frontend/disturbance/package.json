@@ -10,11 +10,14 @@
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
   },
   "dependencies": {
+    "@babel/runtime": "^7.27.6",
     "@vue/cli-service": "^5.0.8",
     "@vue/compat": "^3.5.17",
     "awesomplete": "^1.1.7",
+    "babel-polyfill": "^6.26.0",
     "bootstrap": "^5.3.7",
     "buffer": "^6.0.3",
+    "core-js": "^3.44.0",
     "datatables.net-bs": "^2.3.2",
     "datatables.net-buttons": "^3.2.4",
     "datatables.net-responsive-bs": "^3.0.5",
@@ -37,18 +40,20 @@
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.25.9",
     "@babel/preset-env": "^7.26.0",
+    "@vue/babel-plugin-jsx": "^1.4.0",
     "@vue/babel-plugin-transform-vue-jsx": "^1.4.0",
+    "@vue/cli-plugin-babel": "^5.0.8",
     "@vue/compiler-sfc": "^3.5.13",
     "babel-loader": "^10.0.0",
-    "eslint": "^9.16.0",
+    "eslint": "^9.31.0",
     "eslint-config-prettier": "^10.1.4",
     "eslint-plugin-prettier": "^5.0.1",
-    "eslint-plugin-vue": "^10.1",
+    "eslint-plugin-vue": "^10.3.0",
     "prettier": "^3.3"
   },
   "engines": {
-    "node": ">= 4.0.0",
-    "npm": ">= 3.0.0"
+    "node": ">= 20.19.3",
+    "npm": ">= 10.8.2"
   },
   "browserslist": [
     "> 1%",

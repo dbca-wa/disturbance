@@ -29,13 +29,7 @@
                 <a href="" v-else  @click.prevent="toggleComment"><i class="fa fa-ban">&nbsp;</i></a>
             </template>
 
-            <template>
-                <!--<LayerInfo v-show="assessorMode" :layer_value="layer_val"  :assessorMode="assessorMode"/>-->
-                <LayerInfo v-show="true" :layer_value="layer_val"  :assessorMode="true"/>
-            </template>
-
-            
-
+            <LayerInfo v-show="true" :layer_value="layer_val"  :assessorMode="true"/>
      
             <template v-if="readonly">
                 <select v-if="!isMultiple" disabled ref="selectB" :id="selectid" :name="name" class="form-control" :data-conditions="cons" style="width:100%">
@@ -64,12 +58,7 @@
                 </select>
             </template>
         </div>
-        <!-- <template>
-                <LayerInfo v-show="assessorMode" :layer_value="layer_val"  :assessorMode="assessorMode"/>
-        </template> -->
-
         
-        <!-- <Comment :question="label" :readonly="assessor_readonly" :name="name+'-comment-field'" v-show="showingComment && assessorMode" :value="comment_value"/>  -->
         <CommentBox :comment_boxes="JSON.parse(comment_boxes)" v-show="showingComment && assessorMode"/> 
 
 

@@ -54,7 +54,7 @@
                         </ul>
                 </div>
 
-                <alert :show.sync="showError" type="danger" style="color: red" class="noPrint"><strong>{{errorString}}</strong></alert>
+                <alert v-if="showError" type="danger" style="color: red" class="noPrint"><strong>{{errorString}}</strong></alert>
                 <div class="noPrint button-sec">
                     <div class="row">
                         <div class="col-sm-2">

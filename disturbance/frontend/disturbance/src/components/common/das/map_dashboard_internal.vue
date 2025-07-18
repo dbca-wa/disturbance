@@ -12,10 +12,8 @@
                                             <template v-show="select2Applied">
                                                 <label for="">Region</label>
                                                 <select style="width:100%" class="form-control input-sm" ref="filterRegion" v-model="filterProposalRegion">
-                                                    <template>
-                                                        <option value="All">All</option>
-                                                        <option v-for="r in regions" :value="r.id">{{r.search_term}}</option>
-                                                    </template>
+                                                    <option value="All">All</option>
+                                                    <option v-for="r in regions" :value="r.id">{{r.search_term}}</option>
                                                 </select>
                                             </template>
                                         </div>

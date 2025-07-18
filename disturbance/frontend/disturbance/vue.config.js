@@ -95,12 +95,12 @@ module.exports = defineConfig({
                         filename: 'fonts/[name][ext]',
                     },
                 },
-                // {
-                //     test: /\.js$/,
-                //     loader: 'babel-loader',
-                //     include: [path.resolve('src'), path.resolve('test'), path.resolve('node_modules/ckeditor4'),
-                //     path.resolve('node_modules/ckeditor4-vue') ]
-                // },
+                {
+                    test: /\.js$/,
+                    loader: 'babel-loader',
+                    // include: [path.resolve('src'), path.resolve('test'), path.resolve('node_modules/ckeditor4'),
+                    // path.resolve('node_modules/ckeditor4-vue') ]
+                },
             ],
         },
         performance: {

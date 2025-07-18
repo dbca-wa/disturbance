@@ -125,7 +125,7 @@
                                 <label for="">Sort By</label>
                                 <select class="form-control" v-model="sortBy">
                                     <option value=""></option>
-                                    <option v-for="s in sort_by" :value="s.value">{{s.name}}</option>
+                                    <option v-for="s in sort_by" :key="s.value" :value="s.value">{{s.name}}</option>
                                 </select>
                             </div>
                         </div>
@@ -424,7 +424,7 @@ export default {
             columnList.push({
                     // 4. Submitter
                     data: "submitter",
-                    mRender:function (data,type,full) {
+                    mRender:function (data) {
                         if (data) {
                             return `${data.first_name} ${data.last_name}`;
                         }
@@ -458,8 +458,8 @@ export default {
                 {
                     // 7. Lodged on
                     data: "lodgement_date",
-                    mRender:function (data,type,full) {
-                        return data != '' && data != null ? moment(data).format(vm.dateFormat): '';
+                    mRender:function (data) {
+                        return data != '' && data  != null ? moment(data).format(vm.dateFormat): '';
                     },
                     defaultContent: '',
                     searchable: true,

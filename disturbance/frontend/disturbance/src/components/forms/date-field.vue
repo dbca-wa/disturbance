@@ -26,10 +26,8 @@
                 </template>
                 <a href="" v-else  @click.prevent="toggleComment"><i class="fa fa-ban">&nbsp;</i></a>
             </template>
-            <template>
-                <!--<LayerInfo v-show="assessorMode" :layer_value="layer_val"  :assessorMode="assessorMode"/>-->
-                <LayerInfo v-show="true" :layer_value="layer_val"  :assessorMode="true"/>
-            </template>
+            <!--<LayerInfo v-show="assessorMode" :layer_value="layer_val"  :assessorMode="assessorMode"/>-->
+            <LayerInfo v-show="true" :layer_value="layer_val"  :assessorMode="true"/>
             <div class='input-group date'>
                 <input type="text" :readonly="readonly" :name="name" class="form-control" placeholder="DD/MM/YYYY" :value="value" :required="isRequired"/>
                 <span class="input-group-addon">

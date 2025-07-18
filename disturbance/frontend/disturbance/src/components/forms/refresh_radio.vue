@@ -4,15 +4,13 @@
             <template v-if="!assessorMode">
             -->
             <template v-if="layer_data && !assessorMode">
-                <template>
-                    <label  for="refresh_time_value" class="inline" > {{ refresh_time_val }}</label>
-                    <input type="hidden" class="form-control" :name="refresh_timestamp_name" :value="refresh_time" />
-                </template>
+                <label  for="refresh_time_value" class="inline" > {{ refresh_time_val }}</label>
+                <input type="hidden" class="form-control" :name="refresh_timestamp_name" :value="refresh_time" />
                 <template v-if="!isRefreshing">
                     <a href="" @click.prevent="refresh">Refresh&nbsp;</a>
                 </template>
                 <template v-if="isRefreshing">
-                    <i class="fa fa-spin fa-spinner"></i>&nbsp;Refresh&nbsp;</i>
+                    <i class="fa fa-spin fa-spinner">&nbsp;Refresh&nbsp;</i>
                 </template>
             </template>
         </span>     

@@ -4,7 +4,6 @@ import Radio from '../components/forms/radio.vue'
 import Conditions from '../components/forms/conditions.vue'
 import SelectConditions from '../components/forms/select-conditions.vue'
 import Checkbox from '../components/forms/checkbox.vue'
-import Declaration from '../components/forms/declarations.vue'
 import File from '../components/forms/file.vue'
 import Select from '../components/forms/select.vue'
 import DateField from '../components/forms/date-field.vue'
@@ -19,7 +18,7 @@ import CommentRadioCheckBox from '../components/forms/comment_icon_checkbox_radi
 import IFrame from '../components/forms/iframe.vue'
 import LayerInfo from '../components/forms/layer_info.vue'
 import RefreshRadio from '../components/forms/refresh_radio.vue'
-import {helpers,api_endpoints} from "@/utils/hooks.js"
+import {api_endpoints} from "@/utils/hooks.js"
 
 export default{
     renderChildren(h,c,data=null,assessorData=null,_readonly) {
@@ -30,7 +29,6 @@ export default{
         var layerData= this.status_data.layerData;
         var assessorInfo = this.status_data.assessorInfo;
         var proposalId = this.status_data.proposalId;
-        var applicationType = this.status_data.applicationType;
         var proposalLodgementDate = this.status_data.proposalLodgementDate;
         var assessorMode = false;
         var assessorCanAssess = false;

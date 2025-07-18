@@ -80,60 +80,60 @@
                 }));
             }
         },
-        render(h) {
-            let vm =this;
-            //Renderer.sections = [];
-            Renderer.store_status_data(vm.proposal.readonly,vm.proposal.has_prefilled_once,vm.proposal.assessor_data,vm.proposal.layer_data,vm.proposal.comment_data,vm.proposal.add_info_applicant, vm.proposal.add_info_assessor,vm.proposal.history_add_info_assessor, vm.proposal.refresh_timestamp, vm.proposal.current_assessor,vm.proposal.assessor_mode,vm.proposal.can_user_edit,vm.proposal.documents_url, vm.proposal.id, vm.proposal.application_type, vm.proposal.lodgement_date);
-            //Renderer.store_status_data(vm.proposal.readonly,vm.proposal.assessor_data,vm.proposal.comment_data,vm.proposal.current_assessor,vm.proposal.assessor_mode,vm.proposal.can_user_edit,vm.proposal.documents_url, vm.proposal.id, vm.proposal.application_type, vm.proposal.lodgement_date);
-            if (vm.withSectionsSelector){
-                return (
-                    <div>
-                        <div id="scrollspy-heading" class="col-lg-12 noPrint" >
-                            <h3>Proposal: <small>{vm.proposal.lodgement_number}</small></h3>
-                        </div>
-                        <div v-show={vm.showSections} class="col-md-3 noPrint" >
-                            <div class="panel panel-default fixed">
-                              <div class="panel-heading">
-                                <h5>Sections</h5>
-                              </div>
-                              <div class="panel-body" style="padding:0">
-                                  <ul class="list-group" id="scrollspy-section" style="margin-bottom:0">
+        // render(h) {
+        //     let vm =this;
+        //     //Renderer.sections = [];
+        //     Renderer.store_status_data(vm.proposal.readonly,vm.proposal.has_prefilled_once,vm.proposal.assessor_data,vm.proposal.layer_data,vm.proposal.comment_data,vm.proposal.add_info_applicant, vm.proposal.add_info_assessor,vm.proposal.history_add_info_assessor, vm.proposal.refresh_timestamp, vm.proposal.current_assessor,vm.proposal.assessor_mode,vm.proposal.can_user_edit,vm.proposal.documents_url, vm.proposal.id, vm.proposal.application_type, vm.proposal.lodgement_date);
+        //     //Renderer.store_status_data(vm.proposal.readonly,vm.proposal.assessor_data,vm.proposal.comment_data,vm.proposal.current_assessor,vm.proposal.assessor_mode,vm.proposal.can_user_edit,vm.proposal.documents_url, vm.proposal.id, vm.proposal.application_type, vm.proposal.lodgement_date);
+        //     if (vm.withSectionsSelector){
+        //         return (
+        //             <div>
+        //                 <div id="scrollspy-heading" class="col-lg-12 noPrint" >
+        //                     <h3>Proposal: <small>{vm.proposal.lodgement_number}</small></h3>
+        //                 </div>
+        //                 <div v-show={vm.showSections} class="col-md-3 noPrint" >
+        //                     <div class="panel panel-default fixed">
+        //                       <div class="panel-heading">
+        //                         <h5>Sections</h5>
+        //                       </div>
+        //                       <div class="panel-body" style="padding:0">
+        //                           <ul class="list-group" id="scrollspy-section" style="margin-bottom:0">
 
-                                  </ul>
-                              </div>
-                            </div>
-                        </div>
-                        <div class="col-md-9">
-                            {vm.proposal.schema.map(d =>{
-                                return Renderer.renderChildren(h,d,vm.values,vm.proposal.assessor_data,vm.proposal.layer_data,vm.proposal.readonly,vm.proposal.assessor_mode,vm.proposal.assessor)
-                            })}
-                            { this.$slots.default }
-                        </div>
-                    </div>
-                )
-            }
-            else{
-                if (vm.form_width == 'inherit'){
-                    return (
-                        <div>
-                            {vm.proposal.schema.map(d =>{
-                                return Renderer.renderChildren(h,d,vm.values,vm.proposal.assessor_data,vm.proposal.layer_data,vm.proposal.readonly,vm.proposal.assessor_mode,vm.proposal.assessor)
-                            })}
-                            { this.$slots.default }
-                        </div>
-                    )
-                }
-                else {
-                    return (
-                        <div class={vm.form_width}>
-                            {vm.proposal.schema.map(d =>{
-                                return Renderer.renderChildren(h,d,vm.values,vm.proposal.assessor_data,vm.proposal.layer_data,vm.proposal.readonly,vm.proposal.assessor_mode,vm.proposal.assessor)
-                            })}
-                            { this.$slots.default }
-                        </div>
-                    )
-                }
-            }
-        }
+        //                           </ul>
+        //                       </div>
+        //                     </div>
+        //                 </div>
+        //                 <div class="col-md-9">
+        //                     {vm.proposal.schema.map(d =>{
+        //                         return Renderer.renderChildren(h,d,vm.values,vm.proposal.assessor_data,vm.proposal.layer_data,vm.proposal.readonly,vm.proposal.assessor_mode,vm.proposal.assessor)
+        //                     })}
+        //                     { this.$slots.default }
+        //                 </div>
+        //             </div>
+        //         )
+        //     }
+        //     else{
+        //         if (vm.form_width == 'inherit'){
+        //             return (
+        //                 <div>
+        //                     {vm.proposal.schema.map(d =>{
+        //                         return Renderer.renderChildren(h,d,vm.values,vm.proposal.assessor_data,vm.proposal.layer_data,vm.proposal.readonly,vm.proposal.assessor_mode,vm.proposal.assessor)
+        //                     })}
+        //                     { this.$slots.default }
+        //                 </div>
+        //             )
+        //         }
+        //         else {
+        //             return (
+        //                 <div class={vm.form_width}>
+        //                     {vm.proposal.schema.map(d =>{
+        //                         return Renderer.renderChildren(h,d,vm.values,vm.proposal.assessor_data,vm.proposal.layer_data,vm.proposal.readonly,vm.proposal.assessor_mode,vm.proposal.assessor)
+        //                     })}
+        //                     { this.$slots.default }
+        //                 </div>
+        //             )
+        //         }
+        //     }
+        // }
     }
 </script>
