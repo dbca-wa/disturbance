@@ -20,7 +20,7 @@ import {
 }
 from '@/utils/hooks'
 export default {
-    name:"Refresh",
+    name:"RefreshSelect",
     props:[
         "parent_name",
         "parent_label",
@@ -102,7 +102,7 @@ data: function() {
         },
         refresh: async function(){
             let vm=this;
-            var ele=$('[name='+vm.parent_name+']')[0]
+            // var ele=$('[name='+vm.parent_name+']')[0]
             //var ele=$('[name='+vm.parent_name+']')
             //add api call here to get the refresh value and refresh time stamp
             const mlq_data={label: '',

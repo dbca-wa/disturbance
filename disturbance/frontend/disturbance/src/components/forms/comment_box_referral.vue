@@ -1,6 +1,6 @@
 <template lang="html">
     <div class="col-md-12">
-      <div  v-for="box in comment_boxes">
+      <div  v-for="box in comment_boxes" :key="box.id">
         <div v-show="box.box_view" class="form-group">
             <div class="row">
               <!-- <label :id="id" class="col-md-3" for="label" >{{ box.label }}</label> -->

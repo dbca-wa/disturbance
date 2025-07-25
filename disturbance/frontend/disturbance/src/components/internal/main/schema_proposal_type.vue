@@ -51,7 +51,7 @@
             <div id="error" v-if="missing_fields.length > 0" style="margin: 10px; padding: 5px; color: red; border:1px solid red;">
                 <b>Please answer the following mandatory question(s):</b>
                 <ul>
-                    <li v-for="error in missing_fields">
+                    <li v-for="error in missing_fields" :key="error.label">
                         {{ error.label }}
                     </li>
                 </ul>
@@ -88,9 +88,9 @@
                 </form>
             </div>
         </div>
-        <div slot="footer">
+        <template #footer>
             <button type="button" class="btn btn-primary" @click="saveProposalType()">Save</button>
-        </div>
+        </template>
     </modal>
 
   </div>
@@ -99,7 +99,6 @@
 <script>
 import datatable from '@/utils/vue/datatable.vue'
 import modal from '@vue-utils/bootstrap-modal.vue'
-import alert from '@vue-utils/alert.vue'
 import {
   api_endpoints,
   helpers
@@ -109,7 +108,6 @@ export default {
     name:'schema-purpose',
     components: {
         modal,
-        alert,
         datatable,
     },
     props:{
@@ -160,7 +158,7 @@ export default {
                         data: "proposal_type",
                         width: "20%",
                         searchable: false,
-                        mRender:function (data,type,full) {
+                        mRender:function (data) {
                             return data.name_with_version
                         }
                     },
@@ -179,8 +177,8 @@ export default {
                         width: "10%",
                         searchable: false,
                         mRender:function (data,type,full) {
-                            var column = `<a class="edit-row" data-rowid=\"__ROWID__\">Edit</a><br/>`;
-                            column += `<a class="delete-row" data-rowid=\"__ROWID__\">Delete</a><br/>`;
+                            var column = `<a class="edit-row" data-rowid="__ROWID__">Edit</a><br/>`;
+                            column += `<a class="delete-row" data-rowid="__ROWID__">Delete</a><br/>`;
                             return column.replace(/__ROWID__/g, full.id);
                         }
                     },
@@ -241,7 +239,7 @@ export default {
                 await self.$http.post(api_endpoints.schema_proposal_type, JSON.stringify(data),{
                     emulateJSON:true
 
-                }).then((response) => {
+                }).then(() => {
 
                     self.$refs.schema_purpose_table.vmDataTable.ajax.reload();
                     self.close();
@@ -259,7 +257,7 @@ export default {
                 await self.$http.post(helpers.add_endpoint_json(api_endpoints.schema_proposal_type,data.id+'/save_proposal_type'),JSON.stringify(data),{
                         emulateJSON:true,
 
-                }).then((response)=>{
+                }).then(()=>{
 
                     self.$refs.schema_purpose_table.vmDataTable.ajax.reload();
                     self.close();
@@ -319,18 +317,18 @@ export default {
 
                         await self.$http.delete(helpers.add_endpoint_json(api_endpoints.schema_proposal_type,(self.sectionProposalType.id+'/delete_proposal_type')))
     
-                        .then((response) => {
+                        .then(() => {
 
                             self.$refs.schema_purpose_table.vmDataTable.ajax.reload();
 
                         }, (error) => {
-
+                            console.error(error);
                         });
     
                     }
 
                 },(error) => {
-
+                    console.error(error);
                 });                
             });
         },

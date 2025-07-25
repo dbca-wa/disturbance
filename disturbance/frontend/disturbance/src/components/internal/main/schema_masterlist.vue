@@ -42,7 +42,7 @@
             <div id="error" v-if="missing_fields.length > 0" style="margin: 10px; padding: 5px; color: red; border:1px solid red;">
                 <b>Please answer the following mandatory question(s):</b>
                 <ul>
-                    <li v-for="error in missing_fields">
+                    <li v-for="error in missing_fields" :key="error.label">
                         {{ error.label }}
                     </li>
                 </ul>
@@ -65,7 +65,7 @@
                         </div>
                         <div class="col-md-6">
                             <select class="form-control" ref="select_answer_type" name="select-answer-type" v-model="masterlist.answer_type">
-                                <option v-for="a in answerTypes" :value="a.value" >{{a.label}}</option>
+                                <option v-for="a in answerTypes" :value="a.value" :key="a.value">{{a.label}}</option>
                             </select>     
                         </div>
                     </div>
@@ -84,7 +84,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <input type="checkbox" :value="true" v-model="masterlist.help_text_url" >&nbsp;&nbsp;&nbsp;<label>Help Text url?</label></input>
+                            <label><input type="checkbox" :value="true" v-model="masterlist.help_text_url"/>&nbsp;&nbsp;&nbsp;Help Text url?</label>
                         </div>
                     </div>
                     <!-- <div class="row" v-if="isHelptextUrl">
@@ -107,7 +107,7 @@
 
                     <div class="row">
                         <div class="col-md-6">
-                            <input type="checkbox" :value="true" v-model="masterlist.help_text_assessor_url" >&nbsp;&nbsp;&nbsp;<label>Help Text Assessor url?</label></input>
+                            <label><input type="checkbox" :value="true" v-model="masterlist.help_text_assessor_url" />&nbsp;&nbsp;&nbsp;Help Text Assessor url?</label>
                         </div>
                     </div>
                     <div class="row" v-if="isHelptextAssessorUrl">
@@ -124,9 +124,9 @@
                 </form>
             </div>
         </div>
-        <div slot="footer">
+        <template #footer>
             <button type="button" class="btn btn-primary" @click="saveMasterlist()">Save</button>
-        </div>
+        </template>
     </modal>
 
   </div>
@@ -135,7 +135,6 @@
 <script>
 import datatable from '@/utils/vue/datatable.vue'
 import modal from '@vue-utils/bootstrap-modal.vue'
-import alert from '@vue-utils/alert.vue'
 import SchemaOption from './schema_add_option.vue'
 import {
   api_endpoints,
@@ -146,7 +145,6 @@ export default {
     name:'schemaMasterlistModal',
     components: {
         modal,
-        alert,
         datatable,
         SchemaOption,
         // SchemaHeader,
@@ -157,17 +155,17 @@ export default {
     data:function () {
         let vm = this;
         vm.schema_masterlist_url = helpers.add_endpoint_join(api_endpoints.schema_masterlist_paginated, 'schema_masterlist_datatable_list/?format=datatables');
-        var toolbar_options = [
-                [ '-', 'Bold', 'Italic' ],
-                [ 'Format' ],
-                [ 'NumberedList', 'BulletedList' ],
-                [ 'Table' ],
-                ['Link' ],
-                ['Print'],
-                { name: 'editing', items: [ 'Find', 'Replace', '-' ] },
-                { name: 'document', items: [ 'Print', 'Source', 'Preview', 'Scayt' ] },
-                //[ 'Find' ],
-            ]
+        // var toolbar_options = [
+        //         [ '-', 'Bold', 'Italic' ],
+        //         [ 'Format' ],
+        //         [ 'NumberedList', 'BulletedList' ],
+        //         [ 'Table' ],
+        //         ['Link' ],
+        //         ['Print'],
+        //         { name: 'editing', items: [ 'Find', 'Replace', '-' ] },
+        //         { name: 'document', items: [ 'Print', 'Source', 'Preview', 'Scayt' ] },
+        //         //[ 'Find' ],
+        //     ]
         
         return {
             schema_masterlist_id: 'schema-materlist-datatable-'+vm._uid,
@@ -252,7 +250,7 @@ export default {
                     { 
                         data: "question",
                         width: "80%",
-                        mRender:function (data,type,full) {
+                        mRender:function (data) {
                             var ellipsis = '...',
                                 truncated = _.truncate(data, {
                                     length: 100,
@@ -288,8 +286,8 @@ export default {
                         data: "id",
                         width: "10%",
                         mRender:function (data,type,full) {
-                            var column = `<a class="edit-row" data-rowid=\"__ROWID__\">Edit</a><br/>`;
-                            column += `<a class="delete-row" data-rowid=\"__ROWID__\">Delete</a><br/>`;
+                            var column = `<a class="edit-row" data-rowid="__ROWID__">Edit</a><br/>`;
+                            column += `<a class="delete-row" data-rowid="__ROWID__">Delete</a><br/>`;
                             return column.replace(/__ROWID__/g, full.id);
                         },
                         defaultContent: '',
@@ -432,7 +430,7 @@ export default {
 
                 await self.$http.post(api_endpoints.schema_masterlist, JSON.stringify(data),{
                     emulateJSON:true
-                }).then((response) => {
+                }).then(() => {
                     self.$refs.schema_masterlist_table.vmDataTable.ajax.reload();
                     self.close();
                 }, (error) => {
@@ -447,7 +445,7 @@ export default {
 
                 await self.$http.post(helpers.add_endpoint_json(api_endpoints.schema_masterlist,data.id+'/save_masterlist'),JSON.stringify(data),{
                         emulateJSON:true,
-                }).then((response)=>{
+                }).then(()=>{
                     self.$refs.schema_masterlist_table.vmDataTable.ajax.reload();
                     self.close();
                 },(error)=>{
@@ -516,7 +514,7 @@ export default {
                 }).then(async (result) => {
                     if (result) {
                         await self.$http.delete(helpers.add_endpoint_json(api_endpoints.schema_masterlist,(self.masterlist.id+'/delete_masterlist')))
-                        .then((response) => {
+                        .then(() => {
                             self.$refs.schema_masterlist_table.vmDataTable.ajax.reload();
                         }, (error) => {
                             swal(
@@ -528,7 +526,7 @@ export default {
                     }
 
                 },(error) => {
-                    //
+                    console.log(error);
                 });                
             });
         },
@@ -537,9 +535,6 @@ export default {
             $(self.$refs.select_answer_type).select2({
                 "theme": "bootstrap",
                 placeholder:"Select Answer Type..."
-            }).
-            on("select2:selecting",function (e) {
-                let selected = $(e.currentTarget);
             }).
             on("select2:select",function (e) {
                 let selected = $(e.currentTarget);
@@ -558,11 +553,8 @@ export default {
                 "theme": "bootstrap",
                 placeholder:"Select Answer Type..."
             }).
-            on("select2:selecting",function (e) {
-                let selected = $(e.currentTarget);
-            }).
-            on("select2:select",function (e) {
-                let selected = $(e.currentTarget);
+            on("select2:select",function () {
+                // let selected = $(e.currentTarget);
                 // self.masterlist.answer_type = selected.val()
                 // self.setShowAdditional(selected.val())
             }).

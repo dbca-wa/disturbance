@@ -17,7 +17,7 @@
                             </div>
                             <div class="col-sm-12 top-buffer-s">
                                 <strong>Lodged on</strong><br/>
-                                {{ proposal.lodgement_date | formatDate}}
+                                {{ formatDate(proposal.lodgement_date)}}
                             </div>
                             <div class="col-sm-12 top-buffer-s">
                                 <table class="table small-table">
@@ -80,15 +80,15 @@
                                         <th>Status/Action</th>
                                     </tr>
                                     <!-- <tr v-for="r in proposal.latest_referrals"> -->
-                                    <tr v-for="r in referral.latest_referrals">
+                                    <tr v-for="r in referral.latest_referrals" :key="r.id">
                                         <td>
                                             <small><strong>{{r.referral}}</strong></small><br/>
-                                            <small><strong>{{r.lodged_on | formatDate}}</strong></small>
+                                            <small><strong>{{ formatDate(r.lodged_on) }}</strong></small>
                                         </td>
                                         <td><small><strong>{{r.processing_status}}</strong></small><br/>
                                         <template v-if="!isFinalised && referral.referral == proposal.current_assessor.id">
                                             <template v-if="r.processing_status == 'Awaiting'">
-                                                <small><a @click.prevent="remindReferral(r)" href="#">Remind</a> / <a @click.prevent="recallReferral(r)"href="#">Recall</a></small>
+                                                <small><a @click.prevent="remindReferral(r)" href="#">Remind</a> / <a @click.prevent="recallReferral(r)" href="#">Recall</a></small>
                                             </template>
                                             <template v-else>
                                                 <small><a @click.prevent="resendReferral(r)" href="#">Resend</a></small>
@@ -261,7 +261,6 @@
 <script>
 import Proposal from '../../form.vue'
 import NewApply from '../../external/proposal_apply_new.vue'
-import datatable from '@vue-utils/datatable.vue'
 import CommsLogs from '@common-utils/comms_logs.vue'
 import MoreReferrals from '@common-utils/more_referrals.vue'
 require("select2/dist/css/select2.min.css");
@@ -273,7 +272,7 @@ import {
 }
 from '@/utils/hooks'
 export default {
-    name: 'Referral',
+    name: 'InternalReferral',
     data: function() {
         let vm = this;
         return {
@@ -344,15 +343,14 @@ export default {
     },
     components: {
         Proposal,
-        datatable,
         CommsLogs,
         MoreReferrals,
         NewApply,
     },
     filters: {
-        formatDate: function(data){
-            return data ? moment(data).format('DD/MM/YYYY HH:mm:ss'): '';
-        }
+        // formatDate: function(data){
+        //     return data ? moment(data).format('DD/MM/YYYY HH:mm:ss'): '';
+        // }
     },
     props:{
             referralId:{
@@ -382,6 +380,9 @@ export default {
         },
         isFinalised: function(){
             return !(this.referral != null  && this.referral.processing_status == 'Awaiting'); 
+        },
+        formatDate: function(data){
+            return data ? moment(data).format('DD/MM/YYYY HH:mm:ss'): '';
         }
     },
     methods: {
@@ -407,16 +408,17 @@ export default {
         ammendmentRequest: function(){
             this.$refs.ammendment_request.isModalOpen = true;
         },
-        save: function(e) {
+        save: function() {
           let vm = this;
           let formData = new FormData(vm.form);
-          vm.$http.post(vm.proposal_form_url,formData).then(res=>{
+          vm.$http.post(vm.proposal_form_url,formData).then(() => {
               swal(
                 'Saved',
                 'Your proposal has been saved',
                 'success'
               )
           },err=>{
+            console.log(err);
           });
         },
         assignTo: function(){
@@ -502,13 +504,13 @@ export default {
                     },
                 }).
                 on("select2:select", function (e) {
-                    var selected = $(e.currentTarget);
+                    // var selected = $(e.currentTarget);
                     //vm.selected_referral = selected.val();
                     let data = e.params.data.id;
                     vm.selected_referral = data;
                 }).
-                on("select2:unselect",function (e) {
-                    var selected = $(e.currentTarget);
+                on("select2:unselect",function () {
+                    // var selected = $(e.currentTarget);
                     vm.selected_referral = null;
                 });
 
@@ -533,7 +535,7 @@ export default {
             let vm = this;
             let formData = new FormData(vm.form); //save data before completing referral
             vm.sendingReferral = true;
-            vm.$http.post(vm.proposal_form_url,formData).then(res=>{
+            vm.$http.post(vm.proposal_form_url,formData).then(()=>{
                 let data = {'email':vm.selected_referral, 'text': vm.referral_text};
                 //vm.sendingReferral = true;
                 vm.$http.post(helpers.add_endpoint_json(api_endpoints.referrals,(vm.referral.id+'/send_referral')),JSON.stringify(data),{
@@ -565,6 +567,7 @@ export default {
             
              
              },err=>{
+                console.log(err);
              });
 
             /*let data = {'email':vm.selected_referral};
@@ -594,7 +597,7 @@ export default {
         remindReferral:function(r){
             let vm = this;
             
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/remind')).then(response => {
+            vm.$http.get(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/remind')).then(() => {
                 // vm.original_proposal = helpers.copyObject(response.body);
                 // vm.proposal = response.body;
                 // vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
@@ -616,7 +619,7 @@ export default {
         resendReferral:function(r){
             let vm = this;
             
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/resend')).then(response => {
+            vm.$http.get(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/resend')).then(() => {
                 // vm.original_proposal = helpers.copyObject(response.body);
                 // vm.proposal = response.body;
                 // vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
@@ -638,7 +641,7 @@ export default {
         recallReferral:function(r){
             let vm = this;
             
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/recall')).then(response => {
+            vm.$http.get(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/recall')).then(() => {
                 // vm.original_proposal = helpers.copyObject(response.body);
                 // vm.proposal = response.body;
                 // vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
@@ -692,7 +695,7 @@ export default {
                 confirmButtonText: 'Submit'
             }).then(() => { 
                 let formData = new FormData(vm.form);
-                vm.$http.post(vm.proposal_form_url,formData).then(res=>{
+                vm.$http.post(vm.proposal_form_url,formData).then(()=>{
                     
                     vm.$http.post(helpers.add_endpoint_json(api_endpoints.referrals,vm.$route.params.referral_id+'/complete'),JSON.stringify(data),{
                 emulateJSON:true
@@ -709,6 +712,7 @@ export default {
                 });
                 
                  },err=>{
+                    console.log(err);
                  });
 
                /* vm.$http.get(helpers.add_endpoint_json(api_endpoints.referrals,vm.$route.params.referral_id+'/complete')).then(res => {
@@ -725,6 +729,7 @@ export default {
 
 
             },(error) => {
+                console.log(error);
             });
         }
     },

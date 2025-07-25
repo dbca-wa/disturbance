@@ -30,7 +30,11 @@
                   </div>
                   <div class="panel-body collapse in" :id="pBody">
                       <form class="form-horizontal" name="personal_form" method="post">
-                        <alert v-if="showPersonalError" type="danger" style="color:red"><div v-for="item in errorListPersonal"><strong>{{item}}</strong></div></alert>
+                        <alert v-if="showPersonalError" type="danger" style="color:red">
+                            <div v-for="item in errorListPersonal" v-bind:key="item">
+                                <strong>{{item}}</strong>
+                            </div>
+                        </alert>
                           <div class="form-group">
                             <div class="col-sm-3"></div>
                             <div class="col-sm-6">
@@ -80,7 +84,11 @@
                   </div>
                   <div v-if="loading.length == 0" class="panel-body collapse" :id="adBody">
                       <form class="form-horizontal" action="index.html" method="post">
-                        <alert v-if="showAddressError" type="danger" style="color:red"><div v-for="item in errorListAddress"><strong>{{item}}</strong></div></alert>
+                        <alert v-if="showAddressError" type="danger" style="color:red">
+                            <div v-for="item in errorListAddress" v-bind:key="item">
+                                <strong>{{item}}</strong>
+                            </div>
+                        </alert>
                           <div class="form-group">
                             <label for="" class="col-sm-3 control-label">Street</label>
                             <div class="col-sm-6">
@@ -107,7 +115,7 @@
                             <label for="" class="col-sm-3 control-label" >Country</label>
                             <div class="col-sm-4">
                                 <select class="form-control" id="country" name="Country" v-model="profile.residential_address.country">
-                                    <option v-for="c in countries" :value="c.code">{{ c.name }}</option>
+                                    <option v-for="c in countries" :key="c.code" :value="c.code">{{ c.name }}</option>
                                 </select>
                             </div>
                           </div>
@@ -136,7 +144,11 @@
                   </div>
                   <div class="panel-body collapse" :id="cBody">
                       <form class="form-horizontal" action="index.html" method="post">
-                        <alert v-if="showContactError" type="danger" style="color:red"><div v-for="item in errorListContact"><strong>{{item}}</strong></div></alert>
+                        <alert v-if="showContactError" type="danger" style="color:red">
+                            <div v-for="item in errorListContact" v-bind:key="item">
+                                <strong>{{item}}</strong>
+                            </div>
+                        </alert>
                           <div class="form-group">
                             <label for="" class="col-sm-3 control-label">Phone (work)</label>
                             <div v-if="profile.is_department_user" class="col-sm-6">
@@ -200,7 +212,7 @@
                                 <button class="btn btn-primary pull-right" v-if="hasOrgs && !addingCompany" @click.prevent="addCompany()">Add Another Organisation</button>
                             </div>
                           </div>
-                          <div v-for="org in profile.disturbance_organisations">
+                          <div v-for="org in profile.disturbance_organisations" :key="org.id">
                               <div class="form-group">
                                 <label for="" class="col-sm-2 control-label" >Organisation</label>
                                 <div class="col-sm-3">
@@ -214,7 +226,7 @@
                               </div>
                           </div>
 
-                          <div v-for="orgReq in orgRequest_list">
+                          <div v-for="orgReq in orgRequest_list" :key="orgReq.id">
                               <div class="form-group">
                                 <label for="" class="col-sm-2 control-label" >Organisation</label>
                                 <div class="col-sm-3">
@@ -247,7 +259,7 @@
                               </div>
                               <div class="form-group" v-if="newOrg.exists && newOrg.detailsChecked">
                                   <label class="col-sm-12" style="text-align:left;margin-bottom:20px;">
-                                    This organisation has already been  registered with the system.Please enter the two pin codes:</br>
+                                    This organisation has already been  registered with the system.Please enter the two pin codes:<br/>
                                     These pin codes can be retrieved from ({{newOrg.first_five}})
                                   </label>
                                   <label for="" class="col-sm-2 control-label" >Pin 1</label>
@@ -265,7 +277,7 @@
                               </div>
                               <div class="form-group" v-else-if="!newOrg.exists && newOrg.detailsChecked">
                                   <label class="col-sm-12" style="text-align:left;">
-                                    This organisation has not yet been registered with this system. Please upload a letter on organisation head stating that you are an employee of this organisation.</br>
+                                    This organisation has not yet been registered with this system. Please upload a letter on organisation head stating that you are an employee of this organisation.<br/>
                                   </label>
                                   <div class="col-sm-12">
                                     <span class="btn btn-primary btn-file pull-left">
@@ -294,7 +306,7 @@
 import $ from 'jquery'
 import { api_endpoints, helpers } from '@/utils/hooks'
 export default {
-    name: 'Profile',
+    name: 'UserProfile',
     data () {
         let vm = this;
         return {
@@ -323,7 +335,6 @@ export default {
             updatingPersonal: false,
             updatingAddress: false,
             updatingContact: false,
-            registeringOrg: false,
             orgRequest_list: [],
             missing_fields: [],
             errorListPersonal:[],
@@ -663,7 +674,7 @@ export default {
             } else {
                 vm.$http.post(api_endpoints.organisation_requests,data,{
                     emulateJSON:true
-                }).then((response) => {
+                }).then(() => {
                     vm.registeringOrg = false;
                     vm.uploadedFile = null;
                     vm.addingCompany = false;
@@ -724,7 +735,7 @@ export default {
             } else {
                 vm.$http.post(api_endpoints.organisation_requests,data,{
                     emulateJSON:true
-                }).then((response) => {
+                }).then(() => {
                     vm.registeringOrg = false;
                     vm.uploadedFile = null;
                     vm.addingCompany = false;
@@ -757,7 +768,7 @@ export default {
             let el = e.target;
             let chev = null;
             //console.log(el);
-            $(el).on('click', function (event) {
+            $(el).on('click', function () {
                 chev = $(this);
                 //console.log(chev);
                 $(chev).toggleClass('glyphicon-chevron-down glyphicon-chevron-up');
@@ -769,7 +780,7 @@ export default {
             vm.$http.get(api_endpoints.countries).then((response)=>{
                 vm.countries = response.body;
                 vm.loading.splice('fetching countries',1);
-            },(response)=>{
+            },()=>{
                 //console.log(response);
                 vm.loading.splice('fetching countries',1);
             });
@@ -789,7 +800,7 @@ export default {
                 'first_name':vm.profile.first_name,'last_name':vm.profile.last_name,'email':vm.profile.email,
                 'mobile_number':vm.profile.mobile_number, 'phone_number':vm.profile.phone_number},{
                     emulateJSON:true
-                }).then((response) => {
+                }).then(() => {
                     Vue.http.get(api_endpoints.profile).then((response) => {
                         vm.profile = response.body
                         if (vm.profile.residential_address == null){ vm.profile.residential_address = {}; }
@@ -810,6 +821,7 @@ export default {
                     )
                 });
             },(error) => {
+                console.log(error);
             });
         },
         fetchProfile: function(){

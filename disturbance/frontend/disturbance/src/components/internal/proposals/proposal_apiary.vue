@@ -23,7 +23,7 @@
                             </div>
                             <div class="col-sm-12 top-buffer-s">
                                 <strong>Lodged on</strong><br/>
-                                {{ proposal.lodgement_date | formatDate}}
+                                {{ formatDate(proposal.lodgement_date)}}
                             </div>
                             <div class="col-sm-12 top-buffer-s">
                                 <table class="table small-table">
@@ -84,7 +84,7 @@
                                         </select-->
                                         <select :disabled="!canLimitedAction" ref="apiary_referral_groups" class="form-control">
                                             <option value="null"></option>
-                                            <option v-for="group in apiaryReferralGroups" :value="group.id">{{group.name}}</option>
+                                            <option v-for="group in apiaryReferralGroups" :value="group.id" :key="group.id">{{group.name}}</option>
                                         </select>
                                         <template v-if='!sendingReferral'>
                                             <template v-if="selected_referral">
@@ -105,15 +105,15 @@
                                             <th>Referral</th>
                                             <th>Status/Action</th>
                                         </tr>
-                                        <tr v-for="r in proposal.latest_referrals">
+                                        <tr v-for="r in proposal.latest_referrals" :key="r.id">
                                             <td>
                                                 <small><strong>{{r.apiary_referral.referral_group.name}}</strong></small><br/>
-                                                <small><strong>{{r.lodged_on | formatDate}}</strong></small>
+                                                <small><strong>{{ formatDate( r.lodged_on) }}</strong></small>
                                             </td>
                                             <td>
                                                 <small><strong>{{r.processing_status}}</strong></small><br/>
                                                 <template v-if="r.processing_status == 'Awaiting'">
-                                                    <small v-if="canLimitedAction"><a @click.prevent="remindReferral(r)" href="#">Remind</a> / <a @click.prevent="recallReferral(r)"href="#">Recall</a></small>
+                                                    <small v-if="canLimitedAction"><a @click.prevent="remindReferral(r)" href="#">Remind</a> / <a @click.prevent="recallReferral(r)" href="#">Recall</a></small>
                                                 </template>
                                                 <template v-else>
                                                     <small v-if="canLimitedAction"><a @click.prevent="resendReferral(r)" href="#">Resend</a></small>
@@ -131,13 +131,13 @@
                                 <div class="form-group">
                                     <template v-if="proposal.processing_status == 'With Approver'">
                                         <select ref="assigned_officer" :disabled="!canAction" class="form-control" v-model="proposal.assigned_approver">
-                                            <option v-for="member in proposal.allowed_assessors" :value="member.id">{{member.first_name}} {{member.last_name}}</option>
+                                            <option v-for="member in proposal.allowed_assessors" :value="member.id" :key="member.id">{{member.first_name}} {{member.last_name}}</option>
                                         </select>
                                         <a v-if="canAssess && proposal.assigned_approver != proposal.current_assessor.id" @click.prevent="assignRequestUser()" class="actionBtn pull-right">Assign to me</a>
                                     </template>
                                     <template v-else>
                                         <select ref="assigned_officer" :disabled="!canAction" class="form-control" v-model="proposal.assigned_officer">
-                                            <option v-for="member in proposal.allowed_assessors" :value="member.id">{{member.first_name}} {{member.last_name}}</option>
+                                            <option v-for="member in proposal.allowed_assessors" :value="member.id" :key="member.id">{{member.first_name}} {{member.last_name}}</option>
                                         </select>
                                         <a v-if="canAssess && proposal.assigned_officer != proposal.current_assessor.id" @click.prevent="assignRequestUser()" class="actionBtn pull-right">Assign to me</a>
                                     </template>
@@ -487,10 +487,9 @@
 </template>
 <script>
 import ApiaryForm from '@/components/form_apiary.vue'
-import NewApply from '../../external/proposal_apply_new.vue'
+// import NewApply from '../../external/proposal_apply_new.vue'
 import ProposedDecline from './proposal_proposed_decline.vue'
 import AmendmentRequest from './amendment_request.vue'
-import datatable from '@vue-utils/datatable.vue'
 import Requirements from './proposal_requirements.vue'
 import OriginatingApprovalRequirements from './originating_approval_requirements.vue'
 import TargetApprovalRequirements from './target_approval_requirements.vue'
@@ -499,7 +498,6 @@ import ApprovalScreen from './proposal_approval.vue'
 import CommsLogs from '@common-utils/comms_logs.vue'
 import { api_endpoints, helpers } from '@/utils/hooks'
 import ApiarySiteTransfer from '@/components/form_apiary_site_transfer.vue'
-import FileField from '@/components/forms/filefield.vue'
 
 export default {
     name: 'InternalProposalApiary',
@@ -577,7 +575,6 @@ export default {
     components: {
         //ProposalApiary,
         ApiaryForm,
-        datatable,
         ProposedDecline,
         AmendmentRequest,
         Requirements,
@@ -587,15 +584,8 @@ export default {
         // ApprovalScreenSiteTransferTemporaryUse,
         CommsLogs,
         //MoreReferrals,
-        NewApply,
         //MapLocations,
-        FileField,
         ApiarySiteTransfer,
-    },
-    filters: {
-        formatDate: function(data){
-            return data ? moment(data).format('DD/MM/YYYY HH:mm:ss'): '';
-        }
     },
     props: {
         proposalId: {
@@ -605,6 +595,9 @@ export default {
     watch: {
     },
     computed: {
+        formatDate: function(data){
+            return data ? moment(data).format('DD/MM/YYYY HH:mm:ss'): '';
+        },
         referralListURL: function(){
             return this.proposal!= null ? helpers.add_endpoint_json(api_endpoints.apiary_referrals,'datatable_list')+'?proposal='+this.proposal.id : '';
         },
@@ -615,10 +608,12 @@ export default {
           return helpers.getCookie('csrftoken')
         },
         proposal_form_url: function() {
+            var url = "";
           //return (this.proposal) ? `/api/proposal/${this.proposal.id}/assessor_save.json` : '';
             if (this.apiaryProposal) {
-                return `/api/proposal_apiary/${this.apiaryProposal.id}/assessor_save.json`;
+                url = `/api/proposal_apiary/${this.apiaryProposal.id}/assessor_save.json`;
             }
+            return url;
         },
         isFinalised: function(){
             return this.proposal.processing_status == 'Declined' || this.proposal.processing_status == 'Approved';
@@ -658,34 +653,46 @@ export default {
             return this.proposal && this.proposal.applicant.email ? this.proposal.applicant.email : '';
         },
         applicantAddress: function() {
+            var addr="";
             if (this.proposal && this.proposal.applicant_address) {
-                return this.proposal.applicant_address;
+                addr=this.proposal.applicant_address;
             }
+            return addr;
         },
         applicantAddressLine1: function() {
+            var addr1="";
             if (this.proposal && this.proposal.applicant_address) {
-                return this.proposal.applicant_address.line1;
+                addr1=this.proposal.applicant_address.line1;
             }
+            return addr1;
         },
         applicantAddressCountry: function() {
+            var country="";
             if (this.proposal && this.proposal.applicant_address) {
-                return this.proposal.applicant_address.country;
+                country=this.proposal.applicant_address.country;
             }
+            return country;
         },
         applicantAddressLocality: function() {
+            var locality="";
             if (this.proposal && this.proposal.applicant_address) {
-                return this.proposal.applicant_address.locality;
+                locality=this.proposal.applicant_address.locality;
             }
+            return locality;
         },
         applicantAddressState: function() {
+            var state="";
             if (this.proposal && this.proposal.applicant_address) {
-                return this.proposal.applicant_address.state;
+                state=this.proposal.applicant_address.state;
             }
+            return state;
         },
         applicantAddressPostcode: function() {
+            var postcode="";
             if (this.proposal && this.proposal.applicant_address) {
-                return this.proposal.applicant_address.postcode;
+                postcode=this.proposal.applicant_address.postcode;
             }
+            return postcode;
         },
         organisationApplicant: function() {
             let oApplicant = false;
@@ -709,9 +716,11 @@ export default {
             return returnVal;
         },
         apiaryProposal: function() {
+            let returnVal = null;
             if (this.proposal && this.proposal.proposal_apiary) {
-                return this.proposal.proposal_apiary;
+                returnVal = this.proposal.proposal_apiary;
             }
+            return returnVal;
         },
         siteTransferTemporaryUse: function() {
             let returnVal = false;
@@ -862,7 +871,6 @@ export default {
             this.$refs.amendment_request.isModalOpen = true;
         },
         highlight_deficient_fields: function(deficient_fields){
-            let vm = this;
             for (var deficient_field of deficient_fields) {
                 $("#" + "id_"+deficient_field).css("color", 'red');
             }
@@ -879,27 +887,28 @@ export default {
             });
             vm.highlight_deficient_fields(deficient_fields);
         },
-        save: function(e) {
+        save: function() {
           let vm = this;
           vm.checkAssessorData();
           let formData = new FormData(vm.form);
-          vm.$http.post(vm.proposal_form_url,formData).then(res=>{
+          vm.$http.post(vm.proposal_form_url,formData).then(()=>{
               swal(
                 'Saved',
                 'Your proposal has been saved',
                 'success'
               )
           },err=>{
+            console.log(err);
           });
         },
         save_wo: function() {
           let vm = this;
           vm.checkAssessorData();
           let formData = new FormData(vm.form);
-          vm.$http.post(vm.proposal_form_url,formData).then(res=>{
-
-
+          vm.$http.post(vm.proposal_form_url,formData).then(()=>{
+        
           },err=>{
+              console.log(err);
           });
         },
 
@@ -1009,7 +1018,7 @@ export default {
             if(vm.proposal.processing_status == 'With Assessor' && status == 'with_assessor_requirements'){
             vm.checkAssessorData();
             let formData = new FormData(vm.form);
-            vm.$http.post(vm.proposal_form_url,formData).then(res=>{ //save Proposal before changing status so that unsaved assessor data is saved.
+            vm.$http.post(vm.proposal_form_url,formData).then(()=>{ //save Proposal before changing status so that unsaved assessor data is saved.
 
             let data = {'status': status, 'approver_comment': vm.approver_comment}
             vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,(vm.proposal.id+'/switch_status')),JSON.stringify(data),{
@@ -1036,6 +1045,7 @@ export default {
             });
 
           },err=>{
+            console.log(err);
           });
         }
 
@@ -1127,13 +1137,13 @@ export default {
                     vm.proposal.assigned_officer = selected.val();
                 }
                 vm.assignTo();
-            }).on("select2:unselecting", function(e) {
+            }).on("select2:unselecting", function() {
                 var self = $(this);
                 setTimeout(() => {
                     self.select2('close');
                 }, 0);
-            }).on("select2:unselect",function (e) {
-                var selected = $(e.currentTarget);
+            }).on("select2:unselect",function () {
+                // var selected = $(e.currentTarget);
                 if (vm.proposal.processing_status == 'With Approver'){
                     vm.proposal.assigned_approver = null;
                 }
@@ -1155,8 +1165,8 @@ export default {
                     var selected = $(e.currentTarget);
                     vm.selected_referral = selected.val();
                 }).
-                on("select2:unselect",function (e) {
-                    var selected = $(e.currentTarget);
+                on("select2:unselect",function () {
+                    // var selected = $(e.currentTarget);
                     vm.selected_referral = ''
                 });
                 vm.initialiseAssignedOfficerSelect();
@@ -1169,7 +1179,7 @@ export default {
             vm.checkAssessorData();
             let formData = new FormData(vm.form);
             vm.sendingReferral = true;
-            vm.$http.post(vm.proposal_form_url,formData).then(res=>{
+            vm.$http.post(vm.proposal_form_url,formData).then(()=>{
 
             let data = {'group_id':vm.selected_referral, 'text': vm.referral_text};
             //vm.sendingReferral = true;
@@ -1205,6 +1215,7 @@ export default {
 
 
           },err=>{
+              console.log(err);
           });
 
         },

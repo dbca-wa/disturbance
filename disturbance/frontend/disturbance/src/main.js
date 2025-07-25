@@ -4,8 +4,8 @@ import { createApp } from 'vue';
 // import resource from 'vue-resource'
 import App from './App'
 import router from './router'
-import helpers from '@/utils/helpers'
-import api_endpoints from './api'
+// import helpers from '@/utils/helpers'
+// import api_endpoints from './api'
 
 
 // import { extendMoment } from 'moment-range';

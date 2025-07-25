@@ -14,7 +14,7 @@
                             
                             <div class="col-sm-12 top-buffer-s">
                                 <strong>Issued on</strong><br/>
-                                {{ approval.issue_date | formatDate}}
+                                {{ formatDate(approval.issue_date) }}
                             </div>
                             <div class="col-sm-12 top-buffer-s">
                                 <table class="table small-table">
@@ -116,8 +116,7 @@
                           <div class="form-group">
                             <label for="" class="col-sm-3 control-label" >Country</label>
                             <div class="col-sm-4">
-                                <input type="text" disabled class="form-control" name="country" v-model="org.address.country">
-                                </input>
+                                <input type="text" disabled class="form-control" name="country" v-model="org.address.country"/>
                             </div>
                           </div>
                        </form>
@@ -141,22 +140,22 @@
                           <div class="form-group">
                             <label for="" class="col-sm-3 control-label">Issue Date</label>
                             <div class="col-sm-6">
-                                <label for="" class="control-label pull-left">{{approval.issue_date | formatDate}}</label>
+                                <label for="" class="control-label pull-left">{{ formatDate(approval.issue_date) }}</label>
                             </div>
                         <!---    <div class="col-sm-6">
-                                <p>{{approval.issue_date | formatDate}}</p>
+                                <p>{{ formatDate(approval.issue_date) }}</p>
                             </div> -->
                           </div>
                           <div class="form-group">
                             <label for="" class="col-sm-3 control-label" >Start Date</label>
                             <div class="col-sm-6">
-                                <label for="" class="control-label pull-left">{{approval.start_date | formatDate}}</label>
+                                <label for="" class="control-label pull-left">{{ formatDate(approval.start_date) }}</label>
                             </div>
                           </div>
                           <div class="form-group">
                             <label for="" class="col-sm-3 control-label">Expiry Date</label>
                             <div class="col-sm-3">
-                                <label for="" class="control-label pull-left">{{approval.expiry_date | formatDate}}</label>
+                                <label for="" class="control-label pull-left">{{ formatDate(approval.expiry_date) }}</label>
                             </div>
                             
                           </div>
@@ -176,7 +175,7 @@
 </div>
 </template>
 <script>
-import datatable from '@vue-utils/datatable.vue'
+// import datatable from '@vue-utils/datatable.vue'
 import CommsLogs from '@common-utils/comms_logs.vue'
 import {
   api_endpoints,
@@ -184,7 +183,7 @@ import {
 }
 from '@/utils/hooks'
 export default {
-  name: 'Approval',
+  name: 'ApprovalComponent',
   data() {
     let vm = this;
     return {
@@ -209,16 +208,11 @@ export default {
     }
   },
   watch: {},
-  filters: {
-    formatDate: function(data){
-        return moment(data).format('DD/MM/YYYY');
-    }
-  },
-    props: {
-        approvalId: {
-            type: Number,
-        },
+  props: {
+    approvalId: {
+        type: Number,
     },
+  },
   created: function(){
     Vue.http.get(helpers.add_endpoint_json(api_endpoints.approvals,this.approvalId)).then((response) => {
         this.approval = response.body;
@@ -243,7 +237,6 @@ export default {
   },
   */
   components: {
-    datatable,
     CommsLogs
   },
   computed: {
@@ -255,6 +248,9 @@ export default {
   methods: {
     commaToNewline(s){
         return s.replace(/[,;]/g, '\n');
+    },
+    formatDate: function(data){
+        return moment(data).format('DD/MM/YYYY');
     },
     fetchOrganisation(applicant_id){
         let vm=this;
@@ -272,7 +268,7 @@ export default {
             //console.log(approval);
             vm.$http.get(helpers.add_endpoint_json(api_endpoints.approvals,(id+'/approval_pdf_view_log')),{
                 })
-                .then((response) => {  
+                .then(() => {  
                     //console.log(response)  
                 }, (error) => {
                     console.log(error);
@@ -283,7 +279,7 @@ export default {
   
   },
   mounted: function () {
-    let vm = this;
+    // let vm = this;
   }
 }
 </script>

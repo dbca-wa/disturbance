@@ -20,11 +20,11 @@
                     </form>
                 </div>
             </div>
-            <div slot="footer">
+            <template #footer>
                 <button type="button" v-if="addingComms" disabled class="btn btn-default" @click="ok"><i class="fa fa-spinner fa-spin"></i> Testing</button>
                 <button type="button" v-else class="btn btn-default" @click="ok">Test</button>
                 <button type="button" class="btn btn-default" @click="cancel">Cancel</button>
-            </div>
+            </template>
         </modal>
     </div>
 </template>
@@ -47,7 +47,7 @@ export default {
 
     },
     data:function () {
-        let vm = this;
+        // let vm = this;
         return {
             isModalOpen:false,
             form:null,
@@ -97,7 +97,6 @@ export default {
             }
         },
         uploadFile(target,file_obj){
-            let vm = this;
             let _file = null;
             var input = $('.'+target)[0];
             if (input.files && input.files[0]) {
@@ -150,7 +149,7 @@ export default {
             let comms = new FormData(vm.form); 
             vm.addingComms = true;
             vm.$http.post(vm.url,comms,{
-                }).then((response)=>{
+                }).then(()=>{
                     vm.addingComms = false;
                     vm.close();
                     //vm.$emit('refreshFromResponse',response);

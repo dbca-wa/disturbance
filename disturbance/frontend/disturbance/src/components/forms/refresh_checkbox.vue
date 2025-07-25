@@ -19,7 +19,7 @@ import {
 }
 from '@/utils/hooks'
 export default {
-    name:"Refresh",
+    name:"RefreshComponent",
     props:["parent_name","parent_label","assessorMode","layer_data", "proposal_id", "refresh_time_value"],
 
 components: {  },
@@ -41,8 +41,7 @@ data: function() {
  methods:{
          refresh: async function(){
             let vm=this;
-            var found=[]
-            var checkboxes=document.getElementsByClassName(vm.parent_name)
+            // var checkboxes=document.getElementsByClassName(vm.parent_name)
             //console.log('checkboxes', checkboxes)
 
             const mlq_data={label: '',
@@ -50,7 +49,6 @@ data: function() {
             mlq_data.label=vm.parent_label;
             mlq_data.name=vm.parent_name;
             let url = '/refresh'
-            var found=null;
             vm.isRefreshing=true;
             await this.$http.post(helpers.add_endpoint_json(api_endpoints.proposals_sqs,this.proposal_id + url),JSON.stringify(mlq_data),{
                     emulateJSON:true,

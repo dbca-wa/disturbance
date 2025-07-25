@@ -9,18 +9,19 @@ export default{
     var error_str = '';
     if ( resp.status === 400 ) {
       try {
-        obj = JSON.parse( resp.responseText );
-        error_str = obj.non_field_errors[ 0 ].replace( /[\[\]"]/g, '' );
+        let obj = JSON.parse( resp.responseText );
+        error_str = obj.non_field_errors[ 0 ].replace( /[[\]"]/g, '' );
       }
       catch ( e ) {
-        error_str = resp.responseText.replace( /[\[\]"]/g, '' );
+        console.log(e);
+        error_str = resp.responseText.replace( /[[\]"]/g, '' );
       }
     }
     else if ( resp.status === 404 ) {
       error_str = 'The resource you are looking for does not exist.';
     }
     else {
-      error_str = resp.responseText.replace( /[\[\]"]/g, '' );
+      error_str = resp.responseText.replace( /[[\]"]/g, '' );
     }
     return error_str;
   },
@@ -38,8 +39,8 @@ export default{
               }
  
               if (typeof text == 'object'){
-                  if (text.hasOwnProperty('non_field_errors')) {
-                      error_str = text.non_field_errors[0].replace(/[\[\]"]/g, '');
+                  if (Object.prototype.hasOwnProperty.call(text, 'non_field_errors')) {
+                      error_str = text.non_field_errors[0].replace(/[[\]"]/g, '');
                   }
 		  else if (Array.isArray(text) && 'errors' in text) {
 	              error_str = text.errors
@@ -52,7 +53,7 @@ export default{
                   }
               }
               else{
-                  error_str = text.replace(/[\[\]"]/g,'');
+                  error_str = text.replace(/[[\]"]/g,'');
                   error_str = text.replace(/^['"](.*)['"]$/, '$1');
               }
           }
@@ -63,11 +64,13 @@ export default{
               try {
                   error_str = JSON.stringify(resp.data.errors).substring(0, 400);
               } catch (error) {
+                  console.log(error)
                   error_str = JSON.stringify(resp).substring(0, 400);
               }
 	  }
         }
         catch ( e ) {
+          console.log(e)
           error_str = JSON.stringify(resp).substring(0, 400);
         }
         return (typeof text == 'object') ? JSON.stringify(error_str) : error_str
@@ -95,7 +98,7 @@ export default{
     return value;
   },
   namePopover: function ( $, vmDataTable ) {
-    vmDataTable.on( 'mouseover', '.name_popover', function ( e ) {
+    vmDataTable.on( 'mouseover', '.name_popover', function () {
       $( this )
         .popover( 'show' );
       $( this )
@@ -160,7 +163,7 @@ export default{
         var postFormStr = "<form method='POST' action='" + url + "'>";
 
         for (var key in postData) {
-            if (postData.hasOwnProperty(key)) {
+            if (Object.prototype.hasOwnProperty.call(postData, key)) {
                 postFormStr += "<input type='hidden' name='" + key + "' value='" + postData[key] + "'>";
             }
         }
@@ -188,7 +191,7 @@ export default{
             console.log('else')
             // When field errors raised
             for (let field_name in err.body){
-                if (err.body.hasOwnProperty(field_name)){
+                if (Object.prototype.hasOwnProperty.call(err.body, field_name)){
                     errorText += field_name + ':<br />';
                     for (let j=0; j<err.body[field_name].length; j++){
                         errorText += err.body[field_name][j] + '<br />';

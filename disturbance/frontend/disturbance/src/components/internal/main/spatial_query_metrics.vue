@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import MetricsDetails from '@/components/internal/main/spatial_query_metrics.vue'
+// import MetricsDetails from '@/components/internal/main/spatial_query_metrics.vue'
 import datatable from '@/utils/vue/datatable.vue'
 import modal from '@vue-utils/bootstrap-modal.vue'
 import {
@@ -75,7 +75,7 @@ export default {
     components: {
         modal,
         datatable,
-        MetricsDetails,
+        // MetricsDetails,
     },
     props:{
     },
@@ -160,7 +160,7 @@ export default {
                     },
                     { 
                         data: "when",
-                        mRender:function (data,type,full) {
+                        mRender:function (data) {
                             return data.replace('T',' ').replace('Z','');
                         },
                         searchable: false,

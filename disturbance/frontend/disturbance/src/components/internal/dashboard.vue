@@ -17,7 +17,7 @@ from '@/utils/hooks'
 export default {
     name: 'ExternalDashboard',
     data() {
-        let vm = this;
+        // let vm = this;
         return {
             //proposals_url: api_endpoints.proposals,
             //proposals_url: api_endpoints.proposals_paginated_internal,

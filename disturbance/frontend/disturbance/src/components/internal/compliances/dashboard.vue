@@ -12,7 +12,7 @@ from '@/utils/hooks'
 export default {
     name: 'InternalCompliancesDashboard',
     data() {
-        let vm = this;
+        // let vm = this;
         return {
             //compliances_url: api_endpoints.compliances,
             compliances_url: api_endpoints.compliances_paginated_external,

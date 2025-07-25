@@ -11,7 +11,7 @@
                                     <div class="form-group">
                                         <label class="control-label pull-left"  for="Name">Reason</label>
                                         <select class="form-control" name="reason" ref="reason" v-model="amendment.reason">
-                                            <option v-for="r in reason_choices" :value="r.key">{{r.value}}</option>
+                                            <option v-for="r in reason_choices" :value="r.key" :key="r.key">{{r.value}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -162,7 +162,7 @@ export default {
             // vm.$http.post('/api/amendment_request.json',JSON.stringify(amendment),{
                 vm.$http.post('/api/amendment_request.json', formData,{
                         emulateJSON:true,
-                    }).then((response)=>{
+                    }).then(()=>{
                         //vm.$parent.loading.splice('processing contact',1);
                         let proposal_or_licence = vm.is_apiary_proposal ? 'application' : 'proposal'
                         swal(

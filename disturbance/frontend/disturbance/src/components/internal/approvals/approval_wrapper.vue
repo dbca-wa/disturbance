@@ -16,7 +16,7 @@ import Approval from './approval.vue';
 export default {
     name: 'ApprovalWrapper',
     data() {
-        let vm = this;
+        // let vm = this;
         return {
             approvalId: null,
             apiaryApproval: false,

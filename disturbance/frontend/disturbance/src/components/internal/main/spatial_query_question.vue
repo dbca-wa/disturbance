@@ -146,17 +146,16 @@
                                 <!-- <select class="form-control" ref="select_group" name="select-group" v-model="spatialquery.group" :disabled="sqq_is_disabled()"> -->
                                 <select class="form-control" ref="select_group" name="select-group" v-model="spatialquery.group">
                                     <template v-if="group.can_user_edit">
-                                        <option v-for="group in spatialquery_selects.cddp_groups" :value="group" >{{group.name}}</option>
+                                        <option v-for="group in spatialquery_selects.cddp_groups" :value="group" :key="group.id">{{group.name}}</option>
                                     </template>
                                 </select>     
                             </div>
                             <div class="col-md-1"></div>
                             <!--<div v-if="is_text_component()" class="col-md-5">-->
                             <div class="col-md-5">
-			        <!-- <input type="checkbox" :value="false" v-model="spatialquery.other_data.show_add_info_section_prop" :disabled="sqq_is_disabled()">&nbsp;&nbsp;&nbsp; -->
-			        <input type="checkbox" :value="false" v-model="spatialquery.other_data.show_add_info_section_prop">&nbsp;&nbsp;&nbsp;
-				    <label>Show additional info section?</label>
-				</input>
+                                <!-- <input type="checkbox" :value="false" v-model="spatialquery.other_data.show_add_info_section_prop" :disabled="sqq_is_disabled()">&nbsp;&nbsp;&nbsp; -->
+                                <input type="checkbox" :value="false" v-model="spatialquery.other_data.show_add_info_section_prop"/>&nbsp;&nbsp;&nbsp;
+                                <label>Show additional info section?</label>
                             </div>
 
                         </div>
@@ -172,7 +171,7 @@
             <div id="error" v-if="missing_fields.length > 0" style="margin: 10px; padding: 5px; color: red; border:1px solid red;">
                 <b>Please answer the following mandatory question(s):</b>
                 <ul>
-                    <li v-for="error in missing_fields">
+                    <li v-for="error in missing_fields" :key="error.label">
                         {{ error.label }}
                     </li>
                 </ul>
@@ -197,7 +196,7 @@
             </span>
 
         </div>
-        <div slot="footer">
+        <template #footer>
             <span v-if="sqq_is_disabled()">
                 <button type="button" class="btn btn-primary" @click="saveSpatialquery()">Update Question</button>
                 <button type="button" class="btn btn-primary" @click.prevent="addLayerEntry()" name="add-spatialquerylayer">Add Layer</button>
@@ -205,7 +204,7 @@
             <span v-else>
                 <button type="button" class="btn btn-primary" @click="saveSpatialquery()">Save</button>
             </span>
-        </div>
+        </template>
     </modal>
 
 
@@ -256,7 +255,7 @@
                         <div class="row">
                             <div class="col-md-1"></div>
                             <div class="col-md-10">
-				<input type="text" class="form-control" name="select-answer" v-model="spatialquery.answer_mlq" style="width:100%;" disabled></input>
+				                <input type="text" class="form-control" name="select-answer" v-model="spatialquery.answer_mlq" style="width:100%;" disabled/>
                             </div>
                         </div>
                     </div>
@@ -270,12 +269,11 @@
                         <div class="row">
                             <div class="col-md-1"></div>
                             <div class="col-md-5">
-				<input type="text" class="form-control" name="select-answer" v-model="spatialquery.group.name" style="width:100%;" disabled></input>
+				                <input type="text" class="form-control" name="select-answer" v-model="spatialquery.group.name" style="width:100%;" disabled/>
                             </div>
                             <div class="col-md-5">
-			        <input type="checkbox" name="select-addinfo" :value="false" v-model="spatialquery.other_data.show_add_info_section_prop" disabled>&nbsp;&nbsp;&nbsp;
-                                    <label style="font-weight:normal !important;">Show proponent 'additional info' section?</label>
-                                </input>
+			                    <input type="checkbox" name="select-addinfo" :value="false" v-model="spatialquery.other_data.show_add_info_section_prop" disabled/>&nbsp;&nbsp;&nbsp;
+                                <label style="font-weight:normal !important;">Show proponent 'additional info' section?</label>
                             </div>
                         </div>
                     </div>
@@ -295,7 +293,7 @@
 					    <div class="col-md-1"></div>
 					    <div class="col-md-10">
 						<select class="form-control" ref="select_layer" name="select-layer" v-model="spatialquerylayer.layer">
-						    <option v-for="layer in spatialquery_selects.das_map_layers" :value="layer" >{{layer.display_name}}</option>
+						    <option v-for="layer in spatialquery_selects.das_map_layers" :value="layer" :key="layer.id">{{layer.display_name}}</option>
 						</select>     
 					    </div>
 					    <span v-if="spatialquerylayer.layer">
@@ -330,10 +328,10 @@
 					<div class="row">
 					    <div class="col-md-1"></div>
 					    <div class="col-md-3">
-						<input type="date" class="form-control" name="expiry" v-model="spatialquerylayer.expiry"></input>
+						    <input type="date" class="form-control" name="expiry" v-model="spatialquerylayer.expiry"/>
 					    </div>
 					    <div class="col-md-3">
-						<input type="number" min="0" class="form-control" name="buffer" v-model="spatialquerylayer.buffer"></input>
+						    <input type="number" min="0" class="form-control" name="buffer" v-model="spatialquerylayer.buffer"/>
 					    </div>
 					</div>
 				    </div>
@@ -376,15 +374,15 @@
 					<div class="row">
 					    <div class="col-md-1"></div>
 					    <div class="col-md-3">
-						<input type="text" class="form-control" name="column_name" v-model="spatialquerylayer.column_name" style="width:100%;"></input>
+						    <input type="text" class="form-control" name="column_name" v-model="spatialquerylayer.column_name" style="width:100%;"/>
 					    </div>
 					    <div class="col-md-3">
 						<select class="form-control" ref="select_operator" name="select-operator" v-model="filterCddpOperator">
-						    <option v-for="operator in spatialquery_selects.operators" :value="operator.value" >{{operator.label}}</option>
+						    <option v-for="operator in spatialquery_selects.operators" :value="operator.value" :key="operator.id">{{operator.label}}</option>
 						</select>     
 					    </div>
 					    <div class="col-md-3" v-if="showValue()">
-						<input type="text" class="form-control" name="value" v-model="spatialquerylayer.value" style="width:100%;"></input>
+						<input type="text" class="form-control" name="value" v-model="spatialquerylayer.value" style="width:100%;"/>
 					    </div>
 					</div>
 				    </div>
@@ -406,7 +404,7 @@
 					    <div class="col-md-1"></div>
 					    <div class="col-md-3">
 						<select class="form-control" ref="select_how" name="select-how" v-model="spatialquerylayer.how">
-						    <option v-for="operator in spatialquery_selects.how" :value="operator.value" >{{operator.label}}</option>
+						    <option v-for="operator in spatialquery_selects.how" :value="operator.value" :key="operator.id">{{operator.label}}</option>
 						</select>     
 					    </div>
 					    <div class="col-md-3" v-if="spatialquery.question && is_text_widget(spatialquery.question && is_text_widget())">
@@ -453,10 +451,10 @@
 						<div class="row">
 						    <div class="col-md-1"></div>
 						    <div class="col-md-5">
-							<input :name="`data[${index}]prefix`" class="form-control" placeholder="Prefix" v-model="item.prefix" :type="hide_prefix(index)"></input>
+							    <input :name="`data[${index}]prefix`" class="form-control" placeholder="Prefix" v-model="item.prefix" :type="hide_prefix(index)"/>
 						    </div>
 						    <div class="col-md-5">
-							<input :name="`data[${index}]answer`" class="form-control" placeholder="<Attribute-Name>" v-model="item.answer" :disabled="!show_prop_ans()"></input>
+							<input :name="`data[${index}]answer`" class="form-control" placeholder="<Attribute-Name>" v-model="item.answer" :disabled="!show_prop_ans()"/>
 						    </div>
 						    <a v-if="spatialquerylayer.proponent_items.length>1" v-on:click="spatialquerylayer.proponent_items.splice(index, 1)" href="#"><i class="fa fa-lg fa-trash">&nbsp;</i></a>
 						</div>
@@ -489,10 +487,10 @@
 						<div class="row">
 						    <div class="col-md-1"></div>
 						    <div class="col-md-5">
-							<input :name="`data[${index}]prefix`" class="form-control" placeholder="Prefix" v-model="item.prefix" :type="hide_prefix(index)"></input>
+							    <input :name="`data[${index}]prefix`" class="form-control" placeholder="Prefix" v-model="item.prefix" :type="hide_prefix(index)"/>
 						    </div>
 						    <div class="col-md-5">
-							<input :name="`data[${index}]info`" class="form-control" placeholder="<Attribute-Name>" v-model="item.info"></input>
+							    <input :name="`data[${index}]info`" class="form-control" placeholder="<Attribute-Name>" v-model="item.info"/>
 						    </div>
 						    <a v-if="spatialquerylayer.assessor_items.length>1" v-on:click="spatialquerylayer.assessor_items.splice(index, 1)" href="#"><i class="fa fa-lg fa-trash">&nbsp;</i></a>
 						</div>
@@ -507,16 +505,16 @@
             <div id="error" v-if="missing_fields.length > 0" style="margin: 10px; padding: 5px; color: red; border:1px solid red;">
                 <b>Please answer the following mandatory question(s):</b>
                 <ul>
-                    <li v-for="error in missing_fields">
+                    <li v-for="error in missing_fields" :key="error.label">
                         {{ error.label }}
                     </li>
                 </ul>
             </div>
 
         </div>
-        <div slot="footer">
+        <template #footer>
             <button type="button" class="btn btn-primary" @click="saveSpatialqueryLayer()">Save layer</button>
-        </div>
+        </template>
     </modal>
 
     <modal :showModal="showTestModal" modal_id="test-id" transition="modal fade" @ok.prevent="ok()" title="Spatial Query Question - Test" :force="true">
@@ -524,7 +522,7 @@
             <div id="error" v-if="missing_fields.length > 0" style="margin: 10px; padding: 5px; color: red; border:1px solid red;">
                 <b>Please answer the following mandatory question(s):</b>
                 <ul>
-                    <li v-for="error in missing_fields">
+                    <li v-for="error in missing_fields" :key="error.label">
                         {{ error.label }}
                     </li>
                 </ul>
@@ -537,7 +535,7 @@
                             <label class="control-label pull-left">Proposal Lodgement No.</label>
                         </div>
                         <div class="col-md-2">
-                            <input class="form-control" name="layer_name" placeholder="P000123" v-model="proposal.lodgement_number"></input>
+                            <input class="form-control" name="layer_name" placeholder="P000123" v-model="proposal.lodgement_number"/>
                         </div>
                         <div v-if="is_admin">
 			    <div class="col-md-2">
@@ -561,19 +559,19 @@
                 <textarea id="output" cols="100" rows="35" v-model="sqs_response"></textarea>
             </div>
         </div>
-        <div slot="footer">
+        <template #footer>
             <button type="button" v-if="requesting" class="btn btn-default" @click="test_spatialquery()"><i class="fa fa-spinner fa-spin"></i> Processing</button>
             <button type="button" v-else class="btn btn-primary" @click="test_spatialquery()">Test</button>
-        </div>
+        </template>
     </modal>
 
       <modal :showModal="showLayerAttrsModal" modal_id="showLayerAttrsModal-id" transition="modal fade" @ok="ok()" title="Layer Attributes" :force="true">
         <div class="container-fluid">
           <textarea id="output" cols="100" rows="35" v-model="sqs_attrs_response"></textarea>
         </div> 
-        <div slot="footer">
+        <template #footer>
             <button type="button" class="btn btn-primary" @click="showLayerAttrsModal=false">Close</button>
-        </div>
+        </template>
 
       </modal>
 
@@ -581,9 +579,9 @@
         <div class="container-fluid">
           <textarea id="output" cols="100" rows="35" v-model="sqs_attr_vals_response"></textarea>
         </div> 
-        <div slot="footer">
+        <template #footer>
             <button type="button" class="btn btn-primary" @click="showLayerAttrValuesModal=false">Close</button>
-        </div>
+        </template>
 
       </modal>
 
@@ -600,8 +598,6 @@
 <script>
 import datatable from '@/utils/vue/datatable.vue'
 import modal from '@vue-utils/bootstrap-modal2.vue'
-import alert from '@vue-utils/alert.vue'
-import SchemaOption from './schema_add_option.vue'
 import moment from 'moment'
 import {
   api_endpoints,
@@ -616,9 +612,7 @@ export default {
     name:'spatialQueryQuestionModal',
     components: {
         modal,
-        alert,
         datatable,
-        SchemaOption,
     },
     props:{
     },
@@ -767,10 +761,10 @@ export default {
                         mRender:function (data,type,full) {
                             var column;
                             if (full.group.can_user_edit) {
-                                column = `<a class="edit-row" data-rowid=\"__ROWID__\">Edit</a><br/>`;
+                                column = `<a class="edit-row" data-rowid="__ROWID__">Edit</a><br/>`;
                                 //column += `<a class="check-row" data-rowid=\"__ROWID__\" title="Check if the Question exists in Propasal Schema">Check_Question</a><br/>`;
                                 //column += `<a class="update-row" data-rowid=\"__ROWID__\" title="Check/Create/Update Layer exists in SQS">Check_Layer</a><br/>`;
-                                column += `<a class="delete-row" data-rowid=\"__ROWID__\">Delete</a><br/>`;
+                                column += `<a class="delete-row" data-rowid="__ROWID__">Delete</a><br/>`;
                             } else {
                                 column = `<a href="/" onclick="return false;" style="color: grey;" title="You are not a member of Spatial Question Group '${full.group.name}'">Edit</a><br/>`;
                                 //column += `<a href="/" onclick="return false;" style="color: grey;" title="You are not a member of Spatial Question Group '${full.group.name}'">Check_Question</a><br/>`;
@@ -820,7 +814,7 @@ export default {
 
                     { 
                         data: "layer.layer_name",
-                        createdCell: function(td, cellData, rowData, row, col){
+                        createdCell: function(td, cellData, rowData){
                             let msg = '(layer_id: ' + rowData.id + ', question_id: ' + rowData.spatial_query_question_id + ')';
                             if (vm.is_question_expired(rowData.expiry)) {
                                 vm.expired_questions.push(rowData.id) 
@@ -879,11 +873,11 @@ export default {
                         width: "10%",
                         mRender:function (data,type,full) {
                             var column;
-                            column = `<a class="edit_layer-row" data-rowid=\"__ROWID__\">Edit</a><br/>`;
-//                            column += `<a class="check-row" data-rowid=\"__ROWID__\" title="Check if the Question exists in Propasal Schema">Check_Question</a><br/>`;
-//                            column += `<a class="update-row" data-rowid=\"__ROWID__\" title="Check/Create/Update Layer exists in SQS">Check_Layer</a><br/>`;
-                            column += `<a class="delete_layer-row" data-rowid=\"__ROWID__\">Delete</a><br/>`;
-                            column += `<a class="test_layer-row" data-rowid=\"__ROWID__\">Test</a><br/>`;
+                            column = `<a class="edit_layer-row" data-rowid="__ROWID__">Edit</a><br/>`;
+//                            column += `<a class="check-row" data-rowid="__ROWID__" title="Check if the Question exists in Propasal Schema">Check_Question</a><br/>`;
+//                            column += `<a class="update-row" data-rowid="__ROWID__" title="Check/Create/Update Layer exists in SQS">Check_Layer</a><br/>`;
+                            column += `<a class="delete_layer-row" data-rowid="__ROWID__">Delete</a><br/>`;
+                            column += `<a class="test_layer-row" data-rowid="__ROWID__">Test</a><br/>`;
                             return column.replace(/__ROWID__/g, full.id);
                         }
                     },
@@ -1162,12 +1156,11 @@ export default {
             }
         },
 
-        check_layer_attrs_exist: async function(e) {
+        check_layer_attrs_exist: async function() {
             const self = this;
             let url = '/get_sqs_attrs'
             url = helpers.add_endpoint_join(api_endpoints.spatial_query,'/'+self.spatialquery.layer.layer_name + url)
 
-            var sqs_check_layer_response = null;
             console.log(url);
             await self.$http.get(url)
             .then((response) => {
@@ -1224,7 +1217,7 @@ export default {
 
                 await self.$http.post(helpers.add_endpoint_json(api_endpoints.spatial_query,data.id+'/save_spatialquery'),JSON.stringify(data),{
                         emulateJSON:true,
-                }).then((response)=>{
+                }).then(()=>{
                     self.$refs.spatial_query_question_table.vmDataTable.ajax.reload();
                     //self.close();
                 },(error)=>{
@@ -1331,7 +1324,7 @@ export default {
 	    this.showLayerModal = false;
         },
 
-        test_spatialquery: async function(e) {
+        test_spatialquery: async function() {
             //e.preventDefault();
             const self = this;
             const data = self.proposal;
@@ -1496,7 +1489,7 @@ export default {
 
 		}
 	    },(error) => {
-		//
+		console.log(error);
 	    });                
 	},
 
@@ -1608,7 +1601,7 @@ export default {
                     vm.show_spinner = false;
                     vm.export_layers_btn_disabled = false;
                 });
-            },(error) => {
+            },() => {
                 vm.show_spinner = false;
                 vm.export_layers_btn_disabled = false;
 
@@ -1671,7 +1664,7 @@ export default {
         },
 
         clearLayerEntry: async function() {
-		const self = this;
+		// const self = this;
 		//self.spatialquery.question = this.filterMasterlistQuestion;
 
 		this.filterCddpOperator = '';
@@ -1688,13 +1681,13 @@ export default {
 		this.spatialquerylayer.prefix_info = '';
 		this.spatialquerylayer.assessor_info = '';
 		this.spatialquerylayer.id = '';
-		this.spatialquerylayer.proponent_items = [{'': '', '': ''}];
-		this.spatialquerylayer.assessor_items = [{'': '', '': ''}];
+		this.spatialquerylayer.proponent_items = [];
+		this.spatialquerylayer.assessor_items = [];
 		this.addedHeaders = [];
 		this.addedExpanders = [];
         },
 
-        addTableEntry: async function(e) {
+        addTableEntry: async function() {
                 this.clearTableEntry();
                 this.clearLayerEntry();
 		this.$refs.spatial_query_layer_table.vmDataTable.clear().draw()
@@ -1708,7 +1701,7 @@ export default {
 		this.showQuestionModal = true;
         },
 
-        addLayerEntry: async function(e) {
+        addLayerEntry: async function() {
 		const self = this;
 		this.isNewEntry = true;
                 this.clearLayerEntry();
@@ -1739,7 +1732,7 @@ export default {
 		    self.sq_questions = res.body['data']
 
 
-                }).then((response)=>{
+                }).then(()=>{
 		    e.preventDefault();
 		    self.isNewEntry = false;
 		    self.$refs.spatial_query_question_table.row_of_data = self.$refs.spatial_query_question_table.vmDataTable.row('#'+$(this).attr('data-rowid'));
@@ -1821,8 +1814,8 @@ export default {
 		    self.spatialquerylayer.operator = '';
 		    self.spatialquerylayer.value = '';
 		    self.spatialquerylayer.show_add_info_section_prop = '';
-		    self.spatialquerylayer.proponent_items = [{'': '', '': ''}];
-		    self.spatialquerylayer.assessor_items = [{'': '', '': ''}];
+		    self.spatialquerylayer.proponent_items = [];
+		    self.spatialquerylayer.assessor_items = [];
 		    //self.spatialquery.other_data = {'show_add_info_section_prop': false};
 
 		    //self.spatialquery.prefix_answer = '';
@@ -1901,7 +1894,7 @@ export default {
                 }).then(async (result) => {
                     if (result) {
                         await self.$http.delete(helpers.add_endpoint_json(api_endpoints.spatial_query,(self.spatialquery.id+'/delete_spatialquery')))
-                        .then((response) => {
+                        .then(() => {
                             self.$refs.spatial_query_question_table.vmDataTable.ajax.reload();
                         }, (error) => {
                             swal(
@@ -1913,7 +1906,7 @@ export default {
                     }
 
                 },(error) => {
-                    //
+                    console.log(error);
                 });                
             });
 
@@ -1950,7 +1943,7 @@ export default {
                         });
                     }
                 },(error) => {
-                    //
+                    console.log(error);
                 });                
             });
 
@@ -2062,8 +2055,8 @@ export default {
                     minimumInputLength: 2,
                     placeholder:"Select Question..."
                 }).
-                on("select2:selecting",function (e) {
-                    let selected = $(e.currentTarget);
+                on("select2:selecting",function () {
+                    // let selected = $(e.currentTarget);
                 }).
                 on("select2:select",function (e) {
                     let selected = $(e.currentTarget);

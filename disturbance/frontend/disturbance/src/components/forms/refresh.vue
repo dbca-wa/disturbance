@@ -19,7 +19,7 @@ import {
 }
 from '@/utils/hooks'
 export default {
-    name:"Refresh",
+    name:"RefreshTime",
     props:["parent_name","parent_label", "assessorMode","layer_data", "proposal_id", "refresh_time_value"],
 
 components: {  },
@@ -41,7 +41,7 @@ data: function() {
  methods:{
          refresh: async function(){
             let vm=this;
-            var ele=$('[name='+vm.parent_name+']')[0]
+            // var ele=$('[name='+vm.parent_name+']')[0]
             const mlq_data={label: '',
                             name: ''};
             mlq_data.label=vm.parent_label;

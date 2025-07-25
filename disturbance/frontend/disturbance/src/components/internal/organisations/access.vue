@@ -17,7 +17,7 @@
                             </div>
                             <div class="col-sm-12 top-buffer-s">
                                 <strong>Lodged on</strong><br/>
-                                {{ access.lodgement_date | formatDate}}
+                                {{ formatDate(access.lodgement_date) }}
                             </div>
                             <div class="col-sm-12 top-buffer-s">
                                 <table class="table small-table">
@@ -51,7 +51,7 @@
                                     </select>
                                     <select @change="assignTo" :disabled="isFinalised || !check_assessor()" v-if="!isLoading" class="form-control" v-model="access.assigned_officer">
                                         <option value="null">Unassigned</option>
-                                        <option v-for="member in members" :value="member.id">{{member.name}}</option>
+                                        <option v-for="member in members" :value="member.id" :key="member.id">{{member.name}}</option>
                                     </select>
                                     <a v-if="!isFinalised && check_assessor()" @click.prevent="assignMyself()" class="actionBtn pull-right">Assign to me</a>
                                 </div>
@@ -125,7 +125,6 @@
 </template>
 <script>
 import $ from 'jquery'
-import datatable from '@vue-utils/datatable.vue'
 import CommsLogs from '@common-utils/comms_logs.vue'
 import {
   api_endpoints,
@@ -176,7 +175,7 @@ export default {
                 },
                 {
                     data:"when",
-                    mRender:function(data,type,full){
+                    mRender:function(data){
                         return moment(data).format(vm.DATE_TIME_FORMAT)
                     }
                 },
@@ -300,11 +299,6 @@ export default {
     }
   },
   watch: {},
-  filters: {
-    formatDate: function(data){
-        return moment(data).format('DD/MM/YYYY HH:mm:ss');
-    }
-  },
   beforeRouteEnter: function(to, from, next){
     Vue.http.get(helpers.add_endpoint_json(api_endpoints.organisation_requests,to.params.access_id)).then((response) => {
         next(vm => {
@@ -315,7 +309,6 @@ export default {
     })
   },
   components: {
-    datatable,
     CommsLogs
   },
   computed: {
@@ -329,6 +322,9 @@ export default {
   methods: {
     commaToNewline(s){
         return s.replace(/[,;]/g, '\n');
+    },
+    formatDate: function(data){
+        return moment(data).format('DD/MM/YYYY HH:mm:ss');
     },
     fetchAccessGroupMembers: async function(){
         //let vm = this;
@@ -392,7 +388,7 @@ export default {
                 console.log(error);
             });
         },(error) => {
-
+            console.log(error);
         });
 
     },
@@ -414,7 +410,7 @@ export default {
                 console.log(error);
             });
         },(error) => {
-
+            console.log(error);
         });
     },
 

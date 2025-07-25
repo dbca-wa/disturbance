@@ -27,7 +27,7 @@
                             </div>
                             <div class="col-sm-12 top-buffer-s">
                                 <strong>Lodged on</strong><br/>
-                                {{ proposal.lodgement_date | formatDate }}
+                                {{ formatDate(proposal.lodgement_date) }}
                                 <input type="hidden" id="lodgement_date" value="">
                             </div>
                         </div>
@@ -83,15 +83,15 @@
                                             <th>Referral</th>
                                             <th>Status/Action</th>
                                         </tr>
-                                        <tr v-for="r in proposal.latest_referrals">
+                                        <tr v-for="r in proposal.latest_referrals" :key="r.id">
                                             <td>
                                                 <small><strong>{{r.referral}}</strong></small><br/>
-                                                <small><strong>{{r.lodged_on | formatDate}}</strong></small>
+                                                <small><strong>{{ formatDate(r.lodged_on) }}</strong></small>
                                             </td>
                                             <td>
-                                                <small><strong>{{r.processing_status}}</strong></small><br/>
+                                                <small><strong>{{ r.processing_status }}</strong></small><br/>
                                                 <template v-if="r.processing_status == 'Awaiting'">
-                                                    <small v-if="canLimitedAction"><a @click.prevent="remindReferral(r)" href="#">Remind</a> / <a @click.prevent="recallReferral(r)"href="#">Recall</a></small>
+                                                    <small v-if="canLimitedAction"><a @click.prevent="remindReferral(r)" href="#">Remind</a> / <a @click.prevent="recallReferral(r)" href="#">Recall</a></small>
                                                 </template>
                                                 <template v-else>
                                                     <small v-if="canLimitedAction"><a @click.prevent="resendReferral(r)" href="#">Resend</a></small>
@@ -110,13 +110,13 @@
                                 <div class="form-group">
                                     <template v-if="proposal.processing_status == 'With Approver'">
                                         <select ref="assigned_officer" :disabled="!canAction" class="form-control" v-model="proposal.assigned_approver">
-                                            <option v-for="member in proposal.allowed_assessors" :value="member.id">{{member.first_name}} {{member.last_name}}</option>
+                                            <option v-for="member in proposal.allowed_assessors" :value="member.id" :key="member.id">{{member.first_name}} {{member.last_name}}</option>
                                         </select>
                                         <a v-if="canAssess && proposal.assigned_approver != proposal.current_assessor.id" @click.prevent="assignRequestUser()" class="actionBtn pull-right">Assign to me</a>
                                     </template>
                                     <template v-else>
                                         <select ref="assigned_officer" :disabled="!canAction" class="form-control" v-model="proposal.assigned_officer">
-                                            <option v-for="member in proposal.allowed_assessors" :value="member.id">{{member.first_name}} {{member.last_name}}</option>
+                                            <option v-for="member in proposal.allowed_assessors" :value="member.id" :key="member.id">{{member.first_name}} {{member.last_name}}</option>
                                         </select>
                                         <a v-if="canAssess && proposal.assigned_officer != proposal.current_assessor.id" @click.prevent="assignRequestUser()" class="actionBtn pull-right">Assign to me</a>
                                     </template>
@@ -225,12 +225,12 @@
             <div v-if="proposal_compare_version!=0" class="panel panel-default sticky-footer">
                 Comparing
                 <span class="label label-default">
-                    {{proposal.lodgement_number}}-{{reversion_history_length}}: {{proposal.lodgement_date | formatDate }}   
+                    {{proposal.lodgement_number}}-{{reversion_history_length}}: {{formatDate(proposal.lodgement_date)}}   
                 </span>&nbsp;
                 with
                 <span class="label label-danger">
                     {{proposal.lodgement_number}}-{{reversion_history_length - proposal_compare_version}}:
-                    {{compare_version_lodgement_date | formatDate}} ({{proposal_compare_version}} Older than current)
+                    {{formatDate(compare_version_lodgement_date)}} ({{proposal_compare_version}} Older than current)
                 </span>
                 
             </div>
@@ -399,7 +399,6 @@ import NewApply from '../../external/proposal_apply_new.vue'
 import MapSection from '@/components/common/das/map_section.vue'
 import ProposedDecline from './proposal_proposed_decline.vue'
 import AmendmentRequest from './amendment_request.vue'
-import datatable from '@vue-utils/datatable.vue'
 import Requirements from './proposal_requirements.vue'
 import ProposedApproval from './proposed_issuance.vue'
 import ApprovalScreen from './proposal_approval.vue'
@@ -502,7 +501,6 @@ export default {
     components: {
         ProposalDisturbance,
         ProposalApiary,
-        datatable,
         ProposedDecline,
         AmendmentRequest,
         Requirements,
@@ -513,12 +511,6 @@ export default {
         MoreReferrals,
         NewApply,
         MapSection,
-    },
-    filters: {
-        formatDate: function(data){
-            // The only time the lodgement_date field should be empty is when viewing the final draft (just prior to submission)
-            return data ? moment(data).format('MMMM Do YYYY') + ' at ' + moment(data).format('h:mm:ss a'): 'Draft just prior to lodgement.';
-        },
     },
     props: {
         proposalId: {
@@ -588,6 +580,10 @@ export default {
         },
     },
     methods: {
+        formatDate: function(data){
+            // The only time the lodgement_date field should be empty is when viewing the final draft (just prior to submission)
+            return data ? moment(data).format('MMMM Do YYYY') + ' at ' + moment(data).format('h:mm:ss a'): 'Draft just prior to lodgement.';
+        },
         updateProposalVersion: async function(proposal_version) {
             /* Changes the currently viewed Proposal and updates the values object on the ProposalDisturbace
             component so data field values change in the DOM. 
@@ -752,7 +748,7 @@ export default {
                             to show the state of the older version.
                         */
                         let select_found = false;
-                        $.each(replacement.siblings(), (function(i, obj){
+                        $.each(replacement.siblings(), (function(){
                             let compare_select = null;
                             let compare_select_id = k + '_compare_select';
                             if ($(this).is('select:not(.revision_note)')){
@@ -762,14 +758,14 @@ export default {
                                     compare_select.attr('id', compare_select_id);
                                     compare_select.addClass('revision_note');
                                     replacement.last().after(compare_select);
-                                    vm.$nextTick(function(e){
+                                    vm.$nextTick(function(){
                                         $('#'+compare_select_id).select2({
                                             "theme": "bootstrap",
                                             allowClear: true,
                                             placeholder:"Select..."
                                         });
                                     });
-                                    vm.$nextTick(function(e){
+                                    vm.$nextTick(function(){
                                         compare_select = $('#' + compare_select_id);
                                         compare_select.next().attr('style','margin-top:15px; border:1px solid red;');
                                         compare_select.next().attr('id', k + '_compare_select2');
@@ -786,13 +782,13 @@ export default {
                                     });
                                 }
                                 if($(this)[0].hasAttribute('multiple')){
-                                    vm.$nextTick(function(e){
+                                    vm.$nextTick(function(){
                                         if(revision_text.includes(',')){
                                             const item_to_remove = revision_text.split(',')[0];
                                             const option_value_remove = item_to_remove.substring(1);
                                             console.log('Removing item = ' + option_value_remove);
                                             const option_text = $('body').find('option[value=' + option_value_remove + ']').first().text();
-                                            vm.$nextTick(function(e){
+                                            vm.$nextTick(function(){
                                                 $('#' + k + '_compare_select2').find("li.select2-selection__choice[title|='" + option_text + "']").remove();          
                                             });
                                             const item_to_add = revision_text.split(',')[1];
@@ -832,7 +828,7 @@ export default {
             }
         },
         applyFileRevisionNotes: function(diffdata){
-            let vm = this;
+            // let vm = this;
             for (let entry in diffdata) {
                 
                 for (let k in diffdata[entry]) {
@@ -896,18 +892,17 @@ export default {
                 }
                 return true;
             }
-            else{
-                if(this.proposal && this.proposal.assigned_officer==null){
+            else if(this.proposal && this.proposal.assigned_officer==null){
                     swal(
                         'Error',
                         'Please assign this proposal to yourself or an officer before proceeding',
                         'error'
                     )
                     return false;
-                }
+            }
+            else{
                 return true;
             }
-            return true;
         },
         checkAssessorData: function(){
             //check assessor boxes and clear value of hidden assessor boxes so it won't get printed on approval pdf.
@@ -1040,7 +1035,6 @@ export default {
             }
         },
         highlight_deficient_fields: function(deficient_fields){
-            let vm = this;
             for (var deficient_field of deficient_fields) {
                 $("#" + "id_"+deficient_field).css("color", 'red');
             }
@@ -1059,25 +1053,27 @@ export default {
             //console.log('deficient fields', deficient_fields);
             vm.highlight_deficient_fields(deficient_fields);
         },
-        save: function(e) {
+        save: function() {
           let vm = this;
           vm.checkAssessorData();
           let formData = new FormData(vm.form);
-          vm.$http.post(vm.proposal_form_url,formData).then(res=>{
+          vm.$http.post(vm.proposal_form_url,formData).then(()=>{
               swal(
                 'Saved',
                 'Your proposal has been saved',
                 'success'
               )
           },err=>{
+            console.log(err);
           });
         },
-        save_exit: function(e) {
+        save_exit: function() {
           let vm = this;
           vm.checkAssessorData();
           let formData = new FormData(vm.form);
-          vm.$http.post(vm.proposal_form_url,formData).then(res=>{
+          vm.$http.post(vm.proposal_form_url,formData).then(()=>{
           },err=>{
+            console.log(err);
           });
           // redirect back to dashboard
             vm.$router.push({
@@ -1088,10 +1084,11 @@ export default {
           let vm = this;
           vm.checkAssessorData();
           let formData = new FormData(vm.form);
-          vm.$http.post(vm.proposal_form_url,formData).then(res=>{
+          vm.$http.post(vm.proposal_form_url,formData).then(()=>{
 
 
           },err=>{
+              console.log(err);
           });
         },
 
@@ -1206,7 +1203,7 @@ export default {
             if(vm.proposal.processing_status == 'With Assessor' && status == 'with_assessor_requirements'){
             vm.checkAssessorData();
             let formData = new FormData(vm.form);
-            vm.$http.post(vm.proposal_form_url,formData).then(res=>{ //save Proposal before changing status so that unsaved assessor data is saved.
+            vm.$http.post(vm.proposal_form_url,formData).then(()=>{ //save Proposal before changing status so that unsaved assessor data is saved.
 
             let data = {'status': status, 'approver_comment': vm.approver_comment}
             vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,(vm.proposal.id+'/switch_status')),JSON.stringify(data),{
@@ -1233,6 +1230,7 @@ export default {
             });
 
           },err=>{
+            console.log(err);
           });
         }
 
@@ -1324,13 +1322,13 @@ export default {
                     vm.proposal.assigned_officer = selected.val();
                 }
                 vm.assignTo();
-            }).on("select2:unselecting", function(e) {
+            }).on("select2:unselecting", function() {
                 var self = $(this);
                 setTimeout(() => {
                     self.select2('close');
                 }, 0);
-            }).on("select2:unselect",function (e) {
-                var selected = $(e.currentTarget);
+            }).on("select2:unselect",function () {
+                // var selected = $(e.currentTarget);
                 if (vm.proposal.processing_status == 'With Approver'){
                     vm.proposal.assigned_approver = null;
                 }
@@ -1369,7 +1367,7 @@ export default {
             vm.checkAssessorData();
             let formData = new FormData(vm.form);
             vm.sendingReferral = true;
-            vm.$http.post(vm.proposal_form_url,formData).then(res=>{
+            vm.$http.post(vm.proposal_form_url,formData).then(()=>{
 
             let data = {'email':vm.selected_referral, 'text': vm.referral_text};
             //vm.sendingReferral = true;
@@ -1400,6 +1398,7 @@ export default {
 
 
           },err=>{
+            console.log(err);
           });
 
         //this.$refs.referral_comment.selected_referral = vm.selected_referral;
@@ -1525,13 +1524,13 @@ export default {
                 },
             }).
             on("select2:select", function (e) {
-                var selected = $(e.currentTarget);
+                // var selected = $(e.currentTarget);
                 //vm.selected_referral = selected.val();
                 let data = e.params.data.id;
                 vm.selected_referral = data;
             }).
-            on("select2:unselect",function (e) {
-                var selected = $(e.currentTarget);
+            on("select2:unselect",function () {
+                // var selected = $(e.currentTarget);
                 vm.selected_referral = null;
             })/*.
             on("select2:open",function (e) {

@@ -12,7 +12,7 @@ export default {
             });
         });
     },
-    fetchOrganisations: function(id){
+    fetchOrganisations: function(){
         return new Promise ((resolve,reject) => {
             Vue.http.get(api.organisations).then((response) => {
                 resolve(response.body);

@@ -140,7 +140,6 @@ import {
     helpers
 }
 from '@/utils/hooks'
-import FormSection from "@/components/forms/section_toggle.vue"
 
 export default {
     name: 'InternalProposalRequirements',
@@ -158,7 +157,6 @@ export default {
     watch:{
     },
     components:{
-        FormSection,
     },
     computed:{
         /*
@@ -187,9 +185,11 @@ export default {
             return this.proposal.approval_level != null ? true : false;
         },
         apiary_sites: function() {
+            let apiary_sites = null;
             if (this.proposal && this.proposal.proposal_apiary) {
-                return this.proposal.proposal_apiary.apiary_sites;
+                apiary_sites = this.proposal.proposal_apiary.apiary_sites;
             }
+            return apiary_sites;
         },
         apiary_sites_prop: function() {
             let apiary_sites = [];
@@ -274,17 +274,18 @@ export default {
                 confirmButtonColor:'#d9534f'
             }).then(() => {
                 vm.$http.delete(helpers.add_endpoint_json(api_endpoints.proposal_requirements,_id))
-                .then((response) => {
+                .then(() => {
                     vm.$refs.requirements_datatable.vmDataTable.ajax.reload();
                 }, (error) => {
                     console.log(error);
                 });
             },(error) => {
+                console.log(error);
             });
         },
     },
     mounted: function(){
-        let vm = this;
+        // let vm = this;
     }
 }
 </script>

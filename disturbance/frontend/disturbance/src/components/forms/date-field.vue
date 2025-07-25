@@ -41,21 +41,21 @@
 </template>
 
 <script>
-import moment from 'moment'
-import Comment from './comment.vue'
+// import moment from 'moment'
+// import Comment from './comment.vue'
 import CommentBox from './comment_box_referral.vue'
 import HelpText from './help_text.vue'
 import HelpTextUrl from './help_text_url.vue'
 import LayerInfo from './layer_info.vue'
 export default {
-    name:"date",
+    name:"DateField",
     props: ['name', 'label', 'id', 'readonly', 'help_text', 'help_text_assessor', 'assessorMode', 'value', 'conditions', "handleChange","comment_value","assessor_readonly", "isRequired", 'help_text_url', 'help_text_assessor_url', 'comment_boxes', 'layer_val'],
     data(){
         return {
             showingComment: false
         }
     },
-    components: {Comment, HelpText, HelpTextUrl, CommentBox, LayerInfo,},
+    components: {HelpText, HelpTextUrl, CommentBox, LayerInfo,},
     computed: {
         isChecked: function() {
         //TODO return value from database
@@ -68,7 +68,7 @@ export default {
             let has_value=false;
             let boxes=JSON.parse(this.comment_boxes)
             for(var i=0; i<boxes.length; i++){
-                if(boxes[i].hasOwnProperty('value')){
+                if (Object.prototype.hasOwnProperty.call(boxes[i], 'value')) {
                     if(boxes[i].value!=null && boxes[i].value!=undefined && boxes[i].value!= '' ){
                         has_value=true;
                     }

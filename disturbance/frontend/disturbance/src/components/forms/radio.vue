@@ -18,7 +18,7 @@
 
 <script>
 export default {
-    name:"radiobuttons",
+    name:"radiobuttonsComponent",
     props:["value","label", "id", "name","isRequired","handleChange","conditions","savedValue","readonly"],
     computed:{
         isChecked:function () {

@@ -67,7 +67,7 @@ export default {
                 serverSide: true,
                 autowidth: false,
                 processing: true,
-                "ajax": function (data, callback, settings) {
+                "ajax": function (data, callback) {
 		    callback(
                       vm.metricsData
 		    );
@@ -104,7 +104,7 @@ export default {
             $(this.$refs.standard_req).val(null).trigger('change');
         },
        eventListeners:function () {
-            let vm = this;
+            // let vm = this;
        }
    },
    mounted:function () {

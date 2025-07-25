@@ -16,7 +16,7 @@
             /-->
 
         <template v-if="files">
-            <template v-for="v in documents">
+            <template v-for="v in documents" :key="v.id">
                 <div>
                     File: <a :href="v.file" target="_blank">{{v.name}}</a> &nbsp;
                     <span v-if="!readonly">
@@ -27,7 +27,7 @@
             <div v-if="show_spinner"><i class='fa fa-2x fa-spinner fa-spin'></i></div>
         </template>
         <template v-if="!readonly">
-            <template v-for="n in repeat">
+            <template v-for="n in repeat" :key="n">
                 <template v-if="isRepeatable || (!isRepeatable && num_documents()==0) && !show_spinner">
                     <input 
                         :id="name + n" 
@@ -211,7 +211,7 @@ export default {
             this.show_spinner = false;
 
         },
-        cancel: async function(file) {
+        cancel: async function() {
             this.show_spinner = true;
 
             let formData = new FormData();
@@ -222,7 +222,11 @@ export default {
             }
             formData.append('csrfmiddlewaretoken', this.csrf_token);
             if (this.document_action_url) {
-                let res = await Vue.http.post(this.document_action_url, formData)
+                // let res = await Vue.http.post(this.document_action_url, formData)
+                await fetch(this.document_action_url, {
+                    body: formData,
+                    method: 'POST',
+                });
             }
             this.show_spinner = false;
         },
@@ -331,9 +335,6 @@ export default {
 <style lang="css">
     input {
         box-shadow:none;
-    }
-    .ffu-wrapper {
-
     }
     .ffu-input-elem {
         display: none !important;

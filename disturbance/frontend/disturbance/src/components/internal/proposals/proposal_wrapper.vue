@@ -26,7 +26,6 @@ import Proposal from './proposal.vue';
 export default {
     name: 'InternalProposalWrapper',
     data() {
-        let vm = this;
         return {
             //proposal: {},
             proposalId: null,

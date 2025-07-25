@@ -9,7 +9,7 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="input-group date" ref="due_date" style="width: 70%;">
-                        <div v-for="v in uploaded_documents" class="row">
+                        <div v-for="v in uploaded_documents" class="row" :key="v.id">
                             <span>
                                 <a :href="v._file" target="_blank">{{v.name}}</a> &nbsp;
                                 <a @click="delete_document(v)" class="fa fa-trash-o" title="Remove file" :filename="v.name" style="cursor: pointer; color:red;"></a>
@@ -23,7 +23,7 @@
         <div class="form-group">
             <div class="row">
                 <div class="col-sm-12">
-                    <div v-for="n in repeat">
+                    <div v-for="n in repeat" :key="n">
                         <div v-if="isRepeatable || (!isRepeatable && num_documents()==0)">
                             <span class="btn btn-link btn-file">
                                 <input :name="name" type="file" class="form-control" :data-que="n" :accept="fileTypes" @change="handleChange($event)" :required="isRequired"/>
@@ -44,7 +44,7 @@
                 -->
                 <div class="col-sm-9">
                     <div v-if="files">
-                        <div v-for="v in files">
+                        <div v-for="v in files" :key="v.name">
                             <p>
                                 <!--File: <a target="_blank">{{v.name}}</a> &nbsp;-->
                                 File:{{v.name}} &nbsp;
@@ -67,6 +67,7 @@ import {
 }
 from '@/utils/hooks'
 export default {
+    name: 'FileField',
     props:{
         proposal_id: null,
         required_doc_id:null,
@@ -102,12 +103,6 @@ export default {
         return {
             repeat:1,
             files: [],
-            _files: [
-                {
-                    'file': null,
-                    'name': ''
-                }
-            ],
             showingComment: false,
             show_spinner: false,
             documents:[],
@@ -183,9 +178,6 @@ export default {
                     }
                 }
             }
-            if (!file_updated) {
-                vm.files.push( {name: e.target.files[0].name, file: e.target.files[0]} );
-            }
         },
         delete_document: function(file) {
             /* deletes, previously saved file, from the server */
@@ -211,6 +203,7 @@ export default {
                     console.log(err);
                 });
             },(error) => {
+                console.log(error);
             });
         },
         num_documents: function() {

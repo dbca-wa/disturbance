@@ -28,7 +28,7 @@
                         </div>
                         <div class="col-md-6" v-else>
                             <div v-for="(c, cid) in a.conditions" v-bind:key="`condition_${cid}`" >
-                                <input type="checkbox" :value="true" v-model="getCheckedConditions(a,c).isChecked" >&nbsp;&nbsp;<label>{{c.label}}</label></input><input type='text' v-if="getCheckedConditions(a,c).isDisplay" class="pull-right" v-model="c.value" />                           
+                                <label><input type="checkbox" :value="true" v-model="getCheckedConditions(a,c).isChecked" />&nbsp;&nbsp;{{c.label}}<input type='text' v-if="getCheckedConditions(a,c).isDisplay" class="pull-right" v-model="c.value" /></label>
                             </div>
                         </div>
                     </div>

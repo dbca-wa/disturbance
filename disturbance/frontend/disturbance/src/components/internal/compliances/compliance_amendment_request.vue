@@ -11,7 +11,7 @@
                                     <div class="form-group">
                                         <label class="control-label pull-left"  for="Name">Reason</label>
                                         <select class="form-control" name="reason" ref="reason" v-model="amendment.reason">
-                                            <option v-for="r in reason_choices" :value="r.key">{{r.value}}</option>
+                                            <option v-for="r in reason_choices" :value="r.key" :key="r.key">{{r.value}}</option>
                                         </select>
                                     </div>
                                 </div>

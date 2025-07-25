@@ -21,7 +21,7 @@
                                     </select>
                                     <select v-else ref="searchOrg" class="form-control" name="organisation">
                                         <option value="">Select Organisation</option>
-                                        <option v-for="o in organisations" :value="o.id">{{ o.name }}</option>
+                                        <option v-for="o in organisations" :value="o.id" :key="o.id">{{ o.name }}</option>
                                     </select>
                                 </div>
                             </div>
@@ -102,7 +102,7 @@
                               </div> 
                               <label for="" class="control-label col-lg-12">Keyword</label>                              
                                 <div class="col-md-8">
-                                  <input type="search"  class="form-control input-sm" name="details" placeholder="" v-model="keyWord"></input>
+                                  <input type="search"  class="form-control input-sm" name="details" placeholder="" v-model="keyWord"/>
                                 </div> 
                                 <div class="col-md-1">                                  
                                 </div>
@@ -118,7 +118,9 @@
                     <div class="row">
                       <div class="col-lg-12">
                           <ul class="list-inline" style="display: inline; width: auto;">                          
-                              <li class="list-inline-item" v-for="(item,i) in searchKeywords">
+                              <li class="list-inline-item" v-for="(item,i) in searchKeywords" :key="i">
+                                  <span class="glyphicon glyphicon-search"></span>
+                                  <span class="sr-only">Search Keyword</span>
                                 <button @click.prevent="" class="btn btn-light" style="margin-top:5px; margin-bottom: 5px">{{item}}</button><a href="" @click.prevent="removeKeyword(i)"><span class="glyphicon glyphicon-remove "></span></a>
                               </li>
                           </ul>
@@ -165,8 +167,8 @@
                     <div class="row">
                        <label for="" class="control-label col-lg-12">Keyword</label>                              
                           <div class="col-md-8">
-                              <input type="search"  class="form-control input-sm" name="referenceWord" placeholder="" v-model="referenceWord"></input>
-                          </div> 
+                              <input type="search"  class="form-control input-sm" name="referenceWord" placeholder="" v-model="referenceWord"/>
+                          </div>
                           <div >
                             <input type="button" @click.prevent="search_reference" class="btn btn-primary" style="margin-bottom: 5px" value="Search"/>
                         </div>

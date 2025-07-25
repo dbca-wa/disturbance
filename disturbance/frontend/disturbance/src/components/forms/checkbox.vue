@@ -23,6 +23,7 @@
 import HelpText from './help_text.vue'
 import HelpTextUrl from './help_text_url.vue'
 export default {
+  name: "CheckboxField",
   props: ['name', 'label', 'value', 'group', 'id', 'help_text', 'help_text_url', 'conditions', "handleChange","readonly", "isRequired", "layer_value", "assessorMode"],
   components: {HelpText, HelpTextUrl},
   data: function() {
@@ -42,10 +43,10 @@ export default {
     },
     layer_name:function () {
             let lay_name='';
-            if(this.layer_value && this.layer_value.hasOwnProperty('layer_name')){
+            if (this.layer_value && Object.prototype.hasOwnProperty.call(this.layer_value, 'layer_name')) {
                 lay_name= this.layer_value.layer_name;
             }
-            if(this.layer_value && this.layer_value.hasOwnProperty('layer_modified_date')){
+            if (this.layer_value && Object.prototype.hasOwnProperty.call(this.layer_value, 'layer_modified_date')) {
                 lay_name= lay_name + ' - ' +this.layer_value.layer_modified_date;
             }
             return lay_name;

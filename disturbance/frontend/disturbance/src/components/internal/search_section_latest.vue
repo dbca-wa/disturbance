@@ -21,7 +21,7 @@
                                   <div class="form-group">
                                       <select class="form-control" style="width:40%" v-model="selected_proposal_type_id" @change="chainedSelectAppType(selected_proposal_type_id)">
                                           <option value="" selected disabled>Proposal Type</option>
-                                          <option v-for="proposal_type in proposal_types" :value="proposal_type.value">
+                                          <option v-for="proposal_type in proposal_types" :value="proposal_type.value" :key="proposal_type.value">
                                                 {{ proposal_type.text }}
                                           </option>
                                       </select>
@@ -35,7 +35,7 @@
                                         <select v-model="selected_region" class="form-control" style="width:40%" @change="chainedSelectDistricts(selected_region)">
                                             <!-- <option value="" selected disabled>Select region</option> -->
                                             <option value="" selected>All</option>
-                                            <option v-for="region in regions" :value="region.value">
+                                            <option v-for="region in regions" :value="region.value" :key="region.value">
                                                 {{ region.text }}
                                             </option>
                                         </select>
@@ -50,7 +50,7 @@
                                         <select  v-model="selected_district" class="form-control" style="width:40%">
                                         <!-- <option value="" selected disabled>Select district</option> -->
                                         <option value="" selected >All</option>
-                                            <option v-for="district in districts" :value="district.value">
+                                            <option v-for="district in districts" :value="district.value" :key="district.value">
                                                 {{ district.text }}
                                             </option>
                                         </select>
@@ -66,7 +66,7 @@
                                     <select v-model="selected_activity" class="form-control" style="width:40%">
                                       <!-- <option value="" selected disabled>Select activity</option> -->
                                       <option value="" selected>All</option>
-                                      <option v-for="activity in activities" :value="activity.value">
+                                      <option v-for="activity in activities" :value="activity.value" :key="activity.value">
                                         {{ activity.text }}
                                       </option>
                                     </select>
@@ -82,7 +82,7 @@
                                   <div class="form-group">
                                     <select v-model="selected_section" class="form-control" style="width:40%" @change="chainedSelectSections(selected_section)">
                                       <option value="" selected disabled>Select section</option>
-                                      <option v-for="section in sections" :value="section.value">
+                                      <option v-for="section in sections" :value="section.value" :key="section.value">
                                         {{ section.text }}
                                       </option>
                                     </select>
@@ -98,7 +98,7 @@
                                   <div class="form-group">
                                     <select v-model="selected_question" class="form-control" style="width:40%" @change="chainedSelectOptions(selected_question)">
                                       <option value="" selected disabled>Select question</option>
-                                      <option v-for="question in questions" :value="question.value">
+                                      <option v-for="question in questions" :value="question.value" :key="question.value">
                                         {{ question.text }}
                                       </option>
                                     </select>
@@ -126,7 +126,7 @@
                                   <div class="form-group">
                                     <select v-model="selected_option" class="form-control" style="width:40%" >
                                       <option value="" selected disabled>Select option</option>
-                                      <option v-for="option in options" :value="option.value">
+                                      <option v-for="option in options" :value="option.value" :key="option.value">
                                         {{ option.text }}
                                       </option>
                                     </select>
@@ -151,7 +151,7 @@
                     <div class="row">
                       <div class="col-lg-12">
                           <ul class="list-inline" style="display: inline; width: auto;">                          
-                              <li class="list-inline-item" v-for="(item,i) in searchKeywords">
+                              <li class="list-inline-item" v-for="(item,i) in searchKeywords" :key="i">
                                 <button @click.prevent="" class="btn btn-light" style="margin-top:5px; margin-bottom: 5px">{{item}}</button><a href="" @click.prevent="removeKeyword(i)"><span class="glyphicon glyphicon-remove "></span></a>
                               </li>
                           </ul>
@@ -202,7 +202,6 @@ import {
   helpers
 }
 from '@/utils/hooks'
-import utils from './utils'
 export default {
   name: 'SearchSection',
   props: {
@@ -288,7 +287,7 @@ export default {
               {data: "applicant"},
               {//data: "text.value"
                 data: "text",
-                mRender: function (data,type,full) {
+                mRender: function (data) {
                   if(data.value){
                     return data.value;
                   }
@@ -329,7 +328,7 @@ export default {
     components: {
         datatable,
     },
-    beforeRouteEnter:function(to,from,next){
+    // beforeRouteEnter:function(to,from,next){
         // utils.fetchOrganisations().then((response)=>{
         //     next(vm => {
         //         vm.organisations = response;
@@ -338,7 +337,7 @@ export default {
         // (error) =>{
         //     console.log(error);
         // });
-    },
+    // },
     computed: {
         showError: function() {
             var vm = this;
@@ -347,7 +346,7 @@ export default {
     },
     methods: {
         addListeners: function(){
-            let vm = this;
+            // let vm = this;
             // Initialise select2 for region
             // $(vm.$refs.searchOrg).select2({
             //     "theme": "bootstrap",
@@ -680,15 +679,15 @@ export default {
 
                 } else {
                     // go to sub_activity2 widget
-                    for (var i = 0; i < api_sub_activities.length; i++) {
-                        var key = Object.keys(api_activities[i])[0];
-                        this.sub_activities1.push( {text: key, value: key, sub_matrix: api_activities[i][key]} );
+                    for (var j = 0; j < api_sub_activities.length; j++) {
+                        var key = Object.keys(api_activities[j])[0];
+                        this.sub_activities1.push( {text: key, value: key, sub_matrix: api_activities[j][key]} );
                     }
                 }
             } else {
-                for (var i = 0; i < api_activities.length; i++) {
-                    var key = Object.keys(api_activities[i])[0];
-                    this.sub_activities1.push( {text: key, value: key, sub_matrix: api_activities[i][key]} );
+                for (var k = 0; k < api_activities.length; k++) {
+                    var activity_key = Object.keys(api_activities[k])[0];
+                    this.sub_activities1.push( {text: activity_key, value: activity_key, sub_matrix: api_activities[k][activity_key]} );
                 }
             }
       },

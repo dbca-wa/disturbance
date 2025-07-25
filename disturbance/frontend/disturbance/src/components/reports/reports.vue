@@ -229,9 +229,8 @@
 <script>
 import {api_endpoints,helpers} from "@/utils/hooks.js"
 export default {
-    name:"reports",
+    name:"PaymentReports",
     data:function () {
-        let vm = this;
         return {
             form:null,
             refund_form:null,
@@ -317,7 +316,7 @@ export default {
             if (vm.oracle_form.valid()){
                 let data = vm.oracleDatePicker.data("DateTimePicker").date().format('DD/MM/YYYY');
                 let override = vm.oracle_override ? 'true': 'false';
-                vm.$http.get('/api/oracle_job?date='+data+'&override='+override).then((response) => {
+                vm.$http.get('/api/oracle_job?date='+data+'&override='+override).then(() => {
                     swal({
                         type: 'success',
                         title: 'Job Success',
@@ -368,12 +367,6 @@ export default {
                     })
                 })*/
             }
-        },
-        fetchRegions:function () {
-            let vm = this;
-            $.get('/ledger/payments/api/regions?format=json',function (data) {
-                vm.regions = data;
-            });
         },
         fetchRegions:function () {
             let vm = this;
@@ -437,7 +430,6 @@ export default {
         },
         getReport:function (values) {
             console.log('getReport');
-            let vm = this;
             //var url = "/ledger/payments/api/report?"+$.param(values);
             var url = "/ledger/payments/api/report?"+$.param(values);
             window.location.assign(url);

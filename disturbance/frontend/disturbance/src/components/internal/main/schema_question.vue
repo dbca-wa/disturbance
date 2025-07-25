@@ -72,7 +72,7 @@
             <div id="error" v-if="missing_fields.length > 0" style="margin: 10px; padding: 5px; color: red; border:1px solid red;">
                 <b>Please answer the following mandatory question(s):</b>
                 <ul>
-                    <li v-for="error in missing_fields">
+                    <li v-for="error in missing_fields" :key="error.label">
                         {{ error.label }}
                     </li>
                 </ul>
@@ -147,27 +147,27 @@
 
                     <div class="row">
                         <div class="col-md-6">
-                            <input type="checkbox" :value="true" v-model="getCheckedTag('isRepeatable').isChecked" >&nbsp;&nbsp;&nbsp;<label>is Repeatable</label></input>
+                            <label><input type="checkbox" :value="true" v-model="getCheckedTag('isRepeatable').isChecked"/>&nbsp;&nbsp;&nbsp;is Repeatable</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <input type="checkbox" :value="true" v-model="getCheckedTag('isRequired').isChecked" >&nbsp;&nbsp;&nbsp;<label>is Required</label></input>
+                            <label><input type="checkbox" :value="true" v-model="getCheckedTag('isRequired').isChecked" />&nbsp;&nbsp;&nbsp;is Required</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <input type="checkbox" :value="true" v-model="getCheckedTag('isCopiedToPermit').isChecked" >&nbsp;&nbsp;&nbsp;<label>is Copied To Permit</label></input>
+                            <label><input type="checkbox" :value="true" v-model="getCheckedTag('isCopiedToPermit').isChecked" />&nbsp;&nbsp;&nbsp;is Copied To Permit</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <input type="checkbox" :value="true" v-model="getCheckedTag('canBeEditedByAssessor').isChecked" >&nbsp;&nbsp;&nbsp;<label>can Be Edited By Assessor</label></input>
+                            <label><input type="checkbox" :value="true" v-model="getCheckedTag('canBeEditedByAssessor').isChecked" />&nbsp;&nbsp;&nbsp;can Be Edited By Assessor</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <input type="checkbox" :value="true" v-model="getCheckedTag('isTitleColumnForDashboard').isChecked" >&nbsp;&nbsp;&nbsp;<label>is Title Column For Dashboard</label></input>
+                            <label><input type="checkbox" :value="true" v-model="getCheckedTag('isTitleColumnForDashboard').isChecked" />&nbsp;&nbsp;&nbsp;is Title Column For Dashboard</label>
                         </div>
                     </div>
 
@@ -217,9 +217,9 @@
                 </form>
             </div>
         </div>
-        <div slot="footer">
+        <template #footer>
             <button type="button" class="btn btn-primary" @click="saveQuestion">Save</button>
-        </div>
+        </template>
     </modal>
 
   </div>
@@ -228,7 +228,6 @@
 <script>
 import datatable from '@/utils/vue/datatable.vue'
 import modal from '@vue-utils/bootstrap-modal.vue'
-import alert from '@vue-utils/alert.vue'
 import SchemaOption from './schema_add_option.vue'
 import {
   api_endpoints,
@@ -236,7 +235,7 @@ import {
 }
 from '@/utils/hooks'
 
-var select2 = require('select2');
+// var select2 = require('select2');
 require("select2/dist/css/select2.min.css");
 require("select2-bootstrap-theme/dist/select2-bootstrap.min.css");
 
@@ -244,7 +243,6 @@ export default {
     name:'schema-question',
     components: {
         modal,
-        alert,
         datatable,
         SchemaOption,
     },
@@ -310,7 +308,7 @@ export default {
                     { 
                         data: "section",
                         searchable: false,
-                        mRender:function (data,type,full) {
+                        mRender:function (data) {
                             return data.section_label;
                         }
                     },
@@ -326,7 +324,7 @@ export default {
                         data: "question",
                         width: "80%",
                         searchable: false,
-                        mRender:function (data,type,full) {
+                        mRender:function (data) {
                             var ellipsis = '...',
                                 truncated = _.truncate(data, {
                                     length: 40,
@@ -360,8 +358,8 @@ export default {
                         data: "id",
                         searchable: false,
                         mRender:function (data,type,full) {
-                            var column = `<a class="edit-row" data-rowid=\"__ROWID__\">Edit</a><br/>`;
-                            column += `<a class="delete-row" data-rowid=\"__ROWID__\">Delete</a><br/>`;
+                            var column = `<a class="edit-row" data-rowid="__ROWID__">Edit</a><br/>`;
+                            column += `<a class="delete-row" data-rowid="__ROWID__">Delete</a><br/>`;
                             return column.replace(/__ROWID__/g, full.id);
                         }
                     },
@@ -435,7 +433,7 @@ export default {
                 this.schemaGroups = res.body.question_groups; 
                 this.schemaSections = res.body.question_sections;
             },err=>{
-
+                console.log(err);
             });
         },
         filterQuestionSection: function(){
@@ -448,7 +446,7 @@ export default {
                 this.sectionQuestion.section = this.filterQuestionSection;
                 this.parentList = res.body.question_parents;
             },err=>{
-
+                console.log(err);
             });
         },
     },
@@ -552,7 +550,7 @@ export default {
                 await self.$http.post(api_endpoints.schema_question, JSON.stringify(data),{
                     emulateJSON:true
 
-                }).then((response) => {
+                }).then(() => {
 
                     self.$refs.schema_question_table.vmDataTable.ajax.reload();
                     self.close();
@@ -571,7 +569,7 @@ export default {
                 await self.$http.post(helpers.add_endpoint_json(api_endpoints.schema_question,data.id+'/save_question'),JSON.stringify(data),{
                         emulateJSON:true,
 
-                    }).then((response)=>{
+                    }).then(()=>{
 
                         self.$refs.schema_question_table.vmDataTable.ajax.reload();
                         self.close();
@@ -666,18 +664,18 @@ export default {
 
                         await self.$http.delete(helpers.add_endpoint_json(api_endpoints.schema_question,(self.sectionQuestion.id+'/delete_question')))
     
-                        .then((response) => {
+                        .then(() => {
 
                             self.$refs.schema_question_table.vmDataTable.ajax.reload();
 
                         }, (error) => {
-
+                            console.log(error);
                         });
     
                     }
 
                 },(error) => {
-
+                    console.log(error);
                 });                
             });
 
@@ -689,9 +687,6 @@ export default {
                     allowClear: true,
                     minimumInputLength: 2,
                     placeholder:"Select Question..."
-                }).
-                on("select2:selecting",function (e) {
-                    let selected = $(e.currentTarget);
                 }).
                 on("select2:select",function (e) {
                     let selected = $(e.currentTarget);
@@ -710,9 +705,6 @@ export default {
                     allowClear: true,
                     minimumInputLength: 2,
                     placeholder:"Select Parent Question..."
-                }).
-                on("select2:selecting",function (e) {
-                    let selected = $(e.currentTarget);
                 }).
                 on("select2:select",function (e) {
                     let selected = $(e.currentTarget);
@@ -748,9 +740,6 @@ export default {
                     allowClear: true,
                     minimumInputLength: 2,
                     placeholder:"Select Section Group..."
-                }).
-                on("select2:selecting",function (e) {
-                    let selected = $(e.currentTarget);
                 }).
                 on("select2:select",function (e) {
                     let selected = $(e.currentTarget);

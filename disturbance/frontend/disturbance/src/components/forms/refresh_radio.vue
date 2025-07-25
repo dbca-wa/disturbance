@@ -22,7 +22,7 @@ import {
 }
 from '@/utils/hooks'
 export default {
-    name:"Refresh",
+    name:"RefreshRadio",
     props:["parent_name","parent_label", "assessorMode","layer_data", "proposal_id", "refresh_time_value"],
 
 components: {  },
@@ -44,14 +44,14 @@ data: function() {
  methods:{
          refresh: async function(){
             let vm=this;
-            var ele=document.querySelectorAll('[name='+vm.parent_name+']')
+            // var ele=document.querySelectorAll('[name='+vm.parent_name+']')
             const mlq_data={label: '',
                             name: ''};
             mlq_data.label=vm.parent_label;
             mlq_data.name=vm.parent_name;
             let url = '/refresh'
             vm.isRefreshing=true;
-            var found=null;
+            // var found=null;
             await this.$http.post(helpers.add_endpoint_json(api_endpoints.proposals_sqs,this.proposal_id + url),JSON.stringify(mlq_data),{
                     emulateJSON:true,
             }).then((response)=>{
