@@ -29,7 +29,8 @@ import datatable from "@vue-utils/datatable.vue";
 // import alert from '@vue-utils/alert.vue';
 import {
     api_endpoints,
-    helpers
+    helpers,
+    constants
 }from '@/utils/hooks'
 export default {
     name: 'ApprovalHistoryModal',
@@ -54,8 +55,11 @@ export default {
             historyTable: null,
             popoversInitialised: false,
             dtOptionsApprovalHistory:{
+                // language: {
+                //     processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+                // },
                 language: {
-                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+                    processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
                 deferRender: true, 

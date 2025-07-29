@@ -131,7 +131,8 @@ import ApprovalSurrender from '../internal/approvals/approval_surrender.vue'
 import ApprovalHistory from './approval_history_modal.vue';
 import {
     api_endpoints,
-    helpers
+    helpers,
+    constants
 }from '@/utils/hooks'
 export default {
     name: 'ApprovalsTableDash',
@@ -155,7 +156,7 @@ export default {
             pBody: 'pBody' + uuidv4(),
             datatable_id: 'approvals-datatable-'+uuidv4(),
             uuid: 0,
-            //datatable_id: 'proposal-datatable-'+vm.uuid,
+            //datatable_id: 'proposal-datatable-'+uuidv4(),
             //Profile to check if user has access to process Proposal
             profile: {},
             approval_history: {
@@ -532,7 +533,7 @@ export default {
             this.proposal_options = {
                 destroy: true,
                 language: {
-                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+                    processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
                 serverSide: true,

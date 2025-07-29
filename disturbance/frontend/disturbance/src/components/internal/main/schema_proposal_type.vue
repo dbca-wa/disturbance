@@ -102,7 +102,8 @@ import datatable from '@/utils/vue/datatable.vue'
 import modal from '@vue-utils/bootstrap-modal.vue'
 import {
   api_endpoints,
-  helpers
+  helpers,
+  constants
 }
 from '@/utils/hooks'
 export default {
@@ -132,7 +133,7 @@ export default {
             dtHeadersSchemaProposalType: ["ID", "Proposal Type", "Section Label", "Index", "Action"],
             dtOptionsSchemaProposalType:{
                 language: {
-                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+                    processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 searchDelay: 1000,
                 responsive: true,

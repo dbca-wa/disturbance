@@ -269,7 +269,8 @@ require("select2-bootstrap-theme/dist/select2-bootstrap.min.css");
 
 import {
     api_endpoints,
-    helpers
+    helpers,
+    constants
 }
 from '@/utils/hooks'
 export default {
@@ -293,10 +294,10 @@ export default {
             //department_users : [],
             contacts_table_initialised: false,
             initialisedSelects: false,
-            contacts_table_id: uuidv4+'contacts-table',
+            contacts_table_id: uuidv4()+'contacts-table',
             contacts_options:{
                 language: {
-                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+                    processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
                 ajax: {

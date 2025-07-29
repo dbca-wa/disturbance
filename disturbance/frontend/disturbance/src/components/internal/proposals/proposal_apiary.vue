@@ -497,7 +497,7 @@ import TargetApprovalRequirements from './target_approval_requirements.vue'
 import ApprovalScreen from './proposal_approval.vue'
 // import ApprovalScreenSiteTransferTemporaryUse from './proposal_approval_site_transfer_temporary_use.vue'
 import CommsLogs from '@common-utils/comms_logs.vue'
-import { api_endpoints, helpers } from '@/utils/hooks'
+import { api_endpoints, helpers, constants } from '@/utils/hooks'
 import ApiarySiteTransfer from '@/components/form_apiary_site_transfer.vue'
 
 export default {
@@ -530,7 +530,7 @@ export default {
             contacts_table_id: uuidv4()+'contacts-table',
             contacts_options:{
                 language: {
-                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+                    processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
                 ajax: {

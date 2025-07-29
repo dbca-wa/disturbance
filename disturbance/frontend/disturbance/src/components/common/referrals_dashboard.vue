@@ -105,6 +105,7 @@ require("select2/dist/css/select2.min.css");
 require("select2-bootstrap-theme/dist/select2-bootstrap.min.css");
 import {
     api_endpoints,
+    constants
 }from '@/utils/hooks'
 export default {
     name: 'RefferralsTableDash',
@@ -150,7 +151,7 @@ export default {
                 customProposalSearch: true,
                 tableID: 'proposal-datatable-'+uuidv4(),
                 language: {
-                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+                    processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
                 serverSide: true,

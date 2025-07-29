@@ -67,7 +67,8 @@ import datatable from '@/utils/vue/datatable.vue'
 import modal from '@vue-utils/bootstrap-modal.vue'
 import {
   api_endpoints,
-  helpers
+  helpers,
+  constants
 }
 from '@/utils/hooks'
 
@@ -110,7 +111,7 @@ export default {
             dtHeadersSchemaQuestion: ["ID", "Lodgement Number", "When", "Query Time", "API Time (s)", "Request Type", "Action"],
             dtOptionsSchemaQuestion:{
                 language: {
-                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+                    processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
                 serverSide: true,
@@ -203,7 +204,7 @@ export default {
 //            dtHeadersLayersUsed: ["ID", "Lodgement Number", "Layer name"],
 //            dtOptionsLayersUsed:{
 //                language: {
-//                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+//                    processing: constants.DATATABLE_PROCESSING_HTML,
 //                },
 //                responsive: true,
 //                serverSide: true,
@@ -238,7 +239,7 @@ export default {
             //dtHeadersSchemaMetrics: ["Question"],
             dtOptionsSchemaMetrics:{
                 language: {
-                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+                    processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
 //    fixedColumns: {

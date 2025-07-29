@@ -190,7 +190,8 @@ import alert from '@vue-utils/alert.vue'
 import datatable from '@/utils/vue/datatable.vue'
 import {
   api_endpoints,
-  helpers
+  helpers,
+  constants
 }
 from '@/utils/hooks'
 import utils from './utils'
@@ -225,7 +226,7 @@ export default {
       proposal_headers:["Number","Type","Proponent","Text found","Action"],
       proposal_options:{
           language: {
-              processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+              processing: constants.DATATABLE_PROCESSING_HTML,
           },
           responsive: true,
           /*ajax: {

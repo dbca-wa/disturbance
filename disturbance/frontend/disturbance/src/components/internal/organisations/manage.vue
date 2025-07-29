@@ -230,7 +230,7 @@
 
 <script>
 import { v4 as uuidv4 } from 'uuid';
-import { api_endpoints, helpers } from '@/utils/hooks'
+import { api_endpoints, helpers, constants } from '@/utils/hooks'
 import datatable from '@vue-utils/datatable.vue'
 import AddContact from '@common-utils/add_contact.vue'
 import ProposalDashTable from '@common-utils/proposals_dashboard.vue'
@@ -280,7 +280,7 @@ export default {
 
             contacts_options:{
                 language: {
-                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+                    processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
                 ajax: {

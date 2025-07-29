@@ -74,7 +74,8 @@ import $ from 'jquery'
 import datatable from '@vue-utils/datatable.vue'
 import {
   api_endpoints,
-  helpers
+  helpers,
+  constants
 }
 from '@/utils/hooks'
 import {v4 as uuidv4} from 'uuid';
@@ -100,7 +101,7 @@ export default {
         table_id: 0,
         dtOptions:{
                 language: {
-                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+                    processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
                 processing:true,

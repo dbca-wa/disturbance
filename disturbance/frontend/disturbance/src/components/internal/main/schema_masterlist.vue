@@ -139,7 +139,8 @@ import modal from '@vue-utils/bootstrap-modal.vue'
 import SchemaOption from './schema_add_option.vue'
 import {
   api_endpoints,
-  helpers
+  helpers,
+  constants
 }
 from '@/utils/hooks'
 export default {
@@ -219,7 +220,7 @@ export default {
             dtHeadersSchemaMasterlist: ["ID", "QuestionOP", "QuestionHD", "QuestionEX", "Question", "Answer Type", "Action"],
             dtOptionsSchemaMasterlist:{
                 language: {
-                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+                    processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
                 serverSide: true,

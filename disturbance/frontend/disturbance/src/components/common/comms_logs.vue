@@ -35,6 +35,9 @@
 <script>
 import AddCommLog from './add_comm_log.vue'
 import { v4 as uuidv4 } from 'uuid';
+import {
+    constants,
+}from '@/utils/hooks'
 export default {
     name: 'CommsLogSection',
     props: {
@@ -63,8 +66,9 @@ export default {
             popoversInitialised: false,
             actionsDtOptions:{
                 language: {
-                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+                    processing: constants.DATATABLE_PROCESSING_HTML,
                 },
+                
                 responsive: true,
                 deferRender: true, 
                 autowidth: true,
@@ -103,7 +107,7 @@ export default {
             },
             commsDtOptions:{
                 language: {
-                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+                    processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
                 deferRender: true, 

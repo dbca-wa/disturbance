@@ -25,6 +25,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import datatable from '@/utils/vue/datatable.vue'
 import modal from '@vue-utils/bootstrap-modal.vue'
+import { constants } from '@/utils/hooks';
 export default {
     name:'Requirement-Detail',
     components:{
@@ -62,7 +63,7 @@ export default {
             dtHeadersSchemaMetrics: ["Question"],
             dtOptionsSchemaMetrics:{
                 language: {
-                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+                    processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
                 serverSide: true,

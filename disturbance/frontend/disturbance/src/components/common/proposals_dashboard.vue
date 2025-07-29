@@ -153,7 +153,8 @@ require("select2/dist/css/select2.min.css");
 require("select2-bootstrap-theme/dist/select2-bootstrap.min.css");
 import {
     api_endpoints,
-    helpers
+    helpers,
+    constants,
 }from '@/utils/hooks'
 export default {
     name: 'ProposalTableDash',
@@ -181,7 +182,7 @@ export default {
             pBody: 'pBody' + uuidv4(),
             uuid: 0,
             datatable_id: 'proposal-datatable-'+uuidv4(),
-            //datatable_id: 'proposal-datatable-'+vm.uuid,
+            //datatable_id: 'proposal-datatable-'+uuidv4(),
             //Profile to check if user has access to process Proposal
             profile: {},
             //template_group: '',
@@ -586,7 +587,7 @@ export default {
                 destroy: true,
                 autoWidth: false,
                 language: {
-                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+                    processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
                 serverSide: true,

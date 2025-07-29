@@ -602,7 +602,8 @@ import modal from '@vue-utils/bootstrap-modal2.vue'
 import moment from 'moment'
 import {
   api_endpoints,
-  helpers
+  helpers,
+  constants
 }
 from '@/utils/hooks'
 
@@ -622,7 +623,7 @@ export default {
         vm.spatial_query_question_url = helpers.add_endpoint_join(api_endpoints.spatial_query_paginated, 'spatial_query_question_datatable_list/?format=datatables');
 
         return {
-            pBody: 'pBody'+uuidv4,
+            pBody: 'pBody'+uuidv4(),
             spatial_query_question_id: 'spatial-query-question-datatable-'+uuidv4(),
             spatial_query_layer_id: 'spatial-query-layer-datatable-'+uuidv4(),
             pSpatialQueryQuestionBody: 'pSpatialQueryQuestionBody' + uuidv4(),
@@ -667,7 +668,7 @@ export default {
             dtHeadersSpatialQueryQuestion: ["ID", "Question", "Answer Option", "Dept Custodian Group", "Layers", "Action"],
             dtOptionsSpatialQueryQuestion:{
                 language: {
-                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+                    processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
                 serverSide: true,
@@ -793,7 +794,7 @@ export default {
             dtHeadersSpatialQueryLayer: ["ID", "Question", "Layer Name", "Expiry", "Visible to proponent", "Buffer", "How", "Attribute name", "Operator", "Value", "Proponent items", "Assessor items", "Action"],
             dtOptionsSpatialQueryLayer:{
                 language: {
-                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+                    processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
                 //serverSide: true,
