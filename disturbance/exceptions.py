@@ -25,3 +25,31 @@ class ProposalMissingFields(APIException):
     status_code = 400
     default_detail = 'The proposal has missing required fields'
     default_code = 'proposal_missing_fields'
+
+def custom_exception_handler(exc, context):
+    """Custom django rest framework exception handler
+    That makes sure all the exception responses are in json format since many django
+    exceptions are in html format
+    """
+
+    # Django rest framework errors are already in json format
+    if isinstance(
+        exc, (serializers.ValidationError, Http404, NotAuthenticated, PermissionDenied)
+    ):
+        pass
+
+    # handle django validation errors
+    elif isinstance(exc, ValidationError):
+        if hasattr(exc, "error_dict"):
+            exc = serializers.ValidationError(repr(exc.error_dict))
+        elif hasattr(exc, "message"):
+            exc = serializers.ValidationError(exc.message)
+        else:
+            exc = serializers.ValidationError(str(exc))
+
+    else:
+        # Handle all other exceptions
+        logger.exception(str(exc))
+        exc = InternalServerError(str(exc))
+
+    return exception_handler(exc, context)
