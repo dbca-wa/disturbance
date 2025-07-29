@@ -303,17 +303,18 @@
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid';
 import $ from 'jquery'
 import { api_endpoints, helpers } from '@/utils/hooks'
 export default {
     name: 'UserProfile',
     data () {
-        let vm = this;
+        // let vm = this;
         return {
-            adBody: 'adBody'+vm._uid,
-            pBody: 'pBody'+vm._uid,
-            cBody: 'cBody'+vm._uid,
-            oBody: 'oBody'+vm._uid,
+            adBody: 'adBody'+uuidv4(),
+            pBody: 'pBody'+uuidv4(),
+            cBody: 'cBody'+uuidv4(),
+            oBody: 'oBody'+uuidv4(),
             profile: {
                 first_name: '',
                 last_name: '',

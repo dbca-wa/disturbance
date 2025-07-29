@@ -66,6 +66,7 @@
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid';
 // var select2 = require('select2');
 require("select2/dist/css/select2.min.css");
 require("select2-bootstrap-theme/dist/select2-bootstrap.min.css");
@@ -123,10 +124,10 @@ export default {
         //"comment_boxes":[String, Array],
     },
     data:function () {
-        let vm =this;
+        // let vm =this;
         return{
             selected: (this.isMultiple) ? [] : "",
-            selectid: "select"+vm._uid,
+            selectid: "select"+uuidv4(),
             multipleSelected: [],
             showingComment: false,
            

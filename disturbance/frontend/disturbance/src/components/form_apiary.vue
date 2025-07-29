@@ -175,7 +175,7 @@
             let vm = this;
             return{
                 values:null,
-                pBody: 'pBody'+vm._uid,
+                pBody: 'pBody'+uuidv4(),
                 component_site_selection_key: '',
                 expiry_date_local: '',
                 deed_poll_url: '',

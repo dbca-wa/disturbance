@@ -18,7 +18,7 @@
                                     <label for="">Region</label>
                                     <select style="width:100%" class="form-control input-sm" ref="filterRegion" >
                                         <template v-if="select2Applied">
-                                            <option v-for="r in proposal_regions" :value="r">{{r}}</option>
+                                            <option v-for="r in proposal_regions" :value="r" :key="r">{{r}}</option>
                                         </template>
                                     </select>
                                 </div>
@@ -28,7 +28,7 @@
                                     <label for="">Activity</label>
                                     <select class="form-control" v-model="filterProposalActivity">
                                         <option value="All">All</option>
-                                        <option v-for="a in proposal_activityTitles" :value="a">{{a}}</option>
+                                        <option v-for="a in proposal_activityTitles" :value="a" :key="a">{{a}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -38,7 +38,7 @@
                                 <label for="">Status</label>
                                 <select class="form-control" v-model="filterComplianceStatus">
                                     <option value="All">All</option>
-                                    <option v-for="s in status_values" :value="s">{{s}}</option>
+                                    <option v-for="s in status_values" :value="s" :key="s">{{s}}</option>
                                 </select>
                             </div>
                         </div>
@@ -96,6 +96,7 @@
     </div>
 </template>
 <script>
+import { v4 as uuidv4 } from 'uuid';
 import datatable from '@/utils/vue/datatable.vue'
 require("select2/dist/css/select2.min.css");
 require("select2-bootstrap-theme/dist/select2-bootstrap.min.css");
@@ -120,11 +121,11 @@ export default {
         }
     },
     data() {
-        let vm = this;
+        // let vm = this;
         return {
-            pBody: 'pBody' + vm._uid,
+            pBody: 'pBody' + uuidv4(),
             uuid: 0,
-            datatable_id: 'compliances-datatable-'+vm._uid,
+            datatable_id: 'compliances-datatable-'+uuidv4(),
             //Profile to check if user has access to process Proposal
             profile: {},
             dasTemplateGroup: false,
@@ -361,7 +362,7 @@ export default {
                     {
                         // 7. Due Date
                         data: "due_date",
-                        mRender:function (data,type,full) {
+                        mRender:function (data) {
                             return data != '' && data != null ? moment(data).format(vm.dateFormat): '';
                         },
                         defaultContent: '',
@@ -381,7 +382,7 @@ export default {
                     {
                         // 10. Approval/Licence
                         data: "approval_lodgement_number",
-                        mRender:function (data,type,full) {
+                        mRender:function (data) {
                             return `${data}`;
                         },
                         name: "approval__lodgement_number",

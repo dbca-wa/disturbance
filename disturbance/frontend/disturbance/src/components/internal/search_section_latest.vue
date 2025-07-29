@@ -195,6 +195,7 @@
     </div>
 </template>
 <script>
+import { v4 as uuidv4 } from 'uuid';
 import $ from 'jquery'
 import datatable from '@/utils/vue/datatable.vue'
 import {
@@ -210,9 +211,9 @@ export default {
   data() {
     let vm = this;
     return {
-      rBody: 'rBody' + vm._uid,
-      oBody: 'oBody' + vm._uid,
-      kBody: 'kBody' + vm._uid,
+      rBody: 'rBody' + uuidv4(),
+      oBody: 'oBody' + uuidv4(),
+      kBody: 'kBody' + uuidv4(),
       loading: [],
       searchKeywords: [],
       searchProposal: true,
@@ -228,8 +229,8 @@ export default {
       errors: false,
       errorString: '',
       form: null,
-      pBody: 'pBody' + vm._uid,
-      pBody2: 'pBody2' + vm._uid,
+      pBody: 'pBody' + uuidv4(),
+      pBody2: 'pBody2' + uuidv4(),
 
       selected_application_name: '',
       selected_proposal_type_id: null,
@@ -265,7 +266,7 @@ export default {
                 allowInputToggle:true
             },
       site_url: (api_endpoints.site_url.endsWith("/")) ? (api_endpoints.site_url): (api_endpoints.site_url + "/"),
-      datatable_id: 'proposal-datatable-'+vm._uid,
+      datatable_id: 'proposal-datatable-'+uuidv4(),
       proposal_headers:["Number","Type","Proponent","Text found","Action"],
       proposal_options:{
           language: {

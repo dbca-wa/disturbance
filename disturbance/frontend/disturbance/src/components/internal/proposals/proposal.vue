@@ -393,6 +393,7 @@
 <script>
 require("select2/dist/css/select2.min.css");
 require("select2-bootstrap-theme/dist/select2-bootstrap.min.css");
+import { v4 as uuidv4 } from 'uuid';
 import ProposalDisturbance from '../../form.vue'
 import ProposalApiary from '@/components/form_apiary.vue'
 import NewApply from '../../external/proposal_apply_new.vue'
@@ -411,10 +412,10 @@ export default {
     data: function() {
         let vm = this;
         return {
-            detailsBody: 'detailsBody'+vm._uid,
-            addressBody: 'addressBody'+vm._uid,
-            contactsBody: 'contactsBody'+vm._uid,
-            siteLocations: 'siteLocations'+vm._uid,
+            detailsBody: 'detailsBody'+uuidv4(),
+            addressBody: 'addressBody'+uuidv4(),
+            contactsBody: 'contactsBody'+uuidv4(),
+            siteLocations: 'siteLocations'+uuidv4(),
             defaultKey: "aho",
             "proposal": null,
             "original_proposal": null,
@@ -433,7 +434,7 @@ export default {
             hasAmendmentRequest: false,
             requirementsComplete:true,
             state_options: ['requirements','processing'],
-            contacts_table_id: vm._uid+'contacts-table',
+            contacts_table_id: uuidv4()+'contacts-table',
             is_local: helpers.is_local(),
             contacts_options:{
                 language: {

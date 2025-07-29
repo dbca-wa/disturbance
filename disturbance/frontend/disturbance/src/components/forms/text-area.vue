@@ -31,7 +31,7 @@
             </template>
             <!--<LayerInfo v-show="assessorMode" :layer_value="layer_val"  :assessorMode="assessorMode"/>-->
             <LayerInfo v-show="true" :layer_value="layer_val"  :assessorMode="true"/>
-            <textarea v-model="value" :readonly="readonly" class="form-control" rows="5" :name="name" :required="isRequired" :id="textarea_id"></textarea>
+            <textarea :value="value" :readonly="readonly" class="form-control" rows="5" :name="name" :required="isRequired" :id="textarea_id"></textarea>
         </div>
         <!-- <Comment :question="label" :readonly="assessor_readonly" :name="name+'-comment-field'" v-show="showingComment && assessorMode" :value="comment_value"/>  -->
         <CommentBox :comment_boxes="JSON.parse(comment_boxes)" v-show="showingComment && assessorMode"/> 

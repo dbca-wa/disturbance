@@ -226,6 +226,7 @@
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid';
 import datatable from '@/utils/vue/datatable.vue'
 import modal from '@vue-utils/bootstrap-modal.vue'
 import SchemaOption from './schema_add_option.vue'
@@ -253,9 +254,9 @@ export default {
         vm.schema_question_url = helpers.add_endpoint_join(api_endpoints.schema_question_paginated, 'schema_question_datatable_list/?format=datatables');
 
         return {
-            schema_question_id: 'schema-question-datatable-'+vm._uid,
-            pOptionsBody: 'pOptionsBody' + vm._uid,
-            pQuestionBody: 'pQuestionBody' + vm._uid,
+            schema_question_id: 'schema-question-datatable-'+uuidv4(),
+            pOptionsBody: 'pOptionsBody' + uuidv4(),
+            pQuestionBody: 'pQuestionBody' + uuidv4(),
             isModalOpen: false,
             isNewEntry: false,
             missing_fields: [],

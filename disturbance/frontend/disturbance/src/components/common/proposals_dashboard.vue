@@ -24,13 +24,15 @@
                         <div v-if="!apiaryTemplateGroup">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <template v-show="select2Applied">
-                                        <label for="">Region</label>
-                                        <select style="width:100%" class="form-control input-sm" ref="filterRegion" >
-                                            <template v-if="select2Applied">
-                                                <option v-for="r in proposal_regions" :value="r">{{r}}</option>
-                                            </template>
-                                        </select>
+                                    <template>
+                                        <div v-show="select2Applied">
+                                            <label for="">Region</label>
+                                            <select style="width:100%" class="form-control input-sm" ref="filterRegion" >
+                                                <template v-if="select2Applied">
+                                                    <option v-for="r in proposal_regions" :value="r" :key="r">{{r}}</option>
+                                                </template>
+                                            </select>
+                                    </div>
                                     </template>
                                 </div>
                             </div>
@@ -38,13 +40,15 @@
                         <div v-if="!apiaryTemplateGroup">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <template v-show="select2bApplied">
-                                        <label for="">District</label>
-                                        <select style="width:100%" class="form-control input-sm" ref="filterDistrict" >
-                                            <template v-if="select2bApplied">
-                                                <option v-for="r in proposal_districts" :value="r">{{r}}</option>
-                                            </template>
-                                        </select>
+                                    <template>
+                                        <div v-show="select2bApplied">
+                                            <label for="">District</label>
+                                            <select style="width:100%" class="form-control input-sm" ref="filterDistrict" >
+                                                <template v-if="select2bApplied">
+                                                    <option v-for="r in proposal_districts" :value="r" :key="r">{{r}}</option>
+                                                </template>
+                                            </select>
+                                        </div>
                                     </template>
                                 </div>
                             </div>
@@ -55,7 +59,7 @@
                                 <label for="">{{ activityFilterLabel }}</label>
                                 <select class="form-control" v-model="filterProposalActivity">
                                     <option value="All">All</option>
-                                    <option v-for="a in proposal_activityTitles" :value="a">{{a}}</option>
+                                    <option v-for="a in proposal_activityTitles" :value="a" :key="a">{{a}}</option>
                                 </select>
                             </div>
                         </div>
@@ -64,7 +68,7 @@
                                 <label for="">Status</label>
                                 <select class="form-control" v-model="filterProposalStatus">
                                     <option value="All">All</option>
-                                    <option v-for="s in proposal_status" :value="s.value">{{s.name}}</option>
+                                    <option v-for="s in proposal_status" :value="s.value" :key="s.value">{{s.name}}</option>
                                 </select>
                             </div>
                         </div>
@@ -75,7 +79,7 @@
                                 <label for="">Proponent</label>
                                 <select class="form-control" v-model="filterProposalApplicant">
                                         <option value="All">All</option>
-                                        <option v-for="s in proposal_applicants" :value="s.id">{{s.search_term}}</option>
+                                        <option v-for="s in proposal_applicants" :value="s.id" :key="s.id">{{s.search_term}}</option>
                                 </select>
                              </div>
                         </div>
@@ -105,7 +109,7 @@
                                 <label for="">Submitter</label>
                                 <select class="form-control" v-model="filterProposalSubmitter">
                                     <option value="All">All</option>
-                                    <option v-for="s in proposal_submitters" :value="s.email">{{s.search_term}}</option>
+                                    <option v-for="s in proposal_submitters" :value="s.email" :key="s.email">{{s.search_term}}</option>
                                 </select>
                             </div>
                         </div>
@@ -116,7 +120,7 @@
                                 <label for="">Proposal Type</label>
                                 <select class="form-control" v-model="filterProposalApplicationType">
                                     <option value="All">All</option>
-                                    <option v-for="a in proposal_applicationTypes" :value="a">{{a}}</option>
+                                    <option v-for="a in proposal_applicationTypes" :value="a" :key="a">{{a}}</option>
                                 </select>
                             </div>
                         </div>
@@ -143,6 +147,7 @@
     </div>
 </template>
 <script>
+import { v4 as uuidv4 } from 'uuid';
 import datatable from '@/utils/vue/datatable.vue'
 require("select2/dist/css/select2.min.css");
 require("select2-bootstrap-theme/dist/select2-bootstrap.min.css");
@@ -167,15 +172,15 @@ export default {
         },
     },
     data() {
-        let vm = this;
+        // let vm = this;
 
         return {
             assigned_officer_column_name: "assigned_officer__first_name, assigned_officer__last_name, assigned_officer__email",
             submitter_column_name: "submitter__email, submitter__first_name, submitter__last_name",
             proponent_applicant_column_name: 'applicant__organisation__name, proxy_applicant__first_name, proxy_applicant__last_name, proxy_applicant__email',
-            pBody: 'pBody' + vm._uid,
+            pBody: 'pBody' + uuidv4(),
             uuid: 0,
-            datatable_id: 'proposal-datatable-'+vm._uid,
+            datatable_id: 'proposal-datatable-'+uuidv4(),
             //datatable_id: 'proposal-datatable-'+vm.uuid,
             //Profile to check if user has access to process Proposal
             profile: {},
@@ -716,7 +721,7 @@ export default {
                 confirmButtonColor:'#d9534f'
             }).then(() => {
                 vm.$http.delete(api_endpoints.discard_proposal(proposal_id))
-                .then((response) => {
+                .then(() => {
                     swal(
                         'Discarded',
                         'Your proposal has been discarded',
@@ -727,7 +732,7 @@ export default {
                     console.log(error);
                 });
             },(error) => {
-
+                console.log(error);
             });
         },
         addEventListeners: function(){
@@ -947,7 +952,6 @@ export default {
         console.log('in mounted')
         this.fetchFilterLists();
         this.fetchProfile();
-        let vm = this;
         $( 'a[data-toggle="collapse"]' ).on( 'click', function () {
             var chev = $( this ).children()[ 0 ];
             window.setTimeout( function () {

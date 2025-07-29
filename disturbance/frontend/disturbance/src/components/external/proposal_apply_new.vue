@@ -25,7 +25,7 @@
                                     <div class="form-group">
                                         <select v-model="proposal.region" class="form-control" style="width:40%" @change="chainedSelectDistricts(proposal.region)" :disabled="proposal.readonly">
 											<option value="" selected disabled>Select region</option>
-                                            <option v-for="region in regions" :value="region.value">
+                                            <option v-for="region in regions" :value="region.value" :key="region.value">
                                                 {{ region.text }}
                                             </option>
                                         </select>
@@ -44,7 +44,7 @@
                                     <div class="form-group">
                                         <select  v-model="proposal.district" class="form-control" style="width:40%" :disabled="proposal.readonly">
 											<option value="" selected disabled>Select district</option>
-                                            <option v-for="district in districts" :value="district.value">
+                                            <option v-for="district in districts" :value="district.value" :key="district.value">
                                                 {{ district.text }}
                                             </option>
                                         </select>
@@ -64,7 +64,7 @@
 										<div class="form-group">
 											<select v-model="proposal.activity" @change="chainedSelectSubActivities1(proposal.activity)" class="form-control" style="width:40%" :disabled="proposal.readonly">
 												<option value="" selected disabled>Select activity</option>
-												<option v-for="activity in activities" :value="activity.value">
+												<option v-for="activity in activities" :value="activity.value" :key="activity.value">
 													{{ activity.text }}
 												</option>
 											</select>
@@ -83,7 +83,7 @@
 										<div class="form-group">
 											<select v-model="proposal.sub_activity_level1" @change="chainedSelectSubActivities2(proposal.sub_activity_level1)" class="form-control" style="width:40%" :disabled="proposal.readonly">
 												<option value="" selected disabled>Select sub_activity 1</option>
-												<option v-for="sub_activity1 in sub_activities1" :value="sub_activity1.value">
+												<option v-for="sub_activity1 in sub_activities1" :value="sub_activity1.value" :key="sub_activity1.value">
 													{{ sub_activity1.text }}
 												</option>
 											</select>
@@ -102,7 +102,7 @@
 										<div class="form-group">
 											<select v-model="proposal.sub_activity_level2" @change="chainedSelectCategories(proposal.sub_activity_level2)" class="form-control" style="width:40%" :disabled="proposal.readonly">
 												<option value="" selected disabled>Select sub_activity 2</option>
-												<option v-for="sub_activity2 in sub_activities2" :value="sub_activity2.value">
+												<option v-for="sub_activity2 in sub_activities2" :value="sub_activity2.value" :key="sub_activity2.value">
 													{{ sub_activity2.text }}
 												</option>
 											</select>
@@ -121,7 +121,7 @@
 										<div class="form-group">
 											<select v-model="proposal.management_area" @change="get_approval_level(proposal.management_area)" class="form-control" style="width:40%" :disabled="proposal.readonly">
 												<option value="" selected disabled>Select category</option>
-												<option v-for="category in categories" :value="category.value" :name="category.approval">
+												<option v-for="category in categories" :value="category.value" :key="category.value" :name="category.approval">
 													{{ category.text }}
 												</option>
 											</select>
@@ -148,7 +148,8 @@ import {
   helpers
 }
 from '@/utils/hooks'
-import utils from './utils'
+import utils from './utils';
+import { v4 as uuidv4 } from 'uuid';
 export default {
     name:'new-apply',
     props:{
@@ -158,7 +159,7 @@ export default {
             },
     },
   data: function() {
-    let vm = this;
+    // let vm = this;
     return {
         //"proposal": null,
         agent: {},
@@ -168,8 +169,8 @@ export default {
         },
         "loading": [],
         form: null,
-        pBody: 'pBody' + vm._uid,
-        pBody2: 'pBody2' + vm._uid,
+        pBody: 'pBody' + uuidv4(),
+        pBody2: 'pBody2' + uuidv4(),
 
         selected_application_id: '',
         selected_application_name: '',
@@ -314,6 +315,7 @@ export default {
         }).then(() => {
          	vm.createProposal();
         },(error) => {
+            console.log(error);
         });
     },
     alertText: function() {
@@ -516,7 +518,7 @@ export default {
        
 	},
     chainedSelectSubActivities1: function(activity_name, set_data=false){
-		let vm = this;
+		// let vm = this;
         
         this.sub_activities1 = [];
         this.sub_activities2 = [];
@@ -559,15 +561,15 @@ export default {
 
                 } else {
                     // go to sub_activity2 widget
-                    for (var i = 0; i < api_sub_activities.length; i++) {
-                        var key = Object.keys(api_activities[i])[0];
-                        this.sub_activities1.push( {text: key, value: key, sub_matrix: api_activities[i][key]} );
+                    for (var j = 0; j < api_sub_activities.length; j++) {
+                        var key = Object.keys(api_activities[j])[0];
+                        this.sub_activities1.push( {text: key, value: key, sub_matrix: api_activities[j][key]} );
                     }
                 }
             } else {
-                for (var i = 0; i < api_activities.length; i++) {
-                    var key = Object.keys(api_activities[i])[0];
-                    this.sub_activities1.push( {text: key, value: key, sub_matrix: api_activities[i][key]} );
+                for (var k = 0; k < api_activities.length; k++) {
+                    var act_key = Object.keys(api_activities[k])[0];
+                    this.sub_activities1.push( {text: act_key, value: act_key, sub_matrix: api_activities[k][act_key]} );
                 }
             }
         }
@@ -599,9 +601,9 @@ export default {
                     this.categories.push( {text: api_activities[i][0], value: api_activities[i][0], approval: api_activities[i][1]} );
                 }
             } else {
-                for (var i = 0; i < vm.sub_activities1.length; i++) {
-                    if (activity_name == vm.sub_activities1[i]['text']) {
-                        var api_activities2 = vm.sub_activities1[i]['sub_matrix'];
+                for (var m = 0; m < vm.sub_activities1.length; m++) {
+                    if (activity_name == vm.sub_activities1[m]['text']) {
+                        var api_activities2 = vm.sub_activities1[m]['sub_matrix'];
                         for (var j = 0; j < api_activities2.length; j++) {
                             var key = Object.keys(api_activities2[j])[0];
                             this.sub_activities2.push( {text: key, value: key, sub_matrix: api_activities2[j][key]} );
@@ -639,10 +641,11 @@ export default {
                     return [sub_activities[activity_name], "pass"];
 
                 } else if ('null' in sub_activities[activity_name][0]) {
+                    var approval_level;
                     if (sub_activities[activity_name]['sub_matrix'] == null) {
-                        var approval_level = sub_activities[activity_name][0]['null'][0][0];
+                        approval_level = sub_activities[activity_name][0]['null'][0][0];
                     } else {
-                        var approval_level = sub_activities[activity_name]['sub_matrix'][0]['null'][0];
+                        approval_level = sub_activities[activity_name]['sub_matrix'][0]['null'][0];
                     }
                     return [approval_level, "null"];
                     //return [sub_activities[activity_name], "null"];
@@ -656,8 +659,8 @@ export default {
             if (activity_name == sub_activities[i]['text']) {
                 var key_sub_matrix = Object.keys(sub_activities[i]['sub_matrix'][0])[0];
                 if (key_sub_matrix == "null") {
-                    var approval_level = sub_activities[i]['sub_matrix'][0]['null'][0];
-                    return [approval_level, null]
+                    var sub_approval_level = sub_activities[i]['sub_matrix'][0]['null'][0];
+                    return [sub_approval_level, null]
                 } else if (key_sub_matrix == "pass") {
                     return [sub_activities[i]['sub_matrix'][0]['pass'], "pass"]
                 } else {
@@ -700,7 +703,7 @@ export default {
             //vm.selected_sub_activity2=vm.proposal.data[0]["regionActivitySection"][0]["Sub-activity level 2"]
             vm.selected_sub_activity2=vm.proposal.sub_activity_level2;
             if(vm.selected_sub_activity2!=""){
-                chainedSelectCategories(vm.selected_sub_activity2);
+                vm.chainedSelectCategories(vm.selected_sub_activity2);
             }
             //vm.selected_category= vm.proposal.data[0]["regionActivitySection"][0]["Management area"]
             vm.selected_category= vm.proposal.management_area;

@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid';
 import datatable from '@/utils/vue/datatable.vue'
 import modal from '@vue-utils/bootstrap-modal.vue'
 export default {
@@ -43,9 +44,9 @@ export default {
     data:function () {
         let vm = this;
         return {
-            spatial_query_metrics_details_id: 'spatial_query_metrics_details-datatable-'+vm._uid,
-            pOptionsBody: 'pOptionsBody' + vm._uid,
-            pQuestionBody: 'pQuestionBody' + vm._uid,
+            spatial_query_metrics_details_id: 'spatial_query_metrics_details-datatable-'+uuidv4(),
+            pOptionsBody: 'pOptionsBody' + uuidv4(),
+            pQuestionBody: 'pQuestionBody' + uuidv4(),
             isModalOpen: false,
             spatial_query_metrics: [],
             //dtHeadersSchemaMetrics: [],

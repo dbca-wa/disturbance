@@ -25,14 +25,14 @@
                         </svg>
                     </div-->
                     <div style="position:relative">
-                        <transition v-if="optionalLayers.length">
-                            <div class="optional-layers-button" @mouseover="hover=true">
+                        <transition>
+                            <div v-if="optionalLayers.length" class="optional-layers-button" @mouseover="hover=true">
                                 <img src="../../../assets/layers.svg" />
                             </div>
                         </transition>
                         <transition v-if="optionalLayers.length">
-                            <div div class="layer_options" v-show="hover" @mouseleave="hover=false" >
-                                <div v-for="layer in optionalLayers">
+                            <div class="layer_options" v-show="hover" @mouseleave="hover=false" >
+                                <div v-for="layer in optionalLayers" :key="layer.ol_uid">
                                     <input
                                         type="checkbox"
                                         :id="layer.ol_uid"
@@ -114,7 +114,9 @@
             },
             shapefile_json: {
                 type: Object,
-                default: {}
+                default: function(){
+                    return {}
+                }
             }
         },
         watch: {
@@ -123,7 +125,7 @@
             }
         },
         data: function(){
-            let vm = this
+            // let vm = this
             return{
                 map: null,
                 apiarySitesQuerySource: null,
@@ -191,7 +193,7 @@
 
                 return styles
             },
-            styleFunctionForMeasurement: function (feature, resolution){
+            styleFunctionForMeasurement: function (feature, ){
                 let vm = this
                 let for_layer = feature.get('for_layer', false)
 
@@ -433,7 +435,7 @@
                 vm.apiarySitesQuerySource = new VectorSource({ });
                 vm.apiarySitesQueryLayer = new VectorLayer({
                     source: vm.apiarySitesQuerySource,
-                    style: function(feature, resolution){
+                    style: function(feature){
                         let status = getStatusForColour(feature, false, vm.display_at_time_of_submitted)
                         return getApiaryFeatureStyle(status, feature.get('checked'))
                     },
@@ -455,13 +457,13 @@
                 })
                 // Set a custom listener to the Measure tool
                 vm.drawForMeasure.set('escKey', '')
-                vm.drawForMeasure.on('change:escKey', function(evt){
+                vm.drawForMeasure.on('change:escKey', function(){
                     //vm.drawForMeasure.finishDrawing()
                 })
-                vm.drawForMeasure.on('drawstart', function(evt){
+                vm.drawForMeasure.on('drawstart', function(){
                     vm.measuring = true
                 })
-                vm.drawForMeasure.on('drawend', function(evt){
+                vm.drawForMeasure.on('drawend', function(){
                     vm.measuring = false
                 })
 
@@ -512,7 +514,7 @@
 
                 vm.map.on('singleclick', function(evt){
                     if (vm.mode === 'layer'){
-                        let feature = vm.map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
+                        let feature = vm.map.forEachFeatureAtPixel(evt.pixel, function(feature) {
                             return feature;
                         });
                         if (feature){
@@ -578,9 +580,9 @@
                     let hit = vm.map.hasFeatureAtPixel(pixel);
                     vm.map.getTargetElement().style.cursor = hit ? 'pointer' : '';
                 });
-                vm.map.on('moveend', function(e){
-                    let extent = vm.map.getView().calculateExtent(vm.map.getSize());
-                    let features = vm.apiarySitesQuerySource.getFeaturesInExtent(extent)
+                vm.map.on('moveend', function(){
+                    // let extent = vm.map.getView().calculateExtent(vm.map.getSize());
+                    // let features = vm.apiarySitesQuerySource.getFeaturesInExtent(extent)
                     // vm.$emit('featuresDisplayed', features)
                 });
                 if (vm.can_modify){
@@ -588,7 +590,7 @@
                         source: vm.apiarySitesQuerySource,
                     });
                     modifyTool.on("modifystart", function(attributes){
-                            attributes.features.forEach(function(feature){
+                            attributes.features.forEach(function(){
                         })
                     });
                     modifyTool.on("modifyend", function(attributes){
@@ -598,7 +600,7 @@
                             if (index != -1) {
                                 // feature has been modified
                                 vm.modifyInProgressList.splice(index, 1);
-                                let coords = feature.getGeometry().getCoordinates();
+                                // let coords = feature.getGeometry().getCoordinates();
                                 // vm.$emit('featureGeometryUpdated', {'id': id, 'coordinates': {'lng': coords[0], 'lat': coords[1]}})
                             }
                         });
@@ -715,14 +717,14 @@
                 let feature = this.apiarySitesQuerySource.getFeatureById(apiary_site_id)
                 this.apiarySitesQuerySource.removeFeature(feature)
             },
-            zoomToApiarySiteById: function(apiary_site_id){
+            // zoomToApiarySiteById: function(apiary_site_id){
                 // let feature = this.apiarySitesQuerySource.getFeatureById(apiary_site_id)
                 // let geometry = feature.getGeometry()
                 // let coord = geometry.getCoordinates()
                 // let view = this.map.getView()
                 // this.map.getView().animate({zoom: 16, center: feature['values_']['geometry']['flatCoordinates']})
                 // this.showPopup(feature)
-            },
+            // },
             setApiarySiteSelectedStatus: function(apiary_site_id, selected) {
                 let feature = this.apiarySitesQuerySource.getFeatureById(apiary_site_id)
                 let style_applied = getApiaryFeatureStyle(getStatusForColour(feature, false, this.display_at_time_of_submitted), selected)
@@ -761,7 +763,6 @@
                 }
             },
             addShapeToMap: function(apiary_sites_geojson){
-                let vm = this
                 let features = (new GeoJSON()).readFeatures(apiary_sites_geojson)
                 this.shapeVectorSource.addFeatures(features)
             },

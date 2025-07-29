@@ -18,7 +18,7 @@
                 </form>
 
             </div>
-            <div slot="footer" />
+            <template #footer />
         </modal>
 
     </div>
@@ -26,7 +26,7 @@
 <script>
 import modal from "@vue-utils/bootstrap-modal.vue";
 import datatable from "@vue-utils/datatable.vue";
-import alert from '@vue-utils/alert.vue';
+// import alert from '@vue-utils/alert.vue';
 import {
     api_endpoints,
     helpers
@@ -39,7 +39,6 @@ export default {
     components:{
         modal,
         datatable,
-        alert,
     },
     data() {
         let vm = this;
@@ -86,7 +85,7 @@ export default {
                     { data:"history_date" },
                     {
                         data:"history_document_url",
-                        mRender:function(data,type,full){
+                        mRender:function(data){
                             return `<a href="${data}" target="_blank"><i style="color:red" class="fa fa-file-pdf-o"></i></a>`;
                         },
                         orderable: false

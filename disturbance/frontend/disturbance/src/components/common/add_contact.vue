@@ -76,7 +76,7 @@ export default {
             },
     },
     data:function () {
-        let vm = this;
+        // let vm = this;
         return {
             isModalOpen:false,
             form:null,
@@ -132,7 +132,7 @@ export default {
                 //vm.$http.put(api_endpoints.organisation_contacts(contact.id),JSON.stringify(contact),{
                 vm.$http.put(helpers.add_endpoint_json(api_endpoints.organisation_contacts,contact.id),JSON.stringify(contact),{
                         emulateJSON:true,
-                    }).then((response)=>{
+                    }).then(()=>{
                         //vm.$parent.loading.splice('processing contact',1);
                         vm.$parent.refreshDatatable();
                         vm.close();
@@ -148,7 +148,7 @@ export default {
                 contact.user_status = 'contact_form';
                 vm.$http.post(api_endpoints.organisation_contacts,JSON.stringify(contact),{
                         emulateJSON:true,
-                    }).then((response)=>{
+                    }).then(()=>{
                         //vm.$parent.loading.splice('processing contact',1);
                         vm.close();
                         vm.$parent.addedContact();
@@ -170,7 +170,7 @@ export default {
                     campground:"required",
                     campsite:{
                         required: {
-                            depends: function(el){
+                            depends: function(){
                                 return vm.campsites.length > 0;
                             }
                         }
@@ -203,7 +203,6 @@ export default {
             });
        },
        eventListerners:function () {
-           let vm = this;
        }
    },
    mounted:function () {

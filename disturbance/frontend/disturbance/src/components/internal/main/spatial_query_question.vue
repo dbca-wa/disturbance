@@ -596,6 +596,7 @@
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid';
 import datatable from '@/utils/vue/datatable.vue'
 import modal from '@vue-utils/bootstrap-modal2.vue'
 import moment from 'moment'
@@ -621,13 +622,13 @@ export default {
         vm.spatial_query_question_url = helpers.add_endpoint_join(api_endpoints.spatial_query_paginated, 'spatial_query_question_datatable_list/?format=datatables');
 
         return {
-            pBody: 'pBody'+vm._uid,
-            spatial_query_question_id: 'spatial-query-question-datatable-'+vm._uid,
-            spatial_query_layer_id: 'spatial-query-layer-datatable-'+vm._uid,
-            pSpatialQueryQuestionBody: 'pSpatialQueryQuestionBody' + vm._uid,
-            pOptionBody: 'pOptionBody' + vm._uid,
-            pHeaderBody: 'pHeaderBody' + vm._uid,
-            pExpanderBody: 'pOptionBody' + vm._uid,
+            pBody: 'pBody'+uuidv4,
+            spatial_query_question_id: 'spatial-query-question-datatable-'+uuidv4(),
+            spatial_query_layer_id: 'spatial-query-layer-datatable-'+uuidv4(),
+            pSpatialQueryQuestionBody: 'pSpatialQueryQuestionBody' + uuidv4(),
+            pOptionBody: 'pOptionBody' + uuidv4(),
+            pHeaderBody: 'pHeaderBody' + uuidv4(),
+            pExpanderBody: 'pOptionBody' + uuidv4(),
             show_spinner: false,
             export_layers_btn_disabled: false,
             filterOptions: '',

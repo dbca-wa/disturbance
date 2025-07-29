@@ -133,6 +133,7 @@
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid';
 import datatable from '@/utils/vue/datatable.vue'
 import modal from '@vue-utils/bootstrap-modal.vue'
 import SchemaOption from './schema_add_option.vue'
@@ -168,11 +169,11 @@ export default {
         //     ]
         
         return {
-            schema_masterlist_id: 'schema-materlist-datatable-'+vm._uid,
-            pMasterListBody: 'pMasterListBody' + vm._uid,
-            pOptionBody: 'pOptionBody' + vm._uid,
-            pHeaderBody: 'pHeaderBody' + vm._uid,
-            pExpanderBody: 'pOptionBody' + vm._uid,
+            schema_masterlist_id: 'schema-materlist-datatable-'+uuidv4(),
+            pMasterListBody: 'pMasterListBody' + uuidv4(),
+            pOptionBody: 'pOptionBody' + uuidv4(),
+            pHeaderBody: 'pHeaderBody' + uuidv4(),
+            pExpanderBody: 'pOptionBody' + uuidv4(),
             filterOptions: '',
             isModalOpen:false,
             missing_fields: [],

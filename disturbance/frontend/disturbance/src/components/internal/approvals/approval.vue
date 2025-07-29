@@ -176,6 +176,7 @@
 </template>
 <script>
 // import datatable from '@vue-utils/datatable.vue'
+import { v4 as uuidv4 } from 'uuid';
 import CommsLogs from '@common-utils/comms_logs.vue'
 import {
   api_endpoints,
@@ -193,10 +194,10 @@ export default {
             
         },
         DATE_TIME_FORMAT: 'DD/MM/YYYY HH:mm:ss',
-        adBody: 'adBody'+vm._uid,
-        pBody: 'pBody'+vm._uid,
-        cBody: 'cBody'+vm._uid,
-        oBody: 'oBody'+vm._uid,
+        adBody: 'adBody'+uuidv4(),
+        pBody: 'pBody'+uuidv4(),
+        cBody: 'cBody'+uuidv4(),
+        oBody: 'oBody'+uuidv4(),
         org: {
             address: {}
         },

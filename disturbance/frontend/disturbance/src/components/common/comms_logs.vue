@@ -34,6 +34,7 @@
 </template>
 <script>
 import AddCommLog from './add_comm_log.vue'
+import { v4 as uuidv4 } from 'uuid';
 export default {
     name: 'CommsLogSection',
     props: {
@@ -77,7 +78,6 @@ export default {
                     "url": vm.logs_url, 
                     "dataSrc": '',
                 },
-                order: [],
                 columns:[
                     {
                         data:"who",
@@ -90,7 +90,7 @@ export default {
                     {
                         data:"when",
                         orderable: false,
-                        mRender:function(data,type,full){
+                        mRender:function(data){
                             return moment(data).format(vm.dateFormat);
                         }
                     },
@@ -312,9 +312,9 @@ export default {
     },
     methods:{
         initialiseCommLogs: function(vm_uid,ref,datatable_options,table){
-            let vm = this;
+            // let vm = this;
             let commsLogId = 'comms-log-table'+vm_uid;
-            let popover_name = 'popover-'+ vm._uid+'-comms';
+            let popover_name = 'popover-'+ uuidv4()+'-comms';
             $(ref).popover({
                 content: function() {
                     return ` 
@@ -355,10 +355,10 @@ export default {
             });
 
         },
-        initialiseActionLogs: function(vm_uid,ref,datatable_options,table){
-            let vm = this;
+        initialiseActionLogs: function(vm_uid,ref){
+            // let vm = this;
             let actionLogId = 'actions-log-table'+vm_uid;
-            let popover_name = 'popover-'+ vm._uid+'-logs';
+            let popover_name = 'popover-'+ uuidv4()+'-logs';
             $(ref).popover({
                 content: function() {
                     return ` 
@@ -382,7 +382,7 @@ export default {
                 trigger: "click",
                 template: `<div class="popover ${popover_name}" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>`,
             }).on('inserted.bs.popover', function () {
-                table = $('#'+actionLogId).DataTable(datatable_options);
+                // table = $('#'+actionLogId).DataTable(datatable_options);
             }).on('shown.bs.popover', function () {
                 var el = ref;
                 
@@ -398,8 +398,8 @@ export default {
         },
         initialisePopovers: function(){
             if (!this.popoversInitialised){
-                this.initialiseActionLogs(this._uid,this.$refs.showActionBtn,this.actionsDtOptions,this.actionsTable);
-                this.initialiseCommLogs('-internal-proposal-'+this._uid,this.$refs.showCommsBtn,this.commsDtOptions,this.commsTable);
+                this.initialiseActionLogs(uuidv4(),this.$refs.showActionBtn,this.actionsDtOptions,this.actionsTable);
+                this.initialiseCommLogs('-internal-proposal-'+uuidv4(),this.$refs.showCommsBtn,this.commsDtOptions,this.commsTable);
                 this.popoversInitialised = true;
             }
         },

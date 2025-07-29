@@ -229,6 +229,7 @@
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid';
 import { api_endpoints, helpers } from '@/utils/hooks'
 import datatable from '@vue-utils/datatable.vue'
 import AddContact from '@common-utils/add_contact.vue'
@@ -242,15 +243,15 @@ export default {
     data () {
         let vm = this;
         return {
-            adBody: 'adBody'+vm._uid,
-            aBody: 'aBody'+vm._uid,
-            pdBody: 'pdBody'+vm._uid,
-            pBody: 'pBody'+vm._uid,
-            cdBody: 'cdBody'+vm._uid,
-            cBody: 'cBody'+vm._uid,
-            oBody: 'oBody'+vm._uid,
-            dTab: 'dTab'+vm._uid,
-            oTab: 'oTab'+vm._uid,
+            adBody: 'adBody'+uuidv4(),
+            aBody: 'aBody'+uuidv4(),
+            pdBody: 'pdBody'+uuidv4(),
+            pBody: 'pBody'+uuidv4(),
+            cdBody: 'cdBody'+uuidv4(),
+            cBody: 'cBody'+uuidv4(),
+            oBody: 'oBody'+uuidv4(),
+            dTab: 'dTab'+uuidv4(),
+            oTab: 'oTab'+uuidv4(),
             org: {
                 address: {}
             },

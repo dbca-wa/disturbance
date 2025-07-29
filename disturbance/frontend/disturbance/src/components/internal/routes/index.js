@@ -1,3 +1,4 @@
+import { RouterView } from 'vue-router';
 import InternalDashboard from '../dashboard.vue'
 import Search from '../search.vue'
 import OrgAccessTable from '../organisations/dashboard.vue'
@@ -15,16 +16,10 @@ import SchemaManager from '../main/schema_manager.vue'
 export default
 {
     path: '/internal',
-    component:
-    {
-        render(c)
-        {
-            return c('router-view')
-        }
-    },
+    component: RouterView,
     children: [
         {
-            path: '/',
+            path: '',
             component: InternalDashboard,
             name:"internal-dashboard",
         },
@@ -59,12 +54,7 @@ export default
         },
         {
             path: 'organisations',
-            component: {
-                render(c)
-                {
-                    return c('router-view')
-                }
-            },
+            component: RouterView,
             children: [
                 {
                     path: 'access',
@@ -86,24 +76,14 @@ export default
         },
         {
             path: 'proposal',
-            component: {
-                render(c)
-                {
-                    return c('router-view')
-                }
-            },
+            component: RouterView,
             children: [
                 {
                     path: ':proposal_id',
-                    component: {
-                        render(c)
-                        {
-                            return c('router-view')
-                        }
-                    },
+                    component: RouterView,
                     children: [
                         {
-                            path: '/',
+                            path: '',
                             component: Proposal,
                             name:"internal-proposal"
                         },

@@ -97,6 +97,7 @@
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid';
 import datatable from '@/utils/vue/datatable.vue'
 import modal from '@vue-utils/bootstrap-modal.vue'
 import {
@@ -121,8 +122,8 @@ export default {
         let vm = this;
         vm.schema_purpose_url = helpers.add_endpoint_join(api_endpoints.schema_proposal_type_paginated, 'schema_proposal_type_datatable_list/?format=datatables');
         return {
-            schema_purpose_id: 'schema-purpose-datatable-'+vm._uid,
-            pProposalTypeBody: 'pProposalTypeBody' + vm._uid,
+            schema_purpose_id: 'schema-purpose-datatable-'+uuidv4(),
+            pProposalTypeBody: 'pProposalTypeBody' + uuidv4(),
             isModalOpen:false,
             missing_fields: [],
             filterTableProposalType: 'All',

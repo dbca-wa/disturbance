@@ -37,7 +37,7 @@ from '@/utils/hooks'
 export default {
     name: 'ExternalDashboard',
     data() {
-        let vm = this;
+        // let vm = this;
         return {
             empty_list: '/api/empty_list',
             //proposals_url: helpers.add_endpoint_json(api_endpoints.proposals,'user_list'),

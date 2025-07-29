@@ -209,10 +209,10 @@
             },
         },
         data:function () {
-            let vm=this;
+            // let vm=this;
             return{
                 values:null,
-                pBody: 'pBody'+vm._uid,
+                pBody: 'pBody'+uuidv4(),
                 checklist_answers : [],
                 transfereeEmail: '',
                 //apiaryApprovals: {},

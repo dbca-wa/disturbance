@@ -17,7 +17,7 @@
                                     <label for="">Region</label>
                                     <select class="form-control" v-model="filterProposalRegion">
                                         <option value="All">All</option>
-                                        <option v-for="r in proposal_regions" :value="r">{{r}}</option>
+                                        <option v-for="r in proposal_regions" :value="r" :key="r">{{r}}</option>
                                     </select>
                                     <!--
                                     <select style="width:100%" class="form-control input-sm" multiple ref="filterRegion" >
@@ -31,7 +31,7 @@
                                     <label for="">Activity</label>
                                     <select class="form-control" v-model="filterProposalActivity">
                                         <option value="All">All</option>
-                                        <option v-for="a in proposal_activityTitles" :value="a">{{a}}</option>
+                                        <option v-for="a in proposal_activityTitles" :value="a" :key="a">{{a}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -60,7 +60,7 @@
                                 <label for="">Status</label>
                                 <select class="form-control" v-model="filterProposalStatus">
                                     <option value="All">All</option>
-                                    <option v-for="s in approval_status" :value="s">{{s}}</option>
+                                    <option v-for="s in approval_status" :value="s" :key="s">{{s}}</option>
                                 </select>
                             </div>
                         </div>
@@ -123,6 +123,7 @@
     </div>
 </template>
 <script>
+import { v4 as uuidv4 } from 'uuid';
 import datatable from '@/utils/vue/datatable.vue'
 import ApprovalCancellation from '../internal/approvals/approval_cancellation.vue'
 import ApprovalSuspension from '../internal/approvals/approval_suspension.vue'
@@ -149,10 +150,10 @@ export default {
         }
     },
     data() {
-        let vm = this;
+        // let vm = this;
         return {
-            pBody: 'pBody' + vm._uid,
-            datatable_id: 'approvals-datatable-'+vm._uid,
+            pBody: 'pBody' + uuidv4(),
+            datatable_id: 'approvals-datatable-'+uuidv4(),
             uuid: 0,
             //datatable_id: 'proposal-datatable-'+vm.uuid,
             //Profile to check if user has access to process Proposal
@@ -402,7 +403,7 @@ export default {
                 },
                 {
                     data: "start_date",
-                    mRender:function (data,type,full) {
+                    mRender:function (data) {
                         return data != '' && data != null ? moment(data).format(vm.dateFormat): '';
                     },
                     searchable: false,
@@ -410,7 +411,7 @@ export default {
                 },
                 {
                     data: "expiry_date",
-                    mRender:function (data,type,full) {
+                    mRender:function (data) {
                         return data != '' && data != null ? moment(data).format(vm.dateFormat): '';
                     },
                     searchable: true,
@@ -833,8 +834,6 @@ export default {
             }
             else
                 return false;
-
-            return false;
         },
 
         reissueApproval:function (proposal_id) {
@@ -852,7 +851,7 @@ export default {
                 vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,(proposal_id+'/reissue_approval')),JSON.stringify(data),{
                 emulateJSON:true,
                 })
-                .then((response) => {
+                .then(() => {
 
                     vm.$router.push({
                     name:"internal-proposal",
@@ -867,13 +866,13 @@ export default {
                     })
                 });
             },(error) => {
-
+                console.log(error);
             });
         },
 
         reinstateApproval:function (approval_id) {
             let vm = this;
-            let status= 'with_approver'
+            // let status= 'with_approver'
             //let data = {'status': status}
             swal({
                 title: "Reinstate Approval",
@@ -886,7 +885,7 @@ export default {
                 vm.$http.post(helpers.add_endpoint_json(api_endpoints.approvals,(approval_id+'/approval_reinstate')),{
 
                 })
-                .then((response) => {
+                .then(() => {
                     swal(
                         'Reinstate',
                         'Your approval has been reinstated',
@@ -903,13 +902,13 @@ export default {
                     })
                 });
             },(error) => {
-
+                console.log(error);
             });
         },
 
         renewApproval:function (proposal_id) {
             let vm = this;
-            let status= 'with_approver'
+            // let status= 'with_approver'
             //let data = {'status': status}
             swal({
                 title: "Renew Approval",
@@ -939,7 +938,7 @@ export default {
                     })
                 });
             },(error) => {
-
+                console.log(error);
             });
         },
 
@@ -974,7 +973,7 @@ export default {
 
                 });
             },(error) => {
-
+                console.log(error);
             });
         },
 
@@ -1005,7 +1004,7 @@ export default {
             //console.log(approval);
             vm.$http.get(helpers.add_endpoint_json(api_endpoints.approvals,(id+'/approval_pdf_view_log')),{
                 })
-                .then((response) => {
+                .then(() => {
                     //console.log(response)
                 }, (error) => {
                     console.log(error);
@@ -1039,7 +1038,6 @@ export default {
     mounted: function(){
 		this.fetchFilterLists();
         this.fetchProfile();
-        let vm = this;
         $( 'a[data-toggle="collapse"]' ).on( 'click', function () {
             var chev = $( this ).children()[ 0 ];
             window.setTimeout( function () {

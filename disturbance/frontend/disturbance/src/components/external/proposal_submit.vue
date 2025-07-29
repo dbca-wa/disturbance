@@ -13,7 +13,7 @@
                             </tr>
                             <tr>
                                 <td><strong>Date/Time:</strong></td>
-                                <td><strong> {{proposal.lodgement_date|formatDate}}</strong></td>
+                                <td><strong> {{formatDate(proposal.lodgement_date)}}</strong></td>
                             </tr>
                         </table>
                         <router-link :to="{name:'external-proposals-dash'}" style="margin-top:15px;" class="btn btn-primary">Back to dashboard</router-link>
@@ -30,7 +30,7 @@
 <script>
 export default {
   data: function() {
-    let vm = this;
+    // let vm = this;
     return {
         "proposal": {},
     }
@@ -40,9 +40,7 @@ export default {
   computed: {
   },
   methods: {
-  },
-  filters:{
-        formatDate: function(data){
+    formatDate: function(data){
             return data ? moment(data).format('DD/MM/YYYY HH:mm:ss'): '';
         }
   },

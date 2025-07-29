@@ -184,6 +184,7 @@
 </div>
 </template>
 <script>
+import { v4 as uuidv4 } from 'uuid';
 import $ from 'jquery'
 import alert from '@vue-utils/alert.vue'
 import datatable from '@/utils/vue/datatable.vue'
@@ -202,10 +203,10 @@ export default {
   data() {
     let vm = this;
     return {
-      rBody: 'rBody' + vm._uid,
-      oBody: 'oBody' + vm._uid,
-      kBody: 'kBody' + vm._uid,
-      uBody: 'uBody' + vm._uid,
+      rBody: 'rBody' + uuidv4(),
+      oBody: 'oBody' + uuidv4(),
+      kBody: 'kBody' + uuidv4(),
+      uBody: 'uBody' + uuidv4(),
       loading: [],
       filtered_url: api_endpoints.filtered_users + '?search=',
       searchKeywords: [],
@@ -220,7 +221,7 @@ export default {
       results: [],
       errors: false,
       errorString: '',
-      datatable_id: 'proposal-datatable-'+vm._uid,
+      datatable_id: 'proposal-datatable-'+uuidv4(),
       proposal_headers:["Number","Type","Proponent","Text found","Action"],
       proposal_options:{
           language: {

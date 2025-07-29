@@ -62,6 +62,7 @@
 
 <script>
 // import MetricsDetails from '@/components/internal/main/spatial_query_metrics.vue'
+import { v4 as uuidv4 } from 'uuid';
 import datatable from '@/utils/vue/datatable.vue'
 import modal from '@vue-utils/bootstrap-modal.vue'
 import {
@@ -87,11 +88,11 @@ export default {
         console.log(vm.spatial_query_layer_used_url)
 
         return {
-            spatial_query_metrics_id: 'spatial_query_metrics-datatable-'+vm._uid,
-            spatial_query_metrics_details_id: 'spatial_query_metrics_details-datatable-'+vm._uid,
-            spatial_query_layers_used_id: 'spatial_query_layers_used-datatable-'+vm._uid,
-            pOptionsBody: 'pOptionsBody' + vm._uid,
-            pQuestionBody: 'pQuestionBody' + vm._uid,
+            spatial_query_metrics_id: 'spatial_query_metrics-datatable-'+uuidv4(),
+            spatial_query_metrics_details_id: 'spatial_query_metrics_details-datatable-'+uuidv4(),
+            spatial_query_layers_used_id: 'spatial_query_layers_used-datatable-'+uuidv4(),
+            pOptionsBody: 'pOptionsBody' + uuidv4(),
+            pQuestionBody: 'pQuestionBody' + uuidv4(),
             isModalOpen: false,
             isNewEntry: false,
             missing_fields: [],

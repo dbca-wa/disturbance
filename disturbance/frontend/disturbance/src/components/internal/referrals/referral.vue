@@ -259,6 +259,7 @@
     </div>
 </template>
 <script>
+import { v4 as uuidv4 } from 'uuid';
 import Proposal from '../../form.vue'
 import NewApply from '../../external/proposal_apply_new.vue'
 import CommsLogs from '@common-utils/comms_logs.vue'
@@ -276,9 +277,9 @@ export default {
     data: function() {
         let vm = this;
         return {
-            detailsBody: 'detailsBody'+vm._uid,
-            addressBody: 'addressBody'+vm._uid,
-            contactsBody: 'contactsBody'+vm._uid,
+            detailsBody: 'detailsBody'+uuidv4(),
+            addressBody: 'addressBody'+uuidv4(),
+            contactsBody: 'contactsBody'+uuidv4(),
             //"proposal": null,
             //referral: null,
             referral_sent_list: null,
@@ -292,7 +293,7 @@ export default {
             //department_users : [],
             contacts_table_initialised: false,
             initialisedSelects: false,
-            contacts_table_id: vm._uid+'contacts-table',
+            contacts_table_id: uuidv4+'contacts-table',
             contacts_options:{
                 language: {
                     processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"

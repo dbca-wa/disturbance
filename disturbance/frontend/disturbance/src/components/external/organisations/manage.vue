@@ -57,7 +57,7 @@
                 <label for="" class="col-sm-3 control-label" >Country</label>
                 <div class="col-sm-4">
                     <select class="form-control" name="country" v-model="org.address.country">
-                        <option v-for="c in countries" :value="c.code">{{ c.name }}</option>
+                        <option v-for="c in countries" :value="c.code" :key="c.code">{{ c.name }}</option>
                     </select>
                 </div>
               </div>
@@ -122,16 +122,16 @@
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid';
 import { api_endpoints, helpers } from '@/utils/hooks'
 import datatable from '@vue-utils/datatable.vue'
 import utils from '../utils'
 import api from '../api'
 import FormSection from "@/components/forms/section_toggle.vue"
-import AddContact from '@common-utils/add_contact.vue'
 
 
 export default {
-    name: 'Organisation',
+    name: 'ManageOrganisation',
     props:{
         org_id:{
             type: Number,
@@ -177,10 +177,10 @@ export default {
     data () {
         let vm = this;
         return {
-            adBody: 'adBody'+vm._uid,
-            pBody: 'pBody'+vm._uid,
-            cBody: 'cBody'+vm._uid,
-            oBody: 'oBody'+vm._uid,
+            adBody: 'adBody'+ uuidv4(),
+            pBody: 'pBody'+ uuidv4(),
+            cBody: 'cBody'+ uuidv4,
+            oBody: 'oBody'+ uuidv4(),
             org: null,
             loading: [],
             countries: [],
@@ -223,7 +223,7 @@ export default {
                     },
                     {
                         data:"when",
-                        mRender:function(data,type,full){
+                        mRender:function(data){
                             return moment(data).format(vm.DATE_TIME_FORMAT)
                         }
                     },
@@ -455,7 +455,6 @@ export default {
     },
     components: {
         datatable,
-        AddContact,
         FormSection,
     },
     computed: {
@@ -501,7 +500,7 @@ export default {
             vm.$http.get(helpers.add_endpoint_json(api_endpoints.organisation_contacts,_id)).then((response) => {
                 this.$refs.add_contact.contact = response.body;
                 this.addContact();
-            }).then((response) => {
+            }).then(() => {
                 this.$refs.contacts_datatable.vmDataTable.ajax.reload();
             },(error) => {
                 console.log(error);
@@ -528,6 +527,7 @@ export default {
                 }).then(() => {
                     vm.deleteContact(id);
                 },(error) => {
+                    console.log(error);
                 });
             });
 
@@ -546,7 +546,7 @@ export default {
                 let lastname = $(e.target).data('lastname');
                 let name = firstname + ' ' + lastname;
                 let email = $(e.target).data('email');
-                let id = $(e.target).data('id');
+                // let id = $(e.target).data('id');
                 let mobile = $(e.target).data('mobile');
                 let phone = $(e.target).data('phone');
                 vm.contact_user.first_name= firstname 
@@ -563,7 +563,7 @@ export default {
                     if (result){
                         vm.$http.post(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/accept_user'),JSON.stringify(vm.contact_user),{
                             emulateJSON:true
-                        }).then((response) => {
+                        }).then(() => {
                             swal({
                                 title: 'Contact Accept',
                                 text: 'You have successfully accepted ' + name + '.',
@@ -572,12 +572,15 @@ export default {
                             }).then(() => {
                                 vm.$refs.contacts_datatable_user.vmDataTable.ajax.reload();
                             },(error) => {
+                                console.log(error);
                             });
                         }, (error) => {
                             swal('Contact Accept','There was an error accepting ' + name + '.','error')
+                            console.log(error);
                         });
                     }
                 },(error) => {
+                    console.log(error);
                 });
             });
             vm.$refs.contacts_datatable_user.vmDataTable.on('click','.accept_declined_contact',(e) => {
@@ -586,7 +589,7 @@ export default {
                 let lastname = $(e.target).data('lastname');
                 let name = firstname + ' ' + lastname;
                 let email = $(e.target).data('email');
-                let id = $(e.target).data('id');
+                // let id = $(e.target).data('id');
                 let mobile = $(e.target).data('mobile');
                 let phone = $(e.target).data('phone');
                 vm.contact_user.first_name= firstname
@@ -603,7 +606,7 @@ export default {
                     if (result.value){
                         vm.$http.post(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/accept_declined_user'),JSON.stringify(vm.contact_user),{
                             emulateJSON:true
-                        }).then((response) => {
+                        }).then(() => {
                             swal({
                                 title: 'Contact Accept (Previously Declined)',
                                 text: 'You have successfully accepted ' + name + '.',
@@ -612,12 +615,15 @@ export default {
                             }).then(() => {
                                 vm.$refs.contacts_datatable_user.vmDataTable.ajax.reload();
                             },(error) => {
+                                console.log(error);
                             });
                         }, (error) => {
                             swal('Contact Accept (Previously Declined)','There was an error accepting ' + name + '.','error')
+                            console.log(error);
                         });
                     }
                 },(error) => {
+                    console.log(error);
                 });
             });
             vm.$refs.contacts_datatable_user.vmDataTable.on('click','.decline_contact',(e) => {
@@ -626,7 +632,7 @@ export default {
                 let lastname = $(e.target).data('lastname');
                 let name = firstname + ' ' + lastname;
                 let email = $(e.target).data('email');
-                let id = $(e.target).data('id');
+                // let id = $(e.target).data('id');
                 let mobile = $(e.target).data('mobile');
                 let phone = $(e.target).data('phone');
                 vm.contact_user.first_name= firstname 
@@ -644,7 +650,7 @@ export default {
                     if (result){
                         vm.$http.post(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/decline_user'),JSON.stringify(vm.contact_user),{
                             emulateJSON:true
-                        }).then((response) => {
+                        }).then(() => {
                             swal({
                                 title: 'Contact Decline',
                                 text: 'You have successfully declined ' + name + '.',
@@ -653,12 +659,15 @@ export default {
                             }).then(() => {
                                 vm.$refs.contacts_datatable_user.vmDataTable.ajax.reload();
                             },(error) => {
+                                console.log(error);
                             });
                         }, (error) => {
-                            swal('Contact Decline','There was an error declining ' + name + '.','error')
+                            swal('Contact Decline','There was an error declining ' + name + '.','error');
+                            console.log(error);
                         });
                     }
                 },(error) => {
+                    console.log(error);
                 });
             });
             vm.$refs.contacts_datatable_user.vmDataTable.on('click','.unlink_contact',(e) => {
@@ -667,7 +676,7 @@ export default {
                 let lastname = $(e.target).data('lastname');
                 let name = firstname + ' ' + lastname;
                 let email = $(e.target).data('email');
-                let id = $(e.target).data('id');
+                // let id = $(e.target).data('id');
                 let mobile = $(e.target).data('mobile');
                 let phone = $(e.target).data('phone');
                 vm.contact_user.first_name= firstname 
@@ -684,7 +693,7 @@ export default {
                     if (result){
                         vm.$http.post(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/unlink_user'),JSON.stringify(vm.contact_user),{
                             emulateJSON:true
-                        }).then((response) => {
+                        }).then(() => {
                             swal({
                                 title: 'Unlink',
                                 text: 'You have successfully unlinked ' + name + '.',
@@ -693,14 +702,17 @@ export default {
                             }).then(() => {
                                     vm.$refs.contacts_datatable_user.vmDataTable.ajax.reload();
                             },(error) => {
+                                console.log(error);
                             });
                         }, (error) => {
                             if (error.status ==500){
                                 swal('Unlink','Last Organisation Admin can not be unlinked.','error');
+                                console.log(error);
                             }
                         });
                     }
                 },(error) => {
+                    console.log(error);
                 });
             });
             vm.$refs.contacts_datatable_user.vmDataTable.on('click','.make_admin_contact',(e) => {
@@ -709,7 +721,7 @@ export default {
                 let lastname = $(e.target).data('lastname');
                 let name = firstname + ' ' + lastname;
                 let email = $(e.target).data('email');
-                let id = $(e.target).data('id');
+                // let id = $(e.target).data('id');
                 let mobile = $(e.target).data('mobile');
                 let phone = $(e.target).data('phone');
                 vm.contact_user.first_name= firstname 
@@ -726,7 +738,7 @@ export default {
                     if (result) {
                         vm.$http.post(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/make_admin_user'),JSON.stringify(vm.contact_user),{
                             emulateJSON:true
-                        }).then((response) => {
+                        }).then(() => {
                             swal({
                                 title: 'Organisation Admin',
                                 text: 'You have successfully made ' + name + ' an Organisation Admin.',
@@ -735,12 +747,15 @@ export default {
                             }).then(() => {
                                 vm.$refs.contacts_datatable_user.vmDataTable.ajax.reload();
                             },(error) => {
+                                console.log(error);
                             });
                         }, (error) => {
                             swal('Organisation Admin','There was an error making ' + name + ' an Organisation Admin.','error')
+                            console.log(error);
                         });
                     }
                 },(error) => {
+                    console.log(error);
                 });
             });
             vm.$refs.contacts_datatable_user.vmDataTable.on('click','.make_user_contact',(e) => {
@@ -749,7 +764,7 @@ export default {
                 let lastname = $(e.target).data('lastname');
                 let name = firstname + ' ' + lastname;
                 let email = $(e.target).data('email');
-                let id = $(e.target).data('id');
+                // let id = $(e.target).data('id');
                 let mobile = $(e.target).data('mobile');
                 let phone = $(e.target).data('phone');
                 vm.contact_user.first_name= firstname 
@@ -767,7 +782,7 @@ export default {
                     if (result) {
                         vm.$http.post(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/make_user'),JSON.stringify(vm.contact_user),{
                             emulateJSON:true
-                        }).then((response) => {
+                        }).then(() => {
                             swal({
                                 title: 'Organisation User',
                                 text: 'You have successfully made ' + name + ' an Organisation User.',
@@ -776,12 +791,15 @@ export default {
                             }).then(() => {
                                 vm.$refs.contacts_datatable_user.vmDataTable.ajax.reload();
                             },(error) => {
+                                console.log(error);
                             });
                         }, (error) => {
                             swal('Company Admin','There was an error making ' + name + ' an Organisation User.','error')
+                            console.log(error);
                         });
                     }
                 },(error) => {
+                    console.log(error);
                 });
             });
             vm.$refs.contacts_datatable_user.vmDataTable.on('click','.suspend_contact',(e) => {
@@ -790,7 +808,7 @@ export default {
                 let lastname = $(e.target).data('lastname');
                 let name = firstname + ' ' + lastname;
                 let email = $(e.target).data('email');
-                let id = $(e.target).data('id');
+                // let id = $(e.target).data('id');
                 let mobile = $(e.target).data('mobile');
                 let phone = $(e.target).data('phone');
                 vm.contact_user.first_name= firstname 
@@ -807,7 +825,7 @@ export default {
                     if (result) {
                         vm.$http.post(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/suspend_user'),JSON.stringify(vm.contact_user),{
                             emulateJSON:true
-                        }).then((response) => {
+                        }).then(() => {
                             swal({
                                 title: 'Suspend User',
                                 text: 'You have successfully suspended ' + name + ' as a User.',
@@ -816,12 +834,15 @@ export default {
                             }).then(() => {
                                 vm.$refs.contacts_datatable_user.vmDataTable.ajax.reload();
                             },(error) => {
+                                console.log(error);
                             });
                         }, (error) => {
                             swal('Suspend User','There was an error suspending ' + name + ' as a User.','error')
+                            console.log(error);
                         });
                     }
                 },(error) => {
+                    console.log(error);
                 });
             });
              vm.$refs.contacts_datatable_user.vmDataTable.on('click','.reinstate_contact',(e) => {
@@ -830,7 +851,7 @@ export default {
                 let lastname = $(e.target).data('lastname');
                 let name = firstname + ' ' + lastname;
                 let email = $(e.target).data('email');
-                let id = $(e.target).data('id');
+                // let id = $(e.target).data('id');
                 let mobile = $(e.target).data('mobile');
                 let phone = $(e.target).data('phone');
                 vm.contact_user.first_name= firstname 
@@ -847,7 +868,7 @@ export default {
                     if (result) {
                         vm.$http.post(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/reinstate_user'),JSON.stringify(vm.contact_user),{
                             emulateJSON:true
-                        }).then((response) => {
+                        }).then(() => {
                             swal({
                                 title: 'Reinstate User',
                                 text: 'You have successfully reinstated ' + name + '.',
@@ -856,12 +877,15 @@ export default {
                             }).then(() => {
                                 vm.$refs.contacts_datatable_user.vmDataTable.ajax.reload();
                             },(error) => {
+                                console.log(error);
                             });
                         }, (error) => {
                             swal('Reinstate User','There was an error reinstating ' + name + '.','error')
+                            console.log(error);
                         });
                     }
                 },(error) => {
+                    console.log(error);
                 });
             });
              vm.$refs.contacts_datatable_user.vmDataTable.on('click','.relink_contact',(e) => {
@@ -870,7 +894,7 @@ export default {
                 let lastname = $(e.target).data('lastname');
                 let name = firstname + ' ' + lastname;
                 let email = $(e.target).data('email');
-                let id = $(e.target).data('id');
+                // let id = $(e.target).data('id');
                 let mobile = $(e.target).data('mobile');
                 let phone = $(e.target).data('phone');
                 vm.contact_user.first_name= firstname
@@ -887,7 +911,7 @@ export default {
                     if (result) {
                         vm.$http.post(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/relink_user'),JSON.stringify(vm.contact_user),{
                             emulateJSON:true
-                        }).then((response) => {
+                        }).then(() => {
                             swal({
                                 title: 'Relink User',
                                 text: 'You have successfully relinked ' + name + '.',
@@ -896,12 +920,15 @@ export default {
                             }).then(() => {
                                 vm.$refs.contacts_datatable_user.vmDataTable.ajax.reload();
                             },(error) => {
+                                console.log(error);
                             });
                         }, (error) => {
                             swal('Relink User','There was an error relink ' + name + '.','error')
+                            console.log(error);
                         });
                     }
                 },(error) => {
+                    console.log(error);
                 });
             });
         },
@@ -928,7 +955,7 @@ export default {
                 //var another=error;
                 var text= helpers.apiVueResourceError(error);
                 if(typeof text == 'object'){
-                    if (text.hasOwnProperty('email')){
+                    if (Object.prototype.hasOwnProperty.call(text, 'email')) {
                         text=text.email[0];
                     }
                 }
@@ -954,7 +981,7 @@ export default {
             
             vm.$http.delete(helpers.add_endpoint_json(api.organisation_contacts,id),{
                 emulateJSON:true
-            }).then((response) => {
+            }).then(() => {
                 swal(
                     'Contact Deleted', 
                     'The contact was successfully deleted',
@@ -975,7 +1002,7 @@ export default {
             
             vm.$http.post(helpers.add_endpoint_json(api.organisation_contacts,id),{
                 emulateJSON:true
-            }).then((response) => {
+            }).then(() => {
                 swal(
                     'Update Contact', 
                     'The contact was successfully updated',
@@ -1045,6 +1072,7 @@ export default {
                     )
                 });
             },(error) => {
+                console.log(error);
             }); 
         }
     },
@@ -1070,7 +1098,7 @@ export default {
 
     },
     updated: function(){
-        let vm = this;
+        // let vm = this;
         $('.panelClicker[data-toggle="collapse"]').on('click', function () {
             var chev = $(this).children()[0];
             window.setTimeout(function () {

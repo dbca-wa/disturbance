@@ -135,6 +135,7 @@
     </div>
 </template>
 <script>
+import { v4 as uuidv4 } from 'uuid';
 import {
     api_endpoints,
     helpers
@@ -147,10 +148,10 @@ export default {
         proposal: Object
     },
     data: function() {
-        let vm = this;
+        // let vm = this;
         return {
-            proposedDecision: "proposal-decision-"+vm._uid,
-            proposedLevel: "proposal-level-"+vm._uid,
+            proposedDecision: "proposal-decision-"+uuidv4(),
+            proposedLevel: "proposal-level-"+uuidv4(),
             uploadedFile: null,
         }
     },

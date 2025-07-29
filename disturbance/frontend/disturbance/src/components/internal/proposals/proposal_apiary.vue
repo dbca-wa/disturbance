@@ -486,6 +486,7 @@
     </div>
 </template>
 <script>
+import { v4 as uuidv4 } from 'uuid';
 import ApiaryForm from '@/components/form_apiary.vue'
 // import NewApply from '../../external/proposal_apply_new.vue'
 import ProposedDecline from './proposal_proposed_decline.vue'
@@ -505,10 +506,10 @@ export default {
         let vm = this;
         return {
             requirementsComplete:true,
-            detailsBody: 'detailsBody'+vm._uid,
-            addressBody: 'addressBody'+vm._uid,
-            contactsBody: 'contactsBody'+vm._uid,
-            siteLocations: 'siteLocations'+vm._uid,
+            detailsBody: 'detailsBody'+uuidv4(),
+            addressBody: 'addressBody'+uuidv4(),
+            contactsBody: 'contactsBody'+uuidv4(),
+            siteLocations: 'siteLocations'+uuidv4(),
             defaultKey: "aho",
             "proposal": null,
             "original_proposal": null,
@@ -526,7 +527,7 @@ export default {
             showingRequirements:false,
             hasAmendmentRequest: false,
             state_options: ['requirements','processing'],
-            contacts_table_id: vm._uid+'contacts-table',
+            contacts_table_id: uuidv4()+'contacts-table',
             contacts_options:{
                 language: {
                     processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"

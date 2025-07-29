@@ -93,8 +93,9 @@
 </template>
 
 <script>
+    import { v4 as uuidv4 } from 'uuid';
     import File from '@/components/forms/map_file.vue'
-    import FileField from '@/components/forms/filefield_immediate.vue'
+    // import FileField from '@/components/forms/filefield_immediate.vue'
     import FormSection from "@/components/forms/section_toggle.vue"
     import ComponentMap from '@/components/common/das/das_component_map.vue'
     import { api_endpoints, helpers }from '@/utils/hooks'
@@ -140,10 +141,10 @@
             },
         },
         data:function () {
-            let vm = this;
+            // let vm = this;
             return{
                 values:null,
-                pBody: 'pBody'+vm._uid,
+                pBody: 'pBody'+uuidv4(),
                 componentMapKey: 0,
                 fileKey: 0,
                 showError:false,
@@ -153,7 +154,6 @@
             }
         },
         components: {
-            FileField,
             FormSection,
             ComponentMap,
             File,
@@ -350,6 +350,7 @@
 
                 },(error) => {
                    swal.hideLoading();
+                   console.log(error);
 
                 });
                 

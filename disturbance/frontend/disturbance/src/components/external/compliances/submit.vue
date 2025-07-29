@@ -13,7 +13,7 @@
                             </tr>
                             <tr>
                                 <td><strong>Date/Time:</strong></td>
-                                <td><strong> {{compliance.lodgement_date|formatDate}}</strong></td>
+                                <td><strong> {{formatDate(compliance.lodgement_date)}}</strong></td>
                             </tr>
                         </table>
                         <div>
@@ -34,8 +34,9 @@
 </template>
 <script>
 export default {
+  name: 'ComplianceSubmit',
   data: function() {
-    let vm = this;
+    // let vm = this;
     return {
         "compliance": {},
     }
@@ -45,9 +46,7 @@ export default {
   computed: {
   },
   methods: {
-  },
-  filters:{
-        formatDate: function(data){
+    formatDate: function(data){
             return data ? moment(data).format('DD/MM/YYYY HH:mm:ss'): '';
         }
   },

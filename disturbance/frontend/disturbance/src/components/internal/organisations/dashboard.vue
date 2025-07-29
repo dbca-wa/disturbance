@@ -86,7 +86,7 @@ export default {
         dasTemplateGroup: false,
         apiaryTemplateGroup: false,
         // Filters
-        pBody: 'pBody' + vm._uid,
+        pBody: 'pBody' + uuidv4(),
         filterOrganisation: 'All',
         filterApplicant : 'All',
         filterRole : 'All',
