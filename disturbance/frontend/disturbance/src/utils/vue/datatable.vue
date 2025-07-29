@@ -169,6 +169,10 @@ module.exports = {
         }
     }
     .dataTables_wrapper .dt-buttons{
-    float: right;
-  }
+        float: right;
+    }
+    table.dataTable {
+        margin-top: 8px;
+        margin-bottom: 8px !important;
+    }
 </style>

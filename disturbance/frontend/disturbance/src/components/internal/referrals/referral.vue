@@ -349,11 +349,6 @@ export default {
         MoreReferrals,
         NewApply,
     },
-    filters: {
-        // formatDate: function(data){
-        //     return data ? moment(data).format('DD/MM/YYYY HH:mm:ss'): '';
-        // }
-    },
     props:{
             referralId:{
                 type:Number,

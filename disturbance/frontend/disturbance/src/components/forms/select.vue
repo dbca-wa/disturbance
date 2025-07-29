@@ -139,7 +139,8 @@ export default {
             immediately: true,
             handler (){
                 this.init();
-            }
+            },
+            deep: true,
         }
     },
     computed:{

@@ -6,7 +6,7 @@
 
         <template #tab-panel-question><SchemaQuestion /></template>
         <template #tab-panel-masterlist><SchemaMasterlist /></template>
-        <template Wtab-panel-proposal-type><SchemaProposalType /></template>
+        <template #tab-panel-proposal-type><SchemaProposalType /></template>
         <template v-if="show_das_map" #tab-panel-spatial-query-question><SpatialQueryQuestion /></template>
         <!--<template v-if="show_das_map" slot="tab-panel-spatial-query-metrics"><SpatialQueryMetrics /></template>-->
         <!-- <template slot="tab-panel-group"><SchemaGroup /></template> -->

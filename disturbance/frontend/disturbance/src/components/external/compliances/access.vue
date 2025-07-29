@@ -172,12 +172,6 @@ export default {
         return this.compliance && this.compliance.documents;
    }
   },
-  filters: {
-    formatDate: function(data){
-        return moment(data).format('DD/MM/YYYY HH:mm:ss');
-    }
-  },
- 
   components: {
   },
   computed: {
@@ -194,6 +188,9 @@ export default {
     
   },
   methods: {
+    formatDate: function(data){
+        return moment(data).format('DD/MM/YYYY HH:mm:ss');
+    },
     uploadFile(target,file_obj){
             let _file = null;
             var input = $('.'+target)[0];
