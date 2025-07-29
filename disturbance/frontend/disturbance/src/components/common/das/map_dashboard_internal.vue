@@ -4,13 +4,13 @@
             <div class="map-wrapper">
                 <div v-show="!fullscreen" id="filter_search_row_wrapper">
                     <div class="filter_search_wrapper" style="margin-bottom: 5px;" id="filter_search_row">
-                        <template>
+                        <div>
                            <div v-show="select2Applied">
                             <div class="row">
                                     <div >
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <template>
+                                                <div>
                                                     <div v-show="select2Applied">
                                                         <label for="">Region</label>
                                                         <select style="width:100%" class="form-control input-sm" ref="filterRegion" v-model="filterProposalRegion">
@@ -18,7 +18,7 @@
                                                             <option v-for="r in regions" :value="r.id" :key="r.id">{{r.search_term}}</option>
                                                         </select>
                                                     </div>
-                                                </template>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -108,7 +108,7 @@
                                     
                                 </div>
                             </div>
-                        </template>
+                        </div>
                     </div>
                 </div>
                 

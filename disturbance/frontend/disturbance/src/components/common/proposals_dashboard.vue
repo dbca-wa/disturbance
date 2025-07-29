@@ -24,7 +24,7 @@
                         <div v-if="!apiaryTemplateGroup">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <template>
+                                    <div>
                                         <div v-show="select2Applied">
                                             <label for="">Region</label>
                                             <select style="width:100%" class="form-control input-sm" ref="filterRegion" >
@@ -32,15 +32,15 @@
                                                     <option v-for="r in proposal_regions" :value="r" :key="r">{{r}}</option>
                                                 </template>
                                             </select>
+                                        </div>
                                     </div>
-                                    </template>
                                 </div>
                             </div>
                         </div>
                         <div v-if="!apiaryTemplateGroup">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <template>
+                                    <div>
                                         <div v-show="select2bApplied">
                                             <label for="">District</label>
                                             <select style="width:100%" class="form-control input-sm" ref="filterDistrict" >
@@ -49,7 +49,7 @@
                                                 </template>
                                             </select>
                                         </div>
-                                    </template>
+                                    </div>
                                 </div>
                             </div>
                         </div>
