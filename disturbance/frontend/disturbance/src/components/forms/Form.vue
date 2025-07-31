@@ -4,6 +4,7 @@
     require('../../node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css')
     require('../../node_modules/font-awesome/css/font-awesome.min.css')
     export default {
+        name: 'FormComponent',
         props:{
             application:{
                 type: Array,

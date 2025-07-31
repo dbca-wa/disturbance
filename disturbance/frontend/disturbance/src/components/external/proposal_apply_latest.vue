@@ -450,15 +450,17 @@ export default {
             text = "Are you sure you want to create " + this.alertText() + " proposal on behalf of "+vm.org+" ?"
         }
 
-        swal({
+        swal.fire({
             title: "Create " + vm.selected_application_name,
             //text: "Are you sure you want to create " + this.alertText() + " proposal on behalf of "+vm.org+" ?",
             text: text,
-            type: "question",
+            icon: "question",
             showCancelButton: true,
             confirmButtonText: 'Accept'
-        }).then(() => {
-         	vm.createProposal();
+        }).then((swalresult) => {
+            if(swalresult.isConfirmed) {
+                vm.createProposal();
+            }
         },(error) => {
             console.log(error);
         });
@@ -526,15 +528,17 @@ export default {
 			console.log(err);
             console.log(err.bodyText);
             if (err.bodyText.includes("null_applicant_address")) {
-                swal({
+                swal.fire({
                     title: "Cannot create application",
                     text: "Please add your address",
-                    type: "error",
+                    icon: "error",
                     confirmButtonText: 'Ok'
-                }).then(() => {
-                    vm.$router.push({
-                        name:"account",
-                    });
+                }).then((swalresult) => {
+                    if(swalresult.isConfirmed) {
+                        vm.$router.push({
+                            name:"account",
+                        });
+                    }
                 });
             }
 		});

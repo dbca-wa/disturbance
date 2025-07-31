@@ -54,6 +54,7 @@ export default [
             parserOptions: {
                 sourceType: 'module',
                 ecmaVersion: 12,
+                ecmaFeatures: { jsx: true },
             },
             globals: projectGlobals,
         },
@@ -62,7 +63,8 @@ export default [
             'no-redeclare': 'warn',
             'no-unused-vars': 'warn',
             'vue/no-mutating-props': 'off',
-            
+            'vue/jsx-uses-vars': 'error',
         },
     },
+    
 ];

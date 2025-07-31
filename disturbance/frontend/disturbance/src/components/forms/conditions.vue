@@ -1,5 +1,6 @@
 <script lang="jsx">
     export default {
+        name: 'ConditionsComponent',
         props:["conditions","renderer","name","data","readonly"],
         mounted(){
 
@@ -28,10 +29,13 @@
                         )
                     }
                 }
+                else{
+                    return ''
+                }
             } catch (e) {
                 console.log(e);
             }
+            return ''
         }
-
     }
 </script>

@@ -713,25 +713,27 @@ export default {
 
         discardProposal:function (proposal_id) {
             let vm = this;
-            swal({
+            swal.fire({
                 title: "Discard Proposal",
                 text: "Are you sure you want to discard this proposal?",
-                type: "warning",
+                icon: "warning",
                 showCancelButton: true,
                 confirmButtonText: 'Discard Proposal',
                 confirmButtonColor:'#d9534f'
-            }).then(() => {
-                vm.$http.delete(api_endpoints.discard_proposal(proposal_id))
-                .then(() => {
-                    swal(
-                        'Discarded',
-                        'Your proposal has been discarded',
-                        'success'
-                    )
-                    vm.$refs.proposal_datatable.vmDataTable.ajax.reload();
-                }, (error) => {
-                    console.log(error);
-                });
+            }).then((swalresult) => {
+                if (swalresult.isConfirmed) {
+                    vm.$http.delete(api_endpoints.discard_proposal(proposal_id))
+                    .then(() => {
+                        swal.fire(
+                            'Discarded',
+                            'Your proposal has been discarded',
+                            'success'
+                        )
+                        vm.$refs.proposal_datatable.vmDataTable.ajax.reload();
+                    }, (error) => {
+                        console.log(error);
+                    });
+                }
             },(error) => {
                 console.log(error);
             });

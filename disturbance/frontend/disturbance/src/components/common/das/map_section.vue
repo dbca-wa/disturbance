@@ -291,62 +291,62 @@
                     title: "Prefill Proposal",
                     //html: '<p>Are you sure you want to prefill this Proposal?<br>Select the Applicable:</p>',
                     html: html_text,
-                    type: "warning",
+                    icon: "warning",
                     showCancelButton: true,
                     confirmButtonText: 'Prefill Proposal',
                     confirmButtonColor:'#d9534f',
                     input: 'radio',
                     inputOptions: inputOptions,
                 }).then(async (result) => {
-                    if (Object.keys(inputOptions).length > 0 && !result) {
-                        swal(
-                            'Please select an option',
-                            null,
-                            'warning'
-                        )
-                        return;
-                    }  else if (Object.keys(inputOptions).length == 0) {
-                        result = 'clear_all';
-                    }
-                    //vm.prefilling=true;
-                    swal({
-                        title: "Loading...",
-                        //text: "Loading...",
-                        allowOutsideClick: false,
-                        allowEscapeKey:false,
-                        onOpen: () =>{
-                            swal.showLoading()
+                        if (Object.keys(inputOptions).length > 0 && !result) {
+                            swal.fire(
+                                'Please select an option',
+                                null,
+                                'warning'
+                            )
+                            return;
+                        }  else if (Object.keys(inputOptions).length == 0) {
+                            result = 'clear_all';
                         }
-                    })
-                    var data={};
-                    data.option = result;
-                    await vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals_sqs,vm.proposal.id+'/prefill_proposal'), JSON.stringify(data),{
-                        emulateJSON:true
-                    }).then(res=>{
-                        swal.hideLoading();
-                        swal.close();
-                        var resp_proposal=null;
-                        resp_proposal=res['body']['proposal']
-                        //vm.$emit('refreshFromResponse',res);
-                        vm.$emit('refreshFromResponseProposal',resp_proposal);
-                        //console.log('URL:' + helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal.id+'/prefill_proposal'))
-                        //console.log('RES:' + JSON.stringify(res))
-                        let title = res['body']['message'].includes('updated') ? "Processing Proposal (UPDATED)" : "Processing Proposal"
-                        let queue_position = res['body']['position']
-	                swal({
-                            //title: "Processing Proposal",
-                            title: title,
-                            html: '<p><strong>Your proposal is in the process of being prefilled based on your uploaded shapefile.</strong><br>' +
-                                  '<span style="font-size:0.8em">You can close your browser and come back later. You will receive an email when it is complete. (' + queue_position+ ')</span>' +
-                                  '</p>',
+                        //vm.prefilling=true;
+                        swal.fire({
+                            title: "Loading...",
+                            //text: "Loading...",
+                            allowOutsideClick: false,
+                            allowEscapeKey:false,
+                            didOpen: () =>{
+                                swal.showLoading()
+                            }
                         })
-		
-                    },err=>{
-                        console.log(err);
-                        vm.showError=true;
-                        vm.errorString=helpers.apiVueResourceError(err);
-                        swal.hideLoading();
-                    });
+                        var data={};
+                        data.option = result;
+                        await vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals_sqs,vm.proposal.id+'/prefill_proposal'), JSON.stringify(data),{
+                            emulateJSON:true
+                        }).then(res=>{
+                            swal.hideLoading();
+                            swal.close();
+                            var resp_proposal=null;
+                            resp_proposal=res['body']['proposal']
+                            //vm.$emit('refreshFromResponse',res);
+                            vm.$emit('refreshFromResponseProposal',resp_proposal);
+                            //console.log('URL:' + helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal.id+'/prefill_proposal'))
+                            //console.log('RES:' + JSON.stringify(res))
+                            let title = res['body']['message'].includes('updated') ? "Processing Proposal (UPDATED)" : "Processing Proposal"
+                            let queue_position = res['body']['position']
+                        swal.fire({
+                                //title: "Processing Proposal",
+                                title: title,
+                                html: '<p><strong>Your proposal is in the process of being prefilled based on your uploaded shapefile.</strong><br>' +
+                                    '<span style="font-size:0.8em">You can close your browser and come back later. You will receive an email when it is complete. (' + queue_position+ ')</span>' +
+                                    '</p>',
+                            })
+            
+                        },err=>{
+                            console.log(err);
+                            vm.showError=true;
+                            vm.errorString=helpers.apiVueResourceError(err);
+                            swal.hideLoading();
+                        });
 
                 },(error) => {
                    swal.hideLoading();

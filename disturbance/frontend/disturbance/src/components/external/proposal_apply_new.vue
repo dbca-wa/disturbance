@@ -306,14 +306,16 @@ export default {
     submit: function() {
         let vm = this;
 			
-        swal({
+        swal.fire({
             title: "Create ",
             text: "Are you sure you want to create ",
-            type: "question",
+            icon: "question",
             showCancelButton: true,
             confirmButtonText: 'Accept1'
-        }).then(() => {
-         	vm.createProposal();
+        }).then((result) => {
+            if (result.isConfirmed) {
+                vm.createProposal();
+            }
         },(error) => {
             console.log(error);
         });

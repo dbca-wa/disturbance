@@ -594,13 +594,13 @@ export default {
             vm.$http.post(vm.proposal_form_url, formData).then(() => {
                     if (confirmation_required){
                         if (this.apiaryTemplateGroup) {
-                            swal(
+                            swal.fire(
                                 'Saved',
                                 'Your application has been saved',
                                 'success'
                             );
                         } else {
-                            swal(
+                            swal.fire(
                                 'Saved',
                                 'Your proposal has been saved',
                                 'success'
@@ -940,10 +940,10 @@ export default {
             //Check for missing map documents
             let missing_files = vm.checkMapFiles();
             if(missing_files!=true){
-              swal({
+              swal.fire({
                 title: "Please fix following errors before submitting",
                 text: missing_files,
-                type:'error'
+                icon:'error'
               })
             //vm.paySubmitting=false;
             return false;
@@ -963,10 +963,10 @@ export default {
             //Check for missing data in Region, District, Category/Management Area
             let missing_data = vm.can_submit();
             if(missing_data!=true){
-              swal({
+              swal.fire({
                 title: "Please fix following errors before submitting",
                 text: missing_data,
-                type:'error'
+                icon:'error'
               })
             //vm.paySubmitting=false;
             return false;
@@ -980,53 +980,55 @@ export default {
                 swalTitle = "Submit Application";
                 swalText = "Are you sure you want to submit this application?";
             }
-            swal({
+            swal.fire({
                 title: swalTitle,
                 text: swalText,
-                type: "question",
+                icon: "question",
                 showCancelButton: true,
                 confirmButtonText: 'Submit'
-            }).then(async () => {
-                vm.submittingProposal = true;
-                // Only Apiary has an application fee
-                //if (!vm.proposal.fee_paid && ['Apiary', 'Site Transfer'].includes(vm.proposal.application_type)) {
-                if (['Apiary', 'Site Transfer'].includes(vm.proposal.application_type)) {
-                    //if (this.submit_button_text === 'Pay and submit' && ['Apiary', 'Site Transfer'].includes(vm.proposal.application_type)) {
-                    vm.save_and_redirect();
-                } else {
-                    /* just save and submit - no payment required (probably application was pushed back by assessor for amendment */
-                    try {
-                        console.log('http.post(submit)')
-                        console.log('http.post: ' + helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal.id+'/submit'))
+            }).then(async (swalresult) => {
+                if (swalresult.isConfirmed) {
+                    vm.submittingProposal = true;
+                    // Only Apiary has an application fee
+                    //if (!vm.proposal.fee_paid && ['Apiary', 'Site Transfer'].includes(vm.proposal.application_type)) {
+                    if (['Apiary', 'Site Transfer'].includes(vm.proposal.application_type)) {
+                        //if (this.submit_button_text === 'Pay and submit' && ['Apiary', 'Site Transfer'].includes(vm.proposal.application_type)) {
+                        vm.save_and_redirect();
+                    } else {
+                        /* just save and submit - no payment required (probably application was pushed back by assessor for amendment */
+                        try {
+                            console.log('http.post(submit)')
+                            console.log('http.post: ' + helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal.id+'/submit'))
 
-                        const res = await vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal.id+'/submit'),formData);
-                        vm.proposal = res.body;
-                        vm.$router.push({
-                            name: 'submit_proposal',
-                            params: { proposal: vm.proposal}
+                            const res = await vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal.id+'/submit'),formData);
+                            vm.proposal = res.body;
+                            vm.$router.push({
+                                name: 'submit_proposal',
+                                params: { proposal: vm.proposal}
+                            });
+                        } catch (err) {
+                            swal.fire(
+                                'Submit Error',
+                                helpers.apiVueResourceError(err),
+                                'error'
+                            )
+                        }
+                        /*
+                        vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal.id+'/submit'),formData).then(res=>{
+                            vm.proposal = res.body;
+                            vm.$router.push({
+                                name: 'submit_proposal',
+                                params: { proposal: vm.proposal}
+                            });
+                        },err=>{
+                            swal.fire(
+                                'Submit Error',
+                                helpers.apiVueResourceError(err),
+                                'error'
+                            )
                         });
-                    } catch (err) {
-                        swal(
-                            'Submit Error',
-                            helpers.apiVueResourceError(err),
-                            'error'
-                        )
+                        */
                     }
-                    /*
-                    vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal.id+'/submit'),formData).then(res=>{
-                        vm.proposal = res.body;
-                        vm.$router.push({
-                            name: 'submit_proposal',
-                            params: { proposal: vm.proposal}
-                        });
-                    },err=>{
-                        swal(
-                            'Submit Error',
-                            helpers.apiVueResourceError(err),
-                            'error'
-                        )
-                    });
-                    */
                 }
             },(error) => {
                 console.log(error);
@@ -1075,27 +1077,29 @@ export default {
             let vm = this
             let apiary_site_id = err.body.apiary_site_id[0]
 
-            swal({
+            swal.fire({
                 title: "Vacant site no longer available",
                 text: err.body.message[0],
-                type: "warning",
+                icon: "warning",
                 confirmButtonText: 'Remove the site from the application',
                 allowOutsideClick: false
-            }).then(function(){
-                console.log('confirmed')
-                vm.$refs.proposal_apiary.remove_apiary_site(apiary_site_id)
-                console.log('confirmed2')
-                // vm.save(false)
-                vm.$http.post(vm.remove_apiary_site_url, {'apiary_site_id': apiary_site_id}).then(
-                    res => {
-                        console.log('res')
-                        console.log(res);
-                    },
-                    err => {
-                        console.log('err')
-                        console.log(err);
-                    },
-                )
+            }).then(function(swalresult) {
+                if (swalresult.isConfirmed) {
+                    console.log('confirmed')
+                    vm.$refs.proposal_apiary.remove_apiary_site(apiary_site_id)
+                    console.log('confirmed2')
+                    // vm.save(false)
+                    vm.$http.post(vm.remove_apiary_site_url, {'apiary_site_id': apiary_site_id}).then(
+                        res => {
+                            console.log('res')
+                            console.log(res);
+                        },
+                        err => {
+                            console.log('err')
+                            console.log(err);
+                        },
+                    );
+                }
             });
         },
         post_and_redirect: function(url, postData) {

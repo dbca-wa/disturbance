@@ -157,14 +157,14 @@ export default {
             vm.$http.get(helpers.add_endpoint_json(api_endpoints.referrals,_id+'/resend')).then(response => {
                 vm.$emit('refreshFromResponse',response);
                 vm.table.ajax.reload();
-                swal(
+                swal.fire(
                     'Referral Resent',
                     'The referral has been resent to '+user,
                     'success'
                 )
             },
             error => {
-                swal(
+                swal.fire(
                     'Proposal Error',
                     helpers.apiVueResourceError(error),
                     'error'
@@ -173,12 +173,12 @@ export default {
         },
         recallReferral:function(_id,user){
             let vm = this;
-            swal({
+            swal.fire({
                     title: "Loading...",
                     //text: "Loading...",
                     allowOutsideClick: false,
                     allowEscapeKey:false,
-                    onOpen: () =>{
+                    didOpen: () =>{
                         swal.showLoading()
                     }
             })
@@ -187,14 +187,14 @@ export default {
                 swal.close();
                 vm.$emit('refreshFromResponse',response);
                 vm.table.ajax.reload();
-                swal(
+                swal.fire(
                     'Referral Recall',
                     'The referral has been recalled from '+user,
                     'success'
                 )
             },
             error => {
-                swal(
+                swal.fire(
                     'Proposal Error',
                     helpers.apiVueResourceError(error),
                     'error'

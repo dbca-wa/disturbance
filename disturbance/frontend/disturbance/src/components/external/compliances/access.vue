@@ -313,7 +313,7 @@ export default {
                 }).then((response)=>{
                     vm.addingCompliance = false;
                     vm.refreshFromResponse(response);                   
-                    /*swal(
+                    /*swal.fire(
                      'Submit',
                      'Your Compliance with Requirement has been submitted',
                      'success'

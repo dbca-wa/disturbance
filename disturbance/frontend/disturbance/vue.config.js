@@ -100,6 +100,7 @@ module.exports = defineConfig({
                     loader: 'babel-loader',
                     // include: [path.resolve('src'), path.resolve('test'), path.resolve('node_modules/ckeditor4'),
                     // path.resolve('node_modules/ckeditor4-vue') ]
+                    include: [path.resolve('src')]
                 },
             ],
         },
