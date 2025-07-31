@@ -138,14 +138,14 @@ export default {
             vm.$http.get(helpers.add_endpoint_json(api_endpoints.referrals,_id+'/remind')).then(response => {
                 vm.$emit('refreshFromResponse',response);
                 vm.table.ajax.reload();
-                swal(
+                swal.fire(
                     'Referral Reminder',
                     'A reminder has been sent to '+user,
                     'success'
                 )
             },
             error => {
-                swal(
+                swal.fire(
                     'Proposal Error',
                     helpers.apiVueResourceError(error),
                     'error'

@@ -1,4 +1,4 @@
-<script>
+<script lang="jsx">
     export default {
         props:["conditions","renderer","name","data","readonly"],
         mounted(){

@@ -2,6 +2,7 @@ import globals from 'globals';
 import jsLint from '@eslint/js';
 import pluginVue from 'eslint-plugin-vue';
 import vueEslintParser from 'vue-eslint-parser';
+import babelEslintParser from '@babel/eslint-parser'; // <-- Add this
 // import pluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 // import eslintConfigPrettier from 'eslint-config-prettier';
 
@@ -28,11 +29,18 @@ export default [
     {
         files: ['**/*.{js,mjs,cjs,ts,mts,jsx,tsx}'],
         languageOptions: {
+            parser: babelEslintParser,
             parserOptions: {
                 sourceType: 'module',
+                ecmaVersion: 2020,
+                ecmaFeatures: { jsx: true },
+                requireConfigFile: false,
             },
             globals: projectGlobals,
         },
+        rules:{
+            'vue/jsx-uses-vars': 'error',
+        }
     },
     {
         files: ['src/**/*.vue'],
@@ -54,6 +62,7 @@ export default [
             'no-redeclare': 'warn',
             'no-unused-vars': 'warn',
             'vue/no-mutating-props': 'off',
+            
         },
     },
 ];

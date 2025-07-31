@@ -21,11 +21,13 @@
                             </div>
                             <div class="col-sm-12 top-buffer-s">
                                 <table class="table small-table">
-                                    <tr>
-                                        <th>Lodgement</th>
-                                        <th>Date</th>
-                                        <th>Action</th>
-                                    </tr>
+                                    <thead>
+                                        <tr>
+                                            <th>Lodgement</th>
+                                            <th>Date</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
                                 </table>
                             </div>
                         </div>
@@ -75,10 +77,12 @@
                                     </template>
                                 </div>
                                 <table class="table small-table">
-                                    <tr>
-                                        <th>Referral</th>
-                                        <th>Status/Action</th>
-                                    </tr>
+                                    <thead>
+                                        <tr>
+                                            <th>Referral</th>
+                                            <th>Status/Action</th>
+                                        </tr>
+                                    </thead>
                                     <!-- <tr v-for="r in proposal.latest_referrals"> -->
                                     <tr v-for="r in referral.latest_referrals" :key="r.id">
                                         <td>

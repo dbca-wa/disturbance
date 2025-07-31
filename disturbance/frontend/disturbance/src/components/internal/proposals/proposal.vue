@@ -79,10 +79,12 @@
                                         </template>
                                     </div>
                                     <table class="table small-table">
-                                        <tr>
-                                            <th>Referral</th>
-                                            <th>Status/Action</th>
-                                        </tr>
+                                        <thead>
+                                            <tr>
+                                                <th>Referral</th>
+                                                <th>Status/Action</th>
+                                            </tr>
+                                        </thead>
                                         <tr v-for="r in proposal.latest_referrals" :key="r.id">
                                             <td>
                                                 <small><strong>{{r.referral}}</strong></small><br/>

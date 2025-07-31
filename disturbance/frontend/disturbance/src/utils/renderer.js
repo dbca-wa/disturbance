@@ -21,10 +21,10 @@ import RefreshRadio from '../components/forms/refresh_radio.vue'
 import {api_endpoints} from "@/utils/hooks.js"
 
 export default{
-    renderChildren(h,c,data=null,assessorData=null,_readonly) {
+    renderChildren(h,c,data=null,assessorData=null) {
         var is_readonly = this.status_data.readonly;
         var assessorStatus = this.status_data.assessorStatus;
-        var assessorData = this.status_data.assessorData;
+        // var assessorData = this.status_data.assessorData;
         var commentData = this.status_data.commentData;
         var layerData= this.status_data.layerData;
         var assessorInfo = this.status_data.assessorInfo;
@@ -36,6 +36,10 @@ export default{
         var readonly = false;
         var _elements = [];
         var comment_boxes=[];
+        var help_text = '';
+        var help_text_assessor = '';
+        var help_text_url = '';
+        var help_text_assessor_url
         var addInfoApplicant= this.status_data.addInfoApplicant
         var addInfoAssessor= this.status_data.addInfoAssessor
         var historyAddInfoAssessor= this.status_data.historyAddInfoAssessor
@@ -70,12 +74,13 @@ export default{
         var add_info_assessor_val = (addInfoAssessor) ? (addInfoAssessor[c.name]) ? addInfoAssessor[c.name] : null : null;
         var history_info_assessor_val = (historyAddInfoAssessor) ? (historyAddInfoAssessor[c.name]) ? historyAddInfoAssessor[c.name] : null : null;
         var comment_val= null;
-	var show_add_info_proponent = true;
+	    var show_add_info_proponent = true;
         if(layer_val){
   	    try {
 	        show_add_info_proponent = layer_val.sqs_data.other_data.show_add_info_section_prop	
 	    } catch (ex) {
-	        show_add_info_proponent = true;
+            show_add_info_proponent = true;
+            console.log(ex);
 	    }
         }
         if(commentData){
@@ -88,40 +93,40 @@ export default{
         }
 
         if (c && c.help_text && c.help_text.indexOf("site_url:/") >= 0) {
-            var help_text = c.help_text.replace('site_url:/', site_url);
+            help_text = c.help_text.replace('site_url:/', site_url);
             if (help_text.indexOf("anchor=") >= 0) {
                 help_text = help_text.replace('anchor=', "#");
             }
         } else {
-            var help_text = c.help_text;
+            help_text = c.help_text;
         }
 
         if (c && c.help_text_assessor && c.help_text_assessor.indexOf("site_url:/") >= 0) {
-            var help_text_assessor = c.help_text_assessor.replace('site_url:/', site_url);
+            help_text_assessor = c.help_text_assessor.replace('site_url:/', site_url);
             if (help_text_assessor.indexOf("anchor=") >= 0) {
                 help_text_assessor = help_text_assessor.replace('anchor=', "#");
             }
         } else {
-            var help_text_assessor = c.help_text_assessor;
+            help_text_assessor = c.help_text_assessor;
         }
 
         // repeat for help_text_url
         if (c && c.help_text_url && c.help_text_url.indexOf("site_url:/") >= 0) {
-            var help_text_url = c.help_text_url.replace('site_url:/', site_url);
+            help_text_url = c.help_text_url.replace('site_url:/', site_url);
             if (help_text_url.indexOf("anchor=") >= 0) {
                 help_text_url = help_text_url.replace('anchor=', "#");
             }
         } else {
-            var help_text_url = c.help_text_url;
+            help_text_url = c.help_text_url;
         }
 
         if (c && c.help_text_assessor_url && c.help_text_assessor_url.indexOf("site_url:/") >= 0) {
-            var help_text_assessor_url = c.help_text_assessor_url.replace('site_url:/', site_url);
+            help_text_assessor_url = c.help_text_assessor_url.replace('site_url:/', site_url);
             if (help_text_assessor_url.indexOf("anchor=") >= 0) {
                 help_text_assessor_url = help_text_assessor_url.replace('anchor=', "#");
             }
         } else {
-            var help_text_assessor_url = c.help_text_assessor_url;
+            help_text_assessor_url = c.help_text_assessor_url;
         }
 
         if (assessorMode && $.inArray(c.type,['declaration','group','section','label']) == -1){
@@ -134,6 +139,7 @@ export default{
         var id1 = id + '_1'
         var id2 = id + '_2'
         var id3 = id + '_3'
+        var value = null;
 
         switch (c.type) {
             case 'text':
@@ -163,7 +169,7 @@ export default{
                 )
                 break;
             case 'select':
-                var value = null;
+                value = null;
                 if(data !== null && data !== undefined) {
                   value = ( data )? data : null ;
                 }
@@ -199,7 +205,7 @@ export default{
                 )
                 break;
             case 'radiobuttons':
-                var value = null;
+                value = null;
                 if(data !== null && data !== undefined) {
                   value = ( data )? data : null ;
                 }
@@ -223,7 +229,7 @@ export default{
                 )
                 break;
             case 'group':
-                var value = null;
+                value = null;
                 if(data !== null && data !== undefined) {
                   value = ( data[c.name] )? data[c.name][0] : null ;
                 }
@@ -242,7 +248,7 @@ export default{
                 )
                 break;
             case 'section':
-                var value = null;
+                value = null;
                 if(data !== null && data !== undefined) {
                   value = ( data[c.name] )? data[c.name][0] : null ;
                 }
@@ -273,7 +279,7 @@ export default{
                 )
                 break;
             case 'declaration':
-                var value = null;
+                value = null;
                 if(data !== null && data !== undefined) {
                   value = ( data[c.name] )? data[c.name] : null ;
                 }
@@ -325,7 +331,7 @@ export default{
     handleRadioChange(e){
         var conditions = $(e.target).data('conditions');
         if (conditions && conditions !== undefined) {
-            var cons = Object.keys(conditions);
+            // var cons = Object.keys(conditions);
             var btns = $('input[name='+e.target.name+']');
             $.each(btns,function (i,input) {
                 $("#cons_"+e.target.name+'_'+input.value).addClass('hidden');
@@ -336,7 +342,7 @@ export default{
     handleCheckBoxChange(e){
         var conditions = $(e.target).data('conditions');
         if (conditions && conditions !== undefined) {
-            var cons = Object.keys(conditions);
+            // var cons = Object.keys(conditions);
             var btns = $('input[name='+e.target.name+']');
             $.each(btns,function (i,input) {
                 $("#cons_"+e.target.name+'_'+input.value).addClass('hidden');
@@ -348,7 +354,7 @@ export default{
         }
 
     },
-    handleDeclaration(e){
+    handleDeclaration(){
         return true;
     },
     selectionChanged(target){
@@ -372,13 +378,18 @@ export default{
     generateAssessorTextBoxes(h,c,val,assessor_mode,assessor_data,assessor_info){
         var box_visibility = this.status_data.assessorStatus.assessor_box_view
         var boxes = [];
+        var assessor_visibility;
+        var name = '';
+        var referral_name = '';
+        var referral_visibility = '';
+        var referral_label = '';
         if (!this.status_data.can_user_edit){
             if (assessor_data){
                 var _dt = assessor_data.find(at => at.name == c.name)
                 // Assessor Data
                 var assessor_name = `${c.name}-Assessor`;
                 var assessor_val = _dt == undefined || _dt.assessor == '' ? val : _dt.assessor;
-                var assessor_visibility = assessor_mode == 'assessor' && this.status_data.assessorStatus.has_assessor_mode && !this.status_data.assessorStatus.status_without_assessor? true : false;
+                assessor_visibility = assessor_mode == 'assessor' && this.status_data.assessorStatus.has_assessor_mode && !this.status_data.assessorStatus.status_without_assessor? true : false;
                 assessor_visibility = !assessor_visibility;
                 boxes.push(
                     <AssessorText box_view={box_visibility} type="text" name={assessor_name} value={assessor_val} label={'Assessor (Approved Management Actions)'} help_text={c.help_text} readonly={assessor_visibility}/>
@@ -399,9 +410,9 @@ export default{
                     if (!current_referral_present){
                         //console.log('here', current_referral_present)
                         // Add Referral Box
-                        var referral_name = `${c.name}-Referral-${assessor_info.email}`;
-                        var referral_visibility =  assessor_mode == 'referral' && this.status_data.assessorStatus.assessor_can_assess ? false : true ;
-                        var referral_label = `${assessor_info.name}` + ' (Suggested Management Actions)';
+                        referral_name = `${c.name}-Referral-${assessor_info.email}`;
+                        referral_visibility =  assessor_mode == 'referral' && this.status_data.assessorStatus.assessor_can_assess ? false : true ;
+                        referral_label = `${assessor_info.name}` + ' (Suggested Management Actions)';
                         boxes.push(
                             // <AssessorText box_view={box_visibility} type="text" name={referral_name} value={assessor_val} label={referral_label} readonly={referral_visibility}/>
                             <AssessorText box_view={box_visibility} type="text" name={referral_name} label={referral_label} readonly={referral_visibility}/>
@@ -411,8 +422,8 @@ export default{
             }
             else{
                 if (assessor_mode == 'assessor'){
-                    var name = `${c.name}-Assessor`;
-                    var assessor_visibility = assessor_mode == 'assessor' && this.status_data.assessorStatus.has_assessor_mode && !this.status_data.assessorStatus.status_without_assessor? true : false;
+                    name = `${c.name}-Assessor`;
+                    assessor_visibility = assessor_mode == 'assessor' && this.status_data.assessorStatus.has_assessor_mode && !this.status_data.assessorStatus.status_without_assessor? true : false;
                     assessor_visibility = !assessor_visibility;
                     boxes.push(
                         <AssessorText box_view={box_visibility} type="text" name={name} value={val} label={'Assessor (Approved Management Actions)'} help_text={c.help_text} readonly={assessor_visibility}/>
@@ -420,15 +431,15 @@ export default{
                 }
                 else if (assessor_mode == 'referral'){
                     // Add Assessor Box
-                    var name = `${c.name}-Assessor`;
-                    var assessor_visibility = assessor_mode != 'assessor' ? true : false;
+                    name = `${c.name}-Assessor`;
+                    assessor_visibility = assessor_mode != 'assessor' ? true : false;
                     boxes.push(
                         <AssessorText box_view={box_visibility} type="text" name={name} value={val} label={'Assessor (Approved Management Actions)'} help_text={c.help_text} readonly={assessor_visibility}/>
                     )
                     // Add Referral Box
-                    var referral_name = `${c.name}-Referral-${assessor_info.email}`;
-                    var referral_visibility = assessor_mode != 'referral' ? true : false;
-                    var referral_label = `${assessor_info.name}` + ' (Suggested Management Actions)';
+                    referral_name = `${c.name}-Referral-${assessor_info.email}`;
+                    referral_visibility = assessor_mode != 'referral' ? true : false;
+                    referral_label = `${assessor_info.name}` + ' (Suggested Management Actions)';
                     boxes.push(
                         <AssessorText box_view={box_visibility} type="text" name={referral_name} value={val} label={referral_label} readonly={referral_visibility}/>
                     )
@@ -493,6 +504,11 @@ export default{
     generateCommentTextBoxes(h,c,val,assessor_mode,comment_data,assessor_info, comment_val){
         var box_visibility = this.status_data.assessorStatus.assessor_box_view
         var boxes = [];
+        var assessor_visibility;
+        var referral_name = '';
+        var referral_visibility
+        var referral_label = '';
+        var name = '';
         if (!this.status_data.can_user_edit){
             if (comment_data){
                 var _dt = undefined;
@@ -516,7 +532,7 @@ export default{
                 else{
                     assessor_val = _dt.assessor == '' ? '' : _dt.assessor;
                 }
-                var assessor_visibility = assessor_mode == 'assessor' && this.status_data.assessorStatus.has_assessor_mode && !this.status_data.assessorStatus.status_without_assessor? true : false;
+                assessor_visibility = assessor_mode == 'assessor' && this.status_data.assessorStatus.has_assessor_mode && !this.status_data.assessorStatus.status_without_assessor? true : false;
                 assessor_visibility = !assessor_visibility;
                 boxes.push(
                     {
@@ -559,9 +575,9 @@ export default{
                 if (assessor_mode == 'referral'){
                     if (!current_referral_present){
                         // Add Referral Box
-                        var referral_name = `${c.name}-comment-field-Referral-${assessor_info.email}`;
-                        var referral_visibility =  assessor_mode == 'referral' && this.status_data.assessorStatus.assessor_can_assess ? false : true ;
-                        var referral_label = `${assessor_info.name}`;
+                        referral_name = `${c.name}-comment-field-Referral-${assessor_info.email}`;
+                        referral_visibility =  assessor_mode == 'referral' && this.status_data.assessorStatus.assessor_can_assess ? false : true ;
+                        referral_label = `${assessor_info.name}`;
                         boxes.push(
                             {
                                 "box_view": box_visibility,
@@ -580,8 +596,8 @@ export default{
             }
             else{
                 if (assessor_mode == 'assessor'){
-                    var name = `${c.name}-comment-field-Assessor`;
-                    var assessor_visibility = assessor_mode == 'assessor' && this.status_data.assessorStatus.has_assessor_mode && !this.status_data.assessorStatus.status_without_assessor? true : false;
+                    name = `${c.name}-comment-field-Assessor`;
+                    assessor_visibility = assessor_mode == 'assessor' && this.status_data.assessorStatus.has_assessor_mode && !this.status_data.assessorStatus.status_without_assessor? true : false;
                     assessor_visibility = !assessor_visibility;
                     boxes.push(
                         {
@@ -601,8 +617,8 @@ export default{
                 else if (assessor_mode == 'referral'){
                     //console.log('referral');
                     // Add Assessor Box
-                    var name = `${c.name}-comment-field-Assessor`;
-                    var assessor_visibility = assessor_mode != 'assessor' ? true : false;
+                    name = `${c.name}-comment-field-Assessor`;
+                    assessor_visibility = assessor_mode != 'assessor' ? true : false;
                     boxes.push(
                         {
                                 "box_view": box_visibility,
@@ -618,9 +634,9 @@ export default{
                         //<AssessorText box_view={box_visibility} type="text" name={name} value={val} label={'Assessor'} help_text={c.help_text} readonly={assessor_visibility}/>
                     )
                     // Add Referral Box
-                    var referral_name = `${c.name}-comment-field-Referral-${assessor_info.email}`;
-                    var referral_visibility = assessor_mode != 'referral' ? true : false;
-                    var referral_label = `${assessor_info.name}`;
+                    referral_name = `${c.name}-comment-field-Referral-${assessor_info.email}`;
+                    referral_visibility = assessor_mode != 'referral' ? true : false;
+                    referral_label = `${assessor_info.name}`;
                     boxes.push(
                         {
                                 "box_view": box_visibility,
@@ -646,14 +662,15 @@ export default{
     generateAddInfoApplicantTextBoxes(h,c,val,assessor_mode,readonly,add_info_applicant){
         var box_visibility = true;
         var boxes = [];
+        // var applicant_visibility;
             if (add_info_applicant){
                 //var _dt = add_info_applicant.find(at => at.name == c.name)
                 // Assessor Data
                 var _dt = add_info_applicant;
                 var applicant_name = `${c.name}-add-info-applicant`;
                 var applicant_val = _dt == undefined || _dt == '' ? val : _dt;
-                var applicant_visibility = assessor_mode == 'assessor' && this.status_data.assessorStatus.has_assessor_mode && !this.status_data.assessorStatus.status_without_assessor? false : true;
-                applicant_visibility = !applicant_visibility;
+                // applicant_visibility = assessor_mode == 'assessor' && this.status_data.assessorStatus.has_assessor_mode && !this.status_data.assessorStatus.status_without_assessor? false : true;
+                // applicant_visibility = !applicant_visibility;
                 boxes.push(
                     <AssessorText box_view={box_visibility} type="text" name={applicant_name} value={applicant_val} label={'Additional Information (proponent)'} help_text={c.help_text} readonly={readonly}/>
                 )
@@ -661,8 +678,8 @@ export default{
             else{
                     var name = `${c.name}-add-info-applicant`;
                     var blank_val=null;
-                    var applicant_visibility = assessor_mode == 'assessor' && this.status_data.assessorStatus.has_assessor_mode && !this.status_data.assessorStatus.status_without_assessor? false : true;
-                    applicant_visibility = !applicant_visibility;
+                    // applicant_visibility = assessor_mode == 'assessor' && this.status_data.assessorStatus.has_assessor_mode && !this.status_data.assessorStatus.status_without_assessor? false : true;
+                    // applicant_visibility = !applicant_visibility;
                     boxes.push(
                         <AssessorText box_view={box_visibility} type="text" name={name} value={blank_val} label={'Additional Information (proponent)'} help_text={c.help_text} readonly={readonly}/>
                     )                
@@ -698,8 +715,8 @@ export default{
                 // else{
                 //     assessor_val = _dt.assessor == '' ? '' : _dt.assessor;
                 // }
-                var assessor_visibility = assessor_mode == 'assessor' && this.status_data.assessorStatus.has_assessor_mode && !this.status_data.assessorStatus.status_without_assessor? true : false;
-                assessor_visibility = !assessor_visibility;
+                // var assessor_visibility = assessor_mode == 'assessor' && this.status_data.assessorStatus.has_assessor_mode && !this.status_data.assessorStatus.status_without_assessor? true : false;
+                // assessor_visibility = !assessor_visibility;
                 // var assessor_visibility_always=assessor_visibility;
                 var assessor_visibility_always=true;
                 boxes.push(
@@ -717,7 +734,7 @@ export default{
                     <AssessorText box_view={box_visibility} type="text" name={assessor_name} value={assessor_val} label={'Additional Information (assessor)'} help_text={c.help_text} readonly={assessor_visibility_always}/>
                 )
                 // Referral Data
-                var current_referral_present = false;
+                // var current_referral_present = false;
                 
                 
             }
@@ -794,8 +811,8 @@ export default{
                 // else{
                 //     assessor_val = _dt.assessor == '' ? '' : _dt.assessor;
                 // }
-                var assessor_visibility = assessor_mode == 'assessor' && this.status_data.assessorStatus.has_assessor_mode && !this.status_data.assessorStatus.status_without_assessor? true : false;
-                assessor_visibility = !assessor_visibility;
+                // var assessor_visibility = assessor_mode == 'assessor' && this.status_data.assessorStatus.has_assessor_mode && !this.status_data.assessorStatus.status_without_assessor? true : false;
+                // assessor_visibility = !assessor_visibility;
                 var assessor_visibility_always=true;
                 boxes.push(
                     // {
@@ -812,7 +829,7 @@ export default{
                     <AssessorText box_view={box_visibility} type="text" name={assessor_name} value={assessor_val} label={'History Additional Information (assessor)'} help_text={c.help_text} readonly={assessor_visibility_always}/>
                 )
                 // Referral Data
-                var current_referral_present = false;
+                // var current_referral_present = false;
                 
                 
             }

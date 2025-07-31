@@ -4,30 +4,38 @@
             <div class="scrollable-div">
                 <div style="float: left; width: 80%;">
                     <table class="table small-table">
-                        <tr>
-                            <th>Lodgement</th>
-                            <th style="padding-left: 10px;">Date</th>
-                            <th style="padding-left: 10px; text-align:center">Actions</th>
-                        </tr>
-                        <tr v-for="revision in this.lodgement_revisions_actions" :key="revision.id">
-                            <td>{{ revision.id }}</td>
-                            <td style="padding-left: 10px;">{{ formatDateNoTime(revision.date) }}</td>
-                            <td style="padding-left: 10px;" v-on:click="getCompareVersions(revision['index'],revision.date)">
-                                <span v-bind:id=revision.id v-html=revision.action></span>
-                            </td>
-                        </tr>
+                        <thead>
+                            <tr>
+                                <th>Lodgement</th>
+                                <th style="padding-left: 10px;">Date</th>
+                                <th style="padding-left: 10px; text-align:center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="revision in this.lodgement_revisions_actions" :key="revision.id">
+                                <td>{{ revision.id }}</td>
+                                <td style="padding-left: 10px;">{{ formatDateNoTime(revision.date) }}</td>
+                                <td style="padding-left: 10px;" v-on:click="getCompareVersions(revision['index'],revision.date)">
+                                    <span v-bind:id=revision.id v-html=revision.action></span>
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
                 <div style="float: right; width: 20%;">
                     <table class="table small-table">
-                        <tr>
-                            <th style="visibility: hidden;">Version</th>
-                        </tr>
-                        <tr v-for="revision in this.lodgement_revisions_view_actions" :key="revision.id">
-                            <td  style="padding-left: 15px;" v-on:click="getViewVersion(revision['index'])">
-                                <span v-bind:id=revision.view_id v-html=revision.view_action></span>
-                            </td>
-                        </tr>
+                        <thead>
+                            <tr>
+                                <th style="visibility: hidden;">Version</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="revision in this.lodgement_revisions_view_actions" :key="revision.id">
+                                <td  style="padding-left: 15px;" v-on:click="getViewVersion(revision['index'])">
+                                    <span v-bind:id=revision.view_id v-html=revision.view_action></span>
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>

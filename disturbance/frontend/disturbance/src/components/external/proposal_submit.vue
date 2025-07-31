@@ -7,14 +7,16 @@
                         <strong>Your proposal has been successfully submitted.</strong>
                         <br/>
                         <table>
-                            <tr>
-                                <td><strong>Proposal:</strong></td>
-                                <td><strong>{{proposal.lodgement_number}}</strong></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Date/Time:</strong></td>
-                                <td><strong> {{formatDate(proposal.lodgement_date)}}</strong></td>
-                            </tr>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Proposal:</strong></td>
+                                    <td><strong>{{proposal.lodgement_number}}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Date/Time:</strong></td>
+                                    <td><strong> {{formatDate(proposal.lodgement_date)}}</strong></td>
+                                </tr>
+                            </tbody>
                         </table>
                         <router-link :to="{name:'external-proposals-dash'}" style="margin-top:15px;" class="btn btn-primary">Back to dashboard</router-link>
                     </div>
