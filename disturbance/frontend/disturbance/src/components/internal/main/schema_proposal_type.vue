@@ -247,7 +247,7 @@ export default {
                     self.close();
 
                 }, (error) => {
-                    swal(
+                    swal.fire(
                         'Save Error',
                         helpers.apiVueResourceError(error),
                         'error'
@@ -265,7 +265,7 @@ export default {
                     self.close();
 
                 },(error)=>{
-                    swal(
+                    swal.fire(
                         'Save Error',
                         helpers.apiVueResourceError(error),
                         'error'
@@ -306,7 +306,7 @@ export default {
                 self.$refs.schema_purpose_table.row_of_data = self.$refs.schema_purpose_table.vmDataTable.row('#'+$(this).attr('data-rowid'));
                 self.sectionProposalType.id = self.$refs.schema_purpose_table.row_of_data.data().id;
 
-                swal({
+                swal.fire({
                     title: "Delete ProposalType Section",
                     text: "Are you sure you want to delete?",
                     type: "question",
@@ -315,7 +315,7 @@ export default {
 
                 }).then(async (result) => {
 
-                    if (result) {
+                    if (result.isConfirmed) {
 
                         await self.$http.delete(helpers.add_endpoint_json(api_endpoints.schema_proposal_type,(self.sectionProposalType.id+'/delete_proposal_type')))
     
@@ -342,7 +342,7 @@ export default {
 
             },err=>{
 
-                swal(
+                swal.fire(
                     'Get Application Selects Error',
                     helpers.apiVueResourceError(err),
                     'error'

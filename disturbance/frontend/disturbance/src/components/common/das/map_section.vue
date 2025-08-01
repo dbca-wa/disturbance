@@ -287,7 +287,7 @@
                 }
                 
 
-                await swal({
+                await swal.fire({
                     title: "Prefill Proposal",
                     //html: '<p>Are you sure you want to prefill this Proposal?<br>Select the Applicable:</p>',
                     html: html_text,
@@ -298,12 +298,13 @@
                     input: 'radio',
                     inputOptions: inputOptions,
                 }).then(async (result) => {
-                        if (Object.keys(inputOptions).length > 0 && !result) {
-                            swal.fire(
-                                'Please select an option',
-                                null,
-                                'warning'
-                            )
+                    if (result.isConfirmed) {
+                        if (Object.keys(inputOptions).length > 0 && !result.value) {
+                            swal.fire({
+                                title: 'Please select an option',
+                                text: null,
+                                icon: 'warning'
+                            })
                             return;
                         }  else if (Object.keys(inputOptions).length == 0) {
                             result = 'clear_all';
@@ -347,7 +348,7 @@
                             vm.errorString=helpers.apiVueResourceError(err);
                             swal.hideLoading();
                         });
-
+                    }
                 },(error) => {
                    swal.hideLoading();
                    console.log(error);

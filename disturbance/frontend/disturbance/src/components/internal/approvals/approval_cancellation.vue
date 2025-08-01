@@ -134,7 +134,7 @@ export default {
                     }).then((response)=>{
                         vm.issuingApproval = false;
                         vm.close();
-                        swal(
+                        swal.fire(
                              'Cancelled',
                              'An email has been sent to the proponent about cancellation of this approval',
                              'success'

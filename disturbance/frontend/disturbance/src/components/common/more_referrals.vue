@@ -138,18 +138,18 @@ export default {
             vm.$http.get(helpers.add_endpoint_json(api_endpoints.referrals,_id+'/remind')).then(response => {
                 vm.$emit('refreshFromResponse',response);
                 vm.table.ajax.reload();
-                swal.fire(
-                    'Referral Reminder',
-                    'A reminder has been sent to '+user,
-                    'success'
-                )
+                swal.fire({
+                    title: 'Referral Reminder',
+                    text: 'A reminder has been sent to '+user,
+                    icon: 'success'
+                })
             },
             error => {
-                swal.fire(
-                    'Proposal Error',
-                    helpers.apiVueResourceError(error),
-                    'error'
-                )
+                swal.fire({
+                    title: 'Proposal Error',
+                    text: helpers.apiVueResourceError(error),
+                    icon: 'error'
+                })
             });
         },
         resendReferral:function(_id,user){
@@ -157,18 +157,18 @@ export default {
             vm.$http.get(helpers.add_endpoint_json(api_endpoints.referrals,_id+'/resend')).then(response => {
                 vm.$emit('refreshFromResponse',response);
                 vm.table.ajax.reload();
-                swal.fire(
-                    'Referral Resent',
-                    'The referral has been resent to '+user,
-                    'success'
-                )
+                swal.fire({
+                    title: 'Referral Resent',
+                    text: 'The referral has been resent to '+user,
+                    icon: 'success'
+                })
             },
             error => {
-                swal.fire(
-                    'Proposal Error',
-                    helpers.apiVueResourceError(error),
-                    'error'
-                )
+                swal.fire({
+                    title: 'Proposal Error',
+                    text: helpers.apiVueResourceError(error),
+                    icon: 'error'
+                })
             });
         },
         recallReferral:function(_id,user){
@@ -187,18 +187,18 @@ export default {
                 swal.close();
                 vm.$emit('refreshFromResponse',response);
                 vm.table.ajax.reload();
-                swal.fire(
-                    'Referral Recall',
-                    'The referral has been recalled from '+user,
-                    'success'
-                )
+                swal.fire({
+                    title: 'Referral Recall',
+                    text: 'The referral has been recalled from '+user,
+                    icon: 'success'
+                })
             },
             error => {
-                swal.fire(
-                    'Proposal Error',
-                    helpers.apiVueResourceError(error),
-                    'error'
-                )
+                swal.fire({
+                    title: 'Proposal Error',
+                    text: helpers.apiVueResourceError(error),
+                    icon: 'error'
+                })
             });
         },
         initialiseTable: function(){

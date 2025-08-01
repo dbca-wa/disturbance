@@ -359,10 +359,10 @@ export default {
             });
           }
           else{
-            swal({
+            swal.fire({
                     title: 'User not selected',
                     html: 'Please select the user to view the details',
-                    type: 'error'
+                    icon: 'error'
                 }).then(() => {
                     
                 });

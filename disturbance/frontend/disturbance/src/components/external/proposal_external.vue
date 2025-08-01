@@ -594,17 +594,17 @@ export default {
             vm.$http.post(vm.proposal_form_url, formData).then(() => {
                     if (confirmation_required){
                         if (this.apiaryTemplateGroup) {
-                            swal.fire(
-                                'Saved',
-                                'Your application has been saved',
-                                'success'
-                            );
+                            swal.fire({
+                                title: 'Saved',
+                                text: 'Your application has been saved',
+                                icon: 'success'
+                            });
                         } else {
-                            swal.fire(
-                                'Saved',
-                                'Your proposal has been saved',
-                                'success'
-                            );
+                            swal.fire({
+                                title: 'Saved',
+                                text: 'Your proposal has been saved',
+                                icon: 'success'
+                            });
                         }
                     }
                     this.isSaving = false;
@@ -1007,11 +1007,11 @@ export default {
                                 params: { proposal: vm.proposal}
                             });
                         } catch (err) {
-                            swal.fire(
-                                'Submit Error',
-                                helpers.apiVueResourceError(err),
-                                'error'
-                            )
+                            swal.fire({
+                                title: 'Submit Error',
+                                text: helpers.apiVueResourceError(err),
+                                icon: 'error'
+                            })
                         }
                         /*
                         vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal.id+'/submit'),formData).then(res=>{

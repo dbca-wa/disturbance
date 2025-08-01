@@ -410,7 +410,7 @@ export default {
 
         search: function() {
           let vm = this;
-          // swal(
+          // swal.fire(
           //         'Missing fields',
           //         'Please select all the mandatory fields',
           //         'error'
@@ -418,7 +418,7 @@ export default {
           if(!vm.selected_proposal_type_id || !vm.selected_section || !vm.selected_question || !vm.selected_option )
           {
             //console.log('here');
-            swal(
+            swal.fire(
                   'Missing fields',
                   'Please select all the mandatory fields',
                   'error'
@@ -764,7 +764,7 @@ export default {
                   });
                 }
                 else{
-                    swal(
+                    swal.fire(
                       'Missing records',
                       'No search results to include in the Spatial file',
                       'error'

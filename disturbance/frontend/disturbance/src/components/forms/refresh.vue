@@ -72,7 +72,7 @@ data: function() {
 		    msg = "Processing refresh request";
 		}
 		let queue_position = response['body']['position']
-		swal({
+		swal.fire({
 		    title: 'Refresh Question',
 		    html: '<p><strong>' + msg + '</strong><br>' +
 			  '<span style="font-size:0.8em">You can close your browser and come back later. You will receive an email when it is complete. (' + queue_position+ ')</span>' +
@@ -80,7 +80,7 @@ data: function() {
 		})
 
             },(error)=>{
-                swal(
+                swal.fire(
                     'Error',
                     helpers.apiVueResourceError(error),
                     //error.body,

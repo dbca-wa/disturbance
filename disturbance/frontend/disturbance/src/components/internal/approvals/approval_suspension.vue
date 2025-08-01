@@ -155,7 +155,7 @@ export default {
                         vm.issuingApproval = false;
                         vm.approval={};
                         vm.close();
-                        swal(
+                        swal.fire(
                              'Suspend',
                              'An email has been sent to the proponent about suspension of this approval',
                              'success'

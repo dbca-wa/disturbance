@@ -436,7 +436,7 @@ export default {
                     self.$refs.schema_masterlist_table.vmDataTable.ajax.reload();
                     self.close();
                 }, (error) => {
-                    swal(
+                    swal.fire(
                         'Save Error',
                         helpers.apiVueResourceError(error),
                         'error'
@@ -451,7 +451,7 @@ export default {
                     self.$refs.schema_masterlist_table.vmDataTable.ajax.reload();
                     self.close();
                 },(error)=>{
-                    swal(
+                    swal.fire(
                         'Save Error',
                         helpers.apiVueResourceError(error),
                         'error'
@@ -506,20 +506,20 @@ export default {
                 self.$refs.schema_masterlist_table.row_of_data = self.$refs.schema_masterlist_table.vmDataTable.row('#'+$(this).attr('data-rowid'));
                 self.masterlist.id = self.$refs.schema_masterlist_table.row_of_data.data().id;
 
-                swal({
+                swal.fire({
                     title: "Delete Masterlist",
                     text: "Are you sure you want to delete?",
-                    type: "question",
+                    icon: "question",
                     showCancelButton: true,
                     confirmButtonText: 'Accept'
 
                 }).then(async (result) => {
-                    if (result) {
+                    if (result.isConfirmed) {
                         await self.$http.delete(helpers.add_endpoint_json(api_endpoints.schema_masterlist,(self.masterlist.id+'/delete_masterlist')))
                         .then(() => {
                             self.$refs.schema_masterlist_table.vmDataTable.ajax.reload();
                         }, (error) => {
-                            swal(
+                            swal.fire(
                                 'Delete Error',
                                 helpers.apiVueResourceError(error),
                                 'error'
@@ -572,7 +572,7 @@ export default {
                     this.answerTypes = res.body.all_answer_types
 
             },err=>{
-                swal(
+                swal.fire(
                     'Get Application Selects Error',
                     helpers.apiVueResourceError(err),
                     'error'

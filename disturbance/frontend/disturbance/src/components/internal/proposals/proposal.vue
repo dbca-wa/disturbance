@@ -886,7 +886,7 @@ export default {
         checkAssignedOfficer: function() {
             if (this.proposal.processing_status == 'With Approver'){
                 if(this.proposal && this.proposal.assigned_approver==null){
-                    swal(
+                    swal.fire(
                         'Error',
                         'Please assign this proposal to yourself or an officer before proceeding',
                         'error'
@@ -896,7 +896,7 @@ export default {
                 return true;
             }
             else if(this.proposal && this.proposal.assigned_officer==null){
-                    swal(
+                    swal.fire(
                         'Error',
                         'Please assign this proposal to yourself or an officer before proceeding',
                         'error'
@@ -987,11 +987,11 @@ export default {
             }
             if(this.isApprovalLevelDocument && this.proposal.approval_level_comment=='')
             {
-                swal(
-                    'Error',
-                    'Please add Approval document or comments before final approval',
-                    'error'
-                )
+                swal.fire({
+                    title: 'Error',
+                    text: 'Please add Approval document or comments before final approval',
+                    icon: 'error'
+                })
             }
             else{
             this.$refs.proposed_approval.approval = this.proposal.proposed_issuance_approval != null ? helpers.copyObject(this.proposal.proposed_issuance_approval) : {};
@@ -1061,11 +1061,11 @@ export default {
           vm.checkAssessorData();
           let formData = new FormData(vm.form);
           vm.$http.post(vm.proposal_form_url,formData).then(()=>{
-              swal(
-                'Saved',
-                'Your proposal has been saved',
-                'success'
-              )
+              swal.fire({
+                title: 'Saved',
+                text: 'Your proposal has been saved',
+                icon: 'success'
+              })
           },err=>{
             console.log(err);
           });
@@ -1124,11 +1124,11 @@ export default {
                 vm.proposal = helpers.copyObject(vm.original_proposal)
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
                 vm.updateAssignedOfficerSelect();
-                swal(
-                    'Proposal Error',
-                    helpers.apiVueResourceError(error),
-                    'error'
-                )
+                swal.fire({
+                    title: 'Proposal Error',
+                    text: helpers.apiVueResourceError(error),
+                    icon: 'error'
+                })
             });
         },
         refreshFromResponse:function(response){
@@ -1172,11 +1172,11 @@ export default {
                     vm.proposal = helpers.copyObject(vm.original_proposal)
                     vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
                     vm.updateAssignedOfficerSelect();
-                    swal(
-                        'Proposal Error',
-                        helpers.apiVueResourceError(error),
-                        'error'
-                    )
+                    swal.fire({
+                        title: 'Proposal Error',
+                        text: helpers.apiVueResourceError(error),
+                        icon: 'error'
+                    })
                 });
             }
             else{
@@ -1190,11 +1190,11 @@ export default {
                     vm.proposal = helpers.copyObject(vm.original_proposal)
                     vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
                     vm.updateAssignedOfficerSelect();
-                    swal(
-                        'Proposal Error',
-                        helpers.apiVueResourceError(error),
-                        'error'
-                    )
+                    swal.fire({
+                        title: 'Proposal Error',
+                        text: helpers.apiVueResourceError(error),
+                        icon: 'error'
+                    })
                 });
             }
         },
@@ -1225,11 +1225,11 @@ export default {
             }, (error) => {
                 vm.proposal = helpers.copyObject(vm.original_proposal)
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
-                swal(
-                    'Proposal Error',
-                    helpers.apiVueResourceError(error),
-                    'error'
-                )
+                swal.fire({
+                    title: 'Proposal Error',
+                    text: helpers.apiVueResourceError(error),
+                    icon: 'error'
+                })
             });
 
           },err=>{
@@ -1256,11 +1256,11 @@ export default {
             }, (error) => {
                 vm.proposal = helpers.copyObject(vm.original_proposal)
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
-                swal(
-                    'Proposal Error',
-                    helpers.apiVueResourceError(error),
-                    'error'
-                )
+                swal.fire({
+                    title: 'Proposal Error',
+                    text: helpers.apiVueResourceError(error),
+                    icon: 'error'
+                })
             });
 
         }
@@ -1284,11 +1284,11 @@ export default {
             }, (error) => {
                 vm.proposal = helpers.copyObject(vm.original_proposal)
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
-                swal(
-                    'Proposal Error',
-                    helpers.apiVueResourceError(error),
-                    'error'
-                )
+                swal.fire({
+                    title: 'Proposal Error',
+                    text: helpers.apiVueResourceError(error),
+                    icon: 'error'
+                })
             });
             }
             }
@@ -1381,21 +1381,21 @@ export default {
                 vm.original_proposal = helpers.copyObject(response.body);
                 vm.proposal = response.body;
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
-                swal(
-                    'Referral Sent',
-                    'The referral has been sent to '+ vm.selected_referral,
-                    'success'
-                )
+                swal.fire({
+                    title: 'Referral Sent',
+                    text: 'The referral has been sent to '+ vm.selected_referral,
+                    icon: 'success'
+                })
                 $(vm.$refs.department_users).val(null).trigger("change");
                 vm.selected_referral = '';
                 vm.referral_text = '';
             }, (error) => {
                 console.log(error);
-                swal(
-                    'Referral Error',
-                    helpers.apiVueResourceError(error),
-                    'error'
-                )
+                swal.fire({
+                    title: 'Referral Error',
+                    text: helpers.apiVueResourceError(error),
+                    icon: 'error'
+                })
                 vm.sendingReferral = false;
             });
 
@@ -1416,7 +1416,7 @@ export default {
                 vm.original_proposal = helpers.copyObject(response.body);
                 vm.proposal = response.body;
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
-                swal(
+                swal.fire(
                     'Referral Sent',
                     'The referral has been sent to '+vm.department_users.find(d => d.email == vm.selected_referral).name,
                     'success'
@@ -1425,7 +1425,7 @@ export default {
                 vm.selected_referral = '';
             }, (error) => {
                 console.log(error);
-                swal(
+                swal.fire(
                     'Referral Error',
                     helpers.apiVueResourceError(error),
                     'error'
@@ -1440,18 +1440,18 @@ export default {
                 vm.original_proposal = helpers.copyObject(response.body);
                 vm.proposal = response.body;
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
-                swal(
-                    'Referral Reminder',
-                    'A reminder has been sent to '+r.referral,
-                    'success'
-                )
+                swal.fire({
+                    title: 'Referral Reminder',
+                    text: 'A reminder has been sent to '+r.referral,
+                    icon: 'success'
+                })
             },
             error => {
-                swal(
-                    'Proposal Error',
-                    helpers.apiVueResourceError(error),
-                    'error'
-                )
+                swal.fire({
+                    title: 'Proposal Error',
+                    text: helpers.apiVueResourceError(error),
+                    icon: 'error'
+                })
             });
         },
         resendReferral:function(r){
@@ -1461,28 +1461,28 @@ export default {
                 vm.original_proposal = helpers.copyObject(response.body);
                 vm.proposal = response.body;
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
-                swal(
-                    'Referral Resent',
-                    'The referral has been resent to '+r.referral,
-                    'success'
-                )
+                swal.fire({
+                    title: 'Referral Resent',
+                    text: 'The referral has been resent to '+r.referral,
+                    icon: 'success'
+                })
             },
             error => {
-                swal(
-                    'Proposal Error',
-                    helpers.apiVueResourceError(error),
-                    'error'
-                )
+                swal.fire({
+                    title: 'Proposal Error',
+                    text: helpers.apiVueResourceError(error),
+                    icon: 'error'
+                })
             });
         },
         recallReferral:function(r){
             let vm = this;
-            swal({
+            swal.fire({
                     title: "Loading...",
                     //text: "Loading...",
                     allowOutsideClick: false,
                     allowEscapeKey:false,
-                    onOpen: () =>{
+                    didOpen: () =>{
                         swal.showLoading()
                     }
             })
@@ -1493,18 +1493,18 @@ export default {
                 vm.original_proposal = helpers.copyObject(response.body);
                 vm.proposal = response.body;
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
-                swal(
-                    'Referral Recall',
-                    'The referral has been recalled from '+r.referral,
-                    'success'
-                )
+                swal.fire({
+                    title: 'Referral Recall',
+                    text: 'The referral has been recalled from '+r.referral,
+                    icon: 'success'
+                })
             },
             error => {
-                swal(
-                    'Proposal Error',
-                    helpers.apiVueResourceError(error),
-                    'error'
-                )
+                swal.fire({
+                    title: 'Proposal Error',
+                    text: helpers.apiVueResourceError(error),
+                    icon: 'error'
+                })
             });
         },
         initialiseReferralSelect: function() {

@@ -317,14 +317,14 @@ export default {
                 let data = vm.oracleDatePicker.data("DateTimePicker").date().format('DD/MM/YYYY');
                 let override = vm.oracle_override ? 'true': 'false';
                 vm.$http.get('/api/oracle_job?date='+data+'&override='+override).then(() => {
-                    swal({
-                        type: 'success',
+                    swal.fire({
+                        icon: 'success',
                         title: 'Job Success',
                         text: 'The oracle job was completed successfully',
                     })
                 },(error) => {
-                    swal({
-                        type: 'error',
+                    swal.fire({
+                        icon: 'error',
                         title: 'Oracle Job Error',
                         text: helpers.apiVueResourceError(error),
                     })
@@ -343,8 +343,8 @@ export default {
                 window.location.assign(url);
                 /*vm.$http.get(url).then((response) => {
                 },(error) => {
-                    swal({
-                        type: 'error',
+                    swal.fire({
+                        icon: 'error',
                         title: 'BPOINT Settlement Report Error',
                         text: helpers.apiVueResourceError(error),
                     })
@@ -360,8 +360,8 @@ export default {
                 window.location.assign(url);
                 /*vm.$http.get(url).then((response) => {
                 },(error) => {
-                    swal({
-                        type: 'error',
+                    swal.fire({
+                        icon: 'error',
                         title: 'BPOINT Settlement Report Error',
                         text: helpers.apiVueResourceError(error),
                     })

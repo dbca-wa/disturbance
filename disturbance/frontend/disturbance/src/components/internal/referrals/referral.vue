@@ -413,11 +413,11 @@ export default {
           let vm = this;
           let formData = new FormData(vm.form);
           vm.$http.post(vm.proposal_form_url,formData).then(() => {
-              swal(
-                'Saved',
-                'Your proposal has been saved',
-                'success'
-              )
+              swal.fire({
+                title: 'Saved',
+                text: 'Your proposal has been saved',
+                icon: 'success'
+              })
           },err=>{
             console.log(err);
           });
@@ -545,22 +545,22 @@ export default {
                 vm.sendingReferral = false;
                 vm.referral = response.body;
                 vm.referral.proposal.applicant.address = vm.referral.proposal.applicant.address != null ? vm.referral.proposal.applicant.address : {};
-                swal(
-                    'Referral Sent',
-                    //'The referral has been sent to '+vm.department_users.find(d => d.email == vm.selected_referral).name,
-                    'The referral has been sent to '+ vm.selected_referral,
-                    'success'
-                )
+                swal.fire({
+                    title: 'Referral Sent',
+                     //'The referral has been sent to '+vm.department_users.find(d => d.email == vm.selected_referral).name,
+                    text: 'The referral has been sent to '+ vm.selected_referral,
+                    icon: 'success'
+                })
                 $(vm.$refs.department_users).val(null).trigger("change");
                 vm.selected_referral = '';
                 vm.referral_text = '';
              }, (error) => {
                 console.log(error);
-                swal(
-                    'Referral Error',
-                    helpers.apiVueResourceError(error),
-                    'error'
-                )
+                swal.fire({
+                    title: 'Referral Error',
+                    text: helpers.apiVueResourceError(error),
+                    icon: 'error'
+                })
                 vm.sendingReferral = false;
                 vm.selected_referral = '';
                 vm.referral_text = '';
@@ -579,14 +579,14 @@ export default {
                 vm.sendingReferral = false;
                 vm.referral = response.body;
                 vm.referral.proposal.applicant.address = vm.referral.proposal.applicant.address != null ? vm.referral.proposal.applicant.address : {};
-                swal(
+                swal.fire(
                     'Referral Sent',
                     'The referral has been sent to '+vm.department_users.find(d => d.email == vm.selected_referral).name,
                     'success'
                 )
             }, (error) => {
                 console.log(error);
-                swal(
+                swal.fire(
                     'Referral Error',
                     helpers.apiVueResourceError(error),
                     'error'
@@ -603,18 +603,18 @@ export default {
                 // vm.proposal = response.body;
                 // vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
                 vm.fetchReferral(vm.referral.id);
-                swal(
-                    'Referral Reminder',
-                    'A reminder has been sent to '+r.referral,
-                    'success'
-                )
+                swal.fire({
+                    title: 'Referral Reminder',
+                    text: 'A reminder has been sent to '+r.referral,
+                    icon: 'success'
+                })
             },
             error => {
-                swal(
-                    'Proposal Error',
-                    helpers.apiVueResourceError(error),
-                    'error'
-                )
+                swal.fire({
+                    title: 'Proposal Error',
+                    text: helpers.apiVueResourceError(error),
+                    icon: 'error'
+                })
             });
         },
         resendReferral:function(r){
@@ -625,18 +625,18 @@ export default {
                 // vm.proposal = response.body;
                 // vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
                 vm.fetchReferral(vm.referral.id);
-                swal(
-                    'Referral Resent',
-                    'The referral has been resent to '+r.referral,
-                    'success'
-                )
+                swal.fire({
+                    title: 'Referral Resent',
+                    text: 'The referral has been resent to '+r.referral,
+                    icon: 'success'
+                })
             },
             error => {
-                swal(
-                    'Proposal Error',
-                    helpers.apiVueResourceError(error),
-                    'error'
-                )
+                swal.fire({
+                    title: 'Proposal Error',
+                    text: helpers.apiVueResourceError(error),
+                    icon: 'error'
+                })
             });
         },
         recallReferral:function(r){
@@ -647,18 +647,18 @@ export default {
                 // vm.proposal = response.body;
                 // vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
                 vm.fetchReferral(vm.referral.id);
-                swal(
-                    'Referral Recall',
-                    'The referral has been recalled from '+r.referral,
-                    'success'
-                )
+                swal.fire({
+                    title: 'Referral Recall',
+                    text: 'The referral has been recalled from '+r.referral,
+                    icon: 'success'
+                })
             },
             error => {
-                swal(
-                    'Proposal Error',
-                    helpers.apiVueResourceError(error),
-                    'error'
-                )
+                swal.fire({
+                    title: 'Proposal Error',
+                    text: helpers.apiVueResourceError(error),
+                    icon: 'error'
+                })
             });
         },
         fetchreferrallist: function(referral_id){
@@ -688,47 +688,47 @@ export default {
             let vm = this;
             let data = {'referral_comment': vm.referral_comment};
             
-            swal({
+            swal.fire({
                 title: "Complete Referral",
                 text: "Are you sure you want to complete this referral?",
-                type: "question",
+                icon: "question",
                 showCancelButton: true,
                 confirmButtonText: 'Submit'
-            }).then(() => { 
-                let formData = new FormData(vm.form);
-                vm.$http.post(vm.proposal_form_url,formData).then(()=>{
+            }).then((swalresult) => { 
+                if(swalresult.isConfirmed) {
+                    let formData = new FormData(vm.form);
+                    vm.$http.post(vm.proposal_form_url,formData).then(()=>{
+                        
+                        vm.$http.post(helpers.add_endpoint_json(api_endpoints.referrals,vm.$route.params.referral_id+'/complete'),JSON.stringify(data),{
+                    emulateJSON:true
+                    }).then(res => {
+                        vm.referral = res.body;
+                        vm.referral.proposal.applicant.address = vm.referral.proposal.applicant.address != null ? vm.referral.proposal.applicant.address : {};
+                    },
+                    error => {
+                        swal.fire({
+                            title: 'Referral Error',
+                            text: helpers.apiVueResourceError(error),
+                            icon: 'error'
+                        })
+                    });
                     
-                    vm.$http.post(helpers.add_endpoint_json(api_endpoints.referrals,vm.$route.params.referral_id+'/complete'),JSON.stringify(data),{
-                emulateJSON:true
-                }).then(res => {
-                    vm.referral = res.body;
-                    vm.referral.proposal.applicant.address = vm.referral.proposal.applicant.address != null ? vm.referral.proposal.applicant.address : {};
-                },
-                error => {
-                    swal(
-                        'Referral Error',
-                        helpers.apiVueResourceError(error),
-                        'error'
-                    )
-                });
-                
-                 },err=>{
-                    console.log(err);
-                 });
+                    },err=>{
+                        console.log(err);
+                    });
 
-               /* vm.$http.get(helpers.add_endpoint_json(api_endpoints.referrals,vm.$route.params.referral_id+'/complete')).then(res => {
-                    vm.referral = res.body;
-                    vm.referral.proposal.applicant.address = vm.referral.proposal.applicant.address != null ? vm.referral.proposal.applicant.address : {};
-                },
-                error => {
-                    swal(
-                        'Referral Error',
-                        helpers.apiVueResourceError(error),
-                        'error'
-                    )
-                }); */
-
-
+                /* vm.$http.get(helpers.add_endpoint_json(api_endpoints.referrals,vm.$route.params.referral_id+'/complete')).then(res => {
+                        vm.referral = res.body;
+                        vm.referral.proposal.applicant.address = vm.referral.proposal.applicant.address != null ? vm.referral.proposal.applicant.address : {};
+                    },
+                    error => {
+                        swal.fire({
+                            title: 'Referral Error',
+                            text: helpers.apiVueResourceError(error),
+                            icon: 'error'
+                        })
+                    }); */
+                }
             },(error) => {
                 console.log(error);
             });

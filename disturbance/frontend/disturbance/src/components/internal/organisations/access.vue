@@ -376,20 +376,22 @@ export default {
     },
     acceptRequest: function() {
         let vm = this;
-        swal({
+        swal.fire({
             title: "Accept Organisation Request",
             text: "Are you sure you want to accept this organisation request?",
-            type: "question",
+            icon: "question",
             showCancelButton: true,
             confirmButtonText: 'Accept'
-        }).then(() => {
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.organisation_requests,(vm.access.id+'/accept')))
-            .then((response) => {
-                console.log(response);
-                vm.access = response.body;
-            }, (error) => {
-                console.log(error);
-            });
+        }).then((swalresult) => {
+            if(swalresult.isConfirmed) {
+                vm.$http.get(helpers.add_endpoint_json(api_endpoints.organisation_requests,(vm.access.id+'/accept')))
+                .then((response) => {
+                    console.log(response);
+                    vm.access = response.body;
+                }, (error) => {
+                    console.log(error);
+                });
+            }
         },(error) => {
             console.log(error);
         });
@@ -398,20 +400,22 @@ export default {
 
     declineRequest: function() {
         let vm = this;
-        swal({
+        swal.fire({
             title: "Decline Organisation Request",
             text: "Are you sure you want to decline this organisation request?",
             type: "question",
             showCancelButton: true,
             confirmButtonText: 'Decline'
-        }).then(() => {
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.organisation_requests,(vm.access.id+'/decline')))
-            .then((response) => {
-                console.log(response);
-                vm.access = response.body;
-            }, (error) => {
-                console.log(error);
-            });
+        }).then((swalresult) => {
+            if(swalresult.isConfirmed) {
+                vm.$http.get(helpers.add_endpoint_json(api_endpoints.organisation_requests,(vm.access.id+'/decline')))
+                .then((response) => {
+                    console.log(response);
+                    vm.access = response.body;
+                }, (error) => {
+                    console.log(error);
+                });
+            }
         },(error) => {
             console.log(error);
         });

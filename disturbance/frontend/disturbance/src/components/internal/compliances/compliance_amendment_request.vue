@@ -112,7 +112,7 @@ export default {
                         emulateJSON:true,
                     }).then((response)=>{
                         //vm.$parent.loading.splice('processing contact',1);
-                        swal(
+                        swal.fire(
                              'Sent',
                              'An email has been sent to the proponent with the request to amend this compliance',
                              'success'

@@ -134,7 +134,7 @@ export default {
                     }).then((response)=>{
                         vm.issuingApproval = false;
                         vm.close();
-                        swal(
+                        swal.fire(
                              'Surrender',
                              'An email has been sent to the proponent about surrender of this approval',
                              'success'

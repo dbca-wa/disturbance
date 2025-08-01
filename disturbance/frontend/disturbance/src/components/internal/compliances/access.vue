@@ -202,20 +202,22 @@ export default {
     },
     acceptCompliance: function() {
         let vm = this;
-        swal({
+        swal.fire({
             title: "Accept Compliance with requirements",
             text: "Are you sure you want to accept this compliance with requirements?",
-            type: "question",
+            icon: "question",
             showCancelButton: true,
             confirmButtonText: 'Accept'
-        }).then(() => {
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.compliances,(vm.compliance.id+'/accept')))
-            .then((response) => {
-                console.log(response);
-                vm.compliance = response.body;
-            }, (error) => {
-                console.log(error);
-            });
+        }).then((swalresult) => {
+            if(swalresult.isConfirmed){
+                vm.$http.get(helpers.add_endpoint_json(api_endpoints.compliances,(vm.compliance.id+'/accept')))
+                .then((response) => {
+                    console.log(response);
+                    vm.compliance = response.body;
+                }, (error) => {
+                    console.log(error);
+                });
+            }
         },(error) => {
             console.log(error);
         });

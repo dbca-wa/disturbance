@@ -509,20 +509,20 @@
                 vm.$http.post(url, JSON.stringify({"geojson": geojson, "filter_kwargs": filter_kwargs}),{
                     emulateJSON:true,
                 }).then((response)=>{
-                    swal.fire(
-                        'Create shapefile',
+                    swal.fire({
+                        title: 'Create shapefile',
                         //response.body.message,
-                        response.body.message + "<br> Click <a href='/filelist' target='_blank'> here </a>to view downloaded file",
-                        'success'
-                    )
+                        text: response.body.message + "<br> Click <a href='/filelist' target='_blank'> here </a>to view downloaded file",
+                        icon: 'success'
+                    })
                     vm.show_spinner = false;
                     vm.download_shapefile_btn_disabled = false;
                 }, (error) => {
-                    swal.fire(
-                        'Create shapefile Error',
-                        helpers.apiVueResourceError(error),
-                        'error'
-                    )
+                    swal.fire({
+                        title: 'Create shapefile Error',
+                        text: helpers.apiVueResourceError(error),
+                        icon: 'error'
+                    })
                     vm.show_spinner = false;
                     vm.download_shapefile_btn_disabled = false;
                 });

@@ -165,11 +165,11 @@ export default {
                     }).then(()=>{
                         //vm.$parent.loading.splice('processing contact',1);
                         let proposal_or_licence = vm.is_apiary_proposal ? 'application' : 'proposal'
-                        swal(
-                             'Sent',
-                             'An email has been sent to the proponent with the request to amend this ' + proposal_or_licence,
-                             'success'
-                        );
+                        swal.fire({
+                             title: 'Sent',
+                             text: 'An email has been sent to the proponent with the request to amend this ' + proposal_or_licence,
+                             icon: 'success'
+                        });
                         vm.amendingProposal = true;
                         vm.close();
                         //vm.$emit('refreshFromResponse',response);

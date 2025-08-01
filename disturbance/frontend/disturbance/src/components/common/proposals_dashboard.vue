@@ -724,11 +724,11 @@ export default {
                 if (swalresult.isConfirmed) {
                     vm.$http.delete(api_endpoints.discard_proposal(proposal_id))
                     .then(() => {
-                        swal.fire(
-                            'Discarded',
-                            'Your proposal has been discarded',
-                            'success'
-                        )
+                        swal.fire({
+                            title: 'Discarded',
+                            text: 'Your proposal has been discarded',
+                            icon: 'success'
+                        })
                         vm.$refs.proposal_datatable.vmDataTable.ajax.reload();
                     }, (error) => {
                         console.log(error);

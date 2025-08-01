@@ -1170,7 +1170,7 @@ export default {
                 return response.body;
             },(error)=>{
                 console.log('Error: ' + JSON.stringify(error))
-                swal(
+                swal.fire(
                     'Error',
                     helpers.apiVueResourceError(error),
                     'error'
@@ -1205,7 +1205,7 @@ export default {
                     //self.close();
                 }, (error) => {
                     console.log('Error: ' + JSON.stringify(error))
-                    swal(
+                    swal.fire(
                         'Save Error',
                         helpers.apiVueResourceError(error),
                         'error'
@@ -1224,7 +1224,7 @@ export default {
                     //self.close();
                 },(error)=>{
                     console.log('Error: ' + JSON.stringify(error))
-                    swal(
+                    swal.fire(
                         'Save Error',
                         helpers.apiVueResourceError(error),
                         'error'
@@ -1256,7 +1256,7 @@ export default {
 
                 let num_layers = this.$refs.spatial_query_layer_table.vmDataTable.rows()[0].length // number of rows
                 if (num_layers==env['max_layers_per_sqq']) {
-                    swal(
+                    swal.fire(
                         'Layer Limit Reached',
                         'Max number of Layers per Question: ' + env['max_layers_per_sqq'],
                         'warning'
@@ -1281,7 +1281,7 @@ export default {
                     //self.close();
                 }, (error) => {
                     console.log('Error: ' + JSON.stringify(error))
-                    swal(
+                    swal.fire(
                         'Save Error',
                         helpers.apiVueResourceError(error),
                         'error'
@@ -1314,7 +1314,7 @@ export default {
                     //self.close();
                 },(error)=>{
                     console.log('Error: ' + JSON.stringify(error))
-                    swal(
+                    swal.fire(
                         'Save Error',
                         helpers.apiVueResourceError(error),
                         'error'
@@ -1365,7 +1365,7 @@ export default {
                     if (!sqs_response_basic.answer) { delete sqs_response_basic.answer }
 		    self.sqs_response = JSON.stringify(sqs_response_basic, null, 4);
                 }
-                //swal(
+                //swal.fire(
                 //    'Request Queued on Spatial Query Server',
                 //    'Task ID: ' + self.sqs_response['data']['task_id'] + 'Created: ' + self.sqs_response['data']['task_created'] + '\n' + self.sqs_response['message'],
                 //    'info'
@@ -1377,7 +1377,7 @@ export default {
                 self.num_layers_utilised = uniq(response.body['layer_data'].map((item) => item.layer_name)).length // unique layers used
             },(error)=>{
                 console.log('Error: ' + JSON.stringify(error))
-                swal(
+                swal.fire(
                     'Error',
                     helpers.apiVueResourceError(error),
                     'error'
@@ -1445,7 +1445,7 @@ export default {
                 console.log('Error: ' + JSON.stringify(error))
                 self.requesting = false;
                 self.show_spinner = false;
-                swal(
+                swal.fire(
                     'Error',
                     helpers.apiVueResourceError(error),
                     'error'
@@ -1454,45 +1454,46 @@ export default {
         },
 
         check_sqs_layer_form: async function() {
-	    let self = this;
-	    const data = {}
-	    data['csrfmiddlewaretoken'] = self.csrf_token;
-	    data['layer'] = self.spatialquerylayer.layer;
+            let self = this;
+            const data = {}
+            data['csrfmiddlewaretoken'] = self.csrf_token;
+            data['layer'] = self.spatialquerylayer.layer;
 
-	    swal({
-		title: "Check Spatialquery Layer",
-		type: "question",
-		showCancelButton: true,
-		confirmButtonText: 'OK',
-		input: 'radio',
-		inputOptions: {
-		  'check_layer':  'Check Layer Exists on SQS',
-		  'reload_layer': 'Create/Update Layer in SQS',
-		}
-	    }).then(async (result) => {
-		console.log("Result: " + result);
-		if (!result) {
-		    swal(
-			'Please select an option',
-			null,
-			'warning'
-		    )
-		    return;
-		}
+            swal.fire({
+                title: "Check Spatialquery Layer",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: 'OK',
+                input: 'radio',
+                inputOptions: {
+                    'check_layer':  'Check Layer Exists on SQS',
+                    'reload_layer': 'Create/Update Layer in SQS',
+                }
+            }).then(async (result) => {
+                if(result.isConfirmed) {
+                    console.log("Result: " + result);
+                    if (!result.value) {
+                        swal.fire(
+                            'Please select an option',
+                            null,
+                            'warning'
+                        )
+                        return;
+                    }
+                    if (result=='check_layer') {
+                        let url = helpers.add_endpoint_json(api_endpoints.spatial_query, self.spatialquerylayer.layer.layer_name+'/check_sqs_layer');
+                        self.check_sqs_layer(url)
 
-		if (result=='check_layer') {
-		    let url = helpers.add_endpoint_json(api_endpoints.spatial_query, self.spatialquerylayer.layer.layer_name+'/check_sqs_layer');
-		    self.check_sqs_layer(url)
+                    }
+                    else if (result=='reload_layer') {
+                        let url = helpers.add_endpoint_json(api_endpoints.spatial_query, self.spatialquerylayer.layer.layer_name + '/create_or_update_sqs_layer');
+                        self.create_or_update_sqs_layer(url, data)
 
-		}
-		else if (result=='reload_layer') {
-		    let url = helpers.add_endpoint_json(api_endpoints.spatial_query, self.spatialquerylayer.layer.layer_name + '/create_or_update_sqs_layer');
-		    self.create_or_update_sqs_layer(url, data)
-
-		}
-	    },(error) => {
-		console.log(error);
-	    });                
+                    }
+                }
+            },(error) => {
+            console.log(error);
+            });                
 	},
 
 
@@ -1503,14 +1504,14 @@ export default {
             await self.$http.get(url)
             .then((response) => {
                 //console.log(JSON.stringify(response))
-                swal(
+                swal.fire(
                     'Layer Exists in SQS!',
                     response.body.message,
                     'success'
                 )
                 self.show_spinner = false;
             }, (error) => {
-                swal(
+                swal.fire(
                     'Layer Check Error',
                     helpers.apiVueResourceError(error),
                     'error'
@@ -1526,14 +1527,14 @@ export default {
             await self.$http.post(url ,JSON.stringify(data),{
                 emulateJSON:true,
             }).then((response)=>{
-                swal(
+                swal.fire(
                     'Create/Update SQS Layer!',
                     response.body.message,
                     'success'
                 )
                 self.show_spinner = false;
             }, (error) => {
-                swal(
+                swal.fire(
                     'Create/Update Error',
                     helpers.apiVueResourceError(error),
                     'error'
@@ -1550,14 +1551,14 @@ export default {
             //await self.$http.get(api_endpoints.spatial_query + '/' + spatialquery_id + '/check_cddp_question?proposal_id='+proposal_id)
             await self.$http.get(url)
             .then((response) => {
-                swal(
+                swal.fire(
                     'Question Found in Proposal Schema!',
                     response.body.message,
                     'success'
                 )
                 self.show_spinner = false;
             }, (error) => {
-                swal(
+                swal.fire(
                     'Check Question Error',
                     helpers.apiVueResourceError(error),
                     'error'
@@ -1568,41 +1569,43 @@ export default {
 
         export_layers_used:function () {
             let vm = this;
-            swal({
+            swal.fire({
                 title: "Export Layers Used",
                 text: "Are you sure you want to run export?",
-                type: "warning",
+                icon: "warning",
                 showCancelButton: true,
                 confirmButtonText: 'Export',
                 //confirmButtonColor:'#d9534f'
-            }).then(() => {
-                vm.show_spinner = true;
-                vm.export_layers_btn_disabled = true;
-                vm.$http.get('/api/proposal_sqs/layers_used/')
-                .then((response) => {
-                    var FileSaver = require('file-saver');
-                    const blob = new Blob([response.body], {type: 'text/csv'});
-                    //const blob = new Blob([response.bodyText], {type: 'text/csv'});
-                    //console.log(response.headers.map.filename)
-                    FileSaver.saveAs(blob, response.headers.map.filename);
-                    vm.show_spinner = false;
-                    vm.export_layers_btn_disabled = false;
+            }).then((swalresult) => {
+                if(swalresult.isConfirmed) {
+                    vm.show_spinner = true;
+                    vm.export_layers_btn_disabled = true;
+                    vm.$http.get('/api/proposal_sqs/layers_used/')
+                    .then((response) => {
+                        var FileSaver = require('file-saver');
+                        const blob = new Blob([response.body], {type: 'text/csv'});
+                        //const blob = new Blob([response.bodyText], {type: 'text/csv'});
+                        //console.log(response.headers.map.filename)
+                        FileSaver.saveAs(blob, response.headers.map.filename);
+                        vm.show_spinner = false;
+                        vm.export_layers_btn_disabled = false;
 
-                    swal(
-                        'Export \'Layers Used\' Completed',
-                        "Export completed",
-                        'success'
-                    )
-                }, (error) => {
-                    console.log(error);
-                    swal({
-                    title: "Export Layers Used",
-                    text: error.body,
-                    type: "error",
-                    })
-                    vm.show_spinner = false;
-                    vm.export_layers_btn_disabled = false;
-                });
+                        swal.fire(
+                            'Export \'Layers Used\' Completed',
+                            "Export completed",
+                            'success'
+                        )
+                    }, (error) => {
+                        console.log(error);
+                        swal.fire({
+                            title: "Export Layers Used",
+                            text: error.body,
+                            icon: "error",
+                        })
+                        vm.show_spinner = false;
+                        vm.export_layers_btn_disabled = false;
+                    });
+                }
             },() => {
                 vm.show_spinner = false;
                 vm.export_layers_btn_disabled = false;
@@ -1786,7 +1789,7 @@ export default {
 		    self.showQuestionModal = true;
 		    $(self.$refs.select_question).val(self.spatialquery.question).trigger('change');
 		},err=>{
-		    swal(
+		    swal.fire(
 			'Get Application Selects Error',
 			helpers.apiVueResourceError(err),
 			'error'
@@ -1886,20 +1889,20 @@ export default {
                 self.$refs.spatial_query_question_table.row_of_data = self.$refs.spatial_query_question_table.vmDataTable.row('#'+$(this).attr('data-rowid'));
                 self.spatialquery.id = self.$refs.spatial_query_question_table.row_of_data.data().id;
 
-                swal({
+                swal.fire({
                     title: "Delete Spatialquery",
                     text: "Are you sure you want to delete?",
-                    type: "question",
+                    icon: "question",
                     showCancelButton: true,
                     confirmButtonText: 'Accept'
 
                 }).then(async (result) => {
-                    if (result) {
+                    if (result.isConfirmed) {
                         await self.$http.delete(helpers.add_endpoint_json(api_endpoints.spatial_query,(self.spatialquery.id+'/delete_spatialquery')))
                         .then(() => {
                             self.$refs.spatial_query_question_table.vmDataTable.ajax.reload();
                         }, (error) => {
-                            swal(
+                            swal.fire(
                                 'Delete Error',
                                 helpers.apiVueResourceError(error),
                                 'error'
@@ -1917,7 +1920,7 @@ export default {
                 self.$refs.spatial_query_layer_table.row_of_data = self.$refs.spatial_query_layer_table.vmDataTable.row('#'+$(this).attr('data-rowid'));
                 let id = self.$refs.spatial_query_layer_table.row_of_data.data().id;
 
-                swal({
+                swal.fire({
                     title: "Delete Spatialquery Layer",
                     text: "Are you sure you want to delete?",
                     type: "question",
@@ -1925,7 +1928,7 @@ export default {
                     confirmButtonText: 'Accept'
 
                 }).then(async (result) => {
-                    if (result) {
+                    if (result.isConfirmed) {
                         await self.$http.delete(helpers.add_endpoint_json(api_endpoints.spatial_query_layer,(id+'/delete_spatialquerylayer')))
                         .then((response) => {
                             //self.$refs.spatial_query_layer_table.vmDataTable.ajax.reload();
@@ -1937,7 +1940,7 @@ export default {
                 	    self.$refs.spatial_query_question_table.vmDataTable.ajax.reload();
 
                         }, (error) => {
-                            swal(
+                            swal.fire(
                                 'Delete Error',
                                 helpers.apiVueResourceError(error),
                                 'error'
@@ -1975,10 +1978,10 @@ export default {
 //                data['csrfmiddlewaretoken'] = self.csrf_token;
 //                data['layer'] = self.spatialquery.layer;
 //
-//                swal({
+//                swal.fire({
 //                    title: "Check Spatialquery Layer",
 //                    //text: "Input Proposal Lodgement Number",
-//                    type: "question",
+//                    icon: "question",
 //                    showCancelButton: true,
 //                    confirmButtonText: 'OK',
 //                    input: 'radio',
@@ -1989,7 +1992,7 @@ export default {
 //                }).then(async (result) => {
 //                    console.log("Result: " + result);
 //                    if (!result) {
-//                        swal(
+//                        swal.fire(
 //                            'Please select an option',
 //                            null,
 //                            'warning'
@@ -2019,10 +2022,10 @@ export default {
 //                let spatialquery_id = self.$refs.spatial_query_question_table.row_of_data.data().id;
 //
 //                //console.log(api_endpoints.spatial_query + '/check_sqs_layer?layer_name=' + layer_name)
-//                swal({
+//                swal.fire({
 //                    title: "Check Spatialquery Question",
 //                    text: "Input Proposal Lodgement Number",
-//                    type: "question",
+//                    icon: "question",
 //                    showCancelButton: true,
 //                    confirmButtonText: 'Check',
 //                    input: 'text',
@@ -2030,7 +2033,7 @@ export default {
 //                }).then(async (result) => {
 //                    console.log("Result: " + result);
 //                    if (!result) {
-//                        swal(
+//                        swal.fire(
 //                            'Please input Proposal Lodgement Number',
 //                            null,
 //                            'warning'
@@ -2078,7 +2081,7 @@ export default {
                     this.masterlist_questions = this.spatialquery_selects.all_masterlist
                     this.is_admin = this.spatialquery_selects.permissions.is_admin
             },err=>{
-                swal(
+                swal.fire(
                     'Get Application Selects Error',
                     helpers.apiVueResourceError(err),
                     'error'
@@ -2088,7 +2091,7 @@ export default {
 //            await this.$http.get(helpers.add_endpoint_json(api_endpoints.spatial_query,'get_sqs_layers')).then(res=>{
 //                    this.available_sqs_layers = res.body
 //            },err=>{
-//                swal(
+//                swal.fire(
 //                    'Get Application Selects Error',
 //                    helpers.apiVueResourceError(err),
 //                    'error'

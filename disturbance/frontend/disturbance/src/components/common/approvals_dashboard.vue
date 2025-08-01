@@ -893,11 +893,11 @@ export default {
 
                         })
                         .then(() => {
-                            swal.fire(
-                                'Reinstate',
-                                'Your approval has been reinstated',
-                                'success'
-                            )
+                            swal.fire({
+                                title: 'Reinstate',
+                                text: 'Your approval has been reinstated',
+                                icon: 'success'
+                            })
                             vm.$refs.proposal_datatable.vmDataTable.ajax.reload();
 
                         }, (error) => {

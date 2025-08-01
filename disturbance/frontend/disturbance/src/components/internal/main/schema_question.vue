@@ -559,7 +559,7 @@ export default {
 
                 }, (error) => {
 
-                    swal(
+                    swal.fire(
                         'Save Error',
                         helpers.apiVueResourceError(error),
                         'error'
@@ -652,17 +652,17 @@ export default {
                 self.$refs.schema_question_table.row_of_data = self.$refs.schema_question_table.vmDataTable.row('#'+$(this).attr('data-rowid'));
                 self.sectionQuestion.id = self.$refs.schema_question_table.row_of_data.data().id;
 
-                swal({
+                swal.fire({
                     title: "Delete Section Question",
                     text: "Are you sure you want to delete?",
-                    type: "question",
+                    icon: "question",
                     showCancelButton: true,
                     confirmButtonText: 'Accept'
 
                 }).then(async (result) => {
                     //console.log(result);
 
-                    if (result) {
+                    if (result.isConfirmed) {
 
                         await self.$http.delete(helpers.add_endpoint_json(api_endpoints.schema_question,(self.sectionQuestion.id+'/delete_question')))
     
@@ -762,7 +762,7 @@ export default {
                     this.schemaGroups = res.body.all_group
 
             },err=>{
-                swal(
+                swal.fire(
                     'Get Application Selects Error',
                     helpers.apiVueResourceError(err),
                     'error'

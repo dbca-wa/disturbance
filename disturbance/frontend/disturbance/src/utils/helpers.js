@@ -199,6 +199,10 @@ export default{
                 }
             }
         }
-        await swal("Error", errorText, "error");
+        await swal.fire({
+            title: "Error",
+            text: errorText,
+            icon: "error"
+        });
     },
 };

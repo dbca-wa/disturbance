@@ -387,14 +387,16 @@ export default {
                 let name = $(e.target).data('name');
                 let email = $(e.target).data('email');
                 let id = $(e.target).data('id');
-                swal({
+                swal.fire({
                     title: "Delete Contact",
                     text: "Are you sure you want to remove "+ name + "("+ email + ") as a contact  ?",
-                    type: "error",
+                    icon: "error",
                     showCancelButton: true,
                     confirmButtonText: 'Accept'
-                }).then(() => {
-                    vm.deleteContact(id);
+                }).then((swalresult) => {
+                    if(swalresult.isConfirmed){
+                        vm.deleteContact(id);
+                    }
                 },(error) => {
                     console.log(error);
                 });
@@ -422,7 +424,7 @@ export default {
                 vm.updatingDetails = false;
                 vm.org = response.body;
                 if (vm.org.address == null){ vm.org.address = {}; }
-                swal(
+                swal.fire(
                     'Saved',
                     'Organisation details have been saved',
                     'success'
@@ -435,7 +437,7 @@ export default {
                         text=text.email[0];
                     }
                 }
-                swal(
+                swal.fire(
                     'Error', 
                     'Organisation details have cannot be saved because of the following error: '+text,
                     'error'
@@ -445,7 +447,7 @@ export default {
         },
         addedContact: function() {
             let vm = this;
-            swal(
+            swal.fire(
                 'Added',
                 'The contact has been successfully added.',
                 'success'
@@ -458,7 +460,7 @@ export default {
             vm.$http.delete(helpers.add_endpoint_json(api_endpoints.organisation_contacts,id),{
                 emulateJSON:true
             }).then(() => {
-                swal(
+                swal.fire(
                     'Contact Deleted', 
                     'The contact was successfully deleted',
                     'success'
@@ -466,7 +468,7 @@ export default {
                 vm.$refs.contacts_datatable.vmDataTable.ajax.reload();
             }, (error) => {
                 console.log(error);
-                swal(
+                swal.fire(
                     'Contact Deleted', 
                     'The contact could not be deleted because of the following error : [' + error.body + ']',
                     'error'
@@ -481,7 +483,7 @@ export default {
             }).then((response) => {
                 vm.updatingAddress = false;
                 vm.org = response.body;
-                swal(
+                swal.fire(
                     'Saved',
                     'Address details have been saved',
                     'success'
