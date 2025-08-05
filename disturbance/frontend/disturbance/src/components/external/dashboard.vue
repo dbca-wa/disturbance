@@ -92,7 +92,7 @@ export default {
     },
     created: function() {
         // retrieve template group
-        this.$http.get('/template_group',{
+        fetch('/template_group',{
             emulateJSON:true
             }).then(res=>{
                 //this.template_group = res.body.template_group;

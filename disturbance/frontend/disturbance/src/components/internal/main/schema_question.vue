@@ -429,7 +429,7 @@ export default {
             if (this.filterQuestionProposalType==='All') {
                 return true
             }
-            this.$http.get(helpers.add_endpoint_json(api_endpoints.schema_question,'1/get_question_sections'),{
+            fetch(helpers.add_endpoint_json(api_endpoints.schema_question,'1/get_question_sections'),{
                 params: { proposal_type_id: this.filterQuestionProposalType },
             }).then((res)=>{
                 this.schemaGroups = res.body.question_groups; 
@@ -442,7 +442,7 @@ export default {
             if (this.filterQuestionSection==='All') {
                 return true
             }
-            this.$http.get(helpers.add_endpoint_json(api_endpoints.schema_question,'1/get_question_parents'),{
+            fetch(helpers.add_endpoint_json(api_endpoints.schema_question,'1/get_question_parents'),{
                 params: { section_id: this.filterQuestionSection },
             }).then((res)=>{
                 this.sectionQuestion.section = this.filterQuestionSection;
@@ -469,7 +469,7 @@ export default {
             if (!this.isModalOpen || g_id == '' || g_id == null) {
                 return true
             }
-            // this.$http.get(helpers.add_endpoint_json(api_endpoints.schema_question,'1/get_question_order'),{
+            // fetch(helpers.add_endpoint_json(api_endpoints.schema_question,'1/get_question_order'),{
             //     params: { group_id: g_id },
             // }).then((res)=>{
             //     this.sectionQuestion.order = res.body.question_order;
@@ -754,7 +754,7 @@ export default {
         },
         initSelects: async function() {
 
-            await this.$http.get(helpers.add_endpoint_json(api_endpoints.schema_question,'1/get_question_selects')).then(res=>{
+            await fetch(helpers.add_endpoint_json(api_endpoints.schema_question,'1/get_question_selects')).then(res=>{
 
                     this.masterlist = res.body.all_masterlist;
                     this.schemaProposalTypes = res.body.all_proposal_types;

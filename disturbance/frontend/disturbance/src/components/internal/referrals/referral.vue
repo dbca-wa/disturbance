@@ -436,7 +436,7 @@ export default {
                 });
             }
             else{
-                vm.$http.get(helpers.add_endpoint_json(api_endpoints.organisation_requests,(vm.proposal.id+'/unassign')))
+                fetch(helpers.add_endpoint_json(api_endpoints.organisation_requests,(vm.proposal.id+'/unassign')))
                 .then((response) => {
                     console.log(response);
                     vm.proposal = response.body;
@@ -448,7 +448,7 @@ export default {
         fetchProposalGroupMembers: function(){
             let vm = this;
             vm.loading.push('Loading Proposal Group Members');
-            vm.$http.get(api_endpoints.organisation_access_group_members).then((response) => {
+            fetch(api_endpoints.organisation_access_group_members).then((response) => {
                 vm.members = response.body
                 vm.loading.splice('Loading Proposal Group Members',1);
             },(error) => {
@@ -460,7 +460,7 @@ export default {
         fetchDeparmentUsers: function(){
             let vm = this;
             vm.loading.push('Loading Department Users');
-            vm.$http.get(api_endpoints.department_users).then((response) => {
+            fetch(api_endpoints.department_users).then((response) => {
                 vm.department_users = response.body
                 vm.loading.splice('Loading Department Users',1);
             },(error) => {
@@ -598,7 +598,7 @@ export default {
         remindReferral:function(r){
             let vm = this;
             
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/remind')).then(() => {
+            fetch(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/remind')).then(() => {
                 // vm.original_proposal = helpers.copyObject(response.body);
                 // vm.proposal = response.body;
                 // vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
@@ -620,7 +620,7 @@ export default {
         resendReferral:function(r){
             let vm = this;
             
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/resend')).then(() => {
+            fetch(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/resend')).then(() => {
                 // vm.original_proposal = helpers.copyObject(response.body);
                 // vm.proposal = response.body;
                 // vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
@@ -642,7 +642,7 @@ export default {
         recallReferral:function(r){
             let vm = this;
             
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/recall')).then(() => {
+            fetch(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/recall')).then(() => {
                 // vm.original_proposal = helpers.copyObject(response.body);
                 // vm.proposal = response.body;
                 // vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
@@ -664,7 +664,7 @@ export default {
         fetchreferrallist: function(referral_id){
             let vm = this;
 
-            Vue.http.get(helpers.add_endpoint_json(api_endpoints.referrals,referral_id+'/referral_list')).then(response => {
+            fetch(helpers.add_endpoint_json(api_endpoints.referrals,referral_id+'/referral_list')).then(response => {
                 vm.referral_sent_list = response.body;     
             },
             err => {
@@ -673,7 +673,7 @@ export default {
         },
         fetchReferral: function(){
             let vm = this;
-            Vue.http.get(helpers.add_endpoint_json(api_endpoints.referrals,vm.referral.id)).then(res => {
+            fetch(helpers.add_endpoint_json(api_endpoints.referrals,vm.referral.id)).then(res => {
               
                 vm.referral = res.body;
                 vm.referral.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
@@ -717,7 +717,7 @@ export default {
                         console.log(err);
                     });
 
-                /* vm.$http.get(helpers.add_endpoint_json(api_endpoints.referrals,vm.$route.params.referral_id+'/complete')).then(res => {
+                /* fetch(helpers.add_endpoint_json(api_endpoints.referrals,vm.$route.params.referral_id+'/complete')).then(res => {
                         vm.referral = res.body;
                         vm.referral.proposal.applicant.address = vm.referral.proposal.applicant.address != null ? vm.referral.proposal.applicant.address : {};
                     },
@@ -759,7 +759,7 @@ export default {
         });
     },
     created: function() {
-        Vue.http.get(helpers.add_endpoint_json(api_endpoints.referrals,this.referralId)).then(res => {
+        fetch(helpers.add_endpoint_json(api_endpoints.referrals,this.referralId)).then(res => {
                 this.referral = res.body;
                 this.referral.proposal.applicant.address = this.proposal.applicant.address != null ? this.proposal.applicant.address : {};
                 //vm.fetchreferrallist(vm.referral.id);
@@ -770,8 +770,8 @@ export default {
     },
     /*
     beforeRouteEnter: function(to, from, next) {
-          //Vue.http.get(`/api/proposal/${to.params.proposal_id}/referral_proposal.json`).then(res => {
-          Vue.http.get(helpers.add_endpoint_json(api_endpoints.referrals,to.params.referral_id)).then(res => {
+          //fetch(`/api/proposal/${to.params.proposal_id}/referral_proposal.json`).then(res => {
+          fetch(helpers.add_endpoint_json(api_endpoints.referrals,to.params.referral_id)).then(res => {
               next(vm => {
                 vm.referral = res.body;
                 vm.referral.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
@@ -784,7 +784,7 @@ export default {
     },
     */
     beforeRouteUpdate: function(to, from, next) {
-          Vue.http.get(`/api/proposal/${to.params.proposal_id}/referall_proposal.json`).then(res => {
+          fetch(`/api/proposal/${to.params.proposal_id}/referall_proposal.json`).then(res => {
               next(vm => {
                 vm.referral = res.body;
                 vm.referral.proposal.applicant.address = vm.referral.proposal.applicant.address != null ? vm.referral.proposal.applicant.address : {};

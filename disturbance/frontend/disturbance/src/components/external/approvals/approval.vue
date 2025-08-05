@@ -194,7 +194,7 @@ export default {
         },
         loadApproval: function(approval_id){
             let vm = this
-            Vue.http.get(helpers.add_endpoint_json(api_endpoints.approvals,approval_id)).then(
+            fetch(helpers.add_endpoint_json(api_endpoints.approvals,approval_id)).then(
                 res => {
                     vm.approval = res.body;
                     vm.approval.applicant_id = res.body.applicant_id;
@@ -210,7 +210,7 @@ export default {
         },
         fetchOrganisation(applicant_id){
             let vm=this;
-            Vue.http.get(helpers.add_endpoint_json(api_endpoints.organisations,applicant_id)).then((response) => {
+            fetch(helpers.add_endpoint_json(api_endpoints.organisations,applicant_id)).then((response) => {
                 vm.org = response.body;
                 vm.org.address = response.body.address;
         },(error) => {

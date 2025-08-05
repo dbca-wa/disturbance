@@ -33,8 +33,8 @@ export default {
     mounted: function () {
     },
     beforeRouteEnter: function(to, from, next) {
-          Vue.http.get(`/api/referrals/${to.params.referral_id}/referral_wrapper.json`).then(res => {
-          //Vue.http.get(helpers.add_endpoint_json(api_endpoints.referrals,to.params.referral_id)).then(res => {
+          fetch(`/api/referrals/${to.params.referral_id}/referral_wrapper.json`).then(res => {
+          //fetch(helpers.add_endpoint_json(api_endpoints.referrals,to.params.referral_id)).then(res => {
               next(vm => {
                   vm.referralId = res.body.id;
                 //   vm.apiaryReferral = res.body.apiary_referral_exists;

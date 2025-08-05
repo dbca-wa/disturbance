@@ -303,7 +303,7 @@ export default {
   },
   watch: {},
   beforeRouteEnter: function(to, from, next){
-    Vue.http.get(helpers.add_endpoint_json(api_endpoints.organisation_requests,to.params.access_id)).then((response) => {
+    fetch(helpers.add_endpoint_json(api_endpoints.organisation_requests,to.params.access_id)).then((response) => {
         next(vm => {
             vm.access = response.body
         })
@@ -336,13 +336,13 @@ export default {
         if (this.apiaryTemplateGroup) {
             url = api_endpoints.apiary_organisation_access_group_members;
         }
-        const response = await this.$http.get(url)
+        const response = await fetch(url)
         this.members = response.body
         this.loading.splice('Loading Access Group Members',1);
     },
     assignMyself: function(){
         let vm = this;
-        vm.$http.get(helpers.add_endpoint_json(api_endpoints.organisation_requests,(vm.access.id+'/assign_request_user')))
+        fetch(helpers.add_endpoint_json(api_endpoints.organisation_requests,(vm.access.id+'/assign_request_user')))
         .then((response) => {
             console.log(response);
             vm.access = response.body;
@@ -365,7 +365,7 @@ export default {
             console.log('there');
         }
         else{
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.organisation_requests,(vm.access.id+'/unassign')))
+            fetch(helpers.add_endpoint_json(api_endpoints.organisation_requests,(vm.access.id+'/unassign')))
             .then((response) => {
                 console.log(response);
                 vm.access = response.body;
@@ -384,7 +384,7 @@ export default {
             confirmButtonText: 'Accept'
         }).then((swalresult) => {
             if(swalresult.isConfirmed) {
-                vm.$http.get(helpers.add_endpoint_json(api_endpoints.organisation_requests,(vm.access.id+'/accept')))
+                fetch(helpers.add_endpoint_json(api_endpoints.organisation_requests,(vm.access.id+'/accept')))
                 .then((response) => {
                     console.log(response);
                     vm.access = response.body;
@@ -408,7 +408,7 @@ export default {
             confirmButtonText: 'Decline'
         }).then((swalresult) => {
             if(swalresult.isConfirmed) {
-                vm.$http.get(helpers.add_endpoint_json(api_endpoints.organisation_requests,(vm.access.id+'/decline')))
+                fetch(helpers.add_endpoint_json(api_endpoints.organisation_requests,(vm.access.id+'/decline')))
                 .then((response) => {
                     console.log(response);
                     vm.access = response.body;
@@ -422,7 +422,7 @@ export default {
     },
 
     fetchProfile: async function(){
-        const response = await Vue.http.get(api_endpoints.profile);
+        const response = await fetch(api_endpoints.profile);
         this.profile = response.body
     },
 
@@ -450,7 +450,7 @@ export default {
   */
     created: async function() {
         // retrieve template group
-        const res = await this.$http.get('/template_group',{
+        const res = await fetch('/template_group',{
             emulateJSON:true
             })
         if (res.body.template_group === 'apiary') {

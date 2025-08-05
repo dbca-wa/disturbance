@@ -336,7 +336,7 @@ export default {
         },
         initSelects: async function() {
 
-            await this.$http.get(helpers.add_endpoint_json(api_endpoints.schema_proposal_type,'1/get_proposal_type_selects')).then(res=>{
+            await fetch(helpers.add_endpoint_json(api_endpoints.schema_proposal_type,'1/get_proposal_type_selects')).then(res=>{
 
                     this.schemaProposalTypes = res.body.all_proposal_type;
 

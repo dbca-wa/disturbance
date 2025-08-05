@@ -8,9 +8,11 @@ import helpers from '@/utils/helpers'
 // import api_endpoints from './api'
 
 
+import $ from 'jquery';
 import { extendMoment } from 'moment-range';
 import jsZip from 'jszip';
 window.JSZip = jsZip;
+window.$ = $;
 
 import 'datatables.net';
 import 'datatables.net-bs';
@@ -23,7 +25,12 @@ import "datatables.net-responsive-bs/css/responsive.bootstrap.css"
 
 import "sweetalert2/dist/sweetalert2.css"
 
-// import 'jquery-validation'
+import 'jquery-validation'
+
+import 'select2';
+import 'select2/dist/css/select2.min.css';
+import 'select2-bootstrap-theme/dist/select2-bootstrap.min.css';
+
 
 
 extendMoment(moment);

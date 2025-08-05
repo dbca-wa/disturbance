@@ -149,8 +149,8 @@
 <script>
 import { v4 as uuidv4 } from 'uuid';
 import datatable from '@/utils/vue/datatable.vue'
-require("select2/dist/css/select2.min.css");
-require("select2-bootstrap-theme/dist/select2-bootstrap.min.css");
+// require("select2/dist/css/select2.min.css");
+// require("select2-bootstrap-theme/dist/select2-bootstrap.min.css");
 import {
     api_endpoints,
     helpers,
@@ -186,6 +186,7 @@ export default {
             //Profile to check if user has access to process Proposal
             profile: {},
             //template_group: '',
+            templateGroupResponse: {},
             apiaryTemplateGroup: false,
             dasTemplateGroup: false,
             templateGroupDetermined: false,
@@ -193,6 +194,7 @@ export default {
             is_apiary_admin: false,
             is_das_apiary_admin: false,
             // Filters for Proposals
+            filterListsProposal:{},
             filterProposalRegion: [],
             filterProposalDistrict: [],
             filterProposalActivity: 'All',
@@ -691,24 +693,25 @@ export default {
 
         fetchFilterLists: function(){
             let vm = this;
+            //fetch('/api/list_proposal/filter_list/').then((response) => {
+            fetch(
+                api_endpoints.filter_list
+            ).then( async (response) => {
+                vm.filterListsProposal = await response.json();
+                vm.proposal_regions = vm.filterListsProposal.regions;
+                vm.proposal_districts = vm.filterListsProposal.districts;
 
-            //vm.$http.get('/api/list_proposal/filter_list/').then((response) => {
-            vm.$http.get(api_endpoints.filter_list).then((response) => {
-                vm.proposal_regions = response.body.regions;
-                vm.proposal_districts = response.body.districts;
-
-                vm.proposal_activityTitles = response.body.activities;
-                vm.proposal_applicationTypes = response.body.application_types;
+                vm.proposal_activityTitles = vm.filterListsProposal.activities;
+                vm.proposal_applicationTypes = vm.filterListsProposal.application_types;
                 //vm.proposal_activityTitles.push('Apiary');
 
-                vm.proposal_submitters = response.body.submitters;
-                vm.proposal_applicants = response.body.applicants;
+                vm.proposal_submitters = vm.filterListsProposal.submitters;
+                vm.proposal_applicants = vm.filterListsProposal.applicants;
                 //vm.proposal_status = vm.level == 'internal' ? response.body.processing_status_choices: response.body.customer_status_choices;
                 vm.proposal_status = vm.level == 'internal' ? vm.internal_status: vm.external_status;
             },(error) => {
-                console.log(error);
+                    console.log(error);
             })
-            //console.log(vm.regions);
         },
 
         discardProposal:function (proposal_id) {
@@ -917,13 +920,14 @@ export default {
 
         fetchProfile: function(){
             let vm = this;
-            Vue.http.get(api_endpoints.profile).then((response) => {
-                vm.profile = response.body
+            fetch(api_endpoints.profile).then(
+                async (response) => {
+                    vm.profile = await response.json();
+                },(error) => {
+                    console.log(error);
 
-            },(error) => {
-                console.log(error);
-
-            })
+                }
+            )
         },
 
         check_assessor: function(proposal){
@@ -963,7 +967,7 @@ export default {
         });
         /*
         // retrieve template group
-        vm.$http.get('/template_group',{
+        fetch('/template_group',{
             emulateJSON:true
             }).then(res=>{
                 vm.template_group = res.body.template_group;
@@ -978,12 +982,14 @@ export default {
         });
     },
     created: function() {
+        let vm = this;
         console.log('in created')
         // retrieve template group
-        this.$http.get('/template_group',{ emulateJSON: true }).then(
-            res=>{
+        fetch('/template_group',{ emulateJSON: true }).then(
+            async res=>{
                 //this.template_group = res.body.template_group;
-                if (res.body.template_group === 'apiary') {
+                vm.templateGroupResponse = await res.json();
+                if (vm.templateGroupResponse.template_group === 'apiary') {
                     this.apiaryTemplateGroup = true;
                 } else {
                     this.dasTemplateGroup = true;
@@ -992,9 +998,9 @@ export default {
                 }
                 this.templateGroupDetermined = true;
                 this.setDashboardText();
-                this.is_das_admin = res.body.is_das_admin
-                this.is_apiary_admin = res.body.is_apiary_admin
-                this.is_das_apiary_admin = res.body.is_das_apiary_admin
+                this.is_das_admin = vm.templateGroupResponse.is_das_admin
+                this.is_apiary_admin = vm.templateGroupResponse.is_apiary_admin
+                this.is_das_apiary_admin = vm.templateGroupResponse.is_das_apiary_admin
             },
             err=>{
                 console.log(err);

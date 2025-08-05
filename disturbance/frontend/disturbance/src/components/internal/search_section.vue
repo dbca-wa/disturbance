@@ -469,7 +469,7 @@ export default {
       fetchRegions: function(){
         let vm = this;
 
-        vm.$http.get(api_endpoints.regions).then((response) => {
+        fetch(api_endpoints.regions).then((response) => {
             vm.api_regions = response.body;
             //console.log('api_regions ' + response.body);
 
@@ -483,7 +483,7 @@ export default {
       fetchSections: function(){
         let vm = this;
 
-        vm.$http.get(api_endpoints.proposal_type_sections).then((response) => {
+        fetch(api_endpoints.proposal_type_sections).then((response) => {
             vm.api_sections = response.body;
             //console.log('api_regions ' + response.body);
 
@@ -603,7 +603,7 @@ export default {
             vm.categories = [];
             vm.approval_level = '';
 
-        vm.$http.get(api_endpoints.activity_matrix).then((response) => {
+        fetch(api_endpoints.activity_matrix).then((response) => {
             this.activity_matrix = response.body[0].schema[0];
             this.keys_ordered = response.body[0].ordered;
             //console.log('this.activity_matrix ' + response.body[0].schema);
@@ -662,7 +662,7 @@ export default {
       fetchApplicationTypes: function(){
         let vm = this;
 
-        vm.$http.get(api_endpoints.searchable_application_types).then((response) => {
+        fetch(api_endpoints.searchable_application_types).then((response) => {
             vm.api_app_types = response.body;
             //console.log('api_app_types ' + response.body);
 

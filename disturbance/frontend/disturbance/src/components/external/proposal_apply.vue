@@ -492,7 +492,7 @@ export default {
 	fetchRegions: function(){
 		let vm = this;
 
-		vm.$http.get(api_endpoints.regions).then((response) => {
+		fetch(api_endpoints.regions).then((response) => {
 				vm.api_regions = response.body;
 				//console.log('api_regions ' + response.body);
 
@@ -527,7 +527,7 @@ export default {
     fetchApplicationTypes: function(){
 		let vm = this;
 
-		vm.$http.get(api_endpoints.application_types).then((response) => {
+		fetch(api_endpoints.application_types).then((response) => {
 				vm.api_app_types = response.body;
 				//console.log('api_app_types ' + response.body);
 
@@ -574,7 +574,7 @@ export default {
         vm.categories = [];
         vm.approval_level = '';
 
-		vm.$http.get(api_endpoints.activity_matrix).then((response) => {
+		fetch(api_endpoints.activity_matrix).then((response) => {
 				this.activity_matrix = response.body[0].schema[0];
 				this.keys_ordered = response.body[0].ordered;
 				//console.log('this.activity_matrix ' + response.body[0].schema);
@@ -749,7 +749,7 @@ export default {
   },
     created: function() {
         // retrieve template group
-        this.$http.get('/template_group',{
+        fetch('/template_group',{
             emulateJSON:true
             }).then(res=>{
                 //this.template_group = res.body.template_group;

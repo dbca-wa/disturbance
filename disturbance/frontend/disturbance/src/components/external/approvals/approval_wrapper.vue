@@ -37,7 +37,7 @@ export default {
     mounted: function () {
     },
     beforeRouteEnter: function(to, from, next) {
-          Vue.http.get(`/api/approvals/${to.params.approval_id}/approval_wrapper.json`).then(res => {
+          fetch(`/api/approvals/${to.params.approval_id}/approval_wrapper.json`).then(res => {
               next(vm => {
                   console.log(res.body)
                   vm.approvalId = res.body.id;

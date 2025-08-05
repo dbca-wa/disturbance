@@ -1181,7 +1181,7 @@ export default {
         let proposal_id = this.$route.params.proposal_id
 
         let vm = this;
-        Vue.http.get(`/api/proposal/${ proposal_id }.json`).then(
+        fetch(`/api/proposal/${ proposal_id }.json`).then(
             res => {
                 vm.loading.push('fetching proposal')
                 vm.proposal = res.body;
@@ -1190,7 +1190,7 @@ export default {
                 vm.loading.splice('fetching proposal', 1);
                 vm.setdata(vm.proposal.readonly);
 
-                Vue.http.get(helpers.add_endpoint_json(api_endpoints.proposals, proposal_id + '/amendment_request')).then((res) => {
+                fetch(helpers.add_endpoint_json(api_endpoints.proposals, proposal_id + '/amendment_request')).then((res) => {
                     vm.setAmendmentData(res.body);
                 },
                 err => {
@@ -1202,7 +1202,7 @@ export default {
             }
         );
         // retrieve template group
-        this.$http.get('/template_group',{
+        fetch('/template_group',{
             emulateJSON:true
             }).then(res=>{
                 //this.template_group = res.body.template_group;

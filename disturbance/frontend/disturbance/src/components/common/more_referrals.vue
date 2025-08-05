@@ -135,7 +135,7 @@ export default {
         remindReferral:function(_id,user){
             let vm = this;
             
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.referrals,_id+'/remind')).then(response => {
+            fetch(helpers.add_endpoint_json(api_endpoints.referrals,_id+'/remind')).then(response => {
                 vm.$emit('refreshFromResponse',response);
                 vm.table.ajax.reload();
                 swal.fire({
@@ -154,7 +154,7 @@ export default {
         },
         resendReferral:function(_id,user){
             let vm = this;
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.referrals,_id+'/resend')).then(response => {
+            fetch(helpers.add_endpoint_json(api_endpoints.referrals,_id+'/resend')).then(response => {
                 vm.$emit('refreshFromResponse',response);
                 vm.table.ajax.reload();
                 swal.fire({
@@ -182,7 +182,7 @@ export default {
                         swal.showLoading()
                     }
             })
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.referrals,_id+'/recall')).then(response => {
+            fetch(helpers.add_endpoint_json(api_endpoints.referrals,_id+'/recall')).then(response => {
                 swal.hideLoading();
                 swal.close();
                 vm.$emit('refreshFromResponse',response);

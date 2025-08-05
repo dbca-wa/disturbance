@@ -37,7 +37,7 @@ export default {
     },
     beforeRouteEnter: function(to, from, next) {
         // let vm = this
-        Vue.http.get(`/api/proposal/${to.params.proposal_id}/internal_proposal_wrapper.json`).then(res => {
+        fetch(`/api/proposal/${to.params.proposal_id}/internal_proposal_wrapper.json`).then(res => {
             next(vm => {
                 vm.proposalId = res.body.id;
                 vm.applicationTypeName = res.body.application_type_name;

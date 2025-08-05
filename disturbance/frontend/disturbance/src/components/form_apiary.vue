@@ -341,7 +341,7 @@
             },
             fetchDeedPollUrl: function(){
                 let vm = this;
-                vm.$http.get('/api/deed_poll_url').then((response) => {
+                fetch('/api/deed_poll_url').then((response) => {
                     vm.deed_poll_url = response.body;
                 },(error) => {
                     console.log(error);

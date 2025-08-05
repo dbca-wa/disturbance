@@ -193,6 +193,7 @@ export default {
             select2Applied: false,
             proposal_options: {},
             datatableReady: false,
+            filter_lists_approval: {},
         }
     },
     components:{
@@ -618,14 +619,17 @@ export default {
         fetchFilterLists: function(){
             let vm = this;
 
-            vm.$http.get(api_endpoints.filter_list_approvals).then((response) => {
-                vm.proposal_regions = response.body.regions;
-                vm.proposal_activityTitles = response.body.activities;
-                vm.proposal_submitters = response.body.submitters;
-                vm.approval_status = response.body.approval_status_choices;
-            },(error) => {
-                console.log(error);
-            })
+            fetch(api_endpoints.filter_list_approvals).then(
+                async (response) => {
+                    vm.filter_lists_approval = await response.json();
+                    vm.proposal_regions = vm.filter_lists_approval.regions;
+                    vm.proposal_activityTitles = vm.filter_lists_approval.activities;
+                    vm.proposal_submitters = vm.filter_lists_approval.submitters;
+                    vm.approval_status = vm.filter_lists_approval.approval_status_choices;
+                },(error) => {
+                    console.log(error);
+                }
+            )
             //console.log(vm.regions);
         },
 
@@ -812,13 +816,13 @@ export default {
 
         fetchProfile: function(){
             let vm = this;
-            Vue.http.get(api_endpoints.profile).then((response) => {
-                vm.profile = response.body
-
-            },(error) => {
-                console.log(error);
-
-            })
+            fetch(api_endpoints.profile).then(
+                async (response) => {
+                    vm.profile = await response.json();
+                },(error) => {
+                    console.log(error);
+                }
+            )
         },
 
         check_assessor: function(proposal){
@@ -928,25 +932,25 @@ export default {
                 //confirmButtonColor:'#d9534f'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    vm.$http.get(helpers.add_endpoint_json(api_endpoints.proposals,(proposal_id+'/renew_approval')),{
+                    fetch(helpers.add_endpoint_json(api_endpoints.proposals,(proposal_id+'/renew_approval')),{
 
-                    })
-                    .then((response) => {
-                    let proposal = {}
-                    proposal = response.body
-                    vm.$router.push({
-                        name:"draft_proposal",
-                        params:{proposal_id: proposal.id}
-                    });
-
-                    }, (error) => {
-                        console.log(error);
-                        swal.fire({
-                            title: "Renew Approval",
-                            text: error.body,
-                            icon: "error",
-                        })
-                    });
+                    }).then(
+                        async (response) => {
+                            let proposal = {}
+                            proposal = await response.json();
+                            vm.$router.push({
+                                name:"draft_proposal",
+                                params:{proposal_id: proposal.id}
+                            });
+                        }, (error) => {
+                            console.log(error);
+                            swal.fire({
+                                title: "Renew Approval",
+                                text: error.body,
+                                icon: "error",
+                            })
+                        }
+                    );
                 }
             },(error) => {
                 console.log(error);
@@ -964,26 +968,27 @@ export default {
                 //confirmButtonColor:'#d9534f'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    vm.$http.get(helpers.add_endpoint_json(api_endpoints.proposals,(proposal_id+'/amend_approval')),{
+                    fetch(helpers.add_endpoint_json(api_endpoints.proposals,(proposal_id+'/amend_approval')),{
 
-                    })
-                    .then((response) => {
-                    let proposal = {}
-                    proposal = response.body
-                    vm.$router.push({
-                        name:"draft_proposal",
-                        params:{proposal_id: proposal.id}
-                    });
+                    }).then(
+                        async (response) => {
+                            let proposal = {}
+                            proposal = await response.json();
+                            vm.$router.push({
+                                name:"draft_proposal",
+                                params:{proposal_id: proposal.id}
+                            });
 
-                    }, (error) => {
-                        console.log(error);
-                        swal.fire({
-                        title: "Amend Approval",
-                        text: error.body,
-                        icon: "error",
-                        })
+                        }, (error) => {
+                            console.log(error);
+                            swal.fire({
+                                title: "Amend Approval",
+                                text: error.body,
+                                icon: "error",
+                            })
 
-                    });
+                        }
+                    );
                 }
             },(error) => {
                 console.log(error);
@@ -1013,9 +1018,8 @@ export default {
         },
 
         viewApprovalPDF: function(id,media_link){
-            let vm=this;
             //console.log(approval);
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.approvals,(id+'/approval_pdf_view_log')),{
+            fetch(helpers.add_endpoint_json(api_endpoints.approvals,(id+'/approval_pdf_view_log')),{
                 })
                 .then(() => {
                     //console.log(response)
@@ -1066,20 +1070,24 @@ export default {
     },
     created: function() {
         // retrieve template group
-        this.$http.get('/template_group',{
+        fetch('/template_group',{
             emulateJSON:true
-            }).then(res=>{
+        }).then(
+            async res=>{
                 //this.template_group = res.body.template_group;
-                if (res.body.template_group === 'apiary') {
+                let template_group_res = {}
+                template_group_res = await res.json()
+                if (template_group_res.template_group === 'apiary') {
                     this.apiaryTemplateGroup = true;
                 } else {
                     this.dasTemplateGroup = true;
                 }
                 this.setDashboardText();
                 this.templateGroupDetermined = true;
-        },err=>{
-        console.log(err);
-        });
+            },err=>{
+            console.log(err);
+            }
+        );
     },
 }
 </script>

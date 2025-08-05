@@ -263,7 +263,7 @@
             },
             addOptionalLayers: function(){
                 let vm = this
-                this.$http.get('/api/das_map_layers/').then(response => {
+                fetch('/api/das_map_layers/').then(response => {
                     let layers = response.body
                     for (var i = 0; i < layers.length; i++){
                         let l = new TileWMS({

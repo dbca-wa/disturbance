@@ -133,7 +133,7 @@ export default {
         },
         fetchAmendmentChoices: function(){
             let vm = this;
-            vm.$http.get('/api/amendment_request_reason_choices.json').then((response) => {
+            fetch('/api/amendment_request_reason_choices.json').then((response) => {
                 vm.reason_choices = response.body;
 
             },(error) => {
@@ -173,7 +173,7 @@ export default {
                         vm.amendingProposal = true;
                         vm.close();
                         //vm.$emit('refreshFromResponse',response);
-                        Vue.http.get(`/api/proposal/${vm.proposal_id}/internal_proposal.json`).then((response)=>
+                        fetch(`/api/proposal/${vm.proposal_id}/internal_proposal.json`).then((response)=>
                         {
                             vm.$emit('refreshFromResponse',response);
 

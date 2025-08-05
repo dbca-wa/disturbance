@@ -463,7 +463,7 @@ export default {
         fetchFilterLists: function(){
             let vm = this;
 
-            vm.$http.get(api_endpoints.filter_list_referrals).then((response) => {
+            fetch(api_endpoints.filter_list_referrals).then((response) => {
                 vm.proposal_regions = response.body.regions;
                 //vm.proposal_districts = response.body.districts;
                 vm.proposal_activityTitles = response.body.activities;
@@ -644,7 +644,7 @@ export default {
     },
     created: function() {
         // retrieve template group
-        this.$http.get('/template_group',{
+        fetch('/template_group',{
             emulateJSON:true
             }).then(res=>{
                 //this.template_group = res.body.template_group;
@@ -661,7 +661,7 @@ export default {
     /*
     created: function() {
         // retrieve template group
-        this.$http.get('/template_group',{
+        fetch('/template_group',{
             emulateJSON:true
             }).then(res=>{
                 this.template_group = res.body.template_group;

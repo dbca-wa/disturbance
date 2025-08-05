@@ -602,7 +602,7 @@ export default {
             let url = `/api/history/version/disturbance/proposals/Proposal/InternalProposalSerializer/${this.proposalId}/${proposal_version}/`
 
             // Get the required Proposal data
-            const res = await Vue.http.get(url);
+            const res = await fetch(url);
 
             // Set the model data to the version requested
             this.proposal = Object.assign({}, res.body);
@@ -657,22 +657,22 @@ export default {
             'data/' +
             '?differences_only=True';
 
-            const data_diffs = await Vue.http.get(url).then();
+            const data_diffs = await fetch(url).then();
             this.applyRevisionNotes(data_diffs.data)
 
             // Compare the assessor_data field and apply revision notes
             const assessor_data_url = `/api/proposal/${this.proposal.id}/version_differences_assessor_data.json?newer_version=${this.versionCurrentlyShowing}&older_version=${compare_version}`
-            const assessor_data_diffs = await Vue.http.get(assessor_data_url);
+            const assessor_data_diffs = await fetch(assessor_data_url);
             this.applyRevisionNotes(assessor_data_diffs.data)
 
             // Compare the comment_data field and apply revision notes
             const comment_data_url = `/api/proposal/${this.proposal.id}/version_differences_comment_data.json?newer_version=${this.versionCurrentlyShowing}&older_version=${compare_version}`
-            const comment_data_diffs = await Vue.http.get(comment_data_url);
+            const comment_data_diffs = await fetch(comment_data_url);
             this.applyRevisionNotes(comment_data_diffs.data)
 
             // Compare the proposal documents and apply revision notes
             const document_data_url = `/api/proposal/${this.proposal.id}/version_differences_documents.json?newer_version=${this.versionCurrentlyShowing}&older_version=${compare_version}`
-            const document_data_diffs = await Vue.http.get(document_data_url);
+            const document_data_diffs = await fetch(document_data_url);
             this.applyFileRevisionNotes(document_data_diffs.data)            
         },
         applyRevisionNotes: async function (diffdata) {
@@ -1114,7 +1114,7 @@ export default {
         },
         assignRequestUser: function(){
             let vm = this;
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.proposals,(vm.proposal.id+'/assign_request_user')))
+            fetch(helpers.add_endpoint_json(api_endpoints.proposals,(vm.proposal.id+'/assign_request_user')))
             .then((response) => {
                 vm.proposal = response.body;
                 vm.original_proposal = helpers.copyObject(response.body);
@@ -1180,7 +1180,7 @@ export default {
                 });
             }
             else{
-                vm.$http.get(helpers.add_endpoint_json(api_endpoints.proposals,(vm.proposal.id+'/unassign')))
+                fetch(helpers.add_endpoint_json(api_endpoints.proposals,(vm.proposal.id+'/unassign')))
                 .then((response) => {
                     vm.proposal = response.body;
                     vm.original_proposal = helpers.copyObject(response.body);
@@ -1297,7 +1297,7 @@ export default {
         fetchDeparmentUsers: function(){
             let vm = this;
             vm.loading.push('Loading Department Users');
-            vm.$http.get(api_endpoints.department_users).then((response) => {
+            fetch(api_endpoints.department_users).then((response) => {
                 vm.department_users = response.body
                 vm.loading.splice('Loading Department Users',1);
             },(error) => {
@@ -1436,7 +1436,7 @@ export default {
         remindReferral:function(r){
             let vm = this;
 
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/remind')).then(response => {
+            fetch(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/remind')).then(response => {
                 vm.original_proposal = helpers.copyObject(response.body);
                 vm.proposal = response.body;
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
@@ -1457,7 +1457,7 @@ export default {
         resendReferral:function(r){
             let vm = this;
 
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/resend')).then(response => {
+            fetch(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/resend')).then(response => {
                 vm.original_proposal = helpers.copyObject(response.body);
                 vm.proposal = response.body;
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
@@ -1487,7 +1487,7 @@ export default {
                     }
             })
 
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/recall')).then(response => {
+            fetch(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/recall')).then(response => {
                 swal.hideLoading();
                 swal.close();
                 vm.original_proposal = helpers.copyObject(response.body);
@@ -1581,7 +1581,7 @@ export default {
         // window.addEventListener('afterprint', this.afterPrinting);
     },
     created: function() {
-        Vue.http.get(`/api/proposal/${this.proposalId}/internal_proposal.json`).then(res => {
+        fetch(`/api/proposal/${this.proposalId}/internal_proposal.json`).then(res => {
             this.proposal = res.body;
             this.original_proposal = helpers.copyObject(res.body);
             this.proposal.applicant.address = this.proposal.applicant.address != null ? this.proposal.applicant.address : {};
@@ -1598,7 +1598,7 @@ export default {
     },
     /*
     beforeRouteEnter: function(to, from, next) {
-          Vue.http.get(`/api/proposal/${to.params.proposal_id}/internal_proposal.json`).then(res => {
+          fetch(`/api/proposal/${to.params.proposal_id}/internal_proposal.json`).then(res => {
               next(vm => {
                 vm.proposal = res.body;
                 vm.original_proposal = helpers.copyObject(res.body);
@@ -1613,7 +1613,7 @@ export default {
     */
     beforeRouteUpdate: function(to, from, next) {
         console.log("beforeRouteUpdate")
-          Vue.http.get(`/api/proposal/${to.params.proposal_id}.json`).then(res => {
+          fetch(`/api/proposal/${to.params.proposal_id}.json`).then(res => {
               next(vm => {
                 vm.proposal = res.body;
                 vm.original_proposal = helpers.copyObject(res.body);

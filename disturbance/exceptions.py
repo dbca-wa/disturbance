@@ -1,4 +1,12 @@
-from rest_framework.exceptions import APIException,PermissionDenied
+import logging
+
+from django.core.exceptions import ValidationError
+from django.http import Http404
+from rest_framework import serializers
+from rest_framework.exceptions import APIException, NotAuthenticated, PermissionDenied
+from rest_framework.views import exception_handler
+
+logger = logging.getLogger(__name__)
 
 class ReferralNotAuthorized(PermissionDenied):
     default_detail = 'You are not authorised to work on this referral'
@@ -25,6 +33,11 @@ class ProposalMissingFields(APIException):
     status_code = 400
     default_detail = 'The proposal has missing required fields'
     default_code = 'proposal_missing_fields'
+
+class InternalServerError(APIException):
+    status_code = 500
+    default_detail = "A server error occurred."
+    default_code = "internal_server_error"
 
 def custom_exception_handler(exc, context):
     """Custom django rest framework exception handler

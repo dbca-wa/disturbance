@@ -607,7 +607,7 @@ export default {
 
         fetchOrgRequestList: function() { //Fetch all the Organisation requests submitted by user which are pending for approval.
             let vm = this;
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.organisation_requests,'get_pending_requests')).then((response) => {
+            fetch(helpers.add_endpoint_json(api_endpoints.organisation_requests,'get_pending_requests')).then((response) => {
 
                 vm.orgRequest_list=response.body;
             }, (error) => {
@@ -639,7 +639,7 @@ export default {
                     vm.uploadedFile = null;
                     vm.addingCompany = false;
                     vm.resetNewOrg();
-                    Vue.http.get(api_endpoints.profile).then((response) => {
+                    fetch(api_endpoints.profile).then((response) => {
                         vm.profile = response.body
                         if (vm.profile.residential_address == null){ vm.profile.residential_address = {}; }
                         if ( vm.profile.disturbance_organisations && vm.profile.disturbance_organisations.length > 0 ) { vm.managesOrg = 'Yes' }
@@ -784,7 +784,7 @@ export default {
         fetchCountries:function (){
             let vm =this;
             vm.loading.push('fetching countries');
-            vm.$http.get(api_endpoints.countries).then((response)=>{
+            fetch(api_endpoints.countries).then((response)=>{
                 vm.countries = response.body;
                 vm.loading.splice('fetching countries',1);
             },()=>{
@@ -809,7 +809,7 @@ export default {
                     'mobile_number':vm.profile.mobile_number, 'phone_number':vm.profile.phone_number},{
                         emulateJSON:true
                     }).then(() => {
-                        Vue.http.get(api_endpoints.profile).then((response) => {
+                        fetch(api_endpoints.profile).then((response) => {
                             vm.profile = response.body
                             if (vm.profile.residential_address == null){ vm.profile.residential_address = {}; }
                             if ( vm.profile.disturbance_organisations && vm.profile.disturbance_organisations.length > 0 ) { vm.managesOrg = 'Yes' }
@@ -835,7 +835,7 @@ export default {
         },
         fetchProfile: function(){
           let vm=this;
-          Vue.http.get(api_endpoints.profile).then((response) => {
+          fetch(api_endpoints.profile).then((response) => {
                     vm.profile = response.body
                     if (vm.profile.residential_address == null){ vm.profile.residential_address = {}; }
                     if ( vm.profile.disturbance_organisations && vm.profile.disturbance_organisations.length > 0 ) { vm.managesOrg = 'Yes' }
@@ -848,7 +848,7 @@ export default {
         },
     },
     beforeRouteEnter: function(to,from,next){
-        Vue.http.get(api_endpoints.profile).then((response) => {
+        fetch(api_endpoints.profile).then((response) => {
             if (response.body.address_details && response.body.personal_details && response.body.contact_details && to.name == 'first-time'){
                 window.location.href='/';
             }
@@ -877,7 +877,7 @@ export default {
     },
     created: function() {
         // retrieve template group
-        this.$http.get('/template_group',{
+        fetch('/template_group',{
             emulateJSON:true
             }).then(res=>{
                 //this.template_group = res.body.template_group;

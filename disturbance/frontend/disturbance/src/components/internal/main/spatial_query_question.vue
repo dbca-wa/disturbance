@@ -1164,7 +1164,7 @@ export default {
             url = helpers.add_endpoint_join(api_endpoints.spatial_query,'/'+self.spatialquery.layer.layer_name + url)
 
             console.log(url);
-            await self.$http.get(url)
+            await fetch(url)
             .then((response) => {
                 console.log('Response: ' + JSON.stringify(response));
                 return response.body;
@@ -1430,7 +1430,7 @@ export default {
             self.show_spinner = true;
 
             console.log(url);
-            await self.$http.get(url)
+            await fetch(url)
             .then((response) => {
                 console.log('Response: ' + JSON.stringify(response));
                 self.sqs_attrs_response = JSON.stringify(response.body, null, 4);
@@ -1498,10 +1498,10 @@ export default {
 
 
         check_sqs_layer: async function(url) {
-            //await self.$http.get(helpers.add_endpoint_json(api_endpoints.spatial_query, self.spatialquerylayer.layer.layer_name+'/check_sqs_layer'))
+            //await fetch(helpers.add_endpoint_json(api_endpoints.spatial_query, self.spatialquerylayer.layer.layer_name+'/check_sqs_layer'))
             const self = this;
             self.show_spinner = true;
-            await self.$http.get(url)
+            await fetch(url)
             .then((response) => {
                 //console.log(JSON.stringify(response))
                 swal.fire(
@@ -1548,8 +1548,8 @@ export default {
             self.show_spinner = true;
 
             //console.log(url)
-            //await self.$http.get(api_endpoints.spatial_query + '/' + spatialquery_id + '/check_cddp_question?proposal_id='+proposal_id)
-            await self.$http.get(url)
+            //await fetch(api_endpoints.spatial_query + '/' + spatialquery_id + '/check_cddp_question?proposal_id='+proposal_id)
+            await fetch(url)
             .then((response) => {
                 swal.fire(
                     'Question Found in Proposal Schema!',
@@ -1580,7 +1580,7 @@ export default {
                 if(swalresult.isConfirmed) {
                     vm.show_spinner = true;
                     vm.export_layers_btn_disabled = true;
-                    vm.$http.get('/api/proposal_sqs/layers_used/')
+                    fetch('/api/proposal_sqs/layers_used/')
                     .then((response) => {
                         var FileSaver = require('file-saver');
                         const blob = new Blob([response.body], {type: 'text/csv'});
@@ -1729,9 +1729,9 @@ export default {
 
             self.$refs.spatial_query_question_table.vmDataTable.on('click','.edit-row', function(e) {
 
-		//self.$http.get('/api/spatial_query_paginated/spatial_query_question_datatable_list/?format=datatables&length=all').then(res=>{
-		//self.$http.get('/api/spatial_query_paginated/spatial_query_layer_datatable_list/?format=datatables&length=all&sqq_id=257').then(res=>{
-		self.$http.get('/api/spatial_query_paginated/spatial_query_layer_datatable_list/?format=datatables&length=all&sqq_id=225').then(res=>{
+		//fetch('/api/spatial_query_paginated/spatial_query_question_datatable_list/?format=datatables&length=all').then(res=>{
+		//fetch('/api/spatial_query_paginated/spatial_query_layer_datatable_list/?format=datatables&length=all&sqq_id=257').then(res=>{
+		fetch('/api/spatial_query_paginated/spatial_query_layer_datatable_list/?format=datatables&length=all&sqq_id=225').then(res=>{
 		    //self.sq_questions = res.body['data'].map((item) => item.question);
 		    console.log(res.body['data'])
 		    self.sq_questions = res.body['data']
@@ -2076,7 +2076,7 @@ export default {
         initSelects: async function() {
 
             //console.log(helpers.add_endpoint_json(api_endpoints.spatial_query,'get_spatialquery_selects'))
-            await this.$http.get(helpers.add_endpoint_json(api_endpoints.spatial_query,'get_spatialquery_selects')).then(res=>{
+            await fetch(helpers.add_endpoint_json(api_endpoints.spatial_query,'get_spatialquery_selects')).then(res=>{
                     this.spatialquery_selects = res.body
                     this.masterlist_questions = this.spatialquery_selects.all_masterlist
                     this.is_admin = this.spatialquery_selects.permissions.is_admin
@@ -2088,7 +2088,7 @@ export default {
                 )
             });
 
-//            await this.$http.get(helpers.add_endpoint_json(api_endpoints.spatial_query,'get_sqs_layers')).then(res=>{
+//            await fetch(helpers.add_endpoint_json(api_endpoints.spatial_query,'get_sqs_layers')).then(res=>{
 //                    this.available_sqs_layers = res.body
 //            },err=>{
 //                swal.fire(
@@ -2103,7 +2103,7 @@ export default {
 
         fetchProfile: function(){
             let vm = this;
-            Vue.http.get(api_endpoints.profile).then((response) => {
+            fetch(api_endpoints.profile).then((response) => {
                 vm.profile = response.body
 
             },(error) => {

@@ -296,7 +296,7 @@ export default {
         },
         fetchContact: function(id){
             let vm = this;
-            vm.$http.get(api_endpoints.contact(id)).then((response) => {
+            fetch(api_endpoints.contact(id)).then((response) => {
                 vm.contact = response.body; vm.isModalOpen = true;
             },(error) => {
                 console.log(error);

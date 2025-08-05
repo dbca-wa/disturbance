@@ -375,7 +375,7 @@
             },
             fetchGlobalSettings: function(){
                 let vm = this;
-                vm.$http.get('/api/global_settings.json').then((response) => {
+                fetch('/api/global_settings.json').then((response) => {
                     vm.global_settings = response.body;
                     
                 },(error) => {

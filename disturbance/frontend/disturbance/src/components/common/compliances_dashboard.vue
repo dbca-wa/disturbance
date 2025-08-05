@@ -554,7 +554,7 @@ export default {
         fetchFilterLists: function(){
             let vm = this;
 
-            vm.$http.get(api_endpoints.filter_list_compliances).then((response) => {
+            fetch(api_endpoints.filter_list_compliances).then((response) => {
                 vm.proposal_regions = response.body.regions;
                 vm.proposal_activityTitles = response.body.activities;
                 vm.status = vm.level == 'external' ? vm.external_status: vm.internal_status;
@@ -709,7 +709,7 @@ export default {
         },
         fetchProfile: function(){
             let vm = this;
-            Vue.http.get(api_endpoints.profile).then((response) => {
+            fetch(api_endpoints.profile).then((response) => {
                 vm.profile = response.body
 
             },(error) => {
@@ -737,7 +737,7 @@ export default {
     },
     created: function() {
         let vm = this
-        vm.$http.get('/template_group',{
+        fetch('/template_group',{
             emulateJSON:true
             }).then(res=>{
                 if (res.body.template_group === 'apiary') {

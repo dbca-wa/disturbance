@@ -96,7 +96,7 @@ export default {
         },
         fetchAmendmentChoices: function(){
             let vm = this;
-            vm.$http.get('/api/compliance_amendment_reason_choices.json').then((response) => {
+            fetch('/api/compliance_amendment_reason_choices.json').then((response) => {
                 vm.reason_choices = response.body;
 
             },(error) => {

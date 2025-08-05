@@ -250,7 +250,7 @@ export default {
         fetchAccessGroupMembers: function(){
         let vm = this;
         //vm.loading.push('Loading Access Group Members');
-        vm.$http.get(api_endpoints.organisation_access_group_members).then((response) => {
+        fetch(api_endpoints.organisation_access_group_members).then((response) => {
             vm.members = response.body
             //vm.loading.splice('Loading Access Group Members',1);
         },(error) => {
@@ -259,7 +259,7 @@ export default {
         },
         fetchProfile: function(){
         let vm = this;
-        Vue.http.get(api_endpoints.profile).then((response) => {
+        fetch(api_endpoints.profile).then((response) => {
             vm.profile = response.body
 
          },(error) => {
@@ -274,13 +274,13 @@ export default {
             if (this.apiaryTemplateGroup) {
                 url = api_endpoints.apiary_organisation_access_group_members;
             }
-            const response = await this.$http.get(url)
+            const response = await fetch(url)
             this.members = response.body
             //this.loading.splice('Loading Access Group Members',1);
             this.table_id = uuidv4()
         },
         fetchProfile: async function(){
-            const response = await Vue.http.get(api_endpoints.profile);
+            const response = await fetch(api_endpoints.profile);
             this.profile = response.body
         },
 
@@ -299,7 +299,7 @@ export default {
     },
     created: async function() {
         // retrieve template group
-        const res = await this.$http.get('/template_group',{
+        const res = await fetch('/template_group',{
             emulateJSON:true
             })
         if (res.body.template_group === 'apiary') {

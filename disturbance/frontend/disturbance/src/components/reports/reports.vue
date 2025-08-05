@@ -316,7 +316,7 @@ export default {
             if (vm.oracle_form.valid()){
                 let data = vm.oracleDatePicker.data("DateTimePicker").date().format('DD/MM/YYYY');
                 let override = vm.oracle_override ? 'true': 'false';
-                vm.$http.get('/api/oracle_job?date='+data+'&override='+override).then(() => {
+                fetch('/api/oracle_job?date='+data+'&override='+override).then(() => {
                     swal.fire({
                         icon: 'success',
                         title: 'Job Success',
@@ -341,7 +341,7 @@ export default {
                 data = data.format('DD/MM/YYYY');
                 var url = '/api/reports/booking_settlements?date='+data;
                 window.location.assign(url);
-                /*vm.$http.get(url).then((response) => {
+                /*fetch(url).then((response) => {
                 },(error) => {
                     swal.fire({
                         icon: 'error',
@@ -358,7 +358,7 @@ export default {
                 let data = vm.bookingsDatePicker.data("DateTimePicker").date().format('DD/MM/YYYY');
                 var url = '/api/reports/bookings?date='+data;
                 window.location.assign(url);
-                /*vm.$http.get(url).then((response) => {
+                /*fetch(url).then((response) => {
                 },(error) => {
                     swal.fire({
                         icon: 'error',

@@ -497,7 +497,7 @@ export default {
         },
         editContact: function(_id){
             let vm = this;
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.organisation_contacts,_id)).then((response) => {
+            fetch(helpers.add_endpoint_json(api_endpoints.organisation_contacts,_id)).then((response) => {
                 this.$refs.add_contact.contact = response.body;
                 this.addContact();
             }).then(() => {

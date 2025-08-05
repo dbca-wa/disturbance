@@ -776,38 +776,42 @@
             },
             addOptionalLayers: function(){
                 let vm = this
-                this.$http.get('/api/das_map_layers/').then(response => {
-                    let layers = response.body
-                    for (var i = 0; i < layers.length; i++ ){
-                        let l = new TileWMS({
-                            // url: env['kmi_server_url'] + '/geoserver/' + layers[i].layer_group_name + '/wms',
-                            //url:'/kb-proxy/geoserver/' + layers[i].layer_group_name + '/wms',
-                            url: layers[i].layer_group_name ? '/kb-proxy/geoserver/' + layers[i].layer_group_name + '/wms' : '/kb-proxy/geoserver/wms',
-                            //url:'/kmi-proxy/geoserver/' + layers[i].layer_group_name + '/wms',
-                            params: {
-                                'FORMAT': 'image/png',
-                                'VERSION': '1.1.1',
-                                tiled: true,
-                                STYLES: '',
-                                LAYERS: layers[i].layer_full_name
-                            },
-                            //crossOrigin: 'Anonymous',
-                        });
+                fetch('/api/das_map_layers/').then(
+                    async response => {
+                        let layers = await response.json();
+                        for (var i = 0; i < layers.length; i++ ){
+                            let l = new TileWMS({
+                                // url: env['kmi_server_url'] + '/geoserver/' + layers[i].layer_group_name + '/wms',
+                                //url:'/kb-proxy/geoserver/' + layers[i].layer_group_name + '/wms',
+                                url: layers[i].layer_group_name ? '/kb-proxy/geoserver/' + layers[i].layer_group_name + '/wms' : '/kb-proxy/geoserver/wms',
+                                //url:'/kmi-proxy/geoserver/' + layers[i].layer_group_name + '/wms',
+                                params: {
+                                    'FORMAT': 'image/png',
+                                    'VERSION': '1.1.1',
+                                    tiled: true,
+                                    STYLES: '',
+                                    LAYERS: layers[i].layer_full_name
+                                },
+                                //crossOrigin: 'Anonymous',
+                            });
 
-                        let tileLayer= new TileLayer({
-                            title: layers[i].display_name.trim(),
-                            visible: false,
-                            source: l,
-                        })
+                            let tileLayer= new TileLayer({
+                                title: layers[i].display_name.trim(),
+                                visible: false,
+                                source: l,
+                            })
 
-                        // Set additional attributes to the layer
-                        tileLayer.set('columns', layers[i].columns)
-                        tileLayer.set('display_all_columns', layers[i].display_all_columns)
+                            // Set additional attributes to the layer
+                            tileLayer.set('columns', layers[i].columns)
+                            tileLayer.set('display_all_columns', layers[i].display_all_columns)
 
-                        vm.optionalLayers.push(tileLayer)
-                        vm.map.addLayer(tileLayer)
+                            vm.optionalLayers.push(tileLayer)
+                            vm.map.addLayer(tileLayer)
+                        }
+                    },(error) => {
+                        console.log(error);
                     }
-                })
+                )
             },
             closePopup: function(){
                 this.content_element.innerHTML = null
@@ -1604,17 +1608,20 @@
             fetchFilterLists: function(){
                 let vm = this;
 
-                vm.$http.get(api_endpoints.filter_list_map).then((response) => {
-                    vm.regions = response.body.regions;
-                    vm.activity_titles = response.body.activities;
-                    vm.application_types = response.body.application_types;
-                    vm.proposal_submitters = response.body.submitters;
-                    vm.proposal_applicants = response.body.applicants;
-                    //vm.proposal_status = response.body.processing_status_choices;
-                    vm.proposal_status = vm.level == 'internal' ? vm.internal_status: vm.external_status;
-                },(error) => {
-                    console.log(error);
-                })
+                fetch(api_endpoints.filter_list_map).then(
+                    async (response) => {
+                        let filter_lists = await response.json();
+                        vm.regions = filter_lists.regions;
+                        vm.activity_titles = filter_lists.activities;
+                        vm.application_types = filter_lists.application_types;
+                        vm.proposal_submitters = filter_lists.submitters;
+                        vm.proposal_applicants = filter_lists.applicants;
+                        //vm.proposal_status = response.body.processing_status_choices;
+                        vm.proposal_status = vm.level == 'internal' ? vm.internal_status: vm.external_status;
+                    },(error) => {
+                        console.log(error);
+                    }
+                )
                 //console.log(vm.regions);
             },
             fetchProposals: async function(){
@@ -1891,6 +1898,10 @@
         top: 10%;
         left: 50%;
         z-index: 100000;
+    }
+    .map {
+        width: 100%;
+        height: 500px;
     }
     @import '../apiary/map_address_search_scoped.css'
 </style>

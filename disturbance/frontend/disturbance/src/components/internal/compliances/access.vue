@@ -140,7 +140,7 @@ export default {
   },
   watch: {},
   beforeRouteEnter: function(to, from, next){
-    Vue.http.get(helpers.add_endpoint_json(api_endpoints.compliances,to.params.compliance_id)).then((response) => {
+    fetch(helpers.add_endpoint_json(api_endpoints.compliances,to.params.compliance_id)).then((response) => {
         next(vm => {
             vm.compliance = response.body
             vm.members = vm.compliance.allowed_assessors
@@ -170,7 +170,7 @@ export default {
     },
     assignMyself: function(){
         let vm = this;
-        vm.$http.get(helpers.add_endpoint_json(api_endpoints.compliances,(vm.compliance.id+'/assign_request_user')))
+        fetch(helpers.add_endpoint_json(api_endpoints.compliances,(vm.compliance.id+'/assign_request_user')))
         .then((response) => {            
             vm.compliance = response.body;
         }, (error) => {
@@ -191,7 +191,7 @@ export default {
             
         }
         else{
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.compliances,(vm.compliance.id+'/unassign')))
+            fetch(helpers.add_endpoint_json(api_endpoints.compliances,(vm.compliance.id+'/unassign')))
             .then((response) => {
                 console.log(response);
                 vm.compliance = response.body;
@@ -210,7 +210,7 @@ export default {
             confirmButtonText: 'Accept'
         }).then((swalresult) => {
             if(swalresult.isConfirmed){
-                vm.$http.get(helpers.add_endpoint_json(api_endpoints.compliances,(vm.compliance.id+'/accept')))
+                fetch(helpers.add_endpoint_json(api_endpoints.compliances,(vm.compliance.id+'/accept')))
                 .then((response) => {
                     console.log(response);
                     vm.compliance = response.body;
@@ -229,7 +229,7 @@ export default {
     },
     fetchProfile: function(){
         let vm = this;
-        Vue.http.get(api_endpoints.profile).then((response) => {
+        fetch(api_endpoints.profile).then((response) => {
             vm.profile = response.body
                               
          },(error) => {

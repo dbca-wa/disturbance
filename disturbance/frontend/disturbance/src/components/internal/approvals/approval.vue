@@ -217,7 +217,7 @@ export default {
     },
   },
   created: function(){
-    Vue.http.get(helpers.add_endpoint_json(api_endpoints.approvals,this.approvalId)).then((response) => {
+    fetch(helpers.add_endpoint_json(api_endpoints.approvals,this.approvalId)).then((response) => {
         this.approval = response.body;
         this.approval.applicant_id = response.body.applicant_id;
         this.fetchOrganisation(this.approval.applicant_id)
@@ -227,7 +227,7 @@ export default {
   },
 /*
   beforeRouteEnter: function(to, from, next){
-    Vue.http.get(helpers.add_endpoint_json(api_endpoints.approvals,to.params.approval_id)).then((response) => {
+    fetch(helpers.add_endpoint_json(api_endpoints.approvals,to.params.approval_id)).then((response) => {
         next(vm => {
             vm.approval = response.body;
             vm.approval.applicant_id = response.body.applicant_id;
@@ -257,7 +257,7 @@ export default {
     },
     fetchOrganisation(applicant_id){
         let vm=this;
-        Vue.http.get(helpers.add_endpoint_json(api_endpoints.organisations,applicant_id)).then((response) => {
+        fetch(helpers.add_endpoint_json(api_endpoints.organisations,applicant_id)).then((response) => {
         
             vm.org = response.body;
             vm.org.address = response.body.address;         
@@ -269,7 +269,7 @@ export default {
     viewApprovalPDF: function(id,media_link){
             let vm=this;
             //console.log(approval);
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.approvals,(id+'/approval_pdf_view_log')),{
+            fetch(helpers.add_endpoint_json(api_endpoints.approvals,(id+'/approval_pdf_view_log')),{
                 })
                 .then(() => {  
                     //console.log(response)  

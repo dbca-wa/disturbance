@@ -613,7 +613,7 @@
                     }
                 }
             }
-            Vue.http.get(api_endpoints.apiary_site_transfer_fees)
+            fetch(api_endpoints.apiary_site_transfer_fees)
                 .then(res => {
                     for (let fee of res.body) {
                         this.siteTransferFees.push(fee)
