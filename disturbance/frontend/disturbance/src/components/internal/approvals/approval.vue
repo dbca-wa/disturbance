@@ -217,13 +217,16 @@ export default {
     },
   },
   created: function(){
-    fetch(helpers.add_endpoint_json(api_endpoints.approvals,this.approvalId)).then((response) => {
-        this.approval = response.body;
-        this.approval.applicant_id = response.body.applicant_id;
-        this.fetchOrganisation(this.approval.applicant_id)
-    },(error) => {
-        console.log(error);
-    }) 
+    fetch(helpers.add_endpoint_json(api_endpoints.approvals,this.approvalId)).then(
+        async (response) => {
+            let data = await response.json();
+            this.approval = data;
+            this.approval.applicant_id = data.applicant_id;
+            this.fetchOrganisation(this.approval.applicant_id)
+        },(error) => {
+            console.log(error);
+        }
+    ) 
   },
 /*
   beforeRouteEnter: function(to, from, next){
@@ -257,17 +260,17 @@ export default {
     },
     fetchOrganisation(applicant_id){
         let vm=this;
-        fetch(helpers.add_endpoint_json(api_endpoints.organisations,applicant_id)).then((response) => {
-        
-            vm.org = response.body;
-            vm.org.address = response.body.address;         
-    },(error) => {
-        console.log(error);
-    })
-
+        fetch(helpers.add_endpoint_json(api_endpoints.organisations,applicant_id)).then(
+            async (response) => {
+                let data = await response.json();
+                vm.org = data;
+                vm.org.address = data.address;         
+            },(error) => {
+                console.log(error);
+            }
+        )
     },
     viewApprovalPDF: function(id,media_link){
-            let vm=this;
             //console.log(approval);
             fetch(helpers.add_endpoint_json(api_endpoints.approvals,(id+'/approval_pdf_view_log')),{
                 })

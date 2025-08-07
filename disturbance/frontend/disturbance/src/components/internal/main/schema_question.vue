@@ -431,9 +431,10 @@ export default {
             }
             fetch(helpers.add_endpoint_json(api_endpoints.schema_question,'1/get_question_sections'),{
                 params: { proposal_type_id: this.filterQuestionProposalType },
-            }).then((res)=>{
-                this.schemaGroups = res.body.question_groups; 
-                this.schemaSections = res.body.question_sections;
+            }).then(async (res)=>{
+                let data = await res.json();
+                this.schemaGroups = data.question_groups; 
+                this.schemaSections = data.question_sections;
             },err=>{
                 console.log(err);
             });
@@ -444,9 +445,10 @@ export default {
             }
             fetch(helpers.add_endpoint_json(api_endpoints.schema_question,'1/get_question_parents'),{
                 params: { section_id: this.filterQuestionSection },
-            }).then((res)=>{
+            }).then(async (res)=>{
+                let data = await res.json();
                 this.sectionQuestion.section = this.filterQuestionSection;
-                this.parentList = res.body.question_parents;
+                this.parentList = data.question_parents;
             },err=>{
                 console.log(err);
             });
@@ -471,8 +473,9 @@ export default {
             }
             // fetch(helpers.add_endpoint_json(api_endpoints.schema_question,'1/get_question_order'),{
             //     params: { group_id: g_id },
-            // }).then((res)=>{
-            //     this.sectionQuestion.order = res.body.question_order;
+            // }).then(async (res)=>{
+                // let data = await res.json();
+            //     this.sectionQuestion.order = data.question_order;
             // },err=>{
 
             // });
@@ -752,14 +755,14 @@ export default {
                     self.sectionQuestion.section_group=selected.val()
                 });
         },
-        initSelects: async function() {
+        initSelects: function() {
 
-            await fetch(helpers.add_endpoint_json(api_endpoints.schema_question,'1/get_question_selects')).then(res=>{
-
-                    this.masterlist = res.body.all_masterlist;
-                    this.schemaProposalTypes = res.body.all_proposal_types;
-                    this.schemaSections = res.body.all_section;
-                    this.schemaGroups = res.body.all_group
+            fetch(helpers.add_endpoint_json(api_endpoints.schema_question,'1/get_question_selects')).then(async res=>{
+                    let data = await res.json();
+                    this.masterlist = data.all_masterlist;
+                    this.schemaProposalTypes = data.all_proposal_types;
+                    this.schemaSections = data.all_section;
+                    this.schemaGroups = data.all_group
 
             },err=>{
                 swal.fire(

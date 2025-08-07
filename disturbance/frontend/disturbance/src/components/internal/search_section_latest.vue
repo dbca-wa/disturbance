@@ -489,30 +489,34 @@ export default {
       fetchRegions: function(){
         let vm = this;
 
-        fetch(api_endpoints.regions).then((response) => {
-            vm.api_regions = response.body;
-            //console.log('api_regions ' + response.body);
+        fetch(api_endpoints.regions).then(
+          async (response) => {
+              vm.api_regions = await response.json();
+              //console.log('api_regions ' + response.body);
 
-                    for (var i = 0; i < vm.api_regions.length; i++) {
-                        this.regions.push( {text: vm.api_regions[i].name, value: vm.api_regions[i].id, districts: vm.api_regions[i].districts} );
-                    }
-        },(error) => {
-          console.log(error);
-        })
+                      for (var i = 0; i < vm.api_regions.length; i++) {
+                          this.regions.push( {text: vm.api_regions[i].name, value: vm.api_regions[i].id, districts: vm.api_regions[i].districts} );
+                      }
+          },(error) => {
+            console.log(error);
+          }
+        )
       },
       fetchSections: function(){
         let vm = this;
 
-        fetch(api_endpoints.proposal_type_sections).then((response) => {
-            vm.api_sections = response.body;
+        fetch(api_endpoints.proposal_type_sections).then(
+          async (response) => {
+            vm.api_sections = await response.json();
             //console.log('api_regions ' + response.body);
 
                     for (var i = 0; i < vm.api_sections.length; i++) {
                         this.sections.push( {text: vm.api_sections[i].section_label, value: vm.api_sections[i].section_label, questions: vm.api_sections[i].section_questions} );
                     }
-        },(error) => {
-          console.log(error);
-        })
+          },(error) => {
+            console.log(error);
+          }
+        )
       },
       chainedSelectAppType: function(proposal_type_id){
         /* reset */
@@ -608,31 +612,36 @@ export default {
             vm.categories = [];
             vm.approval_level = '';
 
-        fetch(api_endpoints.activity_matrix).then((response) => {
-            this.activity_matrix = response.body[0].schema[0];
-            this.keys_ordered = response.body[0].ordered;
+        fetch(api_endpoints.activity_matrix).then(
+          async (response) => {
+            let data = await response.json();
+            this.activity_matrix = data[0].schema[0];
+            this.keys_ordered = data[0].ordered;
             //console.log('this.activity_matrix ' + response.body[0].schema);
 
                     var keys = this.keys_ordered ? Object.keys(this.activity_matrix).sort() : Object.keys(this.activity_matrix)
                     for (var i = 0; i < keys.length; i++) {
                         this.activities.push( {text: keys[i], value: keys[i]} );
                     }
-        },(error) => {
-          console.log(error);
-        })
+          },(error) => {
+            console.log(error);
+          }
+        )
       },
-      fetchAllActivityMatrices: async function(){
+      fetchAllActivityMatrices: function(){
         let vm = this;
         vm.sub_activities1 = [];
         vm.sub_activities2 = [];
         vm.categories = [];
         vm.approval_level = '';
-        await fetch(api_endpoints.activity_matrix).then((response) => {
-            this.all_activity_matrices = response.body;
-                    //vm.fetchRegions();
-        },(error) => {
-          console.log(error);
-        })
+        fetch(api_endpoints.activity_matrix).then(
+          async (response) => {
+            this.all_activity_matrices = await response.json();
+            //vm.fetchRegions();
+          },(error) => {
+            console.log(error);
+          }
+        )
       },
       getSelectedAppActivityMatrix: function(selected_app){
 		    let vm = this;
@@ -696,8 +705,9 @@ export default {
       fetchProposalTypes: function(){
         let vm = this;
 
-        fetch(api_endpoints.searchable_proposal_types).then((response) => {
-            vm.api_proposal_types = response.body;
+        fetch(api_endpoints.searchable_proposal_types).then(
+          async (response) => {
+            vm.api_proposal_types = await response.json();
             //console.log('api_proposal_types ' + response.body);
 
                     for (var i = 0; i < vm.api_proposal_types.length; i++) {
@@ -711,9 +721,10 @@ export default {
                             //tenures: (vm.api_proposal_types[i].tenure_app_types.length > 0) ? vm.api_proposal_types[i].tenure_app_types : [],
                         } );
                     }
-        },(error) => {
-          console.log(error);
-        })
+          },(error) => {
+            console.log(error);
+          }
+        )
       },
       eventListeners:function () {
             let vm = this;

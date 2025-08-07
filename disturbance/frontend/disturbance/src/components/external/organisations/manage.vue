@@ -496,15 +496,15 @@ export default {
             this.$refs.add_contact.isModalOpen = true;
         },
         editContact: function(_id){
-            let vm = this;
-            fetch(helpers.add_endpoint_json(api_endpoints.organisation_contacts,_id)).then((response) => {
-                this.$refs.add_contact.contact = response.body;
-                this.addContact();
-            }).then(() => {
-                this.$refs.contacts_datatable.vmDataTable.ajax.reload();
-            },(error) => {
-                console.log(error);
-            })
+            fetch(helpers.add_endpoint_json(api_endpoints.organisation_contacts,_id)).then(
+                async (response) => {
+                    this.$refs.add_contact.contact = await response.json();
+                    this.addContact();
+                }).then(() => {
+                    this.$refs.contacts_datatable.vmDataTable.ajax.reload();
+                },(error) => {
+                    console.log(error);
+                })
         },
         refreshDatatable: function(){
             this.$refs.contacts_datatable.vmDataTable.ajax.reload();

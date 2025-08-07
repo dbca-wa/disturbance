@@ -140,14 +140,17 @@ export default {
   },
   watch: {},
   beforeRouteEnter: function(to, from, next){
-    fetch(helpers.add_endpoint_json(api_endpoints.compliances,to.params.compliance_id)).then((response) => {
-        next(vm => {
-            vm.compliance = response.body
-            vm.members = vm.compliance.allowed_assessors
-        })
-    },(error) => {
-        console.log(error);
-    })
+    fetch(helpers.add_endpoint_json(api_endpoints.compliances,to.params.compliance_id)).then(
+        async (response) => {
+            let data = await response.json();
+            next(vm => {
+                vm.compliance = data;
+                vm.members = vm.compliance.allowed_assessors
+            })
+        },(error) => {
+            console.log(error);
+        }
+    )
   },
   components: {
     CommsLogs,
@@ -170,12 +173,12 @@ export default {
     },
     assignMyself: function(){
         let vm = this;
-        fetch(helpers.add_endpoint_json(api_endpoints.compliances,(vm.compliance.id+'/assign_request_user')))
-        .then((response) => {            
-            vm.compliance = response.body;
-        }, (error) => {
-            console.log(error);
-        });
+        fetch(helpers.add_endpoint_json(api_endpoints.compliances,(vm.compliance.id+'/assign_request_user'))).then(
+            async (response) => {            
+                vm.compliance = await response.json();
+            }, (error) => {
+                console.log(error);
+            });
     },
     assignTo: function(){
         let vm = this;
@@ -191,13 +194,14 @@ export default {
             
         }
         else{
-            fetch(helpers.add_endpoint_json(api_endpoints.compliances,(vm.compliance.id+'/unassign')))
-            .then((response) => {
-                console.log(response);
-                vm.compliance = response.body;
-            }, (error) => {
-                console.log(error);
-            });
+            fetch(helpers.add_endpoint_json(api_endpoints.compliances,(vm.compliance.id+'/unassign'))).then(
+                async (response) => {
+                    console.log(response);
+                    vm.compliance = await response.json();
+                }, (error) => {
+                    console.log(error);
+                }
+            );
         }
     },
     acceptCompliance: function() {
@@ -210,13 +214,14 @@ export default {
             confirmButtonText: 'Accept'
         }).then((swalresult) => {
             if(swalresult.isConfirmed){
-                fetch(helpers.add_endpoint_json(api_endpoints.compliances,(vm.compliance.id+'/accept')))
-                .then((response) => {
-                    console.log(response);
-                    vm.compliance = response.body;
-                }, (error) => {
-                    console.log(error);
-                });
+                fetch(helpers.add_endpoint_json(api_endpoints.compliances,(vm.compliance.id+'/accept'))).then(
+                    async (response) => {
+                        console.log(response);
+                        vm.compliance = await response.json();
+                    }, (error) => {
+                        console.log(error);
+                    }
+                );
             }
         },(error) => {
             console.log(error);
@@ -229,14 +234,13 @@ export default {
     },
     fetchProfile: function(){
         let vm = this;
-        fetch(api_endpoints.profile).then((response) => {
-            vm.profile = response.body
-                              
-         },(error) => {
+        fetch(api_endpoints.profile).then(async (response) => {
+            vm.profile = await response.json();
+        },(error) => {
             console.log(error);
                 
         })
-        },
+    },
 
     check_assessor: function(){
         let vm = this;

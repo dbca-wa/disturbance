@@ -565,11 +565,11 @@ export default {
                 self.masterlist.answer_type = selected.val()
             });
         },
-        initSelects: async function() {
+        initSelects: function() {
 
-            await fetch(helpers.add_endpoint_json(api_endpoints.schema_masterlist,'1/get_masterlist_selects')).then(res=>{
-
-                    this.answerTypes = res.body.all_answer_types
+            fetch(helpers.add_endpoint_json(api_endpoints.schema_masterlist,'1/get_masterlist_selects')).then(async res=>{
+                let data = await res.json();
+                this.answerTypes = data.all_answer_types;
 
             },err=>{
                 swal.fire(

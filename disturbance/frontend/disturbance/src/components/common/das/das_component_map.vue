@@ -263,36 +263,38 @@
             },
             addOptionalLayers: function(){
                 let vm = this
-                fetch('/api/das_map_layers/').then(response => {
-                    let layers = response.body
-                    for (var i = 0; i < layers.length; i++){
-                        let l = new TileWMS({
-                            // url: env['kmi_server_url'] + '/geoserver/' + layers[i].layer_group_name + '/wms',
-                            //url: '/kb-proxy/geoserver/' + layers[i].layer_group_name + '/wms',
-                            url: layers[i].layer_group_name ? '/kb-proxy/geoserver/' + layers[i].layer_group_name + '/wms' : '/kb-proxy/geoserver/wms',
-                            params: {
-                                'FORMAT': 'image/png',
-                                'VERSION': '1.1.1',
-                                tiled: true,
-                                STYLES: '',
-                                LAYERS: layers[i].layer_full_name
-                            }
-                        });
+                fetch('/api/das_map_layers/').then(
+                    async response => {
+                        let layers = await response.json();
+                        for (var i = 0; i < layers.length; i++){
+                            let l = new TileWMS({
+                                // url: env['kmi_server_url'] + '/geoserver/' + layers[i].layer_group_name + '/wms',
+                                //url: '/kb-proxy/geoserver/' + layers[i].layer_group_name + '/wms',
+                                url: layers[i].layer_group_name ? '/kb-proxy/geoserver/' + layers[i].layer_group_name + '/wms' : '/kb-proxy/geoserver/wms',
+                                params: {
+                                    'FORMAT': 'image/png',
+                                    'VERSION': '1.1.1',
+                                    tiled: true,
+                                    STYLES: '',
+                                    LAYERS: layers[i].layer_full_name
+                                }
+                            });
 
-                        let tileLayer= new TileLayer({
-                            title: layers[i].display_name.trim(),
-                            visible: false,
-                            source: l,
-                        })
+                            let tileLayer= new TileLayer({
+                                title: layers[i].display_name.trim(),
+                                visible: false,
+                                source: l,
+                            })
 
-                        // Set additional attributes to the layer
-                        tileLayer.set('columns', layers[i].columns)
-                        tileLayer.set('display_all_columns', layers[i].display_all_columns)
+                            // Set additional attributes to the layer
+                            tileLayer.set('columns', layers[i].columns)
+                            tileLayer.set('display_all_columns', layers[i].display_all_columns)
 
-                        vm.optionalLayers.push(tileLayer)
-                        vm.map.addLayer(tileLayer)
+                            vm.optionalLayers.push(tileLayer)
+                            vm.map.addLayer(tileLayer)
+                        }
                     }
-                })
+                )
             },
             setBaseLayer: function(selected_layer_name){
                 console.log('in setBaseLayer')

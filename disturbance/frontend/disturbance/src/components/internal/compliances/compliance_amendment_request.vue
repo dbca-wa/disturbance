@@ -96,12 +96,11 @@ export default {
         },
         fetchAmendmentChoices: function(){
             let vm = this;
-            fetch('/api/compliance_amendment_reason_choices.json').then((response) => {
-                vm.reason_choices = response.body;
-
+            fetch('/api/compliance_amendment_reason_choices.json').then(async (response) => {
+                vm.reason_choices = await response.json();
             },(error) => {
                 console.log(error);
-            } );
+            });
         },
         sendData:function(){
             let vm = this;

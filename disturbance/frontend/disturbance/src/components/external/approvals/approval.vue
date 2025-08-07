@@ -195,9 +195,10 @@ export default {
         loadApproval: function(approval_id){
             let vm = this
             fetch(helpers.add_endpoint_json(api_endpoints.approvals,approval_id)).then(
-                res => {
-                    vm.approval = res.body;
-                    vm.approval.applicant_id = res.body.applicant_id;
+                async res => {
+                    let data = await res.json();
+                    vm.approval = data;
+                    vm.approval.applicant_id = data.applicant_id;
                     vm.fetchOrganisation(vm.approval.applicant_id)
                 },
                 error => {
@@ -210,12 +211,15 @@ export default {
         },
         fetchOrganisation(applicant_id){
             let vm=this;
-            fetch(helpers.add_endpoint_json(api_endpoints.organisations,applicant_id)).then((response) => {
-                vm.org = response.body;
-                vm.org.address = response.body.address;
-        },(error) => {
-            console.log(error);
-        })
+            fetch(helpers.add_endpoint_json(api_endpoints.organisations,applicant_id)).then(
+                async (response) => {
+                    let data = await response.json();
+                    vm.org = data;
+                    vm.org.address = data.address;
+                },(error) => {
+                    console.log(error);
+                }
+            )
 
         },
     },

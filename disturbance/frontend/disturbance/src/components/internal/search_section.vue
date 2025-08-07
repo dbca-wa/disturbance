@@ -469,30 +469,32 @@ export default {
       fetchRegions: function(){
         let vm = this;
 
-        fetch(api_endpoints.regions).then((response) => {
-            vm.api_regions = response.body;
+        fetch(api_endpoints.regions).then(
+          async (response) => {
+            vm.api_regions = await response.json();
             //console.log('api_regions ' + response.body);
-
-                    for (var i = 0; i < vm.api_regions.length; i++) {
-                        this.regions.push( {text: vm.api_regions[i].name, value: vm.api_regions[i].id, districts: vm.api_regions[i].districts} );
-                    }
-        },(error) => {
-          console.log(error);
-        })
+            for (var i = 0; i < vm.api_regions.length; i++) {
+                this.regions.push( {text: vm.api_regions[i].name, value: vm.api_regions[i].id, districts: vm.api_regions[i].districts} );
+            }
+          },(error) => {
+            console.log(error);
+          }
+        )
       },
       fetchSections: function(){
         let vm = this;
 
-        fetch(api_endpoints.proposal_type_sections).then((response) => {
-            vm.api_sections = response.body;
+        fetch(api_endpoints.proposal_type_sections).then(
+          async (response) => {
+            vm.api_sections = await response.json();
             //console.log('api_regions ' + response.body);
-
-                    for (var i = 0; i < vm.api_sections.length; i++) {
-                        this.sections.push( {text: vm.api_sections[i].section_label, value: vm.api_sections[i].section_label, questions: vm.api_sections[i].section_questions} );
-                    }
-        },(error) => {
-          console.log(error);
-        })
+            for (var i = 0; i < vm.api_sections.length; i++) {
+              this.sections.push( {text: vm.api_sections[i].section_label, value: vm.api_sections[i].section_label, questions: vm.api_sections[i].section_questions} );
+            }
+          },(error) => {
+            console.log(error);
+          }
+        )
       },
       chainedSelectAppType: function(application_name){
         /* reset */
@@ -603,18 +605,21 @@ export default {
             vm.categories = [];
             vm.approval_level = '';
 
-        fetch(api_endpoints.activity_matrix).then((response) => {
-            this.activity_matrix = response.body[0].schema[0];
-            this.keys_ordered = response.body[0].ordered;
+        fetch(api_endpoints.activity_matrix).then(
+          async (response) => {
+            let data = await response.json();
+            this.activity_matrix = data[0].schema[0];
+            this.keys_ordered = data[0].ordered;
             //console.log('this.activity_matrix ' + response.body[0].schema);
 
-                    var keys = this.keys_ordered ? Object.keys(this.activity_matrix).sort() : Object.keys(this.activity_matrix)
-                    for (var i = 0; i < keys.length; i++) {
-                        this.activities.push( {text: keys[i], value: keys[i]} );
-                    }
-        },(error) => {
-          console.log(error);
-        })
+            var keys = this.keys_ordered ? Object.keys(this.activity_matrix).sort() : Object.keys(this.activity_matrix)
+            for (var i = 0; i < keys.length; i++) {
+                this.activities.push( {text: keys[i], value: keys[i]} );
+            }
+          },(error) => {
+            console.log(error);
+          }
+        )
       },
       chainedSelectSubActivities1: function(activity_name){
         let vm = this;
@@ -662,22 +667,24 @@ export default {
       fetchApplicationTypes: function(){
         let vm = this;
 
-        fetch(api_endpoints.searchable_application_types).then((response) => {
-            vm.api_app_types = response.body;
+        fetch(api_endpoints.searchable_application_types).then(
+          async (response) => {
+            vm.api_app_types = await response.json();
             //console.log('api_app_types ' + response.body);
 
-                    for (var i = 0; i < vm.api_app_types.length; i++) {
-                        this.application_types.push( {
-                            text: vm.api_app_types[i].name,
-                            value: vm.api_app_types[i].id,
-                            domain_used: vm.api_app_types[i].domain_used,
-                            //activities: (vm.api_app_types[i].activity_app_types.length > 0) ? vm.api_app_types[i].activity_app_types : [],
-                            //tenures: (vm.api_app_types[i].tenure_app_types.length > 0) ? vm.api_app_types[i].tenure_app_types : [],
-                        } );
-                    }
-        },(error) => {
-          console.log(error);
-        })
+            for (var i = 0; i < vm.api_app_types.length; i++) {
+                this.application_types.push( {
+                    text: vm.api_app_types[i].name,
+                    value: vm.api_app_types[i].id,
+                    domain_used: vm.api_app_types[i].domain_used,
+                    //activities: (vm.api_app_types[i].activity_app_types.length > 0) ? vm.api_app_types[i].activity_app_types : [],
+                    //tenures: (vm.api_app_types[i].tenure_app_types.length > 0) ? vm.api_app_types[i].tenure_app_types : [],
+                } );
+            }
+          },(error) => {
+            console.log(error);
+          }
+        )
       },
       eventListeners:function () {
             let vm = this;

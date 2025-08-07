@@ -347,22 +347,27 @@ export default {
   },
 
  beforeRouteEnter: function(to, from, next){
-    fetch(helpers.add_endpoint_json(api_endpoints.compliances,to.params.compliance_id)).then((response) => {
-        next(vm => {
-            vm.compliance = response.body 
-            if ( vm.compliance.customer_status == "Under Review" || vm.compliance.customer_status == "Approved" ) { vm.isFinalised = true }
-            if (vm.compliance && vm.compliance.documents){ vm.hasDocuments = true}
+    fetch(helpers.add_endpoint_json(api_endpoints.compliances,to.params.compliance_id)).then(
+        async (response) => {
+            let compliance_data = await response.json();
+            next(vm => {
+                vm.compliance = compliance_data;
+                if ( vm.compliance.customer_status == "Under Review" || vm.compliance.customer_status == "Approved" ) { vm.isFinalised = true }
+                if (vm.compliance && vm.compliance.documents){ vm.hasDocuments = true}
 
-            fetch(helpers.add_endpoint_json(api_endpoints.compliances,to.params.compliance_id+'/amendment_request')).then((res) => {                     
-                      vm.setAmendmentData(res.body);                  
-                },
-              err => {
-                        console.log(err);
-                  });
-        })
-    },(error) => {
-        console.log(error);
-    })
+                fetch(helpers.add_endpoint_json(api_endpoints.compliances,to.params.compliance_id+'/amendment_request')).then(
+                    async (res) => {     
+                        let amend_data = await res.json();                
+                        vm.setAmendmentData(amend_data);                  
+                    },err => {
+                            console.log(err);
+                    }
+                );
+            })
+        },(error) => {
+            console.log(error);
+        }
+    )
   }
 }
 

@@ -1158,16 +1158,16 @@ export default {
             }
         },
 
-        check_layer_attrs_exist: async function() {
+        check_layer_attrs_exist: function() {
             const self = this;
             let url = '/get_sqs_attrs'
             url = helpers.add_endpoint_join(api_endpoints.spatial_query,'/'+self.spatialquery.layer.layer_name + url)
 
             console.log(url);
-            await fetch(url)
-            .then((response) => {
+            fetch(url).then(async (response) => {
                 console.log('Response: ' + JSON.stringify(response));
-                return response.body;
+                let data = await response.json();
+                return data;
             },(error)=>{
                 console.log('Error: ' + JSON.stringify(error))
                 swal.fire(
@@ -1424,16 +1424,16 @@ export default {
             console.log(this.spatialquery);
         },
 
-        show_layer_details: async function(url) {
+        show_layer_details: function(url) {
             const self = this;
             self.requesting = true;
             self.show_spinner = true;
 
             console.log(url);
-            await fetch(url)
-            .then((response) => {
+            fetch(url).then(async (response) => {
                 console.log('Response: ' + JSON.stringify(response));
-                self.sqs_attrs_response = JSON.stringify(response.body, null, 4);
+                const data = await response.json();
+                self.sqs_attrs_response = JSON.stringify(data, null, 4);
                 self.isModalOpen = true;
                 self.showLayerAttrsModal = true;
                 //self.showQuestionModal = true;

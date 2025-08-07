@@ -137,11 +137,14 @@ export default {
         },
         fetchContact: function(id){
             let vm = this;
-            fetch(api_endpoints.contact(id)).then((response) => {
-                vm.contact = response.body; vm.isModalOpen = true;
-            },(error) => {
-                console.log(error);
-            } );
+            fetch(api_endpoints.contact(id)).then(
+                async (response) => {
+                    vm.contact = await response.json(); 
+                    vm.isModalOpen = true;
+                },(error) => {
+                    console.log(error);
+                }
+            );
         },
         sendData:function(){
             let vm = this;

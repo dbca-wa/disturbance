@@ -33,15 +33,18 @@ export default {
     mounted: function () {
     },
     beforeRouteEnter: function(to, from, next) {
-          fetch(`/api/approvals/${to.params.approval_id}/approval_wrapper.json`).then(res => {
-              next(vm => {
-                  vm.approvalId = res.body.id;
+        fetch(`/api/approvals/${to.params.approval_id}/approval_wrapper.json`).then(
+            async res => {
+                let data = await res.json();
+                next(vm => {
+                  vm.approvalId = data.id;
                 //   vm.apiaryApproval = res.body.apiary_approval;
-              });
+                });
             },
             err => {
               console.log(err);
-            });
+            }
+        );
     },
 }
 </script>

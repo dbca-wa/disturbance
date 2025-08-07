@@ -463,16 +463,19 @@ export default {
         fetchFilterLists: function(){
             let vm = this;
 
-            fetch(api_endpoints.filter_list_referrals).then((response) => {
-                vm.proposal_regions = response.body.regions;
-                //vm.proposal_districts = response.body.districts;
-                vm.proposal_activityTitles = response.body.activities;
-                vm.proposal_applicationTypes = response.body.application_types;
-                vm.proposal_submitters = response.body.submitters;
-                vm.proposal_status = response.body.processing_status_choices;
-            },(error) => {
-                console.log(error);
-            })
+            fetch(api_endpoints.filter_list_referrals).then(
+                async (response) => {
+                    let filter_list_ref = await response.json();
+                    vm.proposal_regions = filter_list_ref.regions;
+                    //vm.proposal_districts = filter_list_ref.districts;
+                    vm.proposal_activityTitles = filter_list_ref.activities;
+                    vm.proposal_applicationTypes = filter_list_ref.application_types;
+                    vm.proposal_submitters = filter_list_ref.submitters;
+                    vm.proposal_status = filter_list_ref.processing_status_choices;
+                },(error) => {
+                    console.log(error);
+                }
+            )
             //console.log(vm.regions);
         },
 
@@ -644,19 +647,20 @@ export default {
     },
     created: function() {
         // retrieve template group
-        fetch('/template_group',{
-            emulateJSON:true
-            }).then(res=>{
+        fetch('/template_group',{ emulateJSON:true }).then(
+            async res=>{
                 //this.template_group = res.body.template_group;
-                if (res.body.template_group === 'apiary') {
+                let template_group_res = await res.json();
+                if (template_group_res.template_group === 'apiary') {
                     this.apiaryTemplateGroup = true;
                 } else {
                     this.dasTemplateGroup = true;
                     this.applySelect2()
                 }
-        },err=>{
-        console.log(err);
-        });
+            },err=>{
+            console.log(err);
+            }
+        );
     },
     /*
     created: function() {

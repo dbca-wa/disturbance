@@ -1182,38 +1182,41 @@ export default {
 
         let vm = this;
         fetch(`/api/proposal/${ proposal_id }.json`).then(
-            res => {
+            async res => {
                 vm.loading.push('fetching proposal')
-                vm.proposal = res.body;
+                vm.proposal = await res.json();
                 console.log('vm.proposal')
                 console.log(vm.proposal)
                 vm.loading.splice('fetching proposal', 1);
                 vm.setdata(vm.proposal.readonly);
 
-                fetch(helpers.add_endpoint_json(api_endpoints.proposals, proposal_id + '/amendment_request')).then((res) => {
-                    vm.setAmendmentData(res.body);
-                },
-                err => {
-                    console.log(err);
-                });
+                fetch(helpers.add_endpoint_json(api_endpoints.proposals, proposal_id + '/amendment_request')).then(
+                    async (res) => {
+                        let data = await res.json()
+                        vm.setAmendmentData(data);
+                    },err => {
+                        console.log(err);
+                    }
+                );
             },
             err => {
                 console.log(err);
             }
         );
         // retrieve template group
-        fetch('/template_group',{
-            emulateJSON:true
-            }).then(res=>{
+        fetch('/template_group',{ emulateJSON:true }).then(
+            async res=>{
                 //this.template_group = res.body.template_group;
-                if (res.body.template_group === 'apiary') {
+                let data = await res.json();
+                if (data.template_group === 'apiary') {
                     this.apiaryTemplateGroup = true;
                 } else {
                     this.dasTemplateGroup = true;
                 }
-        },err=>{
-        console.log(err);
-        });
+            },err=>{
+            console.log(err);
+            }
+        );
     },
 
     beforeRouteEnter: function(to) {

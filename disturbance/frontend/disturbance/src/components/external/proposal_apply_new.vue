@@ -368,27 +368,31 @@ export default {
 	fetchRegions: function(){
 		let vm = this;
 
-		fetch(api_endpoints.regions).then((response) => {
-				vm.api_regions = response.body;
+		fetch(api_endpoints.regions).then(
+            async (response) => {
+				vm.api_regions = await response.json();
 				//console.log('api_regions ' + response.body);
 
                 for (var i = 0; i < vm.api_regions.length; i++) {
                     this.regions.push( {text: vm.api_regions[i].name, value: vm.api_regions[i].id, districts: vm.api_regions[i].districts} );
                 }
                 vm.setProposalData2(this.regions);
-		},(error) => {
-			console.log(error);
-		})
+            },(error) => {
+                console.log(error);
+            }
+        )
         
 	},
     fetchGlobalSettings: function(){
-                let vm = this;
-                fetch('/api/global_settings.json').then((response) => {
-                    vm.global_settings = response.body;
-                    
-                },(error) => {
-                    console.log(error);
-                } );
+        let vm = this;
+        fetch('/api/global_settings.json').then(
+            async (response) => {
+                vm.global_settings = await response.json();
+            
+            },(error) => {
+                console.log(error);
+            }
+        );
     },
 
 	searchList: function(id, search_list){
@@ -430,8 +434,9 @@ export default {
     fetchApplicationTypes: function(){
 		let vm = this;
 
-		fetch(api_endpoints.application_types).then((response) => {
-				vm.api_app_types = response.body;
+		fetch(api_endpoints.application_types).then(
+            async (response) => {
+				vm.api_app_types = await response.json();
 				//console.log('api_app_types ' + response.body);
 
                 for (var i = 0; i < vm.api_app_types.length; i++) {
@@ -442,9 +447,10 @@ export default {
                         //tenures: (vm.api_app_types[i].tenure_app_types.length > 0) ? vm.api_app_types[i].tenure_app_types : [],
                     } );
                 }
-		},(error) => {
-			console.log(error);
-		})
+            },(error) => {
+                console.log(error);
+            }
+        )
 	},
     chainedSelectAppType: function(application_id){
         /* reset */
@@ -476,9 +482,11 @@ export default {
         vm.categories = [];
         vm.approval_level = '';
 
-		await fetch(api_endpoints.activity_matrix).then((response) => {
-				this.activity_matrix = response.body[0].schema[0];
-				this.keys_ordered = response.body[0].ordered;
+		fetch(api_endpoints.activity_matrix).then(
+            async (response) => {
+                let matrix_res = await response.json();
+				this.activity_matrix = matrix_res[0].schema[0];
+				this.keys_ordered = matrix_res[0].ordered;
 				//console.log('this.activity_matrix ' + response.body[0].schema);
 
                 var keys = this.keys_ordered ? Object.keys(this.activity_matrix).sort() : Object.keys(this.activity_matrix)
@@ -486,18 +494,20 @@ export default {
                     this.activities.push( {text: keys[i], value: keys[i]} );
                 }
                 vm.fetchRegions();
-		},(error) => {
-			console.log(error);
-		})
+            },(error) => {
+                console.log(error);
+            }
+        )
 	},
-    fetchAllActivityMatrices: async function(){
+    fetchAllActivityMatrices: function(){
 		let vm = this;
         vm.sub_activities1 = [];
         vm.sub_activities2 = [];
         vm.categories = [];
         vm.approval_level = '';
-		await fetch(api_endpoints.activity_matrix).then((response) => {
-				this.all_activity_matrices = response.body;
+		fetch(api_endpoints.activity_matrix).then(
+            async (response) => {
+				this.all_activity_matrices = await response.json();
                 vm.fetchRegions();
 		},(error) => {
 			console.log(error);

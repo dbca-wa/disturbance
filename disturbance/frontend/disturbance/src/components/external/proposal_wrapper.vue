@@ -37,15 +37,18 @@ export default {
     },
     beforeRouteEnter: function(to, from, next) {
         // let vm = this
-        fetch(`/api/proposal/${to.params.proposal_id}/internal_proposal_wrapper.json`).then(res => {
-            next(vm => {
-                vm.proposalId = res.body.id;
-                vm.applicationTypeName = res.body.application_type_name;
-            });
+        fetch(`/api/proposal/${to.params.proposal_id}/internal_proposal_wrapper.json`).then(
+            async res => {
+                let data = await res.json();
+                next(vm => {
+                    vm.proposalId = data.id;
+                    vm.applicationTypeName = data.application_type_name;
+                });
           },
           err => {
             console.log(err);
-          });
+          }
+        );
     },
 }
 </script>

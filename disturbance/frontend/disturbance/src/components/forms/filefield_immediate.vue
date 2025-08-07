@@ -222,11 +222,7 @@ export default {
             }
             formData.append('csrfmiddlewaretoken', this.csrf_token);
             if (this.document_action_url) {
-                // let res = await Vue.http.post(this.document_action_url, formData)
-                await fetch(this.document_action_url, {
-                    body: formData,
-                    method: 'POST',
-                });
+                await Vue.http.post(this.document_action_url, formData)
             }
             this.show_spinner = false;
         },

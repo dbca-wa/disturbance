@@ -375,12 +375,14 @@
             },
             fetchGlobalSettings: function(){
                 let vm = this;
-                fetch('/api/global_settings.json').then((response) => {
-                    vm.global_settings = response.body;
+                fetch('/api/global_settings.json').then(
+                    async (response) => {
+                        vm.global_settings = await response.json();
                     
-                },(error) => {
-                    console.log(error);
-                } );
+                    },(error) => {
+                        console.log(error);
+                    }
+                );
             },
             
         },
