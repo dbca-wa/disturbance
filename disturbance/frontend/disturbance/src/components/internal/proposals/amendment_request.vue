@@ -133,8 +133,9 @@ export default {
         },
         fetchAmendmentChoices: function(){
             let vm = this;
-            fetch('/api/amendment_request_reason_choices.json').then((response) => {
-                vm.reason_choices = response.body;
+            fetch('/api/amendment_request_reason_choices.json')
+            .then(async (response) => {
+                vm.reason_choices = await response.json();
 
             },(error) => {
                 console.log(error);
@@ -173,9 +174,12 @@ export default {
                         vm.amendingProposal = true;
                         vm.close();
                         //vm.$emit('refreshFromResponse',response);
-                        fetch(`/api/proposal/${vm.proposal_id}/internal_proposal.json`).then((response)=>
+                        fetch(`/api/proposal/${vm.proposal_id}/internal_proposal.json`)
+                        .then(async (response)=>
                         {
-                            vm.$emit('refreshFromResponse',response);
+                            let res_data = await response.json();
+                            // vm.$emit('refreshFromResponse',response);
+                            vm.$emit('refreshFromResponse',res_data);
 
                         },(error)=>{
                             console.log(error);

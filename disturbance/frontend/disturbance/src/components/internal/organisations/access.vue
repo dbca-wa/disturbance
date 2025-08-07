@@ -303,9 +303,10 @@ export default {
   },
   watch: {},
   beforeRouteEnter: function(to, from, next){
-    fetch(helpers.add_endpoint_json(api_endpoints.organisation_requests,to.params.access_id)).then((response) => {
+    fetch(helpers.add_endpoint_json(api_endpoints.organisation_requests,to.params.access_id)).then(async (response) => {
+        let data = await response.json();
         next(vm => {
-            vm.access = response.body
+            vm.access = data;
         })
     },(error) => {
         console.log(error);
@@ -337,15 +338,17 @@ export default {
             url = api_endpoints.apiary_organisation_access_group_members;
         }
         const response = await fetch(url)
-        this.members = response.body
+        const data = await response.json(); 
+        this.members = data;
         this.loading.splice('Loading Access Group Members',1);
     },
     assignMyself: function(){
         let vm = this;
         fetch(helpers.add_endpoint_json(api_endpoints.organisation_requests,(vm.access.id+'/assign_request_user')))
-        .then((response) => {
+        .then(async (response) => {
             console.log(response);
-            vm.access = response.body;
+            let data = await response.json();
+            vm.access = data;
         }, (error) => {
             console.log(error);
         });
@@ -366,9 +369,10 @@ export default {
         }
         else{
             fetch(helpers.add_endpoint_json(api_endpoints.organisation_requests,(vm.access.id+'/unassign')))
-            .then((response) => {
+            .then(async (response) => {
                 console.log(response);
-                vm.access = response.body;
+                let data = await response.json();
+                vm.access = data;
             }, (error) => {
                 console.log(error);
             });
@@ -385,9 +389,10 @@ export default {
         }).then((swalresult) => {
             if(swalresult.isConfirmed) {
                 fetch(helpers.add_endpoint_json(api_endpoints.organisation_requests,(vm.access.id+'/accept')))
-                .then((response) => {
+                .then(async (response) => {
                     console.log(response);
-                    vm.access = response.body;
+                    let data = await response.json();
+                    vm.access = data;
                 }, (error) => {
                     console.log(error);
                 });
@@ -409,9 +414,10 @@ export default {
         }).then((swalresult) => {
             if(swalresult.isConfirmed) {
                 fetch(helpers.add_endpoint_json(api_endpoints.organisation_requests,(vm.access.id+'/decline')))
-                .then((response) => {
+                .then(async (response) => {
                     console.log(response);
-                    vm.access = response.body;
+                    let data = await response.json();
+                    vm.access = data;
                 }, (error) => {
                     console.log(error);
                 });
@@ -423,7 +429,8 @@ export default {
 
     fetchProfile: async function(){
         const response = await fetch(api_endpoints.profile);
-        this.profile = response.body
+        const data = await response.json(); 
+        this.profile = data;
     },
 
     check_assessor: function(){
@@ -453,7 +460,8 @@ export default {
         const res = await fetch('/template_group',{
             emulateJSON:true
             })
-        if (res.body.template_group === 'apiary') {
+        const data = await res.json(); 
+        if (data.template_group === 'apiary') {
             this.apiaryTemplateGroup = true;
         } else {
             this.dasTemplateGroup = true;

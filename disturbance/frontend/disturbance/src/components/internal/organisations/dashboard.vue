@@ -275,13 +275,15 @@ export default {
                 url = api_endpoints.apiary_organisation_access_group_members;
             }
             const response = await fetch(url)
-            this.members = response.body
+            const data = await response.json();
+            this.members = data;
             //this.loading.splice('Loading Access Group Members',1);
             this.table_id = uuidv4()
         },
         fetchProfile: async function(){
             const response = await fetch(api_endpoints.profile);
-            this.profile = response.body
+            const data = await response.json();
+            this.profile = data;
         },
 
         check_assessor: function(){
@@ -302,7 +304,8 @@ export default {
         const res = await fetch('/template_group',{
             emulateJSON:true
             })
-        if (res.body.template_group === 'apiary') {
+        const data = await res.json(); 
+        if (data.template_group === 'apiary') {
             this.apiaryTemplateGroup = true;
         } else {
             this.dasTemplateGroup = true;

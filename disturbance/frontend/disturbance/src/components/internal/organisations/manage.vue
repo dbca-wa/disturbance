@@ -364,8 +364,10 @@ export default {
             this.$refs.add_contact.isModalOpen = true;
         },
         editContact: function(_id){
-            fetch(helpers.add_endpoint_json(api_endpoints.organisation_contacts,_id)).then((response) => {
-                this.$refs.add_contact.contact = response.body;
+            fetch(helpers.add_endpoint_json(api_endpoints.organisation_contacts,_id))
+            .then(async (response) => {
+                const data = await response.json();
+                this.$refs.add_contact.contact = data;
                 this.addContact();
             }).then(() => {
                 this.$refs.contacts_datatable.vmDataTable.ajax.reload();
