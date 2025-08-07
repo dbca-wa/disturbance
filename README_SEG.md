@@ -1,45 +1,3 @@
-# CREATE DB EXPORT
-### EXCLUDE Reversion and add schema only for reversion
-NOTE: normally for PROD you would not exclude the reversion tables as in the command below. But for DEV work, these can be excluded to speed up DB backup and restore.
-```
-pg_dump -U ledger_prod -W --exclude-table='django_cron*' --exclude-table='reversion_revision' --exclude-table='reversion_version' -t 'disturbance_*' -t 'accounts_*' -t 'address_*' -t 'analytics_*' -t 'auth_*' -t 'django_*' -t 'taggit_*' -Fc ledger_prod -h <db_hostname> -p 5432 > /dbdumps/dumps/das_seg_tables_18March2025.sql
-
-### Append empty reversion tables
-pg_dump -U ledger_prod -W --schema-only -t reversion_revision -t reversion_version ledger_prod -h <db_hostname> -p 5432 >> /dbdumps/dumps/das_seg_tables_26Feb2025.sql
-```
-# TO RESTORE to DB  das_seg_dev_orig
-```
-psql -U das_dev das_seg_dev_orig -h localhost -W <  das_seg_tables_26Feb2025.sql
-```
-
-# Create a working copy DB (or use the orig)
-``` 
-psql
-> create database das_seg_dev template das_seg_dev_orig owner das_dev;
-```
-
-# Update disturbance.env DATABASE_URL with DB das_seg_dev2
-```
-...
-DATABASE_URL=postgis://das_dev:<passwd>@172.17.0.1:5432/das_seg_dev
-...
-
-```
-
-# Update pip version to 24.0
-
-# Run migrations
-```
-./manage_ds.py migrate disturbance
-```
-
-# Delete the Apiary Proposal Types
-delete the Apiary proposal type in Admin (via Django Admin) - those with blank application_name (and v1)
-
-
-
-
-
 # Segregation Steps for Disturbance
 
 # Step 1: export disturbance tables and reversion schema from ledger
@@ -82,34 +40,28 @@ psql -U das_dev das_dev -h localhost -W <  das_seg_tables_DDMMYYYY.sql
 psql -U das_dev das_dev -h localhost -W <  reversion_schema_das_seg_tables_DDMMYYYY.sql
 ```
 
-# Step 4: Create a working copy DB (or use the orig)
-``` 
-psql
-> create database das_seg_dev template das_dev owner das_dev;
-```
-
-# Step 5: Update environment variable with new database url (and other variables)
+# Step 4: Update environment variable with new database url (and other variables)
 
 Update the environment variables:
 
 - DATABASE_URL=postgis://das_dev:<passwd>@172.17.0.1:5432/das_seg_dev
 - ENABLE_DJANGO_LOGIN=True
 
-# Step 6: delete the migrations for app django_cron
+# Step 5: delete the migrations for app django_cron
 ```
 ./manage_ds.py dbshell
 
 delete from django_migrations where app = 'django_cron';
 ```
 
-# Step 7: Run all other migrations
+# Step 6: Run all other migrations
 ```
 ./manage_ds.py migrate disturbance
 ./manage_ds.py migrate taggit
 ./manage_ds.py migrate
 ```
 
-# Step 8: Delete the Apiary Proposal Types
+# Step 7: Delete the Apiary Proposal Types
 
 <!-- delete the Apiary proposal type in Admin (via Django Admin) - those with blank application_name (and v1) OR -->
 ```
@@ -118,34 +70,4 @@ delete from django_migrations where app = 'django_cron';
 apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
 ProposalType.objects.filter(name__in=apiary_proposal_types).delete()
 ```
-
-# Step 9: Follow the steps to dump the scheme questions data if necessary 
-NOTE: normally for das_gis prod would not need this spatial schema setup. But for DEV work now, these steps will create the new proposaltype and spatial questions for new Disturbance SQS proposaltype version(v13).
-
-#Copy the files to shared folder or tmp/das folder on rancher 
-Delete the data from tables below:.
-```
-./manage_ds.py shell_plus
-
-QuestionOption.objects.all().delete()
-SectionQuestion.objects.all().delete()
-ProposalTypeSection.objects.all().delete()
-SpatialQueryQuestion.objects.all().delete()
-MasterlistQuestion.objects.all().delete()
-SpatialQueryLayer.objects.all().delete()
-SpatialQueryQuestion.objects.all().delete()
-SpatialQueryMetrics.objects.all().delete()
-DASMapLayer.objects.all().delete()
-CddpQuestionGroup.objects.all().delete()
-GlobalSettings.objects.all().delete()
-```
-
-#Run the below fixtures to create data:
-```
-python manage_ds.py loaddata  dasmap_globsetting_DDMMMYYY.json
-python manage_ds.py loaddata  proposal_type_das_DDMMMYYY.json
-python manage_ds.py loaddata  proposal_type_et_DDMMMYYY.json
-python manage_ds.py loaddata  sqq_DDMMMYYY.json
-```
-
 
