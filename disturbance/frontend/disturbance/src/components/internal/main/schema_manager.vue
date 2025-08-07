@@ -4,10 +4,10 @@
 
     <SchemaTabs :tabs="tabs" :initialTab="initialTab">
 
-        <template slot="tab-panel-question"><SchemaQuestion /></template>
-        <template slot="tab-panel-masterlist"><SchemaMasterlist /></template>
-        <template slot="tab-panel-proposal-type"><SchemaProposalType /></template>
-        <template v-if="show_das_map" slot="tab-panel-spatial-query-question"><SpatialQueryQuestion /></template>
+        <template #tab-panel-question><SchemaQuestion /></template>
+        <template #tab-panel-masterlist><SchemaMasterlist /></template>
+        <template #tab-panel-proposal-type><SchemaProposalType /></template>
+        <template v-if="show_das_map" #tab-panel-spatial-query-question><SpatialQueryQuestion /></template>
         <!--<template v-if="show_das_map" slot="tab-panel-spatial-query-metrics"><SpatialQueryMetrics /></template>-->
         <!-- <template slot="tab-panel-group"><SchemaGroup /></template> -->
 
@@ -22,8 +22,7 @@ import SchemaQuestion from '@/components/internal/main/schema_question.vue'
 import SchemaMasterlist from '@/components/internal/main/schema_masterlist.vue'
 import SchemaProposalType from '@/components/internal/main/schema_proposal_type.vue'
 import SpatialQueryQuestion from '@/components/internal/main/spatial_query_question.vue'
-import SpatialQueryMetrics from '@/components/internal/main/spatial_query_metrics.vue'
-// import SchemaGroup from '@/components/internal/main/schema_group.vue'
+// import SpatialQueryMetrics from '@/components/internal/main/spatial_query_metrics.vue'
 
 export default {
     name: 'schema-manager',
@@ -33,7 +32,7 @@ export default {
         SchemaMasterlist,
         SchemaProposalType,
         SpatialQueryQuestion,
-        SpatialQueryMetrics,
+        //SpatialQueryMetrics,
         // SchemaGroup,
     },
     computed: {

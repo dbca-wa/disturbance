@@ -9,16 +9,6 @@
         </div>
 
         <div :class="apiary_sections_classname">
-            <!--FormSection :formCollapse="false" label="Site Locations" Index="site_locations">
-                <SiteLocations
-                    :proposal="proposal"
-                    id="site_locations"
-                    ref="apiary_site_locations"
-                    :is_external="is_external"
-                    :is_internal="is_internal"
-                    @button_text="button_text"
-                />
-            </FormSection-->
             <FormSection :formCollapse="false" label="Transferee" Index="transferee">
                 <!--span class="row col-sm-12"-->
                 <div v-if="is_external" class="row col-sm-12">
@@ -106,20 +96,7 @@
                 </div-->
 
             </FormSection>
-            <FormSection :formCollapse="false" label="Site" Index="site_locations">
-                <ComponentSiteSelection
-                    :apiary_sites="apiary_sites"
-                    :is_internal="is_internal"
-                    :is_external="is_external"
-                    :key="component_site_selection_key"
-                    :show_col_checkbox="showColCheckbox"
-                    :enable_col_checkbox="is_external"
-
-                    ref="component_site_selection"
-                    @apiary_sites_updated="apiarySitesUpdated"
-                  />
-            </FormSection>
-
+           
             <!--
             <FormSection :formCollapse="false" label="Deed Poll" Index="deed_poll">
                 <div class="row">
@@ -143,58 +120,17 @@
             -->
 
             <FormSection :formCollapse="false" label="Deed Poll" Index="deed_poll">
-                <DeedPoll
-                    ref="deed_poll_component"
-                    :isRepeatable="false"
-                    :isReadonly="readonly"
-                    :documentActionUrl="deedPollDocumentUrl"
-                />
             </FormSection>
 
-            <ApiaryChecklist
-                :checklist="applicantChecklistAnswers"
-                section_title="Applicant Checklist"
-                :readonly="readonly"
-                ref="applicant_checklist"
-                index="1"
-            />
             <div v-if="assessorChecklistVisibility">
-                <ApiaryChecklist
-                :checklist="assessorChecklistAnswers"
-                section_title="Assessor Checklist"
-                :readonly="assessorChecklistReadonly"
-                ref="assessor_checklist"
-                index="2"
-                />
                 <div v-for="site in apiary_sites">
-                    <ApiaryChecklist
-                    :checklist="assessorChecklistAnswersPerSite(site.id)"
-                    :section_title="'Assessor checklist for site ' + site.id"
-                    :readonly="assessorChecklistReadonly"
-                    v-bind:key="'assessor_checklist_per_site_' + site.id"
-                    :index="'2_' + site.id"
-                    />
                 </div>
             </div>
             <div v-for="r in referrerChecklistAnswers">
                 <!--div v-if="(referral && r.referral_id === referral.id) || (assessorChecklistVisibility && proposal.processing_status === 'With Assessor')"-->
                 <div v-if="(referral && r.referral_id === referral.id) || (assessorChecklistVisibility)">
                 <!--div v-if="r.id = referral.id"-->
-                    <ApiaryChecklist
-                    :checklist="r.referral_data"
-                    :section_title="'Referral Checklist: ' + r.referrer_group_name"
-                    :readonly="referrerChecklistReadonly"
-                    ref="referrer_checklist"
-                    index="3"
-                    />
                     <div v-for="site in apiary_sites">
-                        <ApiaryChecklist
-                        :checklist="referrerChecklistAnswersPerSite(r.apiary_referral_id, site.id)"
-                        :section_title="'Referral Checklist: ' + r.referrer_group_name + ' for site ' + site.id"
-                        :readonly="referrerChecklistReadonly"
-                        v-bind:key="'referrer_checklist_per_site_' + r.apiary_referral_id + site.id"
-                        :index="'3_' + r.apiary_referral_id + '_' + site.id"
-                        />
                     </div>
                 </div>
             </div>
@@ -227,14 +163,9 @@
 
 <script>
 
-    //import SiteLocations from '@/components/common/apiary/site_locations.vue'
     import FileField from '@/components/forms/filefield_immediate.vue'
     import FormSection from "@/components/forms/section_toggle.vue"
-    import Vue from 'vue'
-    import ComponentSiteSelection from '@/components/common/apiary/component_site_selection.vue'
-    import ApiaryChecklist from '@/components/common/apiary/section_checklist.vue'
     import {v4 as uuidv4 } from 'uuid';
-    import DeedPoll from "@/components/common/apiary/section_deed_poll.vue"
     import { api_endpoints, helpers }from '@/utils/hooks'
 
     export default {
@@ -278,10 +209,10 @@
             },
         },
         data:function () {
-            let vm=this;
+            // let vm=this;
             return{
                 values:null,
-                pBody: 'pBody'+vm._uid,
+                pBody: 'pBody'+uuidv4(),
                 checklist_answers : [],
                 transfereeEmail: '',
                 //apiaryApprovals: {},
@@ -298,12 +229,8 @@
             }
         },
         components: {
-            //SiteLocations,
-            ComponentSiteSelection,
             FileField,
             FormSection,
-            ApiaryChecklist,
-            DeedPoll,
         },
         watch: {
             applicationFee: function() {
@@ -686,7 +613,7 @@
                     }
                 }
             }
-            Vue.http.get(api_endpoints.apiary_site_transfer_fees)
+            fetch(api_endpoints.apiary_site_transfer_fees)
                 .then(res => {
                     for (let fee of res.body) {
                         this.siteTransferFees.push(fee)

@@ -98,12 +98,12 @@ module.exports = {
         var id3 = id + '_3'
 
         switch (c.type) {
-            case 'text':
-        		readonly = (c.readonly) ? (c.readonly): (readonly);
-                _elements.push(
-                    <TextField type="text" name={c.name} value={val} id={id} comment_value={comment_val} label={c.label} help_text={help_text} help_text_assessor={help_text_assessor} assessorMode={assessorMode} readonly={readonly} assessor_readonly={assessor_visibility} isRequired={c.isRequired} help_text_url={help_text_url} help_text_assessor_url={help_text_assessor_url}/>
-                )
-                break;
+            // case 'text':
+        	// 	readonly = (c.readonly) ? (c.readonly): (readonly);
+            //     _elements.push(
+            //         <TextField type="text" name={c.name} value={val} id={id} comment_value={comment_val} label={c.label} help_text={help_text} help_text_assessor={help_text_assessor} assessorMode={assessorMode} readonly={readonly} assessor_readonly={assessor_visibility} isRequired={c.isRequired} help_text_url={help_text_url} help_text_assessor_url={help_text_assessor_url}/>
+            //     )
+            //     break;
             case 'text_info':
                 _elements.push(
                     <TextInfo label={c.label} name={c.name} value={val} id={id} />

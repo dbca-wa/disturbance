@@ -6,7 +6,7 @@
                     <!--
                     <th :data-class="(i == 0 )? 'expand':null" v-for="(header,i) in dtHeaders"> {{ header}}</th>
                     -->
-                    <th :data-class="(i == 0 )? 'expand':null" v-for="(header,i) in dtHeaders" v-html="header"></th>
+                    <th :data-class="(i == 0 )? 'expand':null" v-for="(header,i) in dtHeaders" v-bind:key="i" v-html="header"></th>
                 </tr>
             </thead>
             <tbody>
@@ -44,12 +44,6 @@ module.exports = {
    methods:{
        initEvents: function () {
            let vm =this;
-           var responsiveHelper;
-           var breakpointDefinition = {
-               //bootstrap grid values
-               tablet: 992,
-               phone : 768
-           };
         //    var responsiveOptions = {
         //        autoWidth        : false,
         //        preDrawCallback: function () {
@@ -175,6 +169,10 @@ module.exports = {
         }
     }
     .dataTables_wrapper .dt-buttons{
-    float: right;
-  }
+        float: right;
+    }
+    table.dataTable {
+        margin-top: 8px;
+        margin-bottom: 8px !important;
+    }
 </style>

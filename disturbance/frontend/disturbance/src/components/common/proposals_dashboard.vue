@@ -24,28 +24,32 @@
                         <div v-if="!apiaryTemplateGroup">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <template v-show="select2Applied">
-                                        <label for="">Region</label>
-                                        <select style="width:100%" class="form-control input-sm" ref="filterRegion" >
-                                            <template v-if="select2Applied">
-                                                <option v-for="r in proposal_regions" :value="r">{{r}}</option>
-                                            </template>
-                                        </select>
-                                    </template>
+                                    <div>
+                                        <div v-show="select2Applied">
+                                            <label for="">Region</label>
+                                            <select style="width:100%" class="form-control input-sm" ref="filterRegion" >
+                                                <template v-if="select2Applied">
+                                                    <option v-for="r in proposal_regions" :value="r" :key="r">{{r}}</option>
+                                                </template>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div v-if="!apiaryTemplateGroup">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <template v-show="select2bApplied">
-                                        <label for="">District</label>
-                                        <select style="width:100%" class="form-control input-sm" ref="filterDistrict" >
-                                            <template v-if="select2bApplied">
-                                                <option v-for="r in proposal_districts" :value="r">{{r}}</option>
-                                            </template>
-                                        </select>
-                                    </template>
+                                    <div>
+                                        <div v-show="select2bApplied">
+                                            <label for="">District</label>
+                                            <select style="width:100%" class="form-control input-sm" ref="filterDistrict" >
+                                                <template v-if="select2bApplied">
+                                                    <option v-for="r in proposal_districts" :value="r" :key="r">{{r}}</option>
+                                                </template>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -55,7 +59,7 @@
                                 <label for="">{{ activityFilterLabel }}</label>
                                 <select class="form-control" v-model="filterProposalActivity">
                                     <option value="All">All</option>
-                                    <option v-for="a in proposal_activityTitles" :value="a">{{a}}</option>
+                                    <option v-for="a in proposal_activityTitles" :value="a" :key="a">{{a}}</option>
                                 </select>
                             </div>
                         </div>
@@ -64,7 +68,7 @@
                                 <label for="">Status</label>
                                 <select class="form-control" v-model="filterProposalStatus">
                                     <option value="All">All</option>
-                                    <option v-for="s in proposal_status" :value="s.value">{{s.name}}</option>
+                                    <option v-for="s in proposal_status" :value="s.value" :key="s.value">{{s.name}}</option>
                                 </select>
                             </div>
                         </div>
@@ -75,7 +79,7 @@
                                 <label for="">Proponent</label>
                                 <select class="form-control" v-model="filterProposalApplicant">
                                         <option value="All">All</option>
-                                        <option v-for="s in proposal_applicants" :value="s.id">{{s.search_term}}</option>
+                                        <option v-for="s in proposal_applicants" :value="s.id" :key="s.id">{{s.search_term}}</option>
                                 </select>
                              </div>
                         </div>
@@ -105,7 +109,7 @@
                                 <label for="">Submitter</label>
                                 <select class="form-control" v-model="filterProposalSubmitter">
                                     <option value="All">All</option>
-                                    <option v-for="s in proposal_submitters" :value="s.email">{{s.search_term}}</option>
+                                    <option v-for="s in proposal_submitters" :value="s.email" :key="s.email">{{s.search_term}}</option>
                                 </select>
                             </div>
                         </div>
@@ -116,7 +120,7 @@
                                 <label for="">Proposal Type</label>
                                 <select class="form-control" v-model="filterProposalApplicationType">
                                     <option value="All">All</option>
-                                    <option v-for="a in proposal_applicationTypes" :value="a">{{a}}</option>
+                                    <option v-for="a in proposal_applicationTypes" :value="a" :key="a">{{a}}</option>
                                 </select>
                             </div>
                         </div>
@@ -125,7 +129,7 @@
                                 <label for="">Sort By</label>
                                 <select class="form-control" v-model="sortBy">
                                     <option value=""></option>
-                                    <option v-for="s in sort_by" :value="s.value">{{s.name}}</option>
+                                    <option v-for="s in sort_by" :key="s.value" :value="s.value">{{s.name}}</option>
                                 </select>
                             </div>
                         </div>
@@ -143,15 +147,14 @@
     </div>
 </template>
 <script>
-// import "babel-polyfill"
+import { v4 as uuidv4 } from 'uuid';
 import datatable from '@/utils/vue/datatable.vue'
-import Vue from 'vue'
-require("select2/dist/css/select2.min.css");
-require("select2-bootstrap-theme/dist/select2-bootstrap.min.css");
-//require("babel-polyfill"); /* only one of 'import' or 'require' is necessary */
+// require("select2/dist/css/select2.min.css");
+// require("select2-bootstrap-theme/dist/select2-bootstrap.min.css");
 import {
     api_endpoints,
-    helpers
+    helpers,
+    constants,
 }from '@/utils/hooks'
 export default {
     name: 'ProposalTableDash',
@@ -170,19 +173,20 @@ export default {
         },
     },
     data() {
-        let vm = this;
+        // let vm = this;
 
         return {
             assigned_officer_column_name: "assigned_officer__first_name, assigned_officer__last_name, assigned_officer__email",
             submitter_column_name: "submitter__email, submitter__first_name, submitter__last_name",
             proponent_applicant_column_name: 'applicant__organisation__name, proxy_applicant__first_name, proxy_applicant__last_name, proxy_applicant__email',
-            pBody: 'pBody' + vm._uid,
+            pBody: 'pBody' + uuidv4(),
             uuid: 0,
-            datatable_id: 'proposal-datatable-'+vm._uid,
-            //datatable_id: 'proposal-datatable-'+vm.uuid,
+            datatable_id: 'proposal-datatable-'+uuidv4(),
+            //datatable_id: 'proposal-datatable-'+uuidv4(),
             //Profile to check if user has access to process Proposal
             profile: {},
             //template_group: '',
+            templateGroupResponse: {},
             apiaryTemplateGroup: false,
             dasTemplateGroup: false,
             templateGroupDetermined: false,
@@ -190,6 +194,7 @@ export default {
             is_apiary_admin: false,
             is_das_apiary_admin: false,
             // Filters for Proposals
+            filterListsProposal:{},
             filterProposalRegion: [],
             filterProposalDistrict: [],
             filterProposalActivity: 'All',
@@ -427,7 +432,7 @@ export default {
             columnList.push({
                     // 4. Submitter
                     data: "submitter",
-                    mRender:function (data,type,full) {
+                    mRender:function (data) {
                         if (data) {
                             return `${data.first_name} ${data.last_name}`;
                         }
@@ -461,8 +466,8 @@ export default {
                 {
                     // 7. Lodged on
                     data: "lodgement_date",
-                    mRender:function (data,type,full) {
-                        return data != '' && data != null ? moment(data).format(vm.dateFormat): '';
+                    mRender:function (data) {
+                        return data != '' && data  != null ? moment(data).format(vm.dateFormat): '';
                     },
                     defaultContent: '',
                     searchable: true,
@@ -584,7 +589,7 @@ export default {
                 destroy: true,
                 autoWidth: false,
                 language: {
-                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+                    processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
                 serverSide: true,
@@ -688,49 +693,52 @@ export default {
 
         fetchFilterLists: function(){
             let vm = this;
+            //fetch('/api/list_proposal/filter_list/').then((response) => {
+            fetch(
+                api_endpoints.filter_list
+            ).then( async (response) => {
+                vm.filterListsProposal = await response.json();
+                vm.proposal_regions = vm.filterListsProposal.regions;
+                vm.proposal_districts = vm.filterListsProposal.districts;
 
-            //vm.$http.get('/api/list_proposal/filter_list/').then((response) => {
-            vm.$http.get(api_endpoints.filter_list).then((response) => {
-                vm.proposal_regions = response.body.regions;
-                vm.proposal_districts = response.body.districts;
-
-                vm.proposal_activityTitles = response.body.activities;
-                vm.proposal_applicationTypes = response.body.application_types;
+                vm.proposal_activityTitles = vm.filterListsProposal.activities;
+                vm.proposal_applicationTypes = vm.filterListsProposal.application_types;
                 //vm.proposal_activityTitles.push('Apiary');
 
-                vm.proposal_submitters = response.body.submitters;
-                vm.proposal_applicants = response.body.applicants;
+                vm.proposal_submitters = vm.filterListsProposal.submitters;
+                vm.proposal_applicants = vm.filterListsProposal.applicants;
                 //vm.proposal_status = vm.level == 'internal' ? response.body.processing_status_choices: response.body.customer_status_choices;
                 vm.proposal_status = vm.level == 'internal' ? vm.internal_status: vm.external_status;
             },(error) => {
-                console.log(error);
+                    console.log(error);
             })
-            //console.log(vm.regions);
         },
 
         discardProposal:function (proposal_id) {
             let vm = this;
-            swal({
+            swal.fire({
                 title: "Discard Proposal",
                 text: "Are you sure you want to discard this proposal?",
-                type: "warning",
+                icon: "warning",
                 showCancelButton: true,
                 confirmButtonText: 'Discard Proposal',
                 confirmButtonColor:'#d9534f'
-            }).then(() => {
-                vm.$http.delete(api_endpoints.discard_proposal(proposal_id))
-                .then((response) => {
-                    swal(
-                        'Discarded',
-                        'Your proposal has been discarded',
-                        'success'
-                    )
-                    vm.$refs.proposal_datatable.vmDataTable.ajax.reload();
-                }, (error) => {
-                    console.log(error);
-                });
+            }).then((swalresult) => {
+                if (swalresult.isConfirmed) {
+                    vm.$http.delete(api_endpoints.discard_proposal(proposal_id))
+                    .then(() => {
+                        swal.fire({
+                            title: 'Discarded',
+                            text: 'Your proposal has been discarded',
+                            icon: 'success'
+                        })
+                        vm.$refs.proposal_datatable.vmDataTable.ajax.reload();
+                    }, (error) => {
+                        console.log(error);
+                    });
+                }
             },(error) => {
-
+                console.log(error);
             });
         },
         addEventListeners: function(){
@@ -912,13 +920,14 @@ export default {
 
         fetchProfile: function(){
             let vm = this;
-            Vue.http.get(api_endpoints.profile).then((response) => {
-                vm.profile = response.body
+            fetch(api_endpoints.profile).then(
+                async (response) => {
+                    vm.profile = await response.json();
+                },(error) => {
+                    console.log(error);
 
-            },(error) => {
-                console.log(error);
-
-            })
+                }
+            )
         },
 
         check_assessor: function(proposal){
@@ -950,7 +959,6 @@ export default {
         console.log('in mounted')
         this.fetchFilterLists();
         this.fetchProfile();
-        let vm = this;
         $( 'a[data-toggle="collapse"]' ).on( 'click', function () {
             var chev = $( this ).children()[ 0 ];
             window.setTimeout( function () {
@@ -959,7 +967,7 @@ export default {
         });
         /*
         // retrieve template group
-        vm.$http.get('/template_group',{
+        fetch('/template_group',{
             emulateJSON:true
             }).then(res=>{
                 vm.template_group = res.body.template_group;
@@ -974,12 +982,14 @@ export default {
         });
     },
     created: function() {
+        let vm = this;
         console.log('in created')
         // retrieve template group
-        this.$http.get('/template_group',{ emulateJSON: true }).then(
-            res=>{
+        fetch('/template_group',{ emulateJSON: true }).then(
+            async res=>{
                 //this.template_group = res.body.template_group;
-                if (res.body.template_group === 'apiary') {
+                vm.templateGroupResponse = await res.json();
+                if (vm.templateGroupResponse.template_group === 'apiary') {
                     this.apiaryTemplateGroup = true;
                 } else {
                     this.dasTemplateGroup = true;
@@ -988,9 +998,9 @@ export default {
                 }
                 this.templateGroupDetermined = true;
                 this.setDashboardText();
-                this.is_das_admin = res.body.is_das_admin
-                this.is_apiary_admin = res.body.is_apiary_admin
-                this.is_das_apiary_admin = res.body.is_das_apiary_admin
+                this.is_das_admin = vm.templateGroupResponse.is_das_admin
+                this.is_apiary_admin = vm.templateGroupResponse.is_apiary_admin
+                this.is_das_apiary_admin = vm.templateGroupResponse.is_das_apiary_admin
             },
             err=>{
                 console.log(err);

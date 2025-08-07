@@ -27,7 +27,7 @@
                             </div>
                             <div class="col-sm-12 top-buffer-s">
                                 <strong>Lodged on</strong><br/>
-                                {{ proposal.lodgement_date | formatDate }}
+                                {{ formatDate(proposal.lodgement_date) }}
                                 <input type="hidden" id="lodgement_date" value="">
                             </div>
                         </div>
@@ -79,19 +79,21 @@
                                         </template>
                                     </div>
                                     <table class="table small-table">
-                                        <tr>
-                                            <th>Referral</th>
-                                            <th>Status/Action</th>
-                                        </tr>
-                                        <tr v-for="r in proposal.latest_referrals">
+                                        <thead>
+                                            <tr>
+                                                <th>Referral</th>
+                                                <th>Status/Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tr v-for="r in proposal.latest_referrals" :key="r.id">
                                             <td>
                                                 <small><strong>{{r.referral}}</strong></small><br/>
-                                                <small><strong>{{r.lodged_on | formatDate}}</strong></small>
+                                                <small><strong>{{ formatDate(r.lodged_on) }}</strong></small>
                                             </td>
                                             <td>
-                                                <small><strong>{{r.processing_status}}</strong></small><br/>
+                                                <small><strong>{{ r.processing_status }}</strong></small><br/>
                                                 <template v-if="r.processing_status == 'Awaiting'">
-                                                    <small v-if="canLimitedAction"><a @click.prevent="remindReferral(r)" href="#">Remind</a> / <a @click.prevent="recallReferral(r)"href="#">Recall</a></small>
+                                                    <small v-if="canLimitedAction"><a @click.prevent="remindReferral(r)" href="#">Remind</a> / <a @click.prevent="recallReferral(r)" href="#">Recall</a></small>
                                                 </template>
                                                 <template v-else>
                                                     <small v-if="canLimitedAction"><a @click.prevent="resendReferral(r)" href="#">Resend</a></small>
@@ -99,9 +101,6 @@
                                             </td>
                                         </tr>
                                     </table>
-                                    <template>
-
-                                    </template>
                                     <MoreReferrals @refreshFromResponse="refreshFromResponse" :proposal="proposal" :canAction="canLimitedAction" :isFinalised="isFinalised" :referral_url="referralListURL"/>
                                 </div>
                                 <div class="col-sm-12">
@@ -113,13 +112,13 @@
                                 <div class="form-group">
                                     <template v-if="proposal.processing_status == 'With Approver'">
                                         <select ref="assigned_officer" :disabled="!canAction" class="form-control" v-model="proposal.assigned_approver">
-                                            <option v-for="member in proposal.allowed_assessors" :value="member.id">{{member.first_name}} {{member.last_name}}</option>
+                                            <option v-for="member in proposal.allowed_assessors" :value="member.id" :key="member.id">{{member.first_name}} {{member.last_name}}</option>
                                         </select>
                                         <a v-if="canAssess && proposal.assigned_approver != proposal.current_assessor.id" @click.prevent="assignRequestUser()" class="actionBtn pull-right">Assign to me</a>
                                     </template>
                                     <template v-else>
                                         <select ref="assigned_officer" :disabled="!canAction" class="form-control" v-model="proposal.assigned_officer">
-                                            <option v-for="member in proposal.allowed_assessors" :value="member.id">{{member.first_name}} {{member.last_name}}</option>
+                                            <option v-for="member in proposal.allowed_assessors" :value="member.id" :key="member.id">{{member.first_name}} {{member.last_name}}</option>
                                         </select>
                                         <a v-if="canAssess && proposal.assigned_officer != proposal.current_assessor.id" @click.prevent="assignRequestUser()" class="actionBtn pull-right">Assign to me</a>
                                     </template>
@@ -228,12 +227,12 @@
             <div v-if="proposal_compare_version!=0" class="panel panel-default sticky-footer">
                 Comparing
                 <span class="label label-default">
-                    {{proposal.lodgement_number}}-{{reversion_history_length}}: {{proposal.lodgement_date | formatDate }}   
+                    {{proposal.lodgement_number}}-{{reversion_history_length}}: {{formatDate(proposal.lodgement_date)}}   
                 </span>&nbsp;
                 with
                 <span class="label label-danger">
                     {{proposal.lodgement_number}}-{{reversion_history_length - proposal_compare_version}}:
-                    {{compare_version_lodgement_date | formatDate}} ({{proposal_compare_version}} Older than current)
+                    {{formatDate(compare_version_lodgement_date)}} ({{proposal_compare_version}} Older than current)
                 </span>
                 
             </div>
@@ -394,34 +393,31 @@
     
 </template>
 <script>
-var select2 = require('select2');
 require("select2/dist/css/select2.min.css");
 require("select2-bootstrap-theme/dist/select2-bootstrap.min.css");
+import { v4 as uuidv4 } from 'uuid';
 import ProposalDisturbance from '../../form.vue'
 import ProposalApiary from '@/components/form_apiary.vue'
 import NewApply from '../../external/proposal_apply_new.vue'
 import MapSection from '@/components/common/das/map_section.vue'
-import Vue from 'vue'
 import ProposedDecline from './proposal_proposed_decline.vue'
 import AmendmentRequest from './amendment_request.vue'
-import datatable from '@vue-utils/datatable.vue'
 import Requirements from './proposal_requirements.vue'
 import ProposedApproval from './proposed_issuance.vue'
 import ApprovalScreen from './proposal_approval.vue'
 import CommsLogs from '@common-utils/comms_logs.vue'
 import RevisionHistory from '@common-utils/revision_history.vue'
 import MoreReferrals from '@common-utils/more_referrals.vue'
-// import ResponsiveDatatablesHelper from "@/utils/responsive_datatable_helper.js"
-import { api_endpoints, helpers } from '@/utils/hooks'
+import { api_endpoints, helpers, constants } from '@/utils/hooks'
 export default {
     name: 'InternalProposal',
     data: function() {
         let vm = this;
         return {
-            detailsBody: 'detailsBody'+vm._uid,
-            addressBody: 'addressBody'+vm._uid,
-            contactsBody: 'contactsBody'+vm._uid,
-            siteLocations: 'siteLocations'+vm._uid,
+            detailsBody: 'detailsBody'+uuidv4(),
+            addressBody: 'addressBody'+uuidv4(),
+            contactsBody: 'contactsBody'+uuidv4(),
+            siteLocations: 'siteLocations'+uuidv4(),
             defaultKey: "aho",
             "proposal": null,
             "original_proposal": null,
@@ -440,11 +436,11 @@ export default {
             hasAmendmentRequest: false,
             requirementsComplete:true,
             state_options: ['requirements','processing'],
-            contacts_table_id: vm._uid+'contacts-table',
+            contacts_table_id: uuidv4()+'contacts-table',
             is_local: helpers.is_local(),
             contacts_options:{
                 language: {
-                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+                    processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
                 ajax: {
@@ -508,7 +504,6 @@ export default {
     components: {
         ProposalDisturbance,
         ProposalApiary,
-        datatable,
         ProposedDecline,
         AmendmentRequest,
         Requirements,
@@ -519,12 +514,6 @@ export default {
         MoreReferrals,
         NewApply,
         MapSection,
-    },
-    filters: {
-        formatDate: function(data){
-            // The only time the lodgement_date field should be empty is when viewing the final draft (just prior to submission)
-            return data ? moment(data).format('MMMM Do YYYY') + ' at ' + moment(data).format('h:mm:ss a'): 'Draft just prior to lodgement.';
-        },
     },
     props: {
         proposalId: {
@@ -594,6 +583,10 @@ export default {
         },
     },
     methods: {
+        formatDate: function(data){
+            // The only time the lodgement_date field should be empty is when viewing the final draft (just prior to submission)
+            return data ? moment(data).format('MMMM Do YYYY') + ' at ' + moment(data).format('h:mm:ss a'): 'Draft just prior to lodgement.';
+        },
         updateProposalVersion: async function(proposal_version) {
             /* Changes the currently viewed Proposal and updates the values object on the ProposalDisturbace
             component so data field values change in the DOM. 
@@ -609,7 +602,7 @@ export default {
             let url = `/api/history/version/disturbance/proposals/Proposal/InternalProposalSerializer/${this.proposalId}/${proposal_version}/`
 
             // Get the required Proposal data
-            const res = await Vue.http.get(url);
+            const res = await fetch(url);
 
             // Set the model data to the version requested
             this.proposal = Object.assign({}, res.body);
@@ -664,22 +657,22 @@ export default {
             'data/' +
             '?differences_only=True';
 
-            const data_diffs = await Vue.http.get(url).then();
+            const data_diffs = await fetch(url).then();
             this.applyRevisionNotes(data_diffs.data)
 
             // Compare the assessor_data field and apply revision notes
             const assessor_data_url = `/api/proposal/${this.proposal.id}/version_differences_assessor_data.json?newer_version=${this.versionCurrentlyShowing}&older_version=${compare_version}`
-            const assessor_data_diffs = await Vue.http.get(assessor_data_url);
+            const assessor_data_diffs = await fetch(assessor_data_url);
             this.applyRevisionNotes(assessor_data_diffs.data)
 
             // Compare the comment_data field and apply revision notes
             const comment_data_url = `/api/proposal/${this.proposal.id}/version_differences_comment_data.json?newer_version=${this.versionCurrentlyShowing}&older_version=${compare_version}`
-            const comment_data_diffs = await Vue.http.get(comment_data_url);
+            const comment_data_diffs = await fetch(comment_data_url);
             this.applyRevisionNotes(comment_data_diffs.data)
 
             // Compare the proposal documents and apply revision notes
             const document_data_url = `/api/proposal/${this.proposal.id}/version_differences_documents.json?newer_version=${this.versionCurrentlyShowing}&older_version=${compare_version}`
-            const document_data_diffs = await Vue.http.get(document_data_url);
+            const document_data_diffs = await fetch(document_data_url);
             this.applyFileRevisionNotes(document_data_diffs.data)            
         },
         applyRevisionNotes: async function (diffdata) {
@@ -758,7 +751,7 @@ export default {
                             to show the state of the older version.
                         */
                         let select_found = false;
-                        $.each(replacement.siblings(), (function(i, obj){
+                        $.each(replacement.siblings(), (function(){
                             let compare_select = null;
                             let compare_select_id = k + '_compare_select';
                             if ($(this).is('select:not(.revision_note)')){
@@ -768,14 +761,14 @@ export default {
                                     compare_select.attr('id', compare_select_id);
                                     compare_select.addClass('revision_note');
                                     replacement.last().after(compare_select);
-                                    vm.$nextTick(function(e){
+                                    vm.$nextTick(function(){
                                         $('#'+compare_select_id).select2({
                                             "theme": "bootstrap",
                                             allowClear: true,
                                             placeholder:"Select..."
                                         });
                                     });
-                                    vm.$nextTick(function(e){
+                                    vm.$nextTick(function(){
                                         compare_select = $('#' + compare_select_id);
                                         compare_select.next().attr('style','margin-top:15px; border:1px solid red;');
                                         compare_select.next().attr('id', k + '_compare_select2');
@@ -792,13 +785,13 @@ export default {
                                     });
                                 }
                                 if($(this)[0].hasAttribute('multiple')){
-                                    vm.$nextTick(function(e){
+                                    vm.$nextTick(function(){
                                         if(revision_text.includes(',')){
                                             const item_to_remove = revision_text.split(',')[0];
                                             const option_value_remove = item_to_remove.substring(1);
                                             console.log('Removing item = ' + option_value_remove);
                                             const option_text = $('body').find('option[value=' + option_value_remove + ']').first().text();
-                                            vm.$nextTick(function(e){
+                                            vm.$nextTick(function(){
                                                 $('#' + k + '_compare_select2').find("li.select2-selection__choice[title|='" + option_text + "']").remove();          
                                             });
                                             const item_to_add = revision_text.split(',')[1];
@@ -838,7 +831,7 @@ export default {
             }
         },
         applyFileRevisionNotes: function(diffdata){
-            let vm = this;
+            // let vm = this;
             for (let entry in diffdata) {
                 
                 for (let k in diffdata[entry]) {
@@ -893,7 +886,7 @@ export default {
         checkAssignedOfficer: function() {
             if (this.proposal.processing_status == 'With Approver'){
                 if(this.proposal && this.proposal.assigned_approver==null){
-                    swal(
+                    swal.fire(
                         'Error',
                         'Please assign this proposal to yourself or an officer before proceeding',
                         'error'
@@ -901,19 +894,18 @@ export default {
                     return false;
                 }
                 return true;
+            }
+            else if(this.proposal && this.proposal.assigned_officer==null){
+                    swal.fire(
+                        'Error',
+                        'Please assign this proposal to yourself or an officer before proceeding',
+                        'error'
+                    )
+                    return false;
             }
             else{
-                if(this.proposal && this.proposal.assigned_officer==null){
-                    swal(
-                        'Error',
-                        'Please assign this proposal to yourself or an officer before proceeding',
-                        'error'
-                    )
-                    return false;
-                }
                 return true;
             }
-            return true;
         },
         checkAssessorData: function(){
             //check assessor boxes and clear value of hidden assessor boxes so it won't get printed on approval pdf.
@@ -995,11 +987,11 @@ export default {
             }
             if(this.isApprovalLevelDocument && this.proposal.approval_level_comment=='')
             {
-                swal(
-                    'Error',
-                    'Please add Approval document or comments before final approval',
-                    'error'
-                )
+                swal.fire({
+                    title: 'Error',
+                    text: 'Please add Approval document or comments before final approval',
+                    icon: 'error'
+                })
             }
             else{
             this.$refs.proposed_approval.approval = this.proposal.proposed_issuance_approval != null ? helpers.copyObject(this.proposal.proposed_issuance_approval) : {};
@@ -1046,7 +1038,6 @@ export default {
             }
         },
         highlight_deficient_fields: function(deficient_fields){
-            let vm = this;
             for (var deficient_field of deficient_fields) {
                 $("#" + "id_"+deficient_field).css("color", 'red');
             }
@@ -1065,25 +1056,27 @@ export default {
             //console.log('deficient fields', deficient_fields);
             vm.highlight_deficient_fields(deficient_fields);
         },
-        save: function(e) {
+        save: function() {
           let vm = this;
           vm.checkAssessorData();
           let formData = new FormData(vm.form);
-          vm.$http.post(vm.proposal_form_url,formData).then(res=>{
-              swal(
-                'Saved',
-                'Your proposal has been saved',
-                'success'
-              )
+          vm.$http.post(vm.proposal_form_url,formData).then(()=>{
+              swal.fire({
+                title: 'Saved',
+                text: 'Your proposal has been saved',
+                icon: 'success'
+              })
           },err=>{
+            console.log(err);
           });
         },
-        save_exit: function(e) {
+        save_exit: function() {
           let vm = this;
           vm.checkAssessorData();
           let formData = new FormData(vm.form);
-          vm.$http.post(vm.proposal_form_url,formData).then(res=>{
+          vm.$http.post(vm.proposal_form_url,formData).then(()=>{
           },err=>{
+            console.log(err);
           });
           // redirect back to dashboard
             vm.$router.push({
@@ -1094,10 +1087,11 @@ export default {
           let vm = this;
           vm.checkAssessorData();
           let formData = new FormData(vm.form);
-          vm.$http.post(vm.proposal_form_url,formData).then(res=>{
+          vm.$http.post(vm.proposal_form_url,formData).then(()=>{
 
 
           },err=>{
+              console.log(err);
           });
         },
 
@@ -1120,7 +1114,7 @@ export default {
         },
         assignRequestUser: function(){
             let vm = this;
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.proposals,(vm.proposal.id+'/assign_request_user')))
+            fetch(helpers.add_endpoint_json(api_endpoints.proposals,(vm.proposal.id+'/assign_request_user')))
             .then((response) => {
                 vm.proposal = response.body;
                 vm.original_proposal = helpers.copyObject(response.body);
@@ -1130,11 +1124,11 @@ export default {
                 vm.proposal = helpers.copyObject(vm.original_proposal)
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
                 vm.updateAssignedOfficerSelect();
-                swal(
-                    'Proposal Error',
-                    helpers.apiVueResourceError(error),
-                    'error'
-                )
+                swal.fire({
+                    title: 'Proposal Error',
+                    text: helpers.apiVueResourceError(error),
+                    icon: 'error'
+                })
             });
         },
         refreshFromResponse:function(response){
@@ -1178,15 +1172,15 @@ export default {
                     vm.proposal = helpers.copyObject(vm.original_proposal)
                     vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
                     vm.updateAssignedOfficerSelect();
-                    swal(
-                        'Proposal Error',
-                        helpers.apiVueResourceError(error),
-                        'error'
-                    )
+                    swal.fire({
+                        title: 'Proposal Error',
+                        text: helpers.apiVueResourceError(error),
+                        icon: 'error'
+                    })
                 });
             }
             else{
-                vm.$http.get(helpers.add_endpoint_json(api_endpoints.proposals,(vm.proposal.id+'/unassign')))
+                fetch(helpers.add_endpoint_json(api_endpoints.proposals,(vm.proposal.id+'/unassign')))
                 .then((response) => {
                     vm.proposal = response.body;
                     vm.original_proposal = helpers.copyObject(response.body);
@@ -1196,11 +1190,11 @@ export default {
                     vm.proposal = helpers.copyObject(vm.original_proposal)
                     vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
                     vm.updateAssignedOfficerSelect();
-                    swal(
-                        'Proposal Error',
-                        helpers.apiVueResourceError(error),
-                        'error'
-                    )
+                    swal.fire({
+                        title: 'Proposal Error',
+                        text: helpers.apiVueResourceError(error),
+                        icon: 'error'
+                    })
                 });
             }
         },
@@ -1212,7 +1206,7 @@ export default {
             if(vm.proposal.processing_status == 'With Assessor' && status == 'with_assessor_requirements'){
             vm.checkAssessorData();
             let formData = new FormData(vm.form);
-            vm.$http.post(vm.proposal_form_url,formData).then(res=>{ //save Proposal before changing status so that unsaved assessor data is saved.
+            vm.$http.post(vm.proposal_form_url,formData).then(()=>{ //save Proposal before changing status so that unsaved assessor data is saved.
 
             let data = {'status': status, 'approver_comment': vm.approver_comment}
             vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,(vm.proposal.id+'/switch_status')),JSON.stringify(data),{
@@ -1231,14 +1225,15 @@ export default {
             }, (error) => {
                 vm.proposal = helpers.copyObject(vm.original_proposal)
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
-                swal(
-                    'Proposal Error',
-                    helpers.apiVueResourceError(error),
-                    'error'
-                )
+                swal.fire({
+                    title: 'Proposal Error',
+                    text: helpers.apiVueResourceError(error),
+                    icon: 'error'
+                })
             });
 
           },err=>{
+            console.log(err);
           });
         }
 
@@ -1261,11 +1256,11 @@ export default {
             }, (error) => {
                 vm.proposal = helpers.copyObject(vm.original_proposal)
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
-                swal(
-                    'Proposal Error',
-                    helpers.apiVueResourceError(error),
-                    'error'
-                )
+                swal.fire({
+                    title: 'Proposal Error',
+                    text: helpers.apiVueResourceError(error),
+                    icon: 'error'
+                })
             });
 
         }
@@ -1289,11 +1284,11 @@ export default {
             }, (error) => {
                 vm.proposal = helpers.copyObject(vm.original_proposal)
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
-                swal(
-                    'Proposal Error',
-                    helpers.apiVueResourceError(error),
-                    'error'
-                )
+                swal.fire({
+                    title: 'Proposal Error',
+                    text: helpers.apiVueResourceError(error),
+                    icon: 'error'
+                })
             });
             }
             }
@@ -1302,7 +1297,7 @@ export default {
         fetchDeparmentUsers: function(){
             let vm = this;
             vm.loading.push('Loading Department Users');
-            vm.$http.get(api_endpoints.department_users).then((response) => {
+            fetch(api_endpoints.department_users).then((response) => {
                 vm.department_users = response.body
                 vm.loading.splice('Loading Department Users',1);
             },(error) => {
@@ -1330,13 +1325,13 @@ export default {
                     vm.proposal.assigned_officer = selected.val();
                 }
                 vm.assignTo();
-            }).on("select2:unselecting", function(e) {
+            }).on("select2:unselecting", function() {
                 var self = $(this);
                 setTimeout(() => {
                     self.select2('close');
                 }, 0);
-            }).on("select2:unselect",function (e) {
-                var selected = $(e.currentTarget);
+            }).on("select2:unselect",function () {
+                // var selected = $(e.currentTarget);
                 if (vm.proposal.processing_status == 'With Approver'){
                     vm.proposal.assigned_approver = null;
                 }
@@ -1375,7 +1370,7 @@ export default {
             vm.checkAssessorData();
             let formData = new FormData(vm.form);
             vm.sendingReferral = true;
-            vm.$http.post(vm.proposal_form_url,formData).then(res=>{
+            vm.$http.post(vm.proposal_form_url,formData).then(()=>{
 
             let data = {'email':vm.selected_referral, 'text': vm.referral_text};
             //vm.sendingReferral = true;
@@ -1386,26 +1381,27 @@ export default {
                 vm.original_proposal = helpers.copyObject(response.body);
                 vm.proposal = response.body;
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
-                swal(
-                    'Referral Sent',
-                    'The referral has been sent to '+ vm.selected_referral,
-                    'success'
-                )
+                swal.fire({
+                    title: 'Referral Sent',
+                    text: 'The referral has been sent to '+ vm.selected_referral,
+                    icon: 'success'
+                })
                 $(vm.$refs.department_users).val(null).trigger("change");
                 vm.selected_referral = '';
                 vm.referral_text = '';
             }, (error) => {
                 console.log(error);
-                swal(
-                    'Referral Error',
-                    helpers.apiVueResourceError(error),
-                    'error'
-                )
+                swal.fire({
+                    title: 'Referral Error',
+                    text: helpers.apiVueResourceError(error),
+                    icon: 'error'
+                })
                 vm.sendingReferral = false;
             });
 
 
           },err=>{
+            console.log(err);
           });
 
         //this.$refs.referral_comment.selected_referral = vm.selected_referral;
@@ -1420,7 +1416,7 @@ export default {
                 vm.original_proposal = helpers.copyObject(response.body);
                 vm.proposal = response.body;
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
-                swal(
+                swal.fire(
                     'Referral Sent',
                     'The referral has been sent to '+vm.department_users.find(d => d.email == vm.selected_referral).name,
                     'success'
@@ -1429,7 +1425,7 @@ export default {
                 vm.selected_referral = '';
             }, (error) => {
                 console.log(error);
-                swal(
+                swal.fire(
                     'Referral Error',
                     helpers.apiVueResourceError(error),
                     'error'
@@ -1440,75 +1436,75 @@ export default {
         remindReferral:function(r){
             let vm = this;
 
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/remind')).then(response => {
+            fetch(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/remind')).then(response => {
                 vm.original_proposal = helpers.copyObject(response.body);
                 vm.proposal = response.body;
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
-                swal(
-                    'Referral Reminder',
-                    'A reminder has been sent to '+r.referral,
-                    'success'
-                )
+                swal.fire({
+                    title: 'Referral Reminder',
+                    text: 'A reminder has been sent to '+r.referral,
+                    icon: 'success'
+                })
             },
             error => {
-                swal(
-                    'Proposal Error',
-                    helpers.apiVueResourceError(error),
-                    'error'
-                )
+                swal.fire({
+                    title: 'Proposal Error',
+                    text: helpers.apiVueResourceError(error),
+                    icon: 'error'
+                })
             });
         },
         resendReferral:function(r){
             let vm = this;
 
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/resend')).then(response => {
+            fetch(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/resend')).then(response => {
                 vm.original_proposal = helpers.copyObject(response.body);
                 vm.proposal = response.body;
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
-                swal(
-                    'Referral Resent',
-                    'The referral has been resent to '+r.referral,
-                    'success'
-                )
+                swal.fire({
+                    title: 'Referral Resent',
+                    text: 'The referral has been resent to '+r.referral,
+                    icon: 'success'
+                })
             },
             error => {
-                swal(
-                    'Proposal Error',
-                    helpers.apiVueResourceError(error),
-                    'error'
-                )
+                swal.fire({
+                    title: 'Proposal Error',
+                    text: helpers.apiVueResourceError(error),
+                    icon: 'error'
+                })
             });
         },
         recallReferral:function(r){
             let vm = this;
-            swal({
+            swal.fire({
                     title: "Loading...",
                     //text: "Loading...",
                     allowOutsideClick: false,
                     allowEscapeKey:false,
-                    onOpen: () =>{
+                    didOpen: () =>{
                         swal.showLoading()
                     }
             })
 
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/recall')).then(response => {
+            fetch(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/recall')).then(response => {
                 swal.hideLoading();
                 swal.close();
                 vm.original_proposal = helpers.copyObject(response.body);
                 vm.proposal = response.body;
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
-                swal(
-                    'Referral Recall',
-                    'The referral has been recalled from '+r.referral,
-                    'success'
-                )
+                swal.fire({
+                    title: 'Referral Recall',
+                    text: 'The referral has been recalled from '+r.referral,
+                    icon: 'success'
+                })
             },
             error => {
-                swal(
-                    'Proposal Error',
-                    helpers.apiVueResourceError(error),
-                    'error'
-                )
+                swal.fire({
+                    title: 'Proposal Error',
+                    text: helpers.apiVueResourceError(error),
+                    icon: 'error'
+                })
             });
         },
         initialiseReferralSelect: function() {
@@ -1531,13 +1527,13 @@ export default {
                 },
             }).
             on("select2:select", function (e) {
-                var selected = $(e.currentTarget);
+                // var selected = $(e.currentTarget);
                 //vm.selected_referral = selected.val();
                 let data = e.params.data.id;
                 vm.selected_referral = data;
             }).
-            on("select2:unselect",function (e) {
-                var selected = $(e.currentTarget);
+            on("select2:unselect",function () {
+                // var selected = $(e.currentTarget);
                 vm.selected_referral = null;
             })/*.
             on("select2:open",function (e) {
@@ -1585,7 +1581,7 @@ export default {
         // window.addEventListener('afterprint', this.afterPrinting);
     },
     created: function() {
-        Vue.http.get(`/api/proposal/${this.proposalId}/internal_proposal.json`).then(res => {
+        fetch(`/api/proposal/${this.proposalId}/internal_proposal.json`).then(res => {
             this.proposal = res.body;
             this.original_proposal = helpers.copyObject(res.body);
             this.proposal.applicant.address = this.proposal.applicant.address != null ? this.proposal.applicant.address : {};
@@ -1602,7 +1598,7 @@ export default {
     },
     /*
     beforeRouteEnter: function(to, from, next) {
-          Vue.http.get(`/api/proposal/${to.params.proposal_id}/internal_proposal.json`).then(res => {
+          fetch(`/api/proposal/${to.params.proposal_id}/internal_proposal.json`).then(res => {
               next(vm => {
                 vm.proposal = res.body;
                 vm.original_proposal = helpers.copyObject(res.body);
@@ -1617,7 +1613,7 @@ export default {
     */
     beforeRouteUpdate: function(to, from, next) {
         console.log("beforeRouteUpdate")
-          Vue.http.get(`/api/proposal/${to.params.proposal_id}.json`).then(res => {
+          fetch(`/api/proposal/${to.params.proposal_id}.json`).then(res => {
               next(vm => {
                 vm.proposal = res.body;
                 vm.original_proposal = helpers.copyObject(res.body);

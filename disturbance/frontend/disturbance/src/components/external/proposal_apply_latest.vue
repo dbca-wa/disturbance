@@ -25,7 +25,7 @@
                                         </div>
                                     </template>
                                     <div v-if="profile.disturbance_organisations.length > 0">
-                                        <div v-for="org in profile.disturbance_organisations" class="radio">
+                                        <div v-for="org in profile.disturbance_organisations" :key="org.id" class="radio">
                                             <label :title="orgHasNoLicenceTitle(org)">
                                               <input :disabled="orgDisableApplyRadioButton(org)" type="radio" name="behalf_of_org" v-model="behalf_of"  :value="org.id"> On behalf of {{org.name}}
                                               <span v-html="org.existing_record_text.notification"></span>
@@ -94,7 +94,8 @@
                                     <div class="form-group">
                                         <select class="form-control" style="width:40%" v-model="selected_application_id" @change="chainedSelectAppType(selected_application_id)">
                                             <option value="" selected disabled>{{ objectTypeListLabel }}</option>
-                                            <option v-for="application_type in applicationTypesList" :value="application_type.value">
+                                            <option v-for="application_type in applicationTypesList" :value="application_type.value" :key="application_type.value">
+                                                {{ application_type.text }}
                                                 {{ application_type.display_text }}
                                             </option>
                                         </select>
@@ -108,7 +109,7 @@
                                     <div class="form-group">
                                         <select v-model="selected_region" class="form-control" style="width:40%" @change="chainedSelectDistricts(selected_region)">
 											<option value="" selected disabled>Select region</option>
-                                            <option v-for="region in regions" :value="region.value">
+                                            <option v-for="region in regions" :value="region.value" :key="region.value">
                                                 {{ region.text }}
                                             </option>
                                         </select>
@@ -122,7 +123,7 @@
                                     <div class="form-group">
                                         <select  v-model="selected_district" class="form-control" style="width:40%">
 											<option value="" selected disabled>Select district</option>
-                                            <option v-for="district in districts" :value="district.value">
+                                            <option v-for="district in districts" :value="district.value" :key="district.value">
                                                 {{ district.text }}
                                             </option>
                                         </select>
@@ -137,7 +138,7 @@
 										<div class="form-group">
 											<select v-model="selected_activity" @change="chainedSelectSubActivities1(selected_activity)" class="form-control" style="width:40%">
 												<option value="" selected disabled>Select activity</option>
-												<option v-for="activity in activities" :value="activity.value">
+												<option v-for="activity in activities" :value="activity.value" :key="activity.value">
 													{{ activity.text }}
 												</option>
 											</select>
@@ -151,7 +152,7 @@
 										<div class="form-group">
 											<select v-model="selected_sub_activity1" @change="chainedSelectSubActivities2(selected_sub_activity1)" class="form-control" style="width:40%">
 												<option value="" selected disabled>Select sub_activity 1</option>
-												<option v-for="sub_activity1 in sub_activities1" :value="sub_activity1.value">
+												<option v-for="sub_activity1 in sub_activities1" :value="sub_activity1.value" :key="sub_activity1.value">
 													{{ sub_activity1.text }}
 												</option>
 											</select>
@@ -165,7 +166,7 @@
 										<div class="form-group">
 											<select v-model="selected_sub_activity2" @change="chainedSelectCategories(selected_sub_activity2)" class="form-control" style="width:40%">
 												<option value="" selected disabled>Select sub_activity 2</option>
-												<option v-for="sub_activity2 in sub_activities2" :value="sub_activity2.value">
+												<option v-for="sub_activity2 in sub_activities2" :value="sub_activity2.value" :key="sub_activity2.value">
 													{{ sub_activity2.text }}
 												</option>
 											</select>
@@ -207,16 +208,15 @@
     </div>
 </template>
 <script>
-import Vue from 'vue'
+import { v4 as uuidv4 } from 'uuid';
 import {
   api_endpoints,
-  helpers
 }
 from '@/utils/hooks'
 import utils from './utils'
 export default {
   data: function() {
-    let vm = this;
+    // let vm = this;
     return {
         "proposal": null,
         agent: {},
@@ -226,8 +226,8 @@ export default {
         },
         "loading": [],
         form: null,
-        pBody: 'pBody' + vm._uid,
-        pBody2: 'pBody2' + vm._uid,
+        pBody: 'pBody' + uuidv4(),
+        pBody2: 'pBody2' + uuidv4(),
 
         selected_application_id: '',
         selected_application_name: '',
@@ -450,16 +450,19 @@ export default {
             text = "Are you sure you want to create " + this.alertText() + " proposal on behalf of "+vm.org+" ?"
         }
 
-        swal({
+        swal.fire({
             title: "Create " + vm.selected_application_name,
             //text: "Are you sure you want to create " + this.alertText() + " proposal on behalf of "+vm.org+" ?",
             text: text,
-            type: "question",
+            icon: "question",
             showCancelButton: true,
             confirmButtonText: 'Accept'
-        }).then(() => {
-         	vm.createProposal();
+        }).then((swalresult) => {
+            if(swalresult.isConfirmed) {
+                vm.createProposal();
+            }
         },(error) => {
+            console.log(error);
         });
     },
     individualDisableApplyRadioButton: function() {
@@ -525,15 +528,17 @@ export default {
 			console.log(err);
             console.log(err.bodyText);
             if (err.bodyText.includes("null_applicant_address")) {
-                swal({
+                swal.fire({
                     title: "Cannot create application",
                     text: "Please add your address",
-                    type: "error",
+                    icon: "error",
                     confirmButtonText: 'Ok'
-                }).then(() => {
-                    vm.$router.push({
-                        name:"account",
-                    });
+                }).then((swalresult) => {
+                    if(swalresult.isConfirmed) {
+                        vm.$router.push({
+                            name:"account",
+                        });
+                    }
                 });
             }
 		});
@@ -566,16 +571,18 @@ export default {
 	fetchRegions: function(){
 		let vm = this;
 
-		vm.$http.get(api_endpoints.regions).then((response) => {
-				vm.api_regions = response.body;
+		fetch(api_endpoints.regions).then(
+            async (response) => {
+				vm.api_regions = await response.json();
 				//console.log('api_regions ' + response.body);
 
                 for (var i = 0; i < vm.api_regions.length; i++) {
                     this.regions.push( {text: vm.api_regions[i].name, value: vm.api_regions[i].id, districts: vm.api_regions[i].districts} );
                 }
-		},(error) => {
-			console.log(error);
-		})
+            },(error) => {
+                console.log(error);
+            }
+        )
 	},
 
 	searchList: function(id, search_list){
@@ -601,8 +608,9 @@ export default {
     fetchApplicationTypes: function(){
 		let vm = this;
 
-		vm.$http.get(api_endpoints.application_types).then((response) => {
-				vm.api_app_types = response.body;
+		fetch(api_endpoints.application_types).then(
+            async (response) => {
+				vm.api_app_types = await response.json();
 				//console.log('api_app_types ' + response.body);
 
                 for (var i = 0; i < vm.api_app_types.length; i++) {
@@ -614,9 +622,10 @@ export default {
                         //tenures: (vm.api_app_types[i].tenure_app_types.length > 0) ? vm.api_app_types[i].tenure_app_types : [],
                     } );
                 }
-		},(error) => {
-			console.log(error);
-		})
+            },(error) => {
+                console.log(error);
+            }
+        )
 	},
     chainedSelectAppType: function(application_id){
         /* reset */
@@ -651,18 +660,21 @@ export default {
         vm.categories = [];
         vm.approval_level = '';
 
-		vm.$http.get(api_endpoints.activity_matrix).then((response) => {
-				this.activity_matrix = response.body[0].schema[0];
-				this.keys_ordered = response.body[0].ordered;
+		fetch(api_endpoints.activity_matrix).then(
+            async (response) => {
+                let matrix_res = await response.json();
+				this.activity_matrix = matrix_res[0].schema[0];
+				this.keys_ordered = matrix_res[0].ordered;
 				//console.log('this.activity_matrix ' + response.body[0].schema);
 
                 var keys = this.keys_ordered ? Object.keys(this.activity_matrix).sort() : Object.keys(this.activity_matrix)
                 for (var i = 0; i < keys.length; i++) {
                     this.activities.push( {text: keys[i], value: keys[i]} );
                 }
-		},(error) => {
-			console.log(error);
-		})
+            },(error) => {
+                console.log(error);
+            }
+        )
 	},
     getSelectedAppActivityMatrix: function(selected_app){
 		let vm = this;
@@ -687,11 +699,13 @@ export default {
         vm.categories = [];
         vm.approval_level = '';
 
-		vm.$http.get(api_endpoints.activity_matrix).then((response) => {
-				this.all_activity_matrices = response.body;
-		},(error) => {
-			console.log(error);
-		})
+		fetch(api_endpoints.activity_matrix).then(
+            async (response) => {
+				this.all_activity_matrices = await response.json();
+            },(error) => {
+                console.log(error);
+            }
+        )
 	},
     chainedSelectSubActivities1: function(activity_name){
 		let vm = this;
@@ -724,15 +738,15 @@ export default {
 
             } else {
                 // go to sub_activity2 widget
-                for (var i = 0; i < api_sub_activities.length; i++) {
-                    var key = Object.keys(api_activities[i])[0];
-                    this.sub_activities1.push( {text: key, value: key, sub_matrix: api_activities[i][key]} );
+                for (var j = 0; j < api_sub_activities.length; j++) {
+                    var key = Object.keys(api_activities[j])[0];
+                    this.sub_activities1.push( {text: key, value: key, sub_matrix: api_activities[j][key]} );
                 }
             }
         } else {
-            for (var i = 0; i < api_activities.length; i++) {
-                var key = Object.keys(api_activities[i])[0];
-                this.sub_activities1.push( {text: key, value: key, sub_matrix: api_activities[i][key]} );
+            for (var k = 0; k < api_activities.length; k++) {
+                var act_key = Object.keys(api_activities[k])[0];
+                this.sub_activities1.push( {text: act_key, value: act_key, sub_matrix: api_activities[k][act_key]} );
             }
         }
 	},
@@ -755,9 +769,9 @@ export default {
                 this.categories.push( {text: api_activities[i][0], value: api_activities[i][0], approval: api_activities[i][1]} );
             }
         } else {
-            for (var i = 0; i < vm.sub_activities1.length; i++) {
-                if (activity_name == vm.sub_activities1[i]['text']) {
-                    var api_activities2 = vm.sub_activities1[i]['sub_matrix'];
+            for (var m = 0; m < vm.sub_activities1.length; m++) {
+                if (activity_name == vm.sub_activities1[m]['text']) {
+                    var api_activities2 = vm.sub_activities1[m]['sub_matrix'];
                     for (var j = 0; j < api_activities2.length; j++) {
                         var key = Object.keys(api_activities2[j])[0];
                         this.sub_activities2.push( {text: key, value: key, sub_matrix: api_activities2[j][key]} );
@@ -790,10 +804,11 @@ export default {
                     return [sub_activities[activity_name], "pass"];
 
                 } else if ('null' in sub_activities[activity_name][0]) {
+                    var approval_level;
                     if (sub_activities[activity_name]['sub_matrix'] == null) {
-                        var approval_level = sub_activities[activity_name][0]['null'][0][0];
+                        approval_level = sub_activities[activity_name][0]['null'][0][0];
                     } else {
-                        var approval_level = sub_activities[activity_name]['sub_matrix'][0]['null'][0];
+                        approval_level = sub_activities[activity_name]['sub_matrix'][0]['null'][0];
                     }
                     return [approval_level, "null"];
                     //return [sub_activities[activity_name], "null"];
@@ -807,8 +822,8 @@ export default {
             if (activity_name == sub_activities[i]['text']) {
                 var key_sub_matrix = Object.keys(sub_activities[i]['sub_matrix'][0])[0];
                 if (key_sub_matrix == "null") {
-                    var approval_level = sub_activities[i]['sub_matrix'][0]['null'][0];
-                    return [approval_level, null]
+                    var sub_approval_level = sub_activities[i]['sub_matrix'][0]['null'][0];
+                    return [sub_approval_level, null]
                 } else if (key_sub_matrix == "pass") {
                     return [sub_activities[i]['sub_matrix'][0]['pass'], "pass"]
                 } else {
@@ -818,13 +833,14 @@ export default {
         }
     },
     fetchGlobalSettings: function(){
-                let vm = this;
-                vm.$http.get('/api/global_settings.json').then((response) => {
-                    vm.global_settings = response.body;
-                    
-                },(error) => {
-                    console.log(error);
-                } );
+        let vm = this;
+        fetch('/api/global_settings.json').then(
+            async (response) => {
+                vm.global_settings = await response.json();
+            },(error) => {
+                console.log(error);
+            }
+        );
     },
     get_approval_level: function(category_name) {
         let vm = this;
@@ -865,18 +881,19 @@ export default {
   },
     created: function() {
         // retrieve template group
-        this.$http.get('/template_group',{
-            emulateJSON:true
-            }).then(res=>{
+        fetch('/template_group',{emulateJSON:true}).then(
+            async res=>{
                 //this.template_group = res.body.template_group;
-                if (res.body.template_group === 'apiary') {
+                let template_group_res = await res.json();
+                if (template_group_res.template_group === 'apiary') {
                     this.apiaryTemplateGroup = true;
                 } else {
                     this.dasTemplateGroup = true;
                 }
-        },err=>{
-        console.log(err);
-        });
+            },err=>{
+            console.log(err);
+            }
+        );
     },
 
 }

@@ -23,6 +23,7 @@
 
 <script>
 export default {
+  name : 'AlertMessage',
   props: {
     type: {
       type: String

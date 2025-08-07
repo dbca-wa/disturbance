@@ -7,14 +7,16 @@
                         <strong>Your proposal has been successfully submitted.</strong>
                         <br/>
                         <table>
-                            <tr>
-                                <td><strong>Proposal:</strong></td>
-                                <td><strong>{{proposal.lodgement_number}}</strong></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Date/Time:</strong></td>
-                                <td><strong> {{proposal.lodgement_date|formatDate}}</strong></td>
-                            </tr>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Proposal:</strong></td>
+                                    <td><strong>{{proposal.lodgement_number}}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Date/Time:</strong></td>
+                                    <td><strong> {{formatDate(proposal.lodgement_date)}}</strong></td>
+                                </tr>
+                            </tbody>
                         </table>
                         <router-link :to="{name:'external-proposals-dash'}" style="margin-top:15px;" class="btn btn-primary">Back to dashboard</router-link>
                     </div>
@@ -28,16 +30,9 @@
     </div>
 </template>
 <script>
-import Vue from 'vue'
-import {
-  api_endpoints,
-  helpers
-}
-from '@/utils/hooks'
-import utils from './utils'
 export default {
   data: function() {
-    let vm = this;
+    // let vm = this;
     return {
         "proposal": {},
     }
@@ -47,9 +42,7 @@ export default {
   computed: {
   },
   methods: {
-  },
-  filters:{
-        formatDate: function(data){
+    formatDate: function(data){
             return data ? moment(data).format('DD/MM/YYYY HH:mm:ss'): '';
         }
   },

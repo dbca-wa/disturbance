@@ -4,14 +4,14 @@
             <div class="container-fluid">
                 <div class="row">
                     <form class="form-horizontal" name="declineForm">
-                        <alert :show.sync="showError" type="danger"><strong>{{errorString}}</strong></alert>
+                        <alert v-if="showError" type="danger"><strong>{{errorString}}</strong></alert>
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <label v-if=check_status() class="control-label"  for="Name">Details</label>
                                         <label v-else class="control-label"  for="Name">Provide Reason for the proposed decline </label>
-                                        <textarea style="width: 70%;"class="form-control" name="reason" v-model="decline.reason"></textarea>
+                                        <textarea style="width: 70%;" class="form-control" name="reason" v-model="decline.reason"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -20,7 +20,7 @@
                                     <div class="col-sm-12">
                                         <label v-if=check_status() class="control-label"  for="Name">CC email</label>
                                         <label v-else class="control-label"  for="Name">Proposed CC email</label>
-                                        <input type="text" style="width: 70%;"class="form-control" name="cc_email" v-model="decline.cc_email"/>
+                                        <input type="text" style="width: 70%;" class="form-control" name="cc_email" v-model="decline.cc_email"/>
                                     </div>
                                 </div>
                             </div>
@@ -28,17 +28,16 @@
                     </form>
                 </div>
             </div>
-            <div slot="footer">
+            <template #footer>
                 <button type="button" v-if="decliningProposal" disabled class="btn btn-default" @click="ok"><i class="fa fa-spinner fa-spin"></i> Processing</button>
                 <button type="button" v-else class="btn btn-default" @click="ok">Ok</button>
                 <button type="button" class="btn btn-default" @click="cancel">Cancel</button>
-            </div>
+            </template>
         </modal>
     </div>
 </template>
 
 <script>
-//import $ from 'jquery'
 import modal from '@vue-utils/bootstrap-modal.vue'
 import alert from '@vue-utils/alert.vue'
 import {helpers,api_endpoints} from "@/utils/hooks.js"
@@ -59,7 +58,7 @@ export default {
             },
     },
     data:function () {
-        let vm = this;
+        // let vm = this;
         return {
             isModalOpen:false,
             form:null,
@@ -173,7 +172,7 @@ export default {
             });
        },
        eventListerners:function () {
-           let vm = this;
+        //    let vm = this;
        }
    },
    mounted:function () {

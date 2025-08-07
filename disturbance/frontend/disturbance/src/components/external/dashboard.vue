@@ -26,20 +26,18 @@
 </template>
 <script>
 
-import datatable from '@/utils/vue/datatable.vue'
 import ProposalDashTable from '@common-utils/proposals_dashboard.vue'
 import ApprovalDashTable from '@common-utils/approvals_dashboard.vue'
 import ComplianceDashTable from '@common-utils/compliances_dashboard.vue'
 import MapDashboard from '@/components/common/das/map_dashboard_internal.vue'
 import {
   api_endpoints,
-  helpers
 }
 from '@/utils/hooks'
 export default {
     name: 'ExternalDashboard',
     data() {
-        let vm = this;
+        // let vm = this;
         return {
             empty_list: '/api/empty_list',
             //proposals_url: helpers.add_endpoint_json(api_endpoints.proposals,'user_list'),
@@ -94,7 +92,7 @@ export default {
     },
     created: function() {
         // retrieve template group
-        this.$http.get('/template_group',{
+        fetch('/template_group',{
             emulateJSON:true
             }).then(res=>{
                 //this.template_group = res.body.template_group;

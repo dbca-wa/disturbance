@@ -7,7 +7,7 @@
             <span v-if="show_spinner"><i class='fa fa-2x fa-spinner fa-spin'></i></span>
             <!-- <i id="file-spinner" class=""></i> -->
             <div v-if="files">
-                <div v-for="v in documents">
+                <div v-for="v in documents" :key="v.id">
                     <p>
                         File: <a :href="v.file" target="_blank">{{v.name}}</a> &nbsp;
                         <span v-if="!readonly && v.can_delete">
@@ -24,13 +24,15 @@
                     </p>
                 </div>
             </div>
-            <div v-if="!readonly" v-for="n in repeat">
-                <div v-if="isRepeatable || (!isRepeatable && num_documents()==0)">
-                    <input :name="name" type="file" class="form-control" :data-que="n" :accept="fileTypes" @change="handleChange" :required="isRequired"/>
-                    <!-- <alert :show.sync="showError" type="danger" style="color: red"><strong>{{errorString}}</strong></alert> -->
-                </div>
+            <div v-if="!readonly">
+                <template v-for="n in repeat">
+                    <div v-if="isRepeatable || (!isRepeatable && num_documents()==0)" :key="n">
+                        <input :name="name" type="file" class="form-control" :data-que="n" :accept="fileTypes" @change="handleChange" :required="isRequired"/>
+                        <!-- <alert v-if="showError" type="danger" style="color: red"><strong>{{errorString}}</strong></alert> -->
+                    </div>
+                </template>
             </div><br v-if="showError">
-            <alert :show.sync="showError" type="danger" style="color: red"><strong>{{errorString}}</strong></alert>
+            <alert v-if="showError" type="danger" style="color: red"><strong>{{errorString}}</strong></alert>
 
         </div>
          
@@ -39,7 +41,6 @@
 
 <script>
 import {
-  api_endpoints,
   helpers
 }
 from '@/utils/hooks'
@@ -174,7 +175,7 @@ export default {
             formData.append('csrfmiddlewaretoken', vm.csrf_token);
 
             vm.$http.post(vm.proposal_document_action, formData)
-                .then(res=>{
+                .then(()=>{
                     vm.documents = vm.get_documents()
                     //vm.documents = res.body;
                     vm.show_spinner = false;
@@ -193,7 +194,7 @@ export default {
             formData.append('csrfmiddlewaretoken', vm.csrf_token);
 
             vm.$http.post(vm.proposal_document_action, formData)
-                .then(res=>{
+                .then(()=>{
                     vm.documents = vm.get_documents()
                     //vm.documents = res.body;
                     vm.show_spinner = false;
@@ -202,7 +203,7 @@ export default {
         },
         
         uploadFile(e){
-            let vm = this;
+            // let vm = this;
             let _file = null;
 
             if (e.target.files && e.target.files[0]) {

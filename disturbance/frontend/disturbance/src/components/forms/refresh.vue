@@ -1,15 +1,13 @@
 <template lang="html">
         <span>
             <template v-if="layer_data && !assessorMode">
-                <template>
-                    <label  for="refresh_time_value" class="inline" >{{ refresh_time_val }}</label>
-                    <input type="hidden" class="form-control" :name="refresh_timestamp_name" :value="refresh_time" />
-                </template>
+                <label  for="refresh_time_value" class="inline" >{{ refresh_time_val }}</label>
+                <input type="hidden" class="form-control" :name="refresh_timestamp_name" :value="refresh_time" />
                 <template v-if="!isRefreshing">
-                    <a href="" @click.prevent="refresh">Refresh&nbsp;</i></a>
+                    <a href="" @click.prevent="refresh">Refresh&nbsp;</a>
                 </template>
                 <template v-if="isRefreshing">
-                    <i class="fa fa-spin fa-spinner"></i>&nbsp;Refresh&nbsp;</i>
+                    <i class="fa fa-spin fa-spinner">&nbsp;Refresh&nbsp;</i>
                 </template>
             </template>
         </span>     
@@ -21,7 +19,7 @@ import {
 }
 from '@/utils/hooks'
 export default {
-    name:"Refresh",
+    name:"RefreshTime",
     props:["parent_name","parent_label", "assessorMode","layer_data", "proposal_id", "refresh_time_value"],
 
 components: {  },
@@ -43,7 +41,7 @@ data: function() {
  methods:{
          refresh: async function(){
             let vm=this;
-            var ele=$('[name='+vm.parent_name+']')[0]
+            // var ele=$('[name='+vm.parent_name+']')[0]
             const mlq_data={label: '',
                             name: ''};
             mlq_data.label=vm.parent_label;
@@ -74,7 +72,7 @@ data: function() {
 		    msg = "Processing refresh request";
 		}
 		let queue_position = response['body']['position']
-		swal({
+		swal.fire({
 		    title: 'Refresh Question',
 		    html: '<p><strong>' + msg + '</strong><br>' +
 			  '<span style="font-size:0.8em">You can close your browser and come back later. You will receive an email when it is complete. (' + queue_position+ ')</span>' +
@@ -82,7 +80,7 @@ data: function() {
 		})
 
             },(error)=>{
-                swal(
+                swal.fire(
                     'Error',
                     helpers.apiVueResourceError(error),
                     //error.body,

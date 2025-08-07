@@ -4,7 +4,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <form class="form-horizontal" name="commsForm">
-                        <alert :show.sync="showError" type="danger"><strong>{{errorString}}</strong></alert>
+                        <alert v-if="showError" type="danger"><strong>{{errorString}}</strong></alert>
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <div class="row">
@@ -67,7 +67,7 @@
                                         <label class="control-label pull-left"  for="Name">Attachments</label>
                                     </div>
                                     <div class="col-sm-9">
-                                        <template v-for="(f,i) in files">
+                                        <template v-for="(f,i) in files" :key="i">
                                             <div :class="'row top-buffer file-row-'+i">
                                                 <div class="col-sm-4">
                                                     <span v-if="f.file == null" class="btn btn-info btn-file pull-left">
@@ -93,20 +93,19 @@
                     </form>
                 </div>
             </div>
-            <div slot="footer">
+            <template #footer>
                 <button type="button" v-if="addingComms" disabled class="btn btn-default" @click="ok"><i class="fa fa-spinner fa-spin"></i> Adding</button>
                 <button type="button" v-else class="btn btn-default" @click="ok">Add</button>
                 <button type="button" class="btn btn-default" @click="cancel">Cancel</button>
-            </div>
+            </template>
         </modal>
     </div>
 </template>
 
 <script>
-//import $ from 'jquery'
 import modal from '@vue-utils/bootstrap-modal.vue'
 import alert from '@vue-utils/alert.vue'
-import {helpers,api_endpoints} from "@/utils/hooks.js"
+import {helpers} from "@/utils/hooks.js"
 export default {
     name:'Add-Comms',
     components:{
@@ -120,7 +119,7 @@ export default {
         }
     },
     data:function () {
-        let vm = this;
+        // let vm = this;
         return {
             isModalOpen:false,
             form:null,
@@ -164,7 +163,7 @@ export default {
             }
         },
         uploadFile(target,file_obj){
-            let vm = this;
+            // let vm = this;
             let _file = null;
             var input = $('.'+target)[0];
             if (input.files && input.files[0]) {
@@ -217,7 +216,7 @@ export default {
             let comms = new FormData(vm.form); 
             vm.addingComms = true;
             vm.$http.post(vm.url,comms,{
-                }).then((response)=>{
+                }).then(()=>{
                     vm.addingComms = false;
                     vm.close();
                     //vm.$emit('refreshFromResponse',response);

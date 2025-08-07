@@ -12,13 +12,12 @@ import ReferralDashTable from '@common-utils/referrals_dashboard.vue'
 import MapDashboard from '@/components/common/das/map_dashboard_internal.vue'
 import {
   api_endpoints,
-  helpers
 }
 from '@/utils/hooks'
 export default {
     name: 'ExternalDashboard',
     data() {
-        let vm = this;
+        // let vm = this;
         return {
             //proposals_url: api_endpoints.proposals,
             //proposals_url: api_endpoints.proposals_paginated_internal,
@@ -28,6 +27,7 @@ export default {
             referrals_url: api_endpoints.referrals_paginated_internal,
             apiaryTemplateGroup: false,
             dasTemplateGroup: false,
+            template_group_res:{},
         }
     
     },
@@ -51,19 +51,21 @@ export default {
     },
 
     created: function() {
+        let vm= this;
         // retrieve template group
-        this.$http.get('/template_group',{
-            emulateJSON:true
-            }).then(res=>{
+        fetch('/template_group',{ emulateJSON:true }).then(
+            async res=>{
                 //this.template_group = res.body.template_group;
-                if (res.body.template_group === 'apiary') {
+                vm.template_group_res = await res.json();
+                if (vm.template_group_res.template_group === 'apiary') {
                     this.apiaryTemplateGroup = true;
                 } else {
                     this.dasTemplateGroup = true;
                 }
-        },err=>{
-        console.log(err);
-        });
+            },err=>{
+                console.log(err);
+            }
+        );
     },
 
 }

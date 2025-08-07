@@ -4,14 +4,14 @@
             <div class="container-fluid">
                 <div class="row">
                     <form class="form-horizontal" name="amendForm">
-                        <alert :show.sync="showError" type="danger"><strong>{{errorString}}</strong></alert>
+                        <alert v-if="showError" type="danger"><strong>{{errorString}}</strong></alert>
                         <div class="col-sm-12">
                             <div class="row">
                                 <div class="col-sm-offset-2 col-sm-8">
                                     <div class="form-group">
                                         <label class="control-label pull-left"  for="Name">Reason</label>
                                         <select class="form-control" name="reason" ref="reason" v-model="amendment.reason">
-                                            <option v-for="r in reason_choices" :value="r.key">{{r.value}}</option>
+                                            <option v-for="r in reason_choices" :value="r.key" :key="r.key">{{r.value}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -33,12 +33,10 @@
 </template>
 
 <script>
-//import $ from 'jquery'
-import Vue from 'vue'
 import modal from '@vue-utils/bootstrap-modal.vue'
 import alert from '@vue-utils/alert.vue'
 
-import {helpers, api_endpoints} from "@/utils/hooks.js"
+import { helpers } from "@/utils/hooks.js"
 export default {
     name:'compliance-amendment-request',
     components:{
@@ -98,12 +96,11 @@ export default {
         },
         fetchAmendmentChoices: function(){
             let vm = this;
-            vm.$http.get('/api/compliance_amendment_reason_choices.json').then((response) => {
-                vm.reason_choices = response.body;
-
+            fetch('/api/compliance_amendment_reason_choices.json').then(async (response) => {
+                vm.reason_choices = await response.json();
             },(error) => {
                 console.log(error);
-            } );
+            });
         },
         sendData:function(){
             let vm = this;
@@ -114,7 +111,7 @@ export default {
                         emulateJSON:true,
                     }).then((response)=>{
                         //vm.$parent.loading.splice('processing contact',1);
-                        swal(
+                        swal.fire(
                              'Sent',
                              'An email has been sent to the proponent with the request to amend this compliance',
                              'success'

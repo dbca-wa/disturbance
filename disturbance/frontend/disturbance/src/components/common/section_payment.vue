@@ -57,7 +57,7 @@ export default {
 
     },
     data:function () {
-        let vm = this;
+        // let vm = this;
         return{
             payment_item: '',
             invoice_reference: '',

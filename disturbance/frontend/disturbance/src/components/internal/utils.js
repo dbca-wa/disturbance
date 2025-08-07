@@ -1,47 +1,58 @@
-import Vue from 'vue'
 import api from './api'
 import {helpers} from '@/utils/hooks' 
 
 export default {
     fetchProposal: function(id){
         return new Promise ((resolve,reject) => {
-            Vue.http.get(helpers.add_endpoint_json(api.proposals,id)).then((response) => {
-                resolve(response.body);
-            },
-            (error) => {
-                reject(error);
-            });
+            fetch(helpers.add_endpoint_json(api.proposals,id)).then(
+                async (response) => {
+                    let data = await response.json();
+                    resolve(data);
+                },
+                (error) => {
+                    reject(error);
+                }
+            );
         });
     },
-    fetchOrganisations: function(id){
+    fetchOrganisations: function(){
         return new Promise ((resolve,reject) => {
-            Vue.http.get(api.organisations).then((response) => {
-                resolve(response.body);
-            },
-            (error) => {
-                reject(error);
-            });
+            fetch(api.organisations).then(
+                async (response) => {
+                    let data = await response.json();
+                    resolve(data);
+                },
+                (error) => {
+                    reject(error);
+                }
+            );
         });
     },
     fetchCountries: function (){
         return new Promise ((resolve,reject) => {
-            Vue.http.get(api.countries).then((response) => {
-                resolve(response.body);
-            },
-            (error) => {
-                reject(error);
-            });
+            fetch(api.countries).then(
+                async (response) => {
+                    let data = await response.json();
+                    resolve(data);
+                },
+                (error) => {
+                    reject(error);
+                }
+            );
         });
 
     },
     fetchOrganisation: function(id){
         return new Promise ((resolve,reject) => {
-            Vue.http.get(helpers.add_endpoint_json(api.organisations,id)).then((response) => {
-                resolve(response.body);
-            },
-            (error) => {
-                reject(error);
-            });
+            fetch(helpers.add_endpoint_json(api.organisations,id)).then(
+                async (response) => {
+                    let data = await response.json();
+                    resolve(data);
+                },
+                (error) => {
+                    reject(error);
+                }
+            );
         });
     },
 }

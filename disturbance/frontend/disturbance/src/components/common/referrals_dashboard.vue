@@ -15,12 +15,14 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Region</label>
-                                    <template v-show="select2Applied">
-                                        <select style="width:100%" class="form-control input-sm" id="region_dropdown">
-                                            <template v-if="select2Applied">
-                                                <option v-for="r in proposal_regions" :value="r">{{r}}</option>
-                                            </template>
-                                        </select>
+                                    <template>
+                                        <div v-show="select2Applied">
+                                            <select style="width:100%" class="form-control input-sm" id="region_dropdown">
+                                                <template v-if="select2Applied">
+                                                    <option v-for="r in proposal_regions" :value="r" :key="r">{{r}}</option>
+                                                </template>
+                                            </select>
+                                        </div>
                                     </template>
                                 </div>
                             </div>
@@ -29,7 +31,7 @@
                                     <label for="">Activity</label>
                                     <select class="form-control" v-model="filterProposalActivity">
                                         <option value="All">All</option>
-                                        <option v-for="a in proposal_activityTitles" :value="a">{{a}}</option>
+                                        <option v-for="a in proposal_activityTitles" :value="a" :key="a">{{a}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -40,7 +42,7 @@
                                     <label for="">Application Type</label>
                                     <select class="form-control" v-model="filterProposalApplicationType">
                                         <option value="All">All</option>
-                                        <option v-for="a in proposal_applicationTypes" :value="a">{{a}}</option>
+                                        <option v-for="a in proposal_applicationTypes" :value="a" :key="a">{{a}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -52,7 +54,7 @@
                                 <label for="">Status</label>
                                 <select class="form-control" v-model="filterProposalStatus">
                                     <option value="All">All</option>
-                                    <option v-for="s in proposal_status" :value="s.value">{{s.name}}</option>
+                                    <option v-for="s in proposal_status" :value="s.value" :key="s.value">{{s.name}}</option>
                                 </select>
                             </div>
                         </div>
@@ -81,7 +83,7 @@
                                 <label for="">Submitter</label>
                                 <select class="form-control" v-model="filterProposalSubmitter">
                                     <option value="All">All</option>
-                                    <option v-for="s in proposal_submitters" :value="s.email">{{s.search_term}}</option>
+                                    <option v-for="s in proposal_submitters" :value="s.email" :key="s.email">{{s.search_term}}</option>
                                 </select>
                             </div>
                         </div>
@@ -97,12 +99,13 @@
     </div>
 </template>
 <script>
+import { v4 as uuidv4 } from 'uuid';
 import datatable from '@/utils/vue/datatable.vue'
 require("select2/dist/css/select2.min.css");
 require("select2-bootstrap-theme/dist/select2-bootstrap.min.css");
 import {
     api_endpoints,
-    helpers
+    constants
 }from '@/utils/hooks'
 export default {
     name: 'RefferralsTableDash',
@@ -116,8 +119,8 @@ export default {
     data() {
         let vm = this;
         return {
-            pBody: 'pBody' + vm._uid,
-            datatable_id: 'proposal-datatable-'+vm._uid,
+            pBody: 'pBody' + uuidv4(),
+            datatable_id: 'proposal-datatable-'+uuidv4(),
             //template_group: '',
             dasTemplateGroup: false,
             apiaryTemplateGroup: false,
@@ -146,9 +149,9 @@ export default {
             //proposal_headers:["Number","Region","Activity","Title","Submitter","Proponent","Status","Lodged on","Action","Template Group"],
             proposal_options:{
                 customProposalSearch: true,
-                tableID: 'proposal-datatable-'+vm._uid,
+                tableID: 'proposal-datatable-'+uuidv4(),
                 language: {
-                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+                    processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
                 serverSide: true,
@@ -213,7 +216,7 @@ export default {
                     },
                     {
                         data: "submitter",
-                        mRender:function (data,type,full) {
+                        mRender:function (data) {
                             if (data) {
                                 return `${data.first_name} ${data.last_name}`;
                             }
@@ -251,7 +254,7 @@ export default {
                     {
                         data: "assigned_officer",
                         name: "assigned_officer",
-                        mRender:function (data,type,full) {
+                        mRender:function (data) {
                             if (data) {
                                 return `${data.first_name} ${data.last_name}`;
                             }
@@ -263,7 +266,7 @@ export default {
                     },
                     {
                         data: "proposal_lodgement_date",
-                        mRender:function (data,type,full) {
+                        mRender:function (data) {
                             return data != '' && data != null ? moment(data).format(vm.dateFormat): '';
                         },
                         name: "proposal__lodgement_date",
@@ -460,16 +463,19 @@ export default {
         fetchFilterLists: function(){
             let vm = this;
 
-            vm.$http.get(api_endpoints.filter_list_referrals).then((response) => {
-                vm.proposal_regions = response.body.regions;
-                //vm.proposal_districts = response.body.districts;
-                vm.proposal_activityTitles = response.body.activities;
-                vm.proposal_applicationTypes = response.body.application_types;
-                vm.proposal_submitters = response.body.submitters;
-                vm.proposal_status = response.body.processing_status_choices;
-            },(error) => {
-                console.log(error);
-            })
+            fetch(api_endpoints.filter_list_referrals).then(
+                async (response) => {
+                    let filter_list_ref = await response.json();
+                    vm.proposal_regions = filter_list_ref.regions;
+                    //vm.proposal_districts = filter_list_ref.districts;
+                    vm.proposal_activityTitles = filter_list_ref.activities;
+                    vm.proposal_applicationTypes = filter_list_ref.application_types;
+                    vm.proposal_submitters = filter_list_ref.submitters;
+                    vm.proposal_status = filter_list_ref.processing_status_choices;
+                },(error) => {
+                    console.log(error);
+                }
+            )
             //console.log(vm.regions);
         },
 
@@ -641,24 +647,25 @@ export default {
     },
     created: function() {
         // retrieve template group
-        this.$http.get('/template_group',{
-            emulateJSON:true
-            }).then(res=>{
+        fetch('/template_group',{ emulateJSON:true }).then(
+            async res=>{
                 //this.template_group = res.body.template_group;
-                if (res.body.template_group === 'apiary') {
+                let template_group_res = await res.json();
+                if (template_group_res.template_group === 'apiary') {
                     this.apiaryTemplateGroup = true;
                 } else {
                     this.dasTemplateGroup = true;
                     this.applySelect2()
                 }
-        },err=>{
-        console.log(err);
-        });
+            },err=>{
+            console.log(err);
+            }
+        );
     },
     /*
     created: function() {
         // retrieve template group
-        this.$http.get('/template_group',{
+        fetch('/template_group',{
             emulateJSON:true
             }).then(res=>{
                 this.template_group = res.body.template_group;

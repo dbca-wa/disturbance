@@ -16,7 +16,7 @@
                         </h3>
                       </div>
                       <div class="panel-body collapse in" :id="oBody">
-                        <div v-for="a in amendment_request">                      
+                        <div v-for="a in amendment_request" :key="a.id">                      
                           <p>Reason: {{a.reason}}</p>
                           <p>Details: {{a.text}}</p>                        
                         </div>
@@ -42,7 +42,7 @@
                         <div class="row">
                            <div class="col-md-12"> 
                             <form class="form-horizontal" name="complianceForm" method="post">
-                                <alert :show.sync="showError" type="danger">
+                                <alert v-if="showError" type="danger">
                                     <strong>{{errorString}}</strong>
                                 </alert>
                                 <div class="row">
@@ -70,7 +70,7 @@
                                             <label  for="Name">Documents:</label>
                                         </div> 
                                         <div class="col-sm-6">
-                                            <div class="row" v-for="d in compliance.documents">
+                                            <div class="row" v-for="d in compliance.documents" :key="d.id">
                                                 <a :href="d[1]" target="_blank" class="control-label pull-left">{{d[0]   }}</a>
                                                 <span v-if="!isFinalisedi && d.can_delete">
                                                     <a @click="delete_document(d)" class="fa fa-trash-o control-label" title="Remove file" style="cursor: pointer; color:red;"></a>
@@ -87,7 +87,7 @@
                                     <div v-if="!isFinalised" class="form-group"> 
                                         <label class="col-sm-3 control-label pull-left"  for="Name">Attachments:</label>
                                     <div class="col-sm-6">
-                                        <template v-for="(f,i) in files">
+                                        <template v-for="(f,i) in files" :key="i">
                                             <div :class="'row top-buffer file-row-'+i">
                                                 <div class="col-sm-4">
                                                     <span v-if="f.file == null" class="btn btn-info btn-file pull-left" style="margin-bottom: 5px">
@@ -129,20 +129,17 @@
 </div>
 </template>
 <script>
-import $ from 'jquery'
-import Vue from 'vue'
-import datatable from '@vue-utils/datatable.vue'
-import CommsLogs from '@common-utils/comms_logs.vue'
-// import ResponsiveDatatablesHelper from "@/utils/responsive_datatable_helper.js"
+import $ from 'jquery';
+import { v4 as uuidv4 } from 'uuid';
 import {
   api_endpoints,
   helpers
 }
-from '@/utils/hooks'
+from '@/utils/hooks';
 export default {
   name: 'externalCompliance',
   data() {
-    let vm = this;
+    // let vm = this;
     return {
         form:null,
         loading: [],        
@@ -153,10 +150,8 @@ export default {
         isFinalised: false,
         errors: false,
         errorString: '',
-        pdBody: 'pdBody'+vm._uid,
-        oBody: 'oBody'+vm._uid,
-        isFinalised: false,
-        pdBody: 'pdBody'+vm._uid,
+        pdBody: 'pdBody'+uuidv4(),
+        oBody: 'oBody'+uuidv4(),
         hasDocuments: false,
         validation_form: null,
         files: [
@@ -177,15 +172,7 @@ export default {
         return this.compliance && this.compliance.documents;
    }
   },
-  filters: {
-    formatDate: function(data){
-        return moment(data).format('DD/MM/YYYY HH:mm:ss');
-    }
-  },
- 
   components: {
-    datatable,
-    CommsLogs
   },
   computed: {
     showError: function() {
@@ -201,8 +188,10 @@ export default {
     
   },
   methods: {
+    formatDate: function(data){
+        return moment(data).format('DD/MM/YYYY HH:mm:ss');
+    },
     uploadFile(target,file_obj){
-            let vm = this;
             let _file = null;
             var input = $('.'+target)[0];
             if (input.files && input.files[0]) {
@@ -324,7 +313,7 @@ export default {
                 }).then((response)=>{
                     vm.addingCompliance = false;
                     vm.refreshFromResponse(response);                   
-                    /*swal(
+                    /*swal.fire(
                      'Submit',
                      'Your Compliance with Requirement has been submitted',
                      'success'
@@ -358,22 +347,27 @@ export default {
   },
 
  beforeRouteEnter: function(to, from, next){
-    Vue.http.get(helpers.add_endpoint_json(api_endpoints.compliances,to.params.compliance_id)).then((response) => {
-        next(vm => {
-            vm.compliance = response.body 
-            if ( vm.compliance.customer_status == "Under Review" || vm.compliance.customer_status == "Approved" ) { vm.isFinalised = true }
-            if (vm.compliance && vm.compliance.documents){ vm.hasDocuments = true}
+    fetch(helpers.add_endpoint_json(api_endpoints.compliances,to.params.compliance_id)).then(
+        async (response) => {
+            let compliance_data = await response.json();
+            next(vm => {
+                vm.compliance = compliance_data;
+                if ( vm.compliance.customer_status == "Under Review" || vm.compliance.customer_status == "Approved" ) { vm.isFinalised = true }
+                if (vm.compliance && vm.compliance.documents){ vm.hasDocuments = true}
 
-            Vue.http.get(helpers.add_endpoint_json(api_endpoints.compliances,to.params.compliance_id+'/amendment_request')).then((res) => {                     
-                      vm.setAmendmentData(res.body);                  
-                },
-              err => {
-                        console.log(err);
-                  });
-        })
-    },(error) => {
-        console.log(error);
-    })
+                fetch(helpers.add_endpoint_json(api_endpoints.compliances,to.params.compliance_id+'/amendment_request')).then(
+                    async (res) => {     
+                        let amend_data = await res.json();                
+                        vm.setAmendmentData(amend_data);                  
+                    },err => {
+                            console.log(err);
+                    }
+                );
+            })
+        },(error) => {
+            console.log(error);
+        }
+    )
   }
 }
 

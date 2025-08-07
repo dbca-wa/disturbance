@@ -28,10 +28,7 @@
                 </template>
                 <a href="" v-else  @click.prevent="toggleComment"><i class="fa fa-ban">&nbsp;</i></a>
             </template>
-            <template>
-                <!--<LayerInfo v-show="assessorMode" :layer_value="layer_val"  :assessorMode="assessorMode" />-->
-                <LayerInfo v-show="true" :layer_value="layer_val"  :assessorMode="true"/>
-            </template>
+            <LayerInfo v-show="true" :layer_value="layer_val"  :assessorMode="true"/>
             <input :readonly="readonly" :type="type" class="form-control" :name="name" :value="value" :required="isRequired" />
         </div>
         <!-- <Comment :question="label" :readonly="assessor_readonly" :name="name+'-comment-field'" v-show="showingComment && assessorMode" :value="comment_value"/>  -->
@@ -40,7 +37,7 @@
 </template>
 
 <script>
-import Comment from './comment.vue'
+// import Comment from './comment.vue'
 import CommentBox from './comment_box_referral.vue'
 import HelpText from './help_text.vue'
 import HelpTextUrl from './help_text_url.vue'
@@ -49,9 +46,9 @@ import Refresh from './refresh.vue'
 export default {
     name:"input-text",
     props:["type","name","id", "comment_value","value","isRequired","help_text","help_text_assessor","assessorMode","label","readonly","assessor_readonly", "help_text_url", "help_text_assessor_url", "comment_boxes", "layer_val","refresh_time_value", "proposal_id"],
-    components: {Comment, HelpText, HelpTextUrl, CommentBox, LayerInfo, Refresh},
+    components: {HelpText, HelpTextUrl, CommentBox, LayerInfo, Refresh},
     data(){
-        let vm = this;
+        // let vm = this;
         return {
             showingComment: false
         }
@@ -61,7 +58,7 @@ export default {
             let has_value=false;
             let boxes=JSON.parse(this.comment_boxes)
             for(var i=0; i<boxes.length; i++){
-                if(boxes[i].hasOwnProperty('value')){
+                if (Object.prototype.hasOwnProperty.call(boxes[i], 'value')) {
                     if(boxes[i].value!=null && boxes[i].value!=undefined && boxes[i].value!= '' ){
                         has_value=true;
                     }

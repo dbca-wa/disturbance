@@ -227,12 +227,10 @@
 </template>
 
 <script>
-//import {$,swal,bus,datetimepicker,api_endpoints,helpers,Moment,validate} from "@/utils/hooks.js"
 import {api_endpoints,helpers} from "@/utils/hooks.js"
 export default {
-    name:"reports",
+    name:"PaymentReports",
     data:function () {
-        let vm = this;
         return {
             form:null,
             refund_form:null,
@@ -318,15 +316,15 @@ export default {
             if (vm.oracle_form.valid()){
                 let data = vm.oracleDatePicker.data("DateTimePicker").date().format('DD/MM/YYYY');
                 let override = vm.oracle_override ? 'true': 'false';
-                vm.$http.get('/api/oracle_job?date='+data+'&override='+override).then((response) => {
-                    swal({
-                        type: 'success',
+                fetch('/api/oracle_job?date='+data+'&override='+override).then(() => {
+                    swal.fire({
+                        icon: 'success',
                         title: 'Job Success',
                         text: 'The oracle job was completed successfully',
                     })
                 },(error) => {
-                    swal({
-                        type: 'error',
+                    swal.fire({
+                        icon: 'error',
                         title: 'Oracle Job Error',
                         text: helpers.apiVueResourceError(error),
                     })
@@ -343,10 +341,10 @@ export default {
                 data = data.format('DD/MM/YYYY');
                 var url = '/api/reports/booking_settlements?date='+data;
                 window.location.assign(url);
-                /*vm.$http.get(url).then((response) => {
+                /*fetch(url).then((response) => {
                 },(error) => {
-                    swal({
-                        type: 'error',
+                    swal.fire({
+                        icon: 'error',
                         title: 'BPOINT Settlement Report Error',
                         text: helpers.apiVueResourceError(error),
                     })
@@ -360,21 +358,15 @@ export default {
                 let data = vm.bookingsDatePicker.data("DateTimePicker").date().format('DD/MM/YYYY');
                 var url = '/api/reports/bookings?date='+data;
                 window.location.assign(url);
-                /*vm.$http.get(url).then((response) => {
+                /*fetch(url).then((response) => {
                 },(error) => {
-                    swal({
-                        type: 'error',
+                    swal.fire({
+                        icon: 'error',
                         title: 'BPOINT Settlement Report Error',
                         text: helpers.apiVueResourceError(error),
                     })
                 })*/
             }
-        },
-        fetchRegions:function () {
-            let vm = this;
-            $.get('/ledger/payments/api/regions?format=json',function (data) {
-                vm.regions = data;
-            });
         },
         fetchRegions:function () {
             let vm = this;
@@ -438,7 +430,6 @@ export default {
         },
         getReport:function (values) {
             console.log('getReport');
-            let vm = this;
             //var url = "/ledger/payments/api/report?"+$.param(values);
             var url = "/ledger/payments/api/report?"+$.param(values);
             window.location.assign(url);

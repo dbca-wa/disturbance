@@ -3,7 +3,7 @@
         <modal @ok="ok()" @cancel="cancel()" :title="title()" large>
             <form class="form-horizontal" name="addContactForm">
                 <div class="row">
-                    <alert :show.sync="showError" type="danger"><strong>{{errorString}}</strong></alert>
+                    <alert v-if="showError" type="danger"><strong>{{errorString}}</strong></alert>
                     <div class="col-lg-12">
                         <div class="row">
                             <div class="form-group">
@@ -61,7 +61,6 @@
 </template>
 
 <script>
-//import $ from 'jquery'
 import modal from '@vue-utils/bootstrap-modal.vue'
 import alert from '@vue-utils/alert.vue'
 import {helpers,api_endpoints} from "@/utils/hooks.js"
@@ -77,7 +76,7 @@ export default {
             },
     },
     data:function () {
-        let vm = this;
+        // let vm = this;
         return {
             isModalOpen:false,
             form:null,
@@ -118,11 +117,14 @@ export default {
         },
         fetchContact: function(id){
             let vm = this;
-            vm.$http.get(api_endpoints.contact(id)).then((response) => {
-                vm.contact = response.body; vm.isModalOpen = true;
-            },(error) => {
-                console.log(error);
-            } );
+            fetch(api_endpoints.contact(id)).then(
+                async (response) => {
+                    vm.contact = await response.json(); 
+                    vm.isModalOpen = true;
+                },(error) => {
+                    console.log(error);
+                }
+            );
         },
         sendData:function(){
             let vm = this;
@@ -133,7 +135,7 @@ export default {
                 //vm.$http.put(api_endpoints.organisation_contacts(contact.id),JSON.stringify(contact),{
                 vm.$http.put(helpers.add_endpoint_json(api_endpoints.organisation_contacts,contact.id),JSON.stringify(contact),{
                         emulateJSON:true,
-                    }).then((response)=>{
+                    }).then(()=>{
                         //vm.$parent.loading.splice('processing contact',1);
                         vm.$parent.refreshDatatable();
                         vm.close();
@@ -149,7 +151,7 @@ export default {
                 contact.user_status = 'contact_form';
                 vm.$http.post(api_endpoints.organisation_contacts,JSON.stringify(contact),{
                         emulateJSON:true,
-                    }).then((response)=>{
+                    }).then(()=>{
                         //vm.$parent.loading.splice('processing contact',1);
                         vm.close();
                         vm.$parent.addedContact();
@@ -171,7 +173,7 @@ export default {
                     campground:"required",
                     campsite:{
                         required: {
-                            depends: function(el){
+                            depends: function(){
                                 return vm.campsites.length > 0;
                             }
                         }
@@ -204,7 +206,6 @@ export default {
             });
        },
        eventListerners:function () {
-           let vm = this;
        }
    },
    mounted:function () {

@@ -18,7 +18,7 @@
                                     <label for="">Region</label>
                                     <select style="width:100%" class="form-control input-sm" ref="filterRegion" >
                                         <template v-if="select2Applied">
-                                            <option v-for="r in proposal_regions" :value="r">{{r}}</option>
+                                            <option v-for="r in proposal_regions" :value="r" :key="r">{{r}}</option>
                                         </template>
                                     </select>
                                 </div>
@@ -28,7 +28,7 @@
                                     <label for="">Activity</label>
                                     <select class="form-control" v-model="filterProposalActivity">
                                         <option value="All">All</option>
-                                        <option v-for="a in proposal_activityTitles" :value="a">{{a}}</option>
+                                        <option v-for="a in proposal_activityTitles" :value="a" :key="a">{{a}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -38,7 +38,7 @@
                                 <label for="">Status</label>
                                 <select class="form-control" v-model="filterComplianceStatus">
                                     <option value="All">All</option>
-                                    <option v-for="s in status_values" :value="s">{{s}}</option>
+                                    <option v-for="s in status_values" :value="s" :key="s">{{s}}</option>
                                 </select>
                             </div>
                         </div>
@@ -96,13 +96,14 @@
     </div>
 </template>
 <script>
+import { v4 as uuidv4 } from 'uuid';
 import datatable from '@/utils/vue/datatable.vue'
-import Vue from 'vue'
 require("select2/dist/css/select2.min.css");
 require("select2-bootstrap-theme/dist/select2-bootstrap.min.css");
 import {
     api_endpoints,
-    helpers
+    helpers,
+    constants
 }from '@/utils/hooks'
 export default {
     name: 'CompliancesTableDash',
@@ -121,11 +122,11 @@ export default {
         }
     },
     data() {
-        let vm = this;
+        // let vm = this;
         return {
-            pBody: 'pBody' + vm._uid,
+            pBody: 'pBody' + uuidv4(),
             uuid: 0,
-            datatable_id: 'compliances-datatable-'+vm._uid,
+            datatable_id: 'compliances-datatable-'+uuidv4(),
             //Profile to check if user has access to process Proposal
             profile: {},
             dasTemplateGroup: false,
@@ -362,7 +363,7 @@ export default {
                     {
                         // 7. Due Date
                         data: "due_date",
-                        mRender:function (data,type,full) {
+                        mRender:function (data) {
                             return data != '' && data != null ? moment(data).format(vm.dateFormat): '';
                         },
                         defaultContent: '',
@@ -382,7 +383,7 @@ export default {
                     {
                         // 10. Approval/Licence
                         data: "approval_lodgement_number",
-                        mRender:function (data,type,full) {
+                        mRender:function (data) {
                             return `${data}`;
                         },
                         name: "approval__lodgement_number",
@@ -475,7 +476,7 @@ export default {
             this.uuid++;
             this.proposal_options = {
                 language: {
-                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+                    processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
                 serverSide: true,
@@ -553,13 +554,16 @@ export default {
         fetchFilterLists: function(){
             let vm = this;
 
-            vm.$http.get(api_endpoints.filter_list_compliances).then((response) => {
-                vm.proposal_regions = response.body.regions;
-                vm.proposal_activityTitles = response.body.activities;
-                vm.status = vm.level == 'external' ? vm.external_status: vm.internal_status;
-            },(error) => {
-                console.log(error);
-            })
+            fetch(api_endpoints.filter_list_compliances).then(
+                async (response) => {
+                    let filter_lists_compliance = await response.json();
+                    vm.proposal_regions = filter_lists_compliance.regions;
+                    vm.proposal_activityTitles = filter_lists_compliance.activities;
+                    vm.status = vm.level == 'external' ? vm.external_status: vm.internal_status;
+                },(error) => {
+                    console.log(error);
+                }
+            )
             //console.log(vm.regions);
         },
 
@@ -708,13 +712,13 @@ export default {
         },
         fetchProfile: function(){
             let vm = this;
-            Vue.http.get(api_endpoints.profile).then((response) => {
-                vm.profile = response.body
-
-            },(error) => {
-                console.log(error);
-
-            })
+            fetch(api_endpoints.profile).then(
+                async (response) => {
+                    vm.profile = await response.json();
+                },(error) => {
+                    console.log(error);
+                }
+            )
         },
         check_assessor: function(compliance){
             let vm = this;
@@ -736,19 +740,23 @@ export default {
     },
     created: function() {
         let vm = this
-        vm.$http.get('/template_group',{
+        fetch('/template_group',{
             emulateJSON:true
-            }).then(res=>{
-                if (res.body.template_group === 'apiary') {
+        }).then(
+            async res=>{
+                let template_group_res = {};
+                template_group_res = await res.json();
+                if (template_group_res.template_group === 'apiary') {
                     vm.apiaryTemplateGroup = true;
                 } else {
                     vm.dasTemplateGroup = true;
                 }
                 vm.templateGroupDetermined = true
                 vm.applySelect2()
-        },err=>{
-        console.log(err);
-        });
+            },err=>{
+            console.log(err);
+            }
+        );
     },
     mounted: function(){
         //console.log('in mounted')

@@ -14,15 +14,17 @@
                             
                             <div class="col-sm-12 top-buffer-s">
                                 <strong>Issued on</strong><br/>
-                                {{ approval.issue_date | formatDate}}
+                                {{ formatDate(approval.issue_date) }}
                             </div>
                             <div class="col-sm-12 top-buffer-s">
                                 <table class="table small-table">
-                                    <tr>
-                                        <th>Lodgement</th>
-                                        <th>Date</th>
-                                        <th>Action</th>
-                                    </tr>
+                                    <thead>
+                                        <tr>
+                                            <th>Lodgement</th>
+                                            <th>Date</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
                                 </table>
                             </div>
                         </div>
@@ -116,8 +118,7 @@
                           <div class="form-group">
                             <label for="" class="col-sm-3 control-label" >Country</label>
                             <div class="col-sm-4">
-                                <input type="text" disabled class="form-control" name="country" v-model="org.address.country">
-                                </input>
+                                <input type="text" disabled class="form-control" name="country" v-model="org.address.country"/>
                             </div>
                           </div>
                        </form>
@@ -141,22 +142,22 @@
                           <div class="form-group">
                             <label for="" class="col-sm-3 control-label">Issue Date</label>
                             <div class="col-sm-6">
-                                <label for="" class="control-label pull-left">{{approval.issue_date | formatDate}}</label>
+                                <label for="" class="control-label pull-left">{{ formatDate(approval.issue_date) }}</label>
                             </div>
                         <!---    <div class="col-sm-6">
-                                <p>{{approval.issue_date | formatDate}}</p>
+                                <p>{{ formatDate(approval.issue_date) }}</p>
                             </div> -->
                           </div>
                           <div class="form-group">
                             <label for="" class="col-sm-3 control-label" >Start Date</label>
                             <div class="col-sm-6">
-                                <label for="" class="control-label pull-left">{{approval.start_date | formatDate}}</label>
+                                <label for="" class="control-label pull-left">{{ formatDate(approval.start_date) }}</label>
                             </div>
                           </div>
                           <div class="form-group">
                             <label for="" class="col-sm-3 control-label">Expiry Date</label>
                             <div class="col-sm-3">
-                                <label for="" class="control-label pull-left">{{approval.expiry_date | formatDate}}</label>
+                                <label for="" class="control-label pull-left">{{ formatDate(approval.expiry_date) }}</label>
                             </div>
                             
                           </div>
@@ -176,18 +177,16 @@
 </div>
 </template>
 <script>
-import $ from 'jquery'
-import Vue from 'vue'
-import datatable from '@vue-utils/datatable.vue'
+// import datatable from '@vue-utils/datatable.vue'
+import { v4 as uuidv4 } from 'uuid';
 import CommsLogs from '@common-utils/comms_logs.vue'
-// import ResponsiveDatatablesHelper from "@/utils/responsive_datatable_helper.js"
 import {
   api_endpoints,
   helpers
 }
 from '@/utils/hooks'
 export default {
-  name: 'Approval',
+  name: 'ApprovalComponent',
   data() {
     let vm = this;
     return {
@@ -197,10 +196,10 @@ export default {
             
         },
         DATE_TIME_FORMAT: 'DD/MM/YYYY HH:mm:ss',
-        adBody: 'adBody'+vm._uid,
-        pBody: 'pBody'+vm._uid,
-        cBody: 'cBody'+vm._uid,
-        oBody: 'oBody'+vm._uid,
+        adBody: 'adBody'+uuidv4(),
+        pBody: 'pBody'+uuidv4(),
+        cBody: 'cBody'+uuidv4(),
+        oBody: 'oBody'+uuidv4(),
         org: {
             address: {}
         },
@@ -212,28 +211,26 @@ export default {
     }
   },
   watch: {},
-  filters: {
-    formatDate: function(data){
-        return moment(data).format('DD/MM/YYYY');
-    }
-  },
-    props: {
-        approvalId: {
-            type: Number,
-        },
+  props: {
+    approvalId: {
+        type: Number,
     },
+  },
   created: function(){
-    Vue.http.get(helpers.add_endpoint_json(api_endpoints.approvals,this.approvalId)).then((response) => {
-        this.approval = response.body;
-        this.approval.applicant_id = response.body.applicant_id;
-        this.fetchOrganisation(this.approval.applicant_id)
-    },(error) => {
-        console.log(error);
-    }) 
+    fetch(helpers.add_endpoint_json(api_endpoints.approvals,this.approvalId)).then(
+        async (response) => {
+            let data = await response.json();
+            this.approval = data;
+            this.approval.applicant_id = data.applicant_id;
+            this.fetchOrganisation(this.approval.applicant_id)
+        },(error) => {
+            console.log(error);
+        }
+    ) 
   },
 /*
   beforeRouteEnter: function(to, from, next){
-    Vue.http.get(helpers.add_endpoint_json(api_endpoints.approvals,to.params.approval_id)).then((response) => {
+    fetch(helpers.add_endpoint_json(api_endpoints.approvals,to.params.approval_id)).then((response) => {
         next(vm => {
             vm.approval = response.body;
             vm.approval.applicant_id = response.body.applicant_id;
@@ -246,7 +243,6 @@ export default {
   },
   */
   components: {
-    datatable,
     CommsLogs
   },
   computed: {
@@ -259,23 +255,26 @@ export default {
     commaToNewline(s){
         return s.replace(/[,;]/g, '\n');
     },
+    formatDate: function(data){
+        return moment(data).format('DD/MM/YYYY');
+    },
     fetchOrganisation(applicant_id){
         let vm=this;
-        Vue.http.get(helpers.add_endpoint_json(api_endpoints.organisations,applicant_id)).then((response) => {
-        
-            vm.org = response.body;
-            vm.org.address = response.body.address;         
-    },(error) => {
-        console.log(error);
-    })
-
+        fetch(helpers.add_endpoint_json(api_endpoints.organisations,applicant_id)).then(
+            async (response) => {
+                let data = await response.json();
+                vm.org = data;
+                vm.org.address = data.address;         
+            },(error) => {
+                console.log(error);
+            }
+        )
     },
     viewApprovalPDF: function(id,media_link){
-            let vm=this;
             //console.log(approval);
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.approvals,(id+'/approval_pdf_view_log')),{
+            fetch(helpers.add_endpoint_json(api_endpoints.approvals,(id+'/approval_pdf_view_log')),{
                 })
-                .then((response) => {  
+                .then(() => {  
                     //console.log(response)  
                 }, (error) => {
                     console.log(error);
@@ -286,7 +285,7 @@ export default {
   
   },
   mounted: function () {
-    let vm = this;
+    // let vm = this;
   }
 }
 </script>

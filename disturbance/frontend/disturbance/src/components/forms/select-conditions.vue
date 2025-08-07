@@ -1,4 +1,4 @@
-<script>
+<script lang="jsx">
     export default {
         props:["conditions","renderer","name","data","readonly"],
         mounted(){
@@ -29,10 +29,13 @@
                             </div>
                         )
                     }
+                }else{
+                    return ''
                 }
             } catch (e) {
                 console.log(e);
             }
+            return ''
         }
 
     }

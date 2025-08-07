@@ -35,21 +35,19 @@
 </template>
 
 <script>
-import Vue from "vue";
 import Leaf from "leaflet";
 import "leaflet-measure"; /* This should be imported after leaflet */
 import "leaflet.locatecontrol";
 import Awesomplete from "awesomplete";
-//import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 import { guid } from "@/utils/helpers";
 import "bootstrap/dist/css/bootstrap.css";
 import "awesomplete/awesomplete.css";
 import "leaflet/dist/leaflet.css";
 import "leaflet-measure/dist/leaflet-measure.css";
 import "leaflet.locatecontrol/dist/L.Control.Locate.min.css";
-import { api_endpoints, helpers, cache_helper } from '@/utils/hooks'
+import { api_endpoints } from '@/utils/hooks'
 
-L.TileLayer.WMTS = L.TileLayer.extend({
+Leaf.TileLayer.WMTS = Leaf.TileLayer.extend({
     defaultWmtsParams: {
         service: 'WMTS',
         request: 'GetTile',
@@ -62,27 +60,27 @@ L.TileLayer.WMTS = L.TileLayer.extend({
 
     initialize: function (url, options) { // (String, Object)
         this._url = url;
-        var wmtsParams = L.extend({}, this.defaultWmtsParams);
+        var wmtsParams = Leaf.extend({}, this.defaultWmtsParams);
         var tileSize = options.tileSize || this.options.tileSize;
-        if (options.detectRetina && L.Browser.retina) {
+        if (options.detectRetina && Leaf.Browser.retina) {
             wmtsParams.width = wmtsParams.height = tileSize * 2;
         } else {
             wmtsParams.width = wmtsParams.height = tileSize;
         }
         for (var i in options) {
             // all keys that are not TileLayer options go to WMTS params
-            if (!this.options.hasOwnProperty(i) && i!="matrixIds") {
+            if (!Object.prototype.hasOwnProperty.call(this.options, i) && i!="matrixIds") {
                 wmtsParams[i] = options[i];
             }
         }
         this.wmtsParams = wmtsParams;
         this.matrixIds = options.matrixIds||this.getDefaultMatrix();
-        L.setOptions(this, options);
+        Leaf.setOptions(this, options);
     },
 
     onAdd: function (map) {
         this._crs = this.options.crs || map.options.crs;
-        L.TileLayer.prototype.onAdd.call(this, map);
+        Leaf.TileLayer.prototype.onAdd.call(this, map);
     },
 
     getTileUrl: function (coords) { // (Point, Number) -> String
@@ -90,7 +88,7 @@ L.TileLayer.WMTS = L.TileLayer.extend({
         var nwPoint = coords.multiplyBy(tileSize);
         nwPoint.x+=1;
         nwPoint.y-=1;
-        var sePoint = nwPoint.add(new L.Point(tileSize, tileSize));
+        var sePoint = nwPoint.add(new Leaf.Point(tileSize, tileSize));
         var zoom = this._tileZoom;
         var nw = this._crs.project(this._map.unproject(nwPoint, zoom));
         var se = this._crs.project(this._map.unproject(sePoint, zoom));
@@ -102,12 +100,12 @@ L.TileLayer.WMTS = L.TileLayer.extend({
         var Y0 = this.matrixIds[zoom].topLeftCorner.lat;
         var tilecol=Math.floor((nw.x-X0)/tilewidth);
         var tilerow=-Math.floor((nw.y-Y0)/tilewidth);
-        var url = L.Util.template(this._url, {s: this._getSubdomain(coords)});
-        return url + L.Util.getParamString(this.wmtsParams, url) + "&tilematrix=" + tilematrix + "&tilerow=" + tilerow +"&tilecol=" + tilecol;
+        var url = Leaf.Util.template(this._url, {s: this._getSubdomain(coords)});
+        return url + Leaf.Util.getParamString(this.wmtsParams, url) + "&tilematrix=" + tilematrix + "&tilerow=" + tilerow +"&tilecol=" + tilecol;
     },
 
     setParams: function (params, noRedraw) {
-        L.extend(this.wmtsParams, params);
+        Leaf.extend(this.wmtsParams, params);
         if (!noRedraw) {
             this.redraw();
         }
@@ -123,14 +121,14 @@ L.TileLayer.WMTS = L.TileLayer.extend({
         for (var i= 0; i<22; i++) {
             matrixIds3857[i]= {
                 identifier    : "" + i,
-                topLeftCorner : new L.LatLng(20037508.3428,-20037508.3428)
+                topLeftCorner : new Leaf.LatLng(20037508.3428,-20037508.3428)
             };
         }
         return matrixIds3857;
     }
 });
-L.tileLayer.wmts = function (url, options) {
-    return new L.TileLayer.WMTS(url, options);
+Leaf.tileLayer.wmts = function (url, options) {
+    return new Leaf.TileLayer.WMTS(url, options);
 };
 
 export default {
@@ -272,8 +270,8 @@ export default {
           vm.feature_marker = Leaf.marker(
             { lon: latLngArr[1], lat: latLngArr[0] },
             { icon: vm.icon_default }
-          ).on("click", function(ev) {
-            vm.feature_marker.setIcon(myIcon);
+          ).on("click", function() {
+            // vm.feature_marker.setIcon(myIcon);
           });
           //vm.feature_marker.bindTooltip("click to lock/unlock");
           vm.feature_marker.addTo(vm.mainMap);
@@ -298,7 +296,7 @@ export default {
                   "region,postcode,district,place,locality,neighborhood,address,poi"
               }),
             dataType: "json",
-            success: function(data, status, xhr) {
+            success: function(data) {
               self.suggest_list = []; // Clear the list first
               if (data.features && data.features.length > 0) {
                 for (var i = 0; i < data.features.length; i++) {
@@ -441,7 +439,7 @@ export default {
           let vm = this;
           vm.cursor_location = vm.mainMap.mouseEventToLatLng(e.originalEvent);
         },
-        onMouseOut: function(e) {
+        onMouseOut: function() {
           this.cursor_location = null;
         },
         onClick: function(e) {
@@ -497,9 +495,6 @@ export default {
   -webkit-filter: brightness(1);
   filter: brightness(1);
   border: 2px white solid;
-}
-.basemap-button-img {
-  /* border-radius: 5px; */
 }
 .basemap-button:hover {
   cursor: pointer;

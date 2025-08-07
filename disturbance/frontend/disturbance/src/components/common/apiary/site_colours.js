@@ -73,7 +73,7 @@ export function getStatusForColour(feature_or_apiary_site, vacant_suppress_disca
     let is_vacant_when_submitted = false
     let making_payment = false
 
-    if (feature_or_apiary_site.hasOwnProperty('ol_uid')){
+    if (Object.prototype.hasOwnProperty.call(feature_or_apiary_site, 'ol_uid')) {
         // feature_or_apiary_site is Feature object
         my_status = feature_or_apiary_site.get("status");
         is_vacant = feature_or_apiary_site.get('is_vacant')
@@ -130,7 +130,6 @@ export function getApiaryFeatureStyle(status, selected=false, stroke_width_when_
                     })
                 })
             });
-            break;
         case 'pending':
             return new Style({
                 image: new CircleStyle({
@@ -144,7 +143,6 @@ export function getApiaryFeatureStyle(status, selected=false, stroke_width_when_
                     })
                 })
             });
-            break;
         case 'current':
             return new Style({
                 image: new CircleStyle({
@@ -158,7 +156,6 @@ export function getApiaryFeatureStyle(status, selected=false, stroke_width_when_
                     })
                 })
             });
-            break;
         case 'approved':
             // Apiary site can be 'approved' status on a proposal
             return new Style({
@@ -173,7 +170,6 @@ export function getApiaryFeatureStyle(status, selected=false, stroke_width_when_
                     })
                 })
             });
-            break;
         case 'suspended':
             return new Style({
                 image: new CircleStyle({
@@ -187,7 +183,6 @@ export function getApiaryFeatureStyle(status, selected=false, stroke_width_when_
                     })
                 })
             });
-            break;
         case 'not_to_be_reissued':
             return new Style({
                 image: new CircleStyle({
@@ -201,7 +196,6 @@ export function getApiaryFeatureStyle(status, selected=false, stroke_width_when_
                     })
                 })
             });
-            break;
         case 'denied':
             return new Style({
                 image: new Icon({
@@ -210,7 +204,6 @@ export function getApiaryFeatureStyle(status, selected=false, stroke_width_when_
                     src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xMzQDW3oAAACMSURBVChTlZDbDYAwDAM7AAOw/ypISEyAEMOUXHDS8viAk0xDYkPbUmv9pShgMg3lBj3NIAOrv95C1OoBngyMaoCHpN6M5wzoa31olsDN8rQAMDBtpoDazWD1I8A2FlNA3Z+pBRiYYs+7BHkRtp4PGhpAHPDtIjJwMfsvDWr1AE8G4GIO6GkGGfioWg6CRJYCwPQeRwAAAABJRU5ErkJggg=="
                 })
             });
-            break;
         case 'transferred':
             return new Style({
                 image: new CircleStyle({
@@ -224,7 +217,6 @@ export function getApiaryFeatureStyle(status, selected=false, stroke_width_when_
                     })
                 })
             });
-            break;
         case 'discarded':
             return new Style({
                 image: new CircleStyle({
@@ -238,7 +230,6 @@ export function getApiaryFeatureStyle(status, selected=false, stroke_width_when_
                     })
                 })
             });
-            break;
         case 'vacant':
             return new Style({
                 image: new CircleStyle({
@@ -252,7 +243,6 @@ export function getApiaryFeatureStyle(status, selected=false, stroke_width_when_
                     })
                 })
             });
-            break;
         case 'pending_vacant':
             return new Style({
                 image: new CircleStyle({
@@ -266,7 +256,6 @@ export function getApiaryFeatureStyle(status, selected=false, stroke_width_when_
                     })
                 })
             });
-            break;
         case 'dpaw_pool_of_sites':
             return new Style({
                 image: new Icon({
@@ -275,7 +264,6 @@ export function getApiaryFeatureStyle(status, selected=false, stroke_width_when_
                     src: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAZdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjAuMTM0A1t6AAAAQklEQVQoU52LMQoAIBDD/P+n69KAmBvEQJaGriSToKahgpqGCmoaKqhpqKB2xie+DpOgpqGCmoYKahoqqGmocO1ZGzz92jSqmlDHAAAAAElFTkSuQmCC"
                 }),
             });
-            break;
         case 'making_payment':
             return new Style({
                 image: new CircleStyle({
@@ -289,7 +277,6 @@ export function getApiaryFeatureStyle(status, selected=false, stroke_width_when_
                     })
                 })
             });
-            break;
         default:
             return new Style({
                 image: new CircleStyle({
@@ -303,61 +290,46 @@ export function getApiaryFeatureStyle(status, selected=false, stroke_width_when_
                     })
                 })
             });
-            break;
     }
 }
 export function getDisplayNameOfCategory(key) {
     switch(key){
         case 'south_west':
             return 'South West'
-            break
         case 'remote':
             return 'Remote'
-            break
         default:
             return ''
-            break
     }
 }
 export function getDisplayNameFromStatus(status_name){
     switch(status_name){
         case 'draft':
             return 'Draft'
-            break
         case 'pending':
             return 'Pending'
-            break
         case 'approved':
             return 'Approved'
-            break
         case 'denied':
             return 'Denied'
-            break
         case 'current':
             return 'Current'
-            break
         case 'not_to_be_reissued':
             return 'Not to be re-issued'
-            break
         case 'suspended':
             return 'Suspended'
-            break
         case 'transferred':
             return 'Transferred'
-            break
         case 'vacant':
             return 'Vacant'
-            break
         case 'discarded':
             return 'Discarded'
-            break
         default:
             if (status_name.toLowerCase().includes('vacant') && status_name.toLowerCase().includes('pending')){
                 //return 'Pending (vacant)'
                 return 'Pending'
             }
             return status_name
-            break
     }
 }
 export function zoomToCoordinates(map, coordinates, zoomLevel){
@@ -371,7 +343,7 @@ export function zoomToCoordinates(map, coordinates, zoomLevel){
 export function checkIfValidlatitudeAndlongitude(str) {
     // Regular expression to check if string is a latitude and longitude
     // const regexExp = /^((\-?|\+?)?\d+(\.\d+)?),\s*((\-?|\+?)?\d+(\.\d+)?)$/gi;
-    const regexExp = /^\s*((\-?|\+?)?\d+(\.\d+)?)[,\,\/]\s*((\-?|\+?)?\d+(\.\d+)?)$/gi;
+    const regexExp = /^\s*((-?|\+?)?\d+(\.\d+)?)[,,/]\s*((-?|\+?)?\d+(\.\d+)?)$/gi;
 
     let regResult = regexExp.exec(str)
 
