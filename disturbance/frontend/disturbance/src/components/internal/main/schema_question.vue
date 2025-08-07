@@ -72,7 +72,7 @@
             <div id="error" v-if="missing_fields.length > 0" style="margin: 10px; padding: 5px; color: red; border:1px solid red;">
                 <b>Please answer the following mandatory question(s):</b>
                 <ul>
-                    <li v-for="error in missing_fields">
+                    <li v-for="error in missing_fields" :key="error.label">
                         {{ error.label }}
                     </li>
                 </ul>
@@ -147,27 +147,27 @@
 
                     <div class="row">
                         <div class="col-md-6">
-                            <input type="checkbox" :value="true" v-model="getCheckedTag('isRepeatable').isChecked" >&nbsp;&nbsp;&nbsp;<label>is Repeatable</label></input>
+                            <label><input type="checkbox" :value="true" v-model="getCheckedTag('isRepeatable').isChecked"/>&nbsp;&nbsp;&nbsp;is Repeatable</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <input type="checkbox" :value="true" v-model="getCheckedTag('isRequired').isChecked" >&nbsp;&nbsp;&nbsp;<label>is Required</label></input>
+                            <label><input type="checkbox" :value="true" v-model="getCheckedTag('isRequired').isChecked" />&nbsp;&nbsp;&nbsp;is Required</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <input type="checkbox" :value="true" v-model="getCheckedTag('isCopiedToPermit').isChecked" >&nbsp;&nbsp;&nbsp;<label>is Copied To Permit</label></input>
+                            <label><input type="checkbox" :value="true" v-model="getCheckedTag('isCopiedToPermit').isChecked" />&nbsp;&nbsp;&nbsp;is Copied To Permit</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <input type="checkbox" :value="true" v-model="getCheckedTag('canBeEditedByAssessor').isChecked" >&nbsp;&nbsp;&nbsp;<label>can Be Edited By Assessor</label></input>
+                            <label><input type="checkbox" :value="true" v-model="getCheckedTag('canBeEditedByAssessor').isChecked" />&nbsp;&nbsp;&nbsp;can Be Edited By Assessor</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <input type="checkbox" :value="true" v-model="getCheckedTag('isTitleColumnForDashboard').isChecked" >&nbsp;&nbsp;&nbsp;<label>is Title Column For Dashboard</label></input>
+                            <label><input type="checkbox" :value="true" v-model="getCheckedTag('isTitleColumnForDashboard').isChecked" />&nbsp;&nbsp;&nbsp;is Title Column For Dashboard</label>
                         </div>
                     </div>
 
@@ -217,26 +217,27 @@
                 </form>
             </div>
         </div>
-        <div slot="footer">
+        <template #footer>
             <button type="button" class="btn btn-primary" @click="saveQuestion">Save</button>
-        </div>
+        </template>
     </modal>
 
   </div>
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid';
 import datatable from '@/utils/vue/datatable.vue'
 import modal from '@vue-utils/bootstrap-modal.vue'
-import alert from '@vue-utils/alert.vue'
 import SchemaOption from './schema_add_option.vue'
 import {
   api_endpoints,
-  helpers
+  helpers,
+  constants
 }
-from '@/utils/hooks'
+from '@/utils/hooks';
 
-var select2 = require('select2');
+// var select2 = require('select2');
 require("select2/dist/css/select2.min.css");
 require("select2-bootstrap-theme/dist/select2-bootstrap.min.css");
 
@@ -244,7 +245,6 @@ export default {
     name:'schema-question',
     components: {
         modal,
-        alert,
         datatable,
         SchemaOption,
     },
@@ -255,9 +255,9 @@ export default {
         vm.schema_question_url = helpers.add_endpoint_join(api_endpoints.schema_question_paginated, 'schema_question_datatable_list/?format=datatables');
 
         return {
-            schema_question_id: 'schema-question-datatable-'+vm._uid,
-            pOptionsBody: 'pOptionsBody' + vm._uid,
-            pQuestionBody: 'pQuestionBody' + vm._uid,
+            schema_question_id: 'schema-question-datatable-'+uuidv4(),
+            pOptionsBody: 'pOptionsBody' + uuidv4(),
+            pQuestionBody: 'pQuestionBody' + uuidv4(),
             isModalOpen: false,
             isNewEntry: false,
             missing_fields: [],
@@ -270,7 +270,7 @@ export default {
             dtHeadersSchemaQuestion: ["ID", "SectionID", "OptionID", "Proposal Type", "Section", "Question", "Index", "Action"],
             dtOptionsSchemaQuestion:{
                 language: {
-                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+                    processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
                 serverSide: true,
@@ -310,7 +310,7 @@ export default {
                     { 
                         data: "section",
                         searchable: false,
-                        mRender:function (data,type,full) {
+                        mRender:function (data) {
                             return data.section_label;
                         }
                     },
@@ -326,7 +326,7 @@ export default {
                         data: "question",
                         width: "80%",
                         searchable: false,
-                        mRender:function (data,type,full) {
+                        mRender:function (data) {
                             var ellipsis = '...',
                                 truncated = _.truncate(data, {
                                     length: 40,
@@ -360,8 +360,8 @@ export default {
                         data: "id",
                         searchable: false,
                         mRender:function (data,type,full) {
-                            var column = `<a class="edit-row" data-rowid=\"__ROWID__\">Edit</a><br/>`;
-                            column += `<a class="delete-row" data-rowid=\"__ROWID__\">Delete</a><br/>`;
+                            var column = `<a class="edit-row" data-rowid="__ROWID__">Edit</a><br/>`;
+                            column += `<a class="delete-row" data-rowid="__ROWID__">Delete</a><br/>`;
                             return column.replace(/__ROWID__/g, full.id);
                         }
                     },
@@ -429,26 +429,28 @@ export default {
             if (this.filterQuestionProposalType==='All') {
                 return true
             }
-            this.$http.get(helpers.add_endpoint_json(api_endpoints.schema_question,'1/get_question_sections'),{
+            fetch(helpers.add_endpoint_json(api_endpoints.schema_question,'1/get_question_sections'),{
                 params: { proposal_type_id: this.filterQuestionProposalType },
-            }).then((res)=>{
-                this.schemaGroups = res.body.question_groups; 
-                this.schemaSections = res.body.question_sections;
+            }).then(async (res)=>{
+                let data = await res.json();
+                this.schemaGroups = data.question_groups; 
+                this.schemaSections = data.question_sections;
             },err=>{
-
+                console.log(err);
             });
         },
         filterQuestionSection: function(){
             if (this.filterQuestionSection==='All') {
                 return true
             }
-            this.$http.get(helpers.add_endpoint_json(api_endpoints.schema_question,'1/get_question_parents'),{
+            fetch(helpers.add_endpoint_json(api_endpoints.schema_question,'1/get_question_parents'),{
                 params: { section_id: this.filterQuestionSection },
-            }).then((res)=>{
+            }).then(async (res)=>{
+                let data = await res.json();
                 this.sectionQuestion.section = this.filterQuestionSection;
-                this.parentList = res.body.question_parents;
+                this.parentList = data.question_parents;
             },err=>{
-
+                console.log(err);
             });
         },
     },
@@ -469,10 +471,11 @@ export default {
             if (!this.isModalOpen || g_id == '' || g_id == null) {
                 return true
             }
-            // this.$http.get(helpers.add_endpoint_json(api_endpoints.schema_question,'1/get_question_order'),{
+            // fetch(helpers.add_endpoint_json(api_endpoints.schema_question,'1/get_question_order'),{
             //     params: { group_id: g_id },
-            // }).then((res)=>{
-            //     this.sectionQuestion.order = res.body.question_order;
+            // }).then(async (res)=>{
+                // let data = await res.json();
+            //     this.sectionQuestion.order = data.question_order;
             // },err=>{
 
             // });
@@ -552,14 +555,14 @@ export default {
                 await self.$http.post(api_endpoints.schema_question, JSON.stringify(data),{
                     emulateJSON:true
 
-                }).then((response) => {
+                }).then(() => {
 
                     self.$refs.schema_question_table.vmDataTable.ajax.reload();
                     self.close();
 
                 }, (error) => {
 
-                    swal(
+                    swal.fire(
                         'Save Error',
                         helpers.apiVueResourceError(error),
                         'error'
@@ -571,7 +574,7 @@ export default {
                 await self.$http.post(helpers.add_endpoint_json(api_endpoints.schema_question,data.id+'/save_question'),JSON.stringify(data),{
                         emulateJSON:true,
 
-                    }).then((response)=>{
+                    }).then(()=>{
 
                         self.$refs.schema_question_table.vmDataTable.ajax.reload();
                         self.close();
@@ -652,32 +655,32 @@ export default {
                 self.$refs.schema_question_table.row_of_data = self.$refs.schema_question_table.vmDataTable.row('#'+$(this).attr('data-rowid'));
                 self.sectionQuestion.id = self.$refs.schema_question_table.row_of_data.data().id;
 
-                swal({
+                swal.fire({
                     title: "Delete Section Question",
                     text: "Are you sure you want to delete?",
-                    type: "question",
+                    icon: "question",
                     showCancelButton: true,
                     confirmButtonText: 'Accept'
 
                 }).then(async (result) => {
                     //console.log(result);
 
-                    if (result) {
+                    if (result.isConfirmed) {
 
                         await self.$http.delete(helpers.add_endpoint_json(api_endpoints.schema_question,(self.sectionQuestion.id+'/delete_question')))
     
-                        .then((response) => {
+                        .then(() => {
 
                             self.$refs.schema_question_table.vmDataTable.ajax.reload();
 
                         }, (error) => {
-
+                            console.log(error);
                         });
     
                     }
 
                 },(error) => {
-
+                    console.log(error);
                 });                
             });
 
@@ -689,9 +692,6 @@ export default {
                     allowClear: true,
                     minimumInputLength: 2,
                     placeholder:"Select Question..."
-                }).
-                on("select2:selecting",function (e) {
-                    let selected = $(e.currentTarget);
                 }).
                 on("select2:select",function (e) {
                     let selected = $(e.currentTarget);
@@ -710,9 +710,6 @@ export default {
                     allowClear: true,
                     minimumInputLength: 2,
                     placeholder:"Select Parent Question..."
-                }).
-                on("select2:selecting",function (e) {
-                    let selected = $(e.currentTarget);
                 }).
                 on("select2:select",function (e) {
                     let selected = $(e.currentTarget);
@@ -749,9 +746,6 @@ export default {
                     minimumInputLength: 2,
                     placeholder:"Select Section Group..."
                 }).
-                on("select2:selecting",function (e) {
-                    let selected = $(e.currentTarget);
-                }).
                 on("select2:select",function (e) {
                     let selected = $(e.currentTarget);
                     self.sectionQuestion.section_group=selected.val()
@@ -761,17 +755,17 @@ export default {
                     self.sectionQuestion.section_group=selected.val()
                 });
         },
-        initSelects: async function() {
+        initSelects: function() {
 
-            await this.$http.get(helpers.add_endpoint_json(api_endpoints.schema_question,'1/get_question_selects')).then(res=>{
-
-                    this.masterlist = res.body.all_masterlist;
-                    this.schemaProposalTypes = res.body.all_proposal_types;
-                    this.schemaSections = res.body.all_section;
-                    this.schemaGroups = res.body.all_group
+            fetch(helpers.add_endpoint_json(api_endpoints.schema_question,'1/get_question_selects')).then(async res=>{
+                    let data = await res.json();
+                    this.masterlist = data.all_masterlist;
+                    this.schemaProposalTypes = data.all_proposal_types;
+                    this.schemaSections = data.all_section;
+                    this.schemaGroups = data.all_group
 
             },err=>{
-                swal(
+                swal.fire(
                     'Get Application Selects Error',
                     helpers.apiVueResourceError(err),
                     'error'

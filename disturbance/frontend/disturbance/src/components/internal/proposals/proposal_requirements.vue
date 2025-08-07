@@ -23,9 +23,11 @@
     </div>
 </template>
 <script>
+import { v4 as uuidv4 } from 'uuid';
 import {
     api_endpoints,
-    helpers
+    helpers,
+    constants
 }
 from '@/utils/hooks'
 import datatable from '@vue-utils/datatable.vue'
@@ -38,13 +40,13 @@ export default {
     data: function() {
         let vm = this;
         return {
-            panelBody: "proposal-requirements-"+vm._uid,
+            panelBody: "proposal-requirements-"+uuidv4(),
             requirements: [],
             requirement_headers:["Requirement","Due Date","Recurrence","Action","Order"],
             requirement_options:{
                 autoWidth: false,
                 language: {
-                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+                    processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
                 ajax: {
@@ -112,7 +114,7 @@ export default {
                     },
                     {
                         data: "due_date",
-                        mRender:function (data,type,full) {
+                        mRender:function (data) {
                             return data != '' && data != null ? moment(data).format('DD/MM/YYYY'): '';
                         },
                         orderable: false,
@@ -169,14 +171,14 @@ export default {
                     }
                 ],
                 processing: true,
-                rowCallback: function ( row, data, index) {
+                rowCallback: function ( row, data) {
                     if (data.copied_for_renewal && data.require_due_date && !data.due_date) {
                         $('td', row).css('background-color', 'Red');
                         vm.setApplicationWorkflowState(false)
                         //vm.$emit('refreshRequirements',false);
                     }
                 },
-                drawCallback: function (settings) {
+                drawCallback: function () {
                     $(vm.$refs.requirements_datatable.table).find('tr:last .dtMoveDown').remove();
                     $(vm.$refs.requirements_datatable.table).children('tbody').find('tr:first .dtMoveUp').remove();
 
@@ -188,7 +190,7 @@ export default {
                     $('.dtMoveUp').click(vm.moveUp);
                     $('.dtMoveDown').click(vm.moveDown);
                 },
-                 preDrawCallback: function (settings) {
+                 preDrawCallback: function () {
                     vm.setApplicationWorkflowState(true)
                     //vm.$emit('refreshRequirements',true);
                 }
@@ -216,29 +218,31 @@ export default {
         },
         removeRequirement(_id){
             let vm = this;
-            swal({
+            swal.fire({
                 title: "Remove Requirement",
                 text: "Are you sure you want to remove this requirement?",
-                type: "warning",
+                icon: "warning",
                 showCancelButton: true,
                 confirmButtonText: 'Remove Requirement',
                 confirmButtonColor:'#d9534f'
-            }).then(() => {
-                // vm.$http.delete(helpers.add_endpoint_json(api_endpoints.proposal_requirements,_id))
-                // .then((response) => {
-                //     vm.$refs.requirements_datatable.vmDataTable.ajax.reload();
-                // }, (error) => {
-                //     console.log(error);
-                // });
+            }).then((swalresult) => {
+                if(swalresult.isConfirmed) {
+                    // vm.$http.delete(helpers.add_endpoint_json(api_endpoints.proposal_requirements,_id))
+                    // .then((response) => {
+                    //     vm.$refs.requirements_datatable.vmDataTable.ajax.reload();
+                    // }, (error) => {
+                    //     console.log(error);
+                    // });
 
-                vm.$http.get(helpers.add_endpoint_json(api_endpoints.proposal_requirements,_id+'/discard'))
-                .then((response) => {
-                    vm.$refs.requirements_datatable.vmDataTable.ajax.reload();
-                }, (error) => {
-                    console.log(error);
-                });
-
+                    fetch(helpers.add_endpoint_json(api_endpoints.proposal_requirements,_id+'/discard'))
+                    .then(() => {
+                        vm.$refs.requirements_datatable.vmDataTable.ajax.reload();
+                    }, (error) => {
+                        console.log(error);
+                    });
+                }
             },(error) => {
+                console.log(error); 
             });
         },
         fetchRequirements(){
@@ -247,7 +251,7 @@ export default {
             if (this.proposal.proposal_apiary) {
                 url = api_endpoints.apiary_standard_requirements;
             }
-            vm.$http.get(url).then((response) => {
+            fetch(url).then((response) => {
                 vm.requirements = response.body
             },(error) => {
                 console.log(error);
@@ -255,7 +259,7 @@ export default {
         },
         editRequirement(_id){
             let vm = this;
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.proposal_requirements,_id)).then((response) => {
+            fetch(helpers.add_endpoint_json(api_endpoints.proposal_requirements,_id)).then((response) => {
                 this.$refs.requirement_detail.requirement = response.body;
                 this.$refs.requirement_detail.requirement.due_date =  response.body.due_date != null && response.body.due_date != undefined ? moment(response.body.due_date).format('DD/MM/YYYY'): '';
                 response.body.standard ? $(this.$refs.requirement_detail.$refs.standard_req).val(response.body.standard_requirement).trigger('change'): '';
@@ -282,7 +286,7 @@ export default {
         },
         sendDirection(req,direction){
             let movement = direction == 'down'? 'move_down': 'move_up';
-            this.$http.get(helpers.add_endpoint_json(api_endpoints.proposal_requirements,req+'/'+movement)).then((response) => {
+            fetch(helpers.add_endpoint_json(api_endpoints.proposal_requirements,req+'/'+movement)).then(() => {
             },(error) => {
                 console.log(error);
                 

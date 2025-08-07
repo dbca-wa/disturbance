@@ -51,7 +51,7 @@
             <div id="error" v-if="missing_fields.length > 0" style="margin: 10px; padding: 5px; color: red; border:1px solid red;">
                 <b>Please answer the following mandatory question(s):</b>
                 <ul>
-                    <li v-for="error in missing_fields">
+                    <li v-for="error in missing_fields" :key="error.label">
                         {{ error.label }}
                     </li>
                 </ul>
@@ -88,28 +88,28 @@
                 </form>
             </div>
         </div>
-        <div slot="footer">
+        <template #footer>
             <button type="button" class="btn btn-primary" @click="saveProposalType()">Save</button>
-        </div>
+        </template>
     </modal>
 
   </div>
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid';
 import datatable from '@/utils/vue/datatable.vue'
 import modal from '@vue-utils/bootstrap-modal.vue'
-import alert from '@vue-utils/alert.vue'
 import {
   api_endpoints,
-  helpers
+  helpers,
+  constants
 }
 from '@/utils/hooks'
 export default {
     name:'schema-purpose',
     components: {
         modal,
-        alert,
         datatable,
     },
     props:{
@@ -123,8 +123,8 @@ export default {
         let vm = this;
         vm.schema_purpose_url = helpers.add_endpoint_join(api_endpoints.schema_proposal_type_paginated, 'schema_proposal_type_datatable_list/?format=datatables');
         return {
-            schema_purpose_id: 'schema-purpose-datatable-'+vm._uid,
-            pProposalTypeBody: 'pProposalTypeBody' + vm._uid,
+            schema_purpose_id: 'schema-purpose-datatable-'+uuidv4(),
+            pProposalTypeBody: 'pProposalTypeBody' + uuidv4(),
             isModalOpen:false,
             missing_fields: [],
             filterTableProposalType: 'All',
@@ -133,7 +133,7 @@ export default {
             dtHeadersSchemaProposalType: ["ID", "Proposal Type", "Section Label", "Index", "Action"],
             dtOptionsSchemaProposalType:{
                 language: {
-                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+                    processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 searchDelay: 1000,
                 responsive: true,
@@ -160,7 +160,7 @@ export default {
                         data: "proposal_type",
                         width: "20%",
                         searchable: false,
-                        mRender:function (data,type,full) {
+                        mRender:function (data) {
                             return data.name_with_version
                         }
                     },
@@ -179,8 +179,8 @@ export default {
                         width: "10%",
                         searchable: false,
                         mRender:function (data,type,full) {
-                            var column = `<a class="edit-row" data-rowid=\"__ROWID__\">Edit</a><br/>`;
-                            column += `<a class="delete-row" data-rowid=\"__ROWID__\">Delete</a><br/>`;
+                            var column = `<a class="edit-row" data-rowid="__ROWID__">Edit</a><br/>`;
+                            column += `<a class="delete-row" data-rowid="__ROWID__">Delete</a><br/>`;
                             return column.replace(/__ROWID__/g, full.id);
                         }
                     },
@@ -241,13 +241,13 @@ export default {
                 await self.$http.post(api_endpoints.schema_proposal_type, JSON.stringify(data),{
                     emulateJSON:true
 
-                }).then((response) => {
+                }).then(() => {
 
                     self.$refs.schema_purpose_table.vmDataTable.ajax.reload();
                     self.close();
 
                 }, (error) => {
-                    swal(
+                    swal.fire(
                         'Save Error',
                         helpers.apiVueResourceError(error),
                         'error'
@@ -259,13 +259,13 @@ export default {
                 await self.$http.post(helpers.add_endpoint_json(api_endpoints.schema_proposal_type,data.id+'/save_proposal_type'),JSON.stringify(data),{
                         emulateJSON:true,
 
-                }).then((response)=>{
+                }).then(()=>{
 
                     self.$refs.schema_purpose_table.vmDataTable.ajax.reload();
                     self.close();
 
                 },(error)=>{
-                    swal(
+                    swal.fire(
                         'Save Error',
                         helpers.apiVueResourceError(error),
                         'error'
@@ -306,7 +306,7 @@ export default {
                 self.$refs.schema_purpose_table.row_of_data = self.$refs.schema_purpose_table.vmDataTable.row('#'+$(this).attr('data-rowid'));
                 self.sectionProposalType.id = self.$refs.schema_purpose_table.row_of_data.data().id;
 
-                swal({
+                swal.fire({
                     title: "Delete ProposalType Section",
                     text: "Are you sure you want to delete?",
                     type: "question",
@@ -315,34 +315,33 @@ export default {
 
                 }).then(async (result) => {
 
-                    if (result) {
+                    if (result.isConfirmed) {
 
                         await self.$http.delete(helpers.add_endpoint_json(api_endpoints.schema_proposal_type,(self.sectionProposalType.id+'/delete_proposal_type')))
     
-                        .then((response) => {
+                        .then(() => {
 
                             self.$refs.schema_purpose_table.vmDataTable.ajax.reload();
 
                         }, (error) => {
-
+                            console.error(error);
                         });
     
                     }
 
                 },(error) => {
-
+                    console.error(error);
                 });                
             });
         },
-        initSelects: async function() {
+        initSelects: function() {
 
-            await this.$http.get(helpers.add_endpoint_json(api_endpoints.schema_proposal_type,'1/get_proposal_type_selects')).then(res=>{
-
-                    this.schemaProposalTypes = res.body.all_proposal_type;
-
+            fetch(helpers.add_endpoint_json(api_endpoints.schema_proposal_type,'1/get_proposal_type_selects')).then(async res=>{
+                let data = await res.json();
+                this.schemaProposalTypes = data.all_proposal_type;
             },err=>{
 
-                swal(
+                swal.fire(
                     'Get Application Selects Error',
                     helpers.apiVueResourceError(err),
                     'error'

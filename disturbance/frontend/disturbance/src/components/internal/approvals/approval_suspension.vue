@@ -4,7 +4,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <form class="form-horizontal" name="approvalForm">
-                        <alert :show.sync="showError" type="danger"><strong>{{errorString}}</strong></alert>
+                        <alert v-if="showError" type="danger"><strong>{{errorString}}</strong></alert>
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <div class="row">
@@ -56,17 +56,16 @@
                     </form>
                 </div>
             </div>
-            <div slot="footer">
+            <template #footer>
                 <button type="button" v-if="issuingApproval" disabled class="btn btn-default" @click="ok"><i class="fa fa-spinner fa-spin"></i> Processing</button>
                 <button type="button" v-else class="btn btn-default" @click="ok">Ok</button>
                 <button type="button" class="btn btn-default" @click="cancel">Cancel</button>
-            </div>
+            </template>
         </modal>
     </div>
 </template>
 
 <script>
-//import $ from 'jquery'
 import modal from '@vue-utils/bootstrap-modal.vue'
 import alert from '@vue-utils/alert.vue'
 import {helpers,api_endpoints} from "@/utils/hooks.js"
@@ -83,7 +82,7 @@ export default {
         //},
     },
     data:function () {
-        let vm = this;
+        // let vm = this;
         return {
             isModalOpen:false,
             form:null,
@@ -138,11 +137,14 @@ export default {
         },
         fetchContact: function(id){
             let vm = this;
-            vm.$http.get(api_endpoints.contact(id)).then((response) => {
-                vm.contact = response.body; vm.isModalOpen = true;
-            },(error) => {
-                console.log(error);
-            } );
+            fetch(api_endpoints.contact(id)).then(
+                async (response) => {
+                    vm.contact = await response.json(); 
+                    vm.isModalOpen = true;
+                },(error) => {
+                    console.log(error);
+                }
+            );
         },
         sendData:function(){
             let vm = this;
@@ -156,7 +158,7 @@ export default {
                         vm.issuingApproval = false;
                         vm.approval={};
                         vm.close();
-                        swal(
+                        swal.fire(
                              'Suspend',
                              'An email has been sent to the proponent about suspension of this approval',
                              'success'

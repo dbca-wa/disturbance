@@ -4,30 +4,38 @@
             <div class="scrollable-div">
                 <div style="float: left; width: 80%;">
                     <table class="table small-table">
-                        <tr>
-                            <th>Lodgement</th>
-                            <th style="padding-left: 10px;">Date</th>
-                            <th style="padding-left: 10px; text-align:center">Actions</th>
-                        </tr>
-                        <tr v-for="revision in this.lodgement_revisions_actions" :key="revision.id">
-                            <td>{{ revision.id }}</td>
-                            <td style="padding-left: 10px;">{{ revision.date | formatDateNoTime }}</td>
-                            <td style="padding-left: 10px;" v-on:click="getCompareVersions(revision['index'],revision.date)">
-                                <span v-bind:id=revision.id v-html=revision.action></span>
-                            </td>
-                        </tr>
+                        <thead>
+                            <tr>
+                                <th>Lodgement</th>
+                                <th style="padding-left: 10px;">Date</th>
+                                <th style="padding-left: 10px; text-align:center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="revision in this.lodgement_revisions_actions" :key="revision.id">
+                                <td>{{ revision.id }}</td>
+                                <td style="padding-left: 10px;">{{ formatDateNoTime(revision.date) }}</td>
+                                <td style="padding-left: 10px;" v-on:click="getCompareVersions(revision['index'],revision.date)">
+                                    <span v-bind:id=revision.id v-html=revision.action></span>
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
                 <div style="float: right; width: 20%;">
                     <table class="table small-table">
-                        <tr>
-                            <th style="visibility: hidden;">Version</th>
-                        </tr>
-                        <tr v-for="revision in this.lodgement_revisions_view_actions" :key="revision.id">
-                            <td  style="padding-left: 15px;" v-on:click="getViewVersion(revision['index'])">
-                                <span v-bind:id=revision.view_id v-html=revision.view_action></span>
-                            </td>
-                        </tr>
+                        <thead>
+                            <tr>
+                                <th style="visibility: hidden;">Version</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="revision in this.lodgement_revisions_view_actions" :key="revision.id">
+                                <td  style="padding-left: 15px;" v-on:click="getViewVersion(revision['index'])">
+                                    <span v-bind:id=revision.view_id v-html=revision.view_action></span>
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -38,11 +46,10 @@
     </div>
 </template>
 <script>
+import { v4 as uuidv4 } from 'uuid';
 import {
-    api_endpoints,
-    helpers
-} from '@/utils/hooks'
-import Vue from 'vue'
+    constants
+}from '@/utils/hooks'
 export default {
     name: 'RevisionHistorySection',
     props: {
@@ -68,7 +75,7 @@ export default {
             compareModeActive:false,
             actionsDtOptions: {
                 language: {
-                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+                    processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
                 deferRender: true, 
@@ -79,7 +86,7 @@ export default {
                     "<'row'<'col-sm-5'i><'col-sm-7'p>>",
                 processing: true,
                 data: this.lodgement_revisions_actions,
-                data: this.lodgement_revisions_view_actions,
+                // data: this.lodgement_revisions_view_actions,
                 columns: [
                     { data: 'id' },
                     { data: 'date' },
@@ -93,45 +100,19 @@ export default {
     components:{
 
     },
-    filters: {
-        formatDateNoTime: function(data){
-            return data ? moment(data).format('DD/MM/YY'): '';
-        },
-    },
     watch:{
 
     },
     computed: {
         console: () => console,
-        createLodgementRevisionTable: function() {
-            /* This creates a table of versions for the current model object. Each entry has the model object ID along with the revision
-                number and date of submission. An action is provided for each entry to allow comparison between versions. 
-                &#x1f441; is eyeball. Viewing doesn't fit very well. */
-            let index = 0
-            for (let prop in this.model_object.reversion_history) {
-                let action_label = '<a style="cursor:pointer;">Compare</a>'
-                let view_action_label = `<a style="cursor:pointer;">View</a>`
-                if (index === 0) { 
-                    view_action_label = '<div style="pointer-events: none;">&#x1f441;</div>'
-                    action_label = '<div style="visibility: hidden; pointer-events: none;">View</div>'
-                }
-                this.lodgement_revisions_actions.push({"index": index,
-                                                       "id": prop,
-                                                       "action": action_label,
-                                                       "date": this.model_object.reversion_history[prop]["date"],
-                })
-                this.lodgement_revisions_view_actions.push({"index": index,
-                                                            "view_id": "v_"+prop,
-                                                            "view_action": view_action_label})
-                                
-                index += 1
-            }
-        },
         showLoader: function() {
             return this.isLoadingData;
         }
     },
     methods:{
+        formatDateNoTime: function(data){
+            return data ? moment(data).format('DD/MM/YY'): '';
+        },
         getCompareVersions: async function (compare_version, lodgement_date) {
             /*  Updates the history panel to show which item is being compared against
                 Then emits to the component above to process the compare.
@@ -176,9 +157,9 @@ export default {
             vm.$refs.revision_history.isModalOpen = true;
         },
         initialiseRevisionHistoryPopover: function(vm_uid, ref, datatable_options, actions, view_actions){
-            let vm = this;
+            // let vm = this;
             let actionLogId = 'actions-log-table'+vm_uid;
-            let popover_name = 'popover-'+ vm._uid+'-logs';
+            let popover_name = 'popover-'+ uuidv4()+'-logs';
             $(ref).popover({
                 content: function() {
                     return ` 
@@ -219,21 +200,22 @@ export default {
                                          })
                 }
                 datatable_options.data = data_for_table
-                let table = $('#'+actionLogId).DataTable(datatable_options);
+                // let table = $('#'+actionLogId).DataTable(datatable_options);
+                $('#'+actionLogId).DataTable(datatable_options);
             }).on('shown.bs.popover', function () {
                 var el = ref;
-                var popoverheight = parseInt($('.'+popover_name).height());
+                // var popoverheight = parseInt($('.'+popover_name).height());
 
                 var popover_bounding_top = parseInt($('.'+popover_name)[0].getBoundingClientRect().top);
-                var popover_bounding_bottom = parseInt($('.'+popover_name)[0].getBoundingClientRect().bottom);
+                // var popover_bounding_bottom = parseInt($('.'+popover_name)[0].getBoundingClientRect().bottom);
 
                 var el_bounding_top = parseInt($(el)[0].getBoundingClientRect().top);
-                var el_bounding_bottom = parseInt($(el)[0].getBoundingClientRect().top);
+                // var el_bounding_bottom = parseInt($(el)[0].getBoundingClientRect().top);
                 
                 var diff = el_bounding_top - popover_bounding_top;
 
-                var position = parseInt($('.'+popover_name).position().top);
-                var pos2 = parseInt($(el).position().top) - 5;
+                // var position = parseInt($('.'+popover_name).position().top);
+                // var pos2 = parseInt($(el).position().top) - 5;
 
                 var x = diff + 5;
                 $('.'+popover_name).children('.arrow').css('top', x + 'px');
@@ -241,7 +223,7 @@ export default {
         },
         initialisePopovers: function(){ 
             if (!this.popoversInitialised){
-                this.initialiseRevisionHistoryPopover(this._uid, 
+                this.initialiseRevisionHistoryPopover(uuidv4(), 
                                                       this.$refs.showActionBtn, 
                                                       this.actionsDtOptions, 
                                                       this.lodgement_revisions_actions,
@@ -249,10 +231,34 @@ export default {
                 this.popoversInitialised = true;
             }
         },
+        createLodgementRevisionTable: function() {
+            /* This creates a table of versions for the current model object. Each entry has the model object ID along with the revision
+                number and date of submission. An action is provided for each entry to allow comparison between versions. 
+                &#x1f441; is eyeball. Viewing doesn't fit very well. */
+            let index = 0
+            for (let prop in this.model_object.reversion_history) {
+                let action_label = '<a style="cursor:pointer;">Compare</a>'
+                let view_action_label = `<a style="cursor:pointer;">View</a>`
+                if (index === 0) { 
+                    view_action_label = '<div style="pointer-events: none;">&#x1f441;</div>'
+                    action_label = '<div style="visibility: hidden; pointer-events: none;">View</div>'
+                }
+                this.lodgement_revisions_actions.push({"index": index,
+                                                       "id": prop,
+                                                       "action": action_label,
+                                                       "date": this.model_object.reversion_history[prop]["date"],
+                })
+                this.lodgement_revisions_view_actions.push({"index": index,
+                                                            "view_id": "v_"+prop,
+                                                            "view_action": view_action_label})
+                                
+                index += 1
+            }
+        },
     },
     created: function() {
         // Populate the revision table
-        this.createLodgementRevisionTable
+        this.createLodgementRevisionTable()
     },
     mounted: function(){
         let vm = this;

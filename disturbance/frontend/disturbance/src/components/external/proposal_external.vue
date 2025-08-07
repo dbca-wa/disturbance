@@ -21,10 +21,14 @@
                         </h3>
                       </div>
                       <div class="panel-body collapse in" :id="pBody">
-                        <div v-for="a in amendment_request">
+                        <div v-for="a in amendment_request" :key="a.id">
                           <p>Reason: {{a.reason}}</p>
-                          <p v-if="a.amendment_request_documents">Documents:<p v-for="d in a.amendment_request_documents"><a :href="d._file" target="_blank" class="control-label pull-left">{{d.name   }}</a><br></p></p>
-                          <p>Details: <p v-for="t in splitText(a.text)">{{t}}</p></p>
+                          <p v-if="a.amendment_request_documents">Documents:</p>
+                              <p v-for="d in a.amendment_request_documents" :key="d.id">
+                                <a :href="d._file" target="_blank" class="control-label pull-left">{{d.name   }}</a><br>
+                              </p>
+                          <p>Details: </p>
+                              <p v-for="t in splitText(a.text)" :key="t.text">{{t}}</p>
                       </div>
                     </div>
                   </div>
@@ -39,7 +43,7 @@
             <div id="error" v-if="missing_fields.length > 0" style="margin: 10px; padding: 5px; color: red; border:1px solid red;">
                 <b>Please answer the following mandatory question(s):</b>
                 <ul>
-                    <li v-for="error in missing_fields">
+                    <li v-for="error in missing_fields" :key="error.id">
                         {{ error.label }}
                     </li>
                 </ul>
@@ -259,7 +263,6 @@ import ApiarySiteTransfer from '../form_apiary_site_transfer.vue'
 import NewApply from './proposal_apply_new.vue'
 import MapSection from '@/components/common/das/map_section.vue'
 import alert from '@/utils/vue/alert.vue'
-import Vue from 'vue'
 import {
   api_endpoints,
   helpers
@@ -552,6 +555,7 @@ export default {
                 }
                 return formData
             } catch (err) {
+                console.log(err);
                 return formData
             }
         },
@@ -587,21 +591,20 @@ export default {
             }
 
             console.log('http.post: ' + vm.proposal_form_url)
-            vm.$http.post(vm.proposal_form_url, formData).then(
-                res=>{
+            vm.$http.post(vm.proposal_form_url, formData).then(() => {
                     if (confirmation_required){
                         if (this.apiaryTemplateGroup) {
-                            swal(
-                                'Saved',
-                                'Your application has been saved',
-                                'success'
-                            );
+                            swal.fire({
+                                title: 'Saved',
+                                text: 'Your application has been saved',
+                                icon: 'success'
+                            });
                         } else {
-                            swal(
-                                'Saved',
-                                'Your proposal has been saved',
-                                'success'
-                            );
+                            swal.fire({
+                                title: 'Saved',
+                                text: 'Your proposal has been saved',
+                                icon: 'success'
+                            });
                         }
                     }
                     this.isSaving = false;
@@ -617,7 +620,7 @@ export default {
                 }
             );
         },
-        save_exit: async function(e) {
+        save_exit: async function() {
             let vm = this;
             this.isSaving = true;
             vm.form=document.forms.new_proposal;
@@ -629,7 +632,7 @@ export default {
             });
             this.isSaving = false;
         },
-        sectionHide: function(e) {
+        sectionHide: function() {
             let vm = this;
             vm.sectionShow=!vm.sectionShow
             //console.log(vm.sectionShow);
@@ -693,45 +696,52 @@ export default {
                 }
 
                 if (this.type == 'checkbox') {
-                    var id = 'id_' + this.className
+                    var chk_id = 'id_' + this.className
+                    var chk_text = ''
                     if ($("[class="+this.className+"]:checked").length == 0) {
-                        try { var text = $('#'+id).text() } catch(error) { var text = $('#'+id).textContent }
-                        console.log('checkbox not checked: ' + this.type + ' ' + text)
-                        vm.missing_fields.push({id: id, label: text});
+                        try { 
+                            chk_text = $('#'+chk_id).text() 
+                        } 
+                        catch(error) { 
+                            console.log(error);
+                            chk_text = $('#'+chk_id).textContent 
+                        }
+                        console.log('checkbox not checked: ' + this.type + ' ' + chk_text)
+                        vm.missing_fields.push({id: chk_id, label: chk_text});
                     }
                 }
 
                 if (this.type == 'select-one') {
                     if ($(this).val() == '') {
-                        var text = $('#'+id).text()  // this is the (question) label
-                        var id = 'id_' + $(this).prop('name'); // the label id
-                        console.log('selector not selected: ' + this.type + ' ' + text)
-                        vm.missing_fields.push({id: id, label: text});
+                        var sel_text = $('#'+id).text()  // this is the (question) label
+                        var sel_id = 'id_' + $(this).prop('name'); // the label id
+                        console.log('selector not selected: ' + this.type + ' ' + sel_text)
+                        vm.missing_fields.push({id: sel_id, label: sel_text});
                     }
                 }
 
                 if (this.type == 'file') {
                     var num_files = $('#'+id).attr('num_files')
                     if (num_files == "0") {
-                        var text = $('#'+id).text()
+                        var file_text = $('#'+id).text()
                         console.log('file not uploaded: ' + this.type + ' ' + this.name)
-                        vm.missing_fields.push({id: id, label: text});
+                        vm.missing_fields.push({id: id, label: file_text});
                     }
                 }
 
                 if (this.type == 'text') {
                     if (this.value == '') {
-                        var text = $('#'+id).text()
+                        var txt_text = $('#'+id).text()
                         console.log('text not provided: ' + this.type + ' ' + this.name)
-                        vm.missing_fields.push({id: id, label: text});
+                        vm.missing_fields.push({id: id, label: txt_text});
                     }
                 }
 
                 if (this.type == 'textarea') {
                     if (this.value == '') {
-                        var text = $('#'+id).text()
+                        var txtarea_text = $('#'+id).text()
                         console.log('textarea not provided: ' + this.type + ' ' + this.name)
-                        vm.missing_fields.push({id: id, label: text});
+                        vm.missing_fields.push({id: id, label: txtarea_text});
                     }
                 }
 
@@ -868,7 +878,6 @@ export default {
         },
 
         highlight_deficient_fields: function(deficient_fields){
-            let vm = this;
             for (var deficient_field of deficient_fields) {
                 $("#" + "id_"+deficient_field).css("color", 'red');
             }
@@ -931,10 +940,10 @@ export default {
             //Check for missing map documents
             let missing_files = vm.checkMapFiles();
             if(missing_files!=true){
-              swal({
+              swal.fire({
                 title: "Please fix following errors before submitting",
                 text: missing_files,
-                type:'error'
+                icon:'error'
               })
             //vm.paySubmitting=false;
             return false;
@@ -954,10 +963,10 @@ export default {
             //Check for missing data in Region, District, Category/Management Area
             let missing_data = vm.can_submit();
             if(missing_data!=true){
-              swal({
+              swal.fire({
                 title: "Please fix following errors before submitting",
                 text: missing_data,
-                type:'error'
+                icon:'error'
               })
             //vm.paySubmitting=false;
             return false;
@@ -971,61 +980,64 @@ export default {
                 swalTitle = "Submit Application";
                 swalText = "Are you sure you want to submit this application?";
             }
-            swal({
+            swal.fire({
                 title: swalTitle,
                 text: swalText,
-                type: "question",
+                icon: "question",
                 showCancelButton: true,
                 confirmButtonText: 'Submit'
-            }).then(async () => {
-                vm.submittingProposal = true;
-                // Only Apiary has an application fee
-                //if (!vm.proposal.fee_paid && ['Apiary', 'Site Transfer'].includes(vm.proposal.application_type)) {
-                if (['Apiary', 'Site Transfer'].includes(vm.proposal.application_type)) {
-                    //if (this.submit_button_text === 'Pay and submit' && ['Apiary', 'Site Transfer'].includes(vm.proposal.application_type)) {
-                    vm.save_and_redirect();
-                } else {
-                    /* just save and submit - no payment required (probably application was pushed back by assessor for amendment */
-                    try {
-                        console.log('http.post(submit)')
-                        console.log('http.post: ' + helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal.id+'/submit'))
+            }).then(async (swalresult) => {
+                if (swalresult.isConfirmed) {
+                    vm.submittingProposal = true;
+                    // Only Apiary has an application fee
+                    //if (!vm.proposal.fee_paid && ['Apiary', 'Site Transfer'].includes(vm.proposal.application_type)) {
+                    if (['Apiary', 'Site Transfer'].includes(vm.proposal.application_type)) {
+                        //if (this.submit_button_text === 'Pay and submit' && ['Apiary', 'Site Transfer'].includes(vm.proposal.application_type)) {
+                        vm.save_and_redirect();
+                    } else {
+                        /* just save and submit - no payment required (probably application was pushed back by assessor for amendment */
+                        try {
+                            console.log('http.post(submit)')
+                            console.log('http.post: ' + helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal.id+'/submit'))
 
-                        const res = await vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal.id+'/submit'),formData);
-                        vm.proposal = res.body;
-                        vm.$router.push({
-                            name: 'submit_proposal',
-                            params: { proposal: vm.proposal}
+                            const res = await vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal.id+'/submit'),formData);
+                            vm.proposal = res.body;
+                            vm.$router.push({
+                                name: 'submit_proposal',
+                                params: { proposal: vm.proposal}
+                            });
+                        } catch (err) {
+                            swal.fire({
+                                title: 'Submit Error',
+                                text: helpers.apiVueResourceError(err),
+                                icon: 'error'
+                            })
+                        }
+                        /*
+                        vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal.id+'/submit'),formData).then(res=>{
+                            vm.proposal = res.body;
+                            vm.$router.push({
+                                name: 'submit_proposal',
+                                params: { proposal: vm.proposal}
+                            });
+                        },err=>{
+                            swal.fire(
+                                'Submit Error',
+                                helpers.apiVueResourceError(err),
+                                'error'
+                            )
                         });
-                    } catch (err) {
-                        swal(
-                            'Submit Error',
-                            helpers.apiVueResourceError(err),
-                            'error'
-                        )
+                        */
                     }
-                    /*
-                    vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal.id+'/submit'),formData).then(res=>{
-                        vm.proposal = res.body;
-                        vm.$router.push({
-                            name: 'submit_proposal',
-                            params: { proposal: vm.proposal}
-                        });
-                    },err=>{
-                        swal(
-                            'Submit Error',
-                            helpers.apiVueResourceError(err),
-                            'error'
-                        )
-                    });
-                    */
                 }
             },(error) => {
-              vm.paySubmitting=false;
+                console.log(error);
+                vm.paySubmitting=false;
             });
             vm.submittingProposal= false;
         },
         // Apiary submission
-        save_and_redirect: async function(e) {
+        save_and_redirect: async function() {
             this.isSaving = true;
             let vm = this;
             vm.form=document.forms.new_proposal;
@@ -1046,8 +1058,7 @@ export default {
                 let transfereeEmail = this.$refs.apiary_site_transfer.transfereeEmail
                 formData.append('transferee_email_text', transfereeEmail);
             }
-            vm.$http.post(vm.proposal_submit_url, formData).then(
-                res=>{
+            vm.$http.post(vm.proposal_submit_url, formData).then(()=>{
                     /* after the above save, redirect to the Django post() method in ApplicationFeeView */
                     vm.post_and_redirect(vm.application_fee_url, {'csrfmiddlewaretoken' : vm.csrf_token});
                 },
@@ -1066,27 +1077,29 @@ export default {
             let vm = this
             let apiary_site_id = err.body.apiary_site_id[0]
 
-            swal({
+            swal.fire({
                 title: "Vacant site no longer available",
                 text: err.body.message[0],
-                type: "warning",
+                icon: "warning",
                 confirmButtonText: 'Remove the site from the application',
                 allowOutsideClick: false
-            }).then(function(){
-                console.log('confirmed')
-                vm.$refs.proposal_apiary.remove_apiary_site(apiary_site_id)
-                console.log('confirmed2')
-                // vm.save(false)
-                vm.$http.post(vm.remove_apiary_site_url, {'apiary_site_id': apiary_site_id}).then(
-                    res => {
-                        console.log('res')
-                        console.log(res);
-                    },
-                    err => {
-                        console.log('err')
-                        console.log(err);
-                    },
-                )
+            }).then(function(swalresult) {
+                if (swalresult.isConfirmed) {
+                    console.log('confirmed')
+                    vm.$refs.proposal_apiary.remove_apiary_site(apiary_site_id)
+                    console.log('confirmed2')
+                    // vm.save(false)
+                    vm.$http.post(vm.remove_apiary_site_url, {'apiary_site_id': apiary_site_id}).then(
+                        res => {
+                            console.log('res')
+                            console.log(res);
+                        },
+                        err => {
+                            console.log('err')
+                            console.log(err);
+                        },
+                    );
+                }
             });
         },
         post_and_redirect: function(url, postData) {
@@ -1100,7 +1113,7 @@ export default {
             var postFormStr = "<form method='POST' action='" + url + "'>";
 
             for (var key in postData) {
-                if (postData.hasOwnProperty(key)) {
+                if (Object.prototype.hasOwnProperty.call(postData, key)) {
                     postFormStr += "<input type='hidden' name='" + key + "' value='" + postData[key] + "'>";
                 }
             }
@@ -1168,42 +1181,45 @@ export default {
         let proposal_id = this.$route.params.proposal_id
 
         let vm = this;
-        Vue.http.get(`/api/proposal/${ proposal_id }.json`).then(
-            res => {
+        fetch(`/api/proposal/${ proposal_id }.json`).then(
+            async res => {
                 vm.loading.push('fetching proposal')
-                vm.proposal = res.body;
+                vm.proposal = await res.json();
                 console.log('vm.proposal')
                 console.log(vm.proposal)
                 vm.loading.splice('fetching proposal', 1);
                 vm.setdata(vm.proposal.readonly);
 
-                Vue.http.get(helpers.add_endpoint_json(api_endpoints.proposals, proposal_id + '/amendment_request')).then((res) => {
-                    vm.setAmendmentData(res.body);
-                },
-                err => {
-                    console.log(err);
-                });
+                fetch(helpers.add_endpoint_json(api_endpoints.proposals, proposal_id + '/amendment_request')).then(
+                    async (res) => {
+                        let data = await res.json()
+                        vm.setAmendmentData(data);
+                    },err => {
+                        console.log(err);
+                    }
+                );
             },
             err => {
                 console.log(err);
             }
         );
         // retrieve template group
-        this.$http.get('/template_group',{
-            emulateJSON:true
-            }).then(res=>{
+        fetch('/template_group',{ emulateJSON:true }).then(
+            async res=>{
                 //this.template_group = res.body.template_group;
-                if (res.body.template_group === 'apiary') {
+                let data = await res.json();
+                if (data.template_group === 'apiary') {
                     this.apiaryTemplateGroup = true;
                 } else {
                     this.dasTemplateGroup = true;
                 }
-        },err=>{
-        console.log(err);
-        });
+            },err=>{
+            console.log(err);
+            }
+        );
     },
 
-    beforeRouteEnter: function(to, from, next) {
+    beforeRouteEnter: function(to) {
         console.log('in beforeRouteEnter')
         console.log('id: ' + to.params.proposal_id)
     }

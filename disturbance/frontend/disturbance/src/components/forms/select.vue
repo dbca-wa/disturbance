@@ -29,25 +29,19 @@
                 <a href="" v-else  @click.prevent="toggleComment"><i class="fa fa-ban">&nbsp;</i></a>
             </template>
 
-            <template>
-                <!--<LayerInfo v-show="assessorMode" :layer_value="layer_val"  :assessorMode="assessorMode"/>-->
-                <LayerInfo v-show="true" :layer_value="layer_val"  :assessorMode="true"/>
-            </template>
-
-            
-
+            <LayerInfo v-show="true" :layer_value="layer_val"  :assessorMode="true"/>
      
             <template v-if="readonly">
                 <select v-if="!isMultiple" disabled ref="selectB" :id="selectid" :name="name" class="form-control" :data-conditions="cons" style="width:100%">
                     <option value="">Select...</option>
-                    <option v-for="op in options"  :value="op.value" @change="handleChange" :selected="op.value == value">{{ op.label }}</option>
+                    <option v-for="op in options"  :value="op.value" :key="op.label" @change="handleChange" :selected="op.value == value">{{ op.label }}</option>
                 </select>
                 <select v-else disabled ref="selectB" :id="selectid" :name="name" class="form-control" multiple style="width:100%">
                     <option value="">Select...</option>
-                    <option v-for="op in options"  :value="op.value" :selected="multipleSelection(op.value)">{{ op.label }}</option>
+                    <option v-for="op in options"  :value="op.value" :key="op.label" :selected="multipleSelection(op.value)">{{ op.label }}</option>
                 </select>
                 <template v-if="isMultiple">
-                    <input v-for="v in value" input type="hidden" :name="name" :value="v" :required="isRequired"/>
+                    <input v-for="v in value" :key="v" input type="hidden" :name="name" :value="v" :required="isRequired"/>
                 </template>
                 <template v-else>
                     <input type="hidden" :name="name" :value="value" :required="isRequired"/>
@@ -56,20 +50,15 @@
             <template v-else>
                 <select v-if="!isMultiple" ref="selectB" :id="selectid" :name="name" class="form-control" :data-conditions="cons" style="width:100%" :required="isRequired">
                     <option value="">Select...</option>
-                    <option v-for="op in options"  :value="op.value" @change="handleChange" :selected="op.value == value">{{ op.label }}</option>
+                    <option v-for="op in options"  :key="op.label" :value="op.value" @change="handleChange" :selected="op.value == value">{{ op.label }}</option>
                 </select>
                 <select v-else ref="selectB" :id="selectid" :name="name" class="form-control" multiple style="width:100%" :required="isRequired">
                     <option value="">Select...</option>
-                    <option v-for="op in options"  :value="op.value" :selected="multipleSelection(op.value)">{{ op.label }}</option>
+                    <option v-for="op in options"  :key="op.label" :value="op.value" :selected="multipleSelection(op.value)">{{ op.label }}</option>
                 </select>
             </template>
         </div>
-        <!-- <template>
-                <LayerInfo v-show="assessorMode" :layer_value="layer_val"  :assessorMode="assessorMode"/>
-        </template> -->
-
         
-        <!-- <Comment :question="label" :readonly="assessor_readonly" :name="name+'-comment-field'" v-show="showingComment && assessorMode" :value="comment_value"/>  -->
         <CommentBox :comment_boxes="JSON.parse(comment_boxes)" v-show="showingComment && assessorMode"/> 
 
 
@@ -77,10 +66,11 @@
 </template>
 
 <script>
-var select2 = require('select2');
+import { v4 as uuidv4 } from 'uuid';
+// var select2 = require('select2');
 require("select2/dist/css/select2.min.css");
 require("select2-bootstrap-theme/dist/select2-bootstrap.min.css");
-import Comment from './comment.vue'
+// import Comment from './comment.vue'
 import CommentBox from './comment_box_referral.vue'
 import HelpText from './help_text.vue'
 import HelpTextUrl from './help_text_url.vue'
@@ -115,21 +105,29 @@ export default {
             }
         },
         'readonly': Boolean,
-        "comment_boxes":"",
+        "comment_boxes":{
+            default:function () {
+                return "";
+            }
+        },
         "layer_val": {
             default:function () {
                 return false;
             }
         },
-        "refresh_time_value":"",
+        "refresh_time_value":{
+            default:function () {
+                return "";
+            }
+        },
         'proposal_id': Number,
         //"comment_boxes":[String, Array],
     },
     data:function () {
-        let vm =this;
+        // let vm =this;
         return{
             selected: (this.isMultiple) ? [] : "",
-            selectid: "select"+vm._uid,
+            selectid: "select"+uuidv4(),
             multipleSelected: [],
             showingComment: false,
            
@@ -139,9 +137,10 @@ export default {
         // Watcher needed to recreate the jquery select2 when changing proposal versions
         value: {
             immediately: true,
-            handler (value, old_value){
+            handler (){
                 this.init();
-            }
+            },
+            deep: true,
         }
     },
     computed:{
@@ -154,7 +153,7 @@ export default {
             for(var i=0; i<boxes.length; i++){
                 console.log('comment box')
                 console.log(boxes[i])
-                if(boxes[i].hasOwnProperty('value')){
+                if (Object.prototype.hasOwnProperty.call(boxes[i], 'value')) {
                     if(boxes[i].value!=null && boxes[i].value!=undefined && boxes[i].value!= '' ){
                         has_value=true;
                     }
@@ -163,7 +162,7 @@ export default {
             return has_value;
         },
     },
-    components: { Comment, HelpText, HelpTextUrl, CommentBox, LayerInfo, RefreshSelect},
+    components: { HelpText, HelpTextUrl, CommentBox, LayerInfo, RefreshSelect},
     methods:{
         toggleComment(){
             this.showingComment = ! this.showingComment;
@@ -182,7 +181,7 @@ export default {
         },
         init:function () {
             let vm =this;
-            vm.$nextTick(function (e) {
+            vm.$nextTick(function () {
                    $('#'+vm.selectid).select2({
                        "theme": "bootstrap",
                        allowClear: true,

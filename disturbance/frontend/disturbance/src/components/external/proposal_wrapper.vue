@@ -2,11 +2,6 @@
 <div class="container">
     <div v-if="proposalId">
         <div v-if="temporaryProposal">
-            <ProposalTemporaryUse 
-                :proposalId="proposalId"
-                :is_internal="false"
-                :is_external="true"
-            />
         </div>
         <div v-else>
             <Proposal :proposalId="proposalId"/>
@@ -16,22 +11,18 @@
 </template>
 
 <script>
-import Vue from 'vue';
-import { api_endpoints, helpers } from '@/utils/hooks'
-import ProposalTemporaryUse from '@/components/external/proposal_temporary_use.vue'
 import Proposal from '@/components/external/proposal_external.vue'
 
 export default {
     name: 'ExternalProposalWrapper',
     data() {
-        let vm = this;
+        // let vm = this;
         return {
             proposalId: null,
             applicationTypeName: '',
         }
     },
     components:{
-        ProposalTemporaryUse,
         Proposal,
     },
     computed: {
@@ -45,16 +36,19 @@ export default {
 
     },
     beforeRouteEnter: function(to, from, next) {
-        let vm = this
-        Vue.http.get(`/api/proposal/${to.params.proposal_id}/internal_proposal_wrapper.json`).then(res => {
-            next(vm => {
-                vm.proposalId = res.body.id;
-                vm.applicationTypeName = res.body.application_type_name;
-            });
+        // let vm = this
+        fetch(`/api/proposal/${to.params.proposal_id}/internal_proposal_wrapper.json`).then(
+            async res => {
+                let data = await res.json();
+                next(vm => {
+                    vm.proposalId = data.id;
+                    vm.applicationTypeName = data.application_type_name;
+                });
           },
           err => {
             console.log(err);
-          });
+          }
+        );
     },
 }
 </script>

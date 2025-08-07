@@ -4,14 +4,14 @@
             <div class="container-fluid">
                 <div class="row">
                     <form class="form-horizontal" name="amendForm">
-                        <alert :show.sync="showError" type="danger"><strong>{{errorString}}</strong></alert>
+                        <alert v-if="showError" type="danger"><strong>{{errorString}}</strong></alert>
                         <div class="col-sm-12">
                             <div class="row">
                                 <div class="col-sm-offset-2 col-sm-8">
                                     <div class="form-group">
                                         <label class="control-label pull-left"  for="Name">Reason</label>
                                         <select class="form-control" name="reason" ref="reason" v-model="amendment.reason">
-                                            <option v-for="r in reason_choices" :value="r.key">{{r.value}}</option>
+                                            <option v-for="r in reason_choices" :value="r.key" :key="r.key">{{r.value}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -56,13 +56,11 @@
 </template>
 
 <script>
-//import $ from 'jquery'
-import Vue from 'vue'
 import modal from '@vue-utils/bootstrap-modal.vue'
 import alert from '@vue-utils/alert.vue'
 import FileField from '@/components/forms/filefield.vue'
 
-import {helpers, api_endpoints} from "@/utils/hooks.js"
+import { helpers } from "@/utils/hooks.js"
 export default {
     name:'amendment-request',
     components:{
@@ -135,7 +133,7 @@ export default {
         },
         fetchAmendmentChoices: function(){
             let vm = this;
-            vm.$http.get('/api/amendment_request_reason_choices.json').then((response) => {
+            fetch('/api/amendment_request_reason_choices.json').then((response) => {
                 vm.reason_choices = response.body;
 
             },(error) => {
@@ -164,18 +162,18 @@ export default {
             // vm.$http.post('/api/amendment_request.json',JSON.stringify(amendment),{
                 vm.$http.post('/api/amendment_request.json', formData,{
                         emulateJSON:true,
-                    }).then((response)=>{
+                    }).then(()=>{
                         //vm.$parent.loading.splice('processing contact',1);
                         let proposal_or_licence = vm.is_apiary_proposal ? 'application' : 'proposal'
-                        swal(
-                             'Sent',
-                             'An email has been sent to the proponent with the request to amend this ' + proposal_or_licence,
-                             'success'
-                        );
+                        swal.fire({
+                             title: 'Sent',
+                             text: 'An email has been sent to the proponent with the request to amend this ' + proposal_or_licence,
+                             icon: 'success'
+                        });
                         vm.amendingProposal = true;
                         vm.close();
                         //vm.$emit('refreshFromResponse',response);
-                        Vue.http.get(`/api/proposal/${vm.proposal_id}/internal_proposal.json`).then((response)=>
+                        fetch(`/api/proposal/${vm.proposal_id}/internal_proposal.json`).then((response)=>
                         {
                             vm.$emit('refreshFromResponse',response);
 

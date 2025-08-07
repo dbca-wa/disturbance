@@ -198,9 +198,8 @@ ResponsiveDatatablesHelper.prototype.initBreakpoints = function () {
         // Copy the sorted breakpoint array into the breakpoints object using the
         // name as the key.
         this.breakpoints = {};
-        var i, l;
-        for (i = 0, l = breakpointsSorted.length; i < l; i++) {
-            this.breakpoints[breakpointsSorted[i].name] = breakpointsSorted[i];
+        for (var a = 0, b = breakpointsSorted.length; a < b; a++) {
+            this.breakpoints[breakpointsSorted[a].name] = breakpointsSorted[a];
         }
 
         /** Create range of visible columns and their indexes *****************/
@@ -209,10 +208,10 @@ ResponsiveDatatablesHelper.prototype.initBreakpoints = function () {
         //     Columns to show = all visible columns - columns to hide
         var columns = this.api.columns().header();
         var visibleColumnsHeadersTds = [];
-        for (i = 0, l = columns.length; i < l; i++) {
-            if (this.api.column(i).visible()) {
-                this.columnIndexes.push(i);
-                visibleColumnsHeadersTds.push(columns[i]);
+        for (var colIdx = 0, columnsLen = columns.length; colIdx < columnsLen; colIdx++) {
+            if (this.api.column(colIdx).visible()) {
+                this.columnIndexes.push(colIdx);
+                visibleColumnsHeadersTds.push(columns[colIdx]);
             }
         }
 
@@ -234,15 +233,15 @@ ResponsiveDatatablesHelper.prototype.initBreakpoints = function () {
             var dataHide = col.attr('data-hide');
             if (dataHide !== undefined) {
                 var splitBreakingPoints = dataHide.split(/,\s*/);
-                for (var i = 0; i < splitBreakingPoints.length; i++) {
-                    var bp = splitBreakingPoints[i];
+                for (var j = 0; j < splitBreakingPoints.length; j++) {
+                    var bp = splitBreakingPoints[j];
                     if (bp === 'always') {
                         // A column with an 'always' breakpoint is always hidden.
                         // Loop through all breakpoints and add it to each except the
                         // default breakpoint.
-                        for (var prop in this.breakpoints) {
-                            if (this.breakpoints[prop].name !== 'default') {
-                                this.breakpoints[prop].columnsToHide.push(this.columnIndexes[index]);
+                        for (var bpProp in this.breakpoints) {
+                            if (this.breakpoints[bpProp].name !== 'default') {
+                                this.breakpoints[bpProp].columnsToHide.push(this.columnIndexes[index]);
                             }
                         }
                     } else if (this.breakpoints[bp] !== undefined) {
@@ -350,7 +349,7 @@ ResponsiveDatatablesHelper.prototype.respond = function () {
         });
     } else {
         this.tableElement.removeClass('has-columns-hidden');
-        $('tr.row-detail', this.tableElement).each(function (event) {
+        $('tr.row-detail', this.tableElement).each(function () {
             ResponsiveDatatablesHelper.prototype.hideRowDetail(that, $(this).prev());
         });
     }
@@ -367,8 +366,8 @@ ResponsiveDatatablesHelper.prototype.showHideColumns = function () {
     }
 
     // Hide columns that may have been previously shown.
-    for (var i = 0, l = this.columnsHiddenIndexes.length; i < l; i++) {
-        this.api.column(this.columnsHiddenIndexes[i]).visible(false);
+    for (var m = 0, n = this.columnsHiddenIndexes.length; m < n; m++) {
+        this.api.column(this.columnsHiddenIndexes[m]).visible(false);
     }
 
     // Rebuild details to reflect shown/hidden column changes.
@@ -592,7 +591,7 @@ ResponsiveDatatablesHelper.prototype.disable = function (disable) {
  * Get state from cookie.
  */
 ResponsiveDatatablesHelper.prototype.getState = function () {
-    if (typeof(Storage)) {
+    if (typeof(Storage) !== "undefined") {
         // Use local storage
         var value = JSON.parse(localStorage.getItem(this.cookieName));
         if (value) {
@@ -611,13 +610,12 @@ ResponsiveDatatablesHelper.prototype.getState = function () {
  * Saves state to cookie.
  */
 ResponsiveDatatablesHelper.prototype.setState = function () {
-    if (typeof(Storage)) {
+    if (typeof(Storage) !== "undefined") {
         // Use local storage
         var d1 = this.difference(this.lastColumnsHiddenIndexes, this.columnsHiddenIndexes).length;
         var d2 = this.difference(this.columnsHiddenIndexes, this.lastColumnsHiddenIndexes).length;
 
         if (d1 + d2 > 0) {
-            var tt;
             var value = {
                 columnIndexes: this.columnIndexes,               // array
                 columnsHiddenIndexes: this.columnsHiddenIndexes, // array

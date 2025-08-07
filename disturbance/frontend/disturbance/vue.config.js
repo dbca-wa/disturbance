@@ -31,6 +31,13 @@ module.exports = defineConfig({
             'easing',
             path.resolve(__dirname, 'jquery.easing')
         );
+        config.resolve.alias.set("vue", "@vue/compat");
+        config.module
+            .rule("vue")
+            .use("vue-loader")
+            .tap((options) => {
+                return { ...options, compilerOptions: { compatConfig: { MODE: 2 } } };
+            });
         // config.resolve.alias.set(
         //     'datetimepicker',
         //     path.resolve(__dirname, 'eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js')
@@ -50,7 +57,6 @@ module.exports = defineConfig({
                 moment: 'moment',
                 swal: 'sweetalert2',
                 _: 'lodash',
-                // datetimepicker:"../node_modules/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"
             }),
             new MomentLocalesPlugin(),
             new webpack.ProvidePlugin({
@@ -92,8 +98,9 @@ module.exports = defineConfig({
                 {
                     test: /\.js$/,
                     loader: 'babel-loader',
-                    include: [path.resolve('src'), path.resolve('test'), path.resolve('node_modules/ckeditor4'),
-                    path.resolve('node_modules/ckeditor4-vue') ]
+                    // include: [path.resolve('src'), path.resolve('test'), path.resolve('node_modules/ckeditor4'),
+                    // path.resolve('node_modules/ckeditor4-vue') ]
+                    include: [path.resolve('src')]
                 },
             ],
         },

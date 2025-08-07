@@ -17,15 +17,17 @@
                             </div>
                             <div class="col-sm-12 top-buffer-s">
                                 <strong>Lodged on</strong><br/>
-                                {{ compliance.lodgement_date | formatDate}}
+                                {{ formatDate(compliance.lodgement_date) }}
                             </div>
                             <div class="col-sm-12 top-buffer-s">
                                 <table class="table small-table">
-                                    <tr>
-                                        <th>Lodgement</th>
-                                        <th>Date</th>
-                                        <th>Action</th>
-                                    </tr>
+                                    <thead>
+                                        <tr>
+                                            <th>Lodgement</th>
+                                            <th>Date</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
                                 </table>
                             </div>
                         </div>
@@ -51,7 +53,7 @@
                                     </select>
                                     <select @change="assignTo" :disabled="canViewonly || !check_assessor()" v-if="!isLoading" class="form-control" v-model="compliance.assigned_to">
                                         <option value="null">Unassigned</option>
-                                        <option v-for="member in compliance.allowed_assessors" :value="member.id">{{member.first_name}} {{member.last_name}}</option>
+                                        <option v-for="member in compliance.allowed_assessors" :value="member.id" :key="member.id">{{member.first_name}} {{member.last_name}}</option>
                                     </select>
                                     <a v-if="!canViewonly && check_assessor()" @click.prevent="assignMyself()" class="actionBtn pull-right">Assign to me</a>
                                 </div>
@@ -92,7 +94,7 @@
                                     <div class="form-group">
                                         <label for="" class="col-sm-3 control-label">Documents</label>
                                         <div class="col-sm-6">
-                                            <div class="row" v-for="d in compliance.documents">
+                                            <div class="row" v-for="d in compliance.documents" :key="d">
                                                     <a :href="d[1]" target="_blank" class="control-label pull-left">{{d[0]}}</a>
                                             </div>
                                         </div>
@@ -109,12 +111,9 @@
 </div>
 </template>
 <script>
-import $ from 'jquery'
-import Vue from 'vue'
-import datatable from '@vue-utils/datatable.vue'
+// import datatable from '@vue-utils/datatable.vue'
 import CommsLogs from '@common-utils/comms_logs.vue'
 import ComplianceAmendmentRequest from './compliance_amendment_request.vue'
-// import ResponsiveDatatablesHelper from "@/utils/responsive_datatable_helper.js"
 import {
   api_endpoints,
   helpers
@@ -140,22 +139,20 @@ export default {
     }
   },
   watch: {},
-  filters: {
-    formatDate: function(data){
-        return data ? moment(data).format('DD/MM/YYYY'): '';    }
-  },
   beforeRouteEnter: function(to, from, next){
-    Vue.http.get(helpers.add_endpoint_json(api_endpoints.compliances,to.params.compliance_id)).then((response) => {
-        next(vm => {
-            vm.compliance = response.body
-            vm.members = vm.compliance.allowed_assessors
-        })
-    },(error) => {
-        console.log(error);
-    })
+    fetch(helpers.add_endpoint_json(api_endpoints.compliances,to.params.compliance_id)).then(
+        async (response) => {
+            let data = await response.json();
+            next(vm => {
+                vm.compliance = data;
+                vm.members = vm.compliance.allowed_assessors
+            })
+        },(error) => {
+            console.log(error);
+        }
+    )
   },
   components: {
-    datatable,
     CommsLogs,
     ComplianceAmendmentRequest,
   },
@@ -171,15 +168,17 @@ export default {
     commaToNewline(s){
         return s.replace(/[,;]/g, '\n');
     },
-  
+    formatDate: function(data){
+        return data ? moment(data).format('DD/MM/YYYY'): '';
+    },
     assignMyself: function(){
         let vm = this;
-        vm.$http.get(helpers.add_endpoint_json(api_endpoints.compliances,(vm.compliance.id+'/assign_request_user')))
-        .then((response) => {            
-            vm.compliance = response.body;
-        }, (error) => {
-            console.log(error);
-        });
+        fetch(helpers.add_endpoint_json(api_endpoints.compliances,(vm.compliance.id+'/assign_request_user'))).then(
+            async (response) => {            
+                vm.compliance = await response.json();
+            }, (error) => {
+                console.log(error);
+            });
     },
     assignTo: function(){
         let vm = this;
@@ -195,33 +194,37 @@ export default {
             
         }
         else{
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.compliances,(vm.compliance.id+'/unassign')))
-            .then((response) => {
-                console.log(response);
-                vm.compliance = response.body;
-            }, (error) => {
-                console.log(error);
-            });
+            fetch(helpers.add_endpoint_json(api_endpoints.compliances,(vm.compliance.id+'/unassign'))).then(
+                async (response) => {
+                    console.log(response);
+                    vm.compliance = await response.json();
+                }, (error) => {
+                    console.log(error);
+                }
+            );
         }
     },
     acceptCompliance: function() {
         let vm = this;
-        swal({
+        swal.fire({
             title: "Accept Compliance with requirements",
             text: "Are you sure you want to accept this compliance with requirements?",
-            type: "question",
+            icon: "question",
             showCancelButton: true,
             confirmButtonText: 'Accept'
-        }).then(() => {
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.compliances,(vm.compliance.id+'/accept')))
-            .then((response) => {
-                console.log(response);
-                vm.compliance = response.body;
-            }, (error) => {
-                console.log(error);
-            });
+        }).then((swalresult) => {
+            if(swalresult.isConfirmed){
+                fetch(helpers.add_endpoint_json(api_endpoints.compliances,(vm.compliance.id+'/accept'))).then(
+                    async (response) => {
+                        console.log(response);
+                        vm.compliance = await response.json();
+                    }, (error) => {
+                        console.log(error);
+                    }
+                );
+            }
         },(error) => {
-
+            console.log(error);
         });
 
     },
@@ -231,14 +234,13 @@ export default {
     },
     fetchProfile: function(){
         let vm = this;
-        Vue.http.get(api_endpoints.profile).then((response) => {
-            vm.profile = response.body
-                              
-         },(error) => {
+        fetch(api_endpoints.profile).then(async (response) => {
+            vm.profile = await response.json();
+        },(error) => {
             console.log(error);
                 
         })
-        },
+    },
 
     check_assessor: function(){
         let vm = this;
@@ -257,10 +259,8 @@ export default {
      },
   },
   mounted: function () {
-    let vm = this;
-    
+    // let vm = this;
     this.fetchProfile();
-    
   }
 }
 </script>

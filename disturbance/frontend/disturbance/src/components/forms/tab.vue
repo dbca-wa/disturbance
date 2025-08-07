@@ -17,7 +17,7 @@
 </template>
 <script>
 export default {
-    name:"tabs",
+    name:"TabsComponent",
   /* Example tabs array property
      Note: Each tab requires key/value pair.
      [{"tab1": "Tab Label 1"}, {"tab2": "Tab Label 2"}]

@@ -17,7 +17,8 @@
 
 <script>
 export default {
-    props:["src", "title", "name", "width", "height", "frameborder", "scrolling", "marginheight", "marginwidth"]
+  name: 'IframeComponent',
+  props:["src", "title", "name", "width", "height", "frameborder", "scrolling", "marginheight", "marginwidth"]
 }
 </script>
 

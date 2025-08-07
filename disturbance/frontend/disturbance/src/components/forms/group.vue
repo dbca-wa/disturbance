@@ -36,7 +36,7 @@ import HelpText from './help_text.vue'
 import HelpTextUrl from './help_text_url.vue'
 import RefreshCheckbox from './refresh_checkbox.vue'
 export default {
-    name:"group",
+    name:"groupComponent",
     props:["label", "name", "id", "help_text", "help_text_url", "isRemovable","isPreviewMode", "assessorMode", "layer_val", "proposal_id", "refresh_time_value"],
     data:function () {
         return{
@@ -45,15 +45,15 @@ export default {
     },
     components: {HelpText, HelpTextUrl, RefreshCheckbox},
     methods:{
-        expand:function(e) {
+        expand:function() {
             this.isExpanded = true;
         },
-        minimize:function(e) {
+        minimize:function() {
             this.isExpanded = false;
         }
     },
     mounted:function () {
-        var vm =this;
+        // var vm =this;
         $('[data-toggle="tooltip"]').tooltip();
     }
 }

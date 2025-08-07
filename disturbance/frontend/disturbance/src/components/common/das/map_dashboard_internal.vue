@@ -1,113 +1,114 @@
 <template>
     <div class="">
-        <!-- <div @click="fixCanvasCss">Fix</div> -->
         <FormSection :formCollapse="false" label="Proposals Map" Index="available_sites">
             <div class="map-wrapper">
                 <div v-show="!fullscreen" id="filter_search_row_wrapper">
                     <div class="filter_search_wrapper" style="margin-bottom: 5px;" id="filter_search_row">
-                        <template v-show="select2Applied">
-                           <div class="row">
-                                <div >
+                        <div>
+                           <div v-show="select2Applied">
+                            <div class="row">
+                                    <div >
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <div>
+                                                    <div v-show="select2Applied">
+                                                        <label for="">Region</label>
+                                                        <select style="width:100%" class="form-control input-sm" ref="filterRegion" v-model="filterProposalRegion">
+                                                            <option value="All">All</option>
+                                                            <option v-for="r in regions" :value="r.id" :key="r.id">{{r.search_term}}</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <template v-show="select2Applied">
-                                                <label for="">Region</label>
-                                                <select style="width:100%" class="form-control input-sm" ref="filterRegion" v-model="filterProposalRegion">
-                                                    <template v-if="">
-                                                        <option value="All">All</option>
-                                                        <option v-for="r in regions" :value="r.id">{{r.search_term}}</option>
-                                                    </template>
-                                                </select>
-                                            </template>
+                                            <label for="">Activity</label>
+                                            <select class="form-control" v-model="filterProposalActivity">
+                                                <option value="All">All</option>
+                                                <option v-for="a in activity_titles" :value="a" :key="a">{{a}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="">Status</label>
+                                            <select class="form-control" v-model="filterProposalStatus">
+                                                <option value="All">All</option>
+                                                <option v-for="s in proposal_status" :value="s.value" :key="s.value">{{s.name}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="">Proponent</label>
+                                            <select class="form-control" v-model="filterProposalApplicant">
+                                                <option value="All">All</option>
+                                                <option v-for="s in proposal_applicants" :value="s.id" :key="s.id">{{s.search_term}}</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="">Activity</label>
-                                        <select class="form-control" v-model="filterProposalActivity">
-                                            <option value="All">All</option>
-                                            <option v-for="a in activity_titles" :value="a">{{a}}</option>
-                                        </select>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for="">Lodged From</label>
+                                        <div class="input-group date" ref="proposalDateFromPicker">
+                                            <input type="date" class="form-control" v-model="filterProposalLodgedFrom">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="">Lodged To</label>
+                                        <div class="input-group date" ref="proposalDateToPicker">
+                                            <input type="date" class="form-control" v-model="filterProposalLodgedTo">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="">Submitter</label>
+                                            <select class="form-control" v-model="filterProposalSubmitter">
+                                                <option value="All">All</option>
+                                                <option v-for="s in proposal_submitters" :value="s.email" :key="s.email">{{s.search_term}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="">Proposal Type</label>
+                                            <select class="form-control" v-model="filterProposalApplicationType">
+                                                <option value="All">All</option>
+                                                <option v-for="a in application_types" :value="a" :key="a">{{a}}</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="">Status</label>
-                                        <select class="form-control" v-model="filterProposalStatus">
-                                            <option value="All">All</option>
-                                            <option v-for="s in proposal_status" :value="s.value">{{s.name}}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="">Proponent</label>
-                                        <select class="form-control" v-model="filterProposalApplicant">
-                                            <option value="All">All</option>
-                                            <option v-for="s in proposal_applicants" :value="s.id">{{s.search_term}}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label for="">Lodged From</label>
-                                    <div class="input-group date" ref="proposalDateFromPicker">
-                                        <input type="date" class="form-control" v-model="filterProposalLodgedFrom">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="">Lodged To</label>
-                                    <div class="input-group date" ref="proposalDateToPicker">
-                                        <input type="date" class="form-control" v-model="filterProposalLodgedTo">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="">Submitter</label>
-                                        <select class="form-control" v-model="filterProposalSubmitter">
-                                            <option value="All">All</option>
-                                            <option v-for="s in proposal_submitters" :value="s.email">{{s.search_term}}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="">Proposal Type</label>
-                                        <select class="form-control" v-model="filterProposalApplicationType">
-                                            <option value="All">All</option>
-                                            <option v-for="a in application_types" :value="a">{{a}}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <!--
-                                    <button type="button" class="btn btn-primary" @click="geoJsonButtonClicked"><i class="fa fa-download"></i>
-                                    Get GeoJSON File</button>
-                                    -->
-                                    <!--
-                                    <button type="button" class="btn btn-primary" @click="shapefileButtonClicked(true)"><i class="fa fa-download"></i>
-                                        Get GeoJSON File</button>
-                                    -->
-                                    <button type="button" class="btn btn-primary btn-margin" @click="shapefileButtonClicked(false)" :disabled="download_shapefile_btn_disabled">
-                                        <i v-if="download_shapefile_btn_disabled" class="fa fa-download fa-spinner fa-spin"></i>
-                                        <i v-else class="fa fa-download"></i>
-                                        Download Shapefile
-                                    </button>
-                                    <a class="btn btn-primary" href="/filelist" target="_blank">View Download Files</a>
-                                </div>
-                                <!-- <div class="col-md-3">
-                                    <button type="button" class="btn btn-primary" id="export-png" @click="exportPNG"><i class="fa fa-download"></i>
-                                        Download Image</button>
-                                    <a id="image-download" download="map.png"></a>
-                                </div> -->
                                 
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <!--
+                                        <button type="button" class="btn btn-primary" @click="geoJsonButtonClicked"><i class="fa fa-download"></i>
+                                        Get GeoJSON File</button>
+                                        -->
+                                        <!--
+                                        <button type="button" class="btn btn-primary" @click="shapefileButtonClicked(true)"><i class="fa fa-download"></i>
+                                            Get GeoJSON File</button>
+                                        -->
+                                        <button type="button" class="btn btn-primary btn-margin" @click="shapefileButtonClicked(false)" :disabled="download_shapefile_btn_disabled">
+                                            <i v-if="download_shapefile_btn_disabled" class="fa fa-download fa-spinner fa-spin"></i>
+                                            <i v-else class="fa fa-download"></i>
+                                            Download Shapefile
+                                        </button>
+                                        <a class="btn btn-primary" href="/filelist" target="_blank">View Download Files</a>
+                                    </div>
+                                    <!-- <div class="col-md-3">
+                                        <button type="button" class="btn btn-primary" id="export-png" @click="exportPNG"><i class="fa fa-download"></i>
+                                            Download Image</button>
+                                        <a id="image-download" download="map.png"></a>
+                                    </div> -->
+                                    
+                                </div>
                             </div>
-                        </template>
+                        </div>
                     </div>
                 </div>
                 
@@ -144,14 +145,14 @@
                             </template>
                         </div>
                         <div style="position:relative">
-                            <transition v-if="optionalLayers.length">
-                                <div class="optional-layers-button" @mouseover="hover=true">
+                            <transition>
+                                <div v-if="optionalLayers.length" class="optional-layers-button" @mouseover="hover=true">
                                     <img src="../../../assets/layers.svg" />
                                 </div>
                             </transition>
                             <transition v-if="optionalLayers.length">
                                 <div class="layer_options" v-show="hover" @mouseover="showOptions"  @mouseleave="hideOptions">
-                                    <div v-for="layer in optionalLayers">
+                                    <div v-for="layer in optionalLayers" :key="layer.ol_uid">
                                         <input
                                             type="checkbox"
                                             :id="layer.ol_uid"
@@ -189,44 +190,32 @@
 
 <script>
     import FormSection from "@/components/forms/section_toggle.vue"
-    import ContactLicenceHolderModal from "@/components/common/apiary/contact_licence_holder_modal.vue"
     import {v4 as uuidv4 } from 'uuid';
-    import Vue from 'vue'
-    // import proj from 'ol/proj'
     import 'ol/ol.css';
     import 'ol-layerswitcher/dist/ol-layerswitcher.css'
     import Map from 'ol/Map';
     import View from 'ol/View';
-    import Extent from 'ol/interaction/Extent';
-    import WMTSCapabilities from 'ol/format/WMTSCapabilities';
     import formatWKT  from 'ol/format/WKT';
     import TileLayer from 'ol/layer/Tile';
-    import OSM from 'ol/source/OSM';
     import TileWMS from 'ol/source/TileWMS';
-    import WMTS, {optionsFromCapabilities} from 'ol/source/WMTS';
+    import WMTS from 'ol/source/WMTS';
     import WMTSTilegrid from 'ol/tilegrid/WMTS';
-    import Collection from 'ol/Collection';
-    import { Draw, Modify, Snap } from 'ol/interaction';
+    import { Draw, Modify } from 'ol/interaction';
     import VectorLayer from 'ol/layer/Vector';
     import VectorSource from 'ol/source/Vector';
-    import { Circle as CircleStyle, Fill, Stroke, Style, Text, RegularShape } from 'ol/style';
-    import { FullScreen as FullScreenControl, MousePosition as MousePositionControl, SelectFeature } from 'ol/control';
-    import { Feature } from 'ol';
+    import { Circle as CircleStyle, Fill, Stroke, Style, Text } from 'ol/style';
+    import { FullScreen as FullScreenControl, MousePosition as MousePositionControl } from 'ol/control';
     import { LineString, Point } from 'ol/geom';
-    import { getDistance } from 'ol/sphere';
-    import { circular} from 'ol/geom/Polygon';
     import GeoJSON from 'ol/format/GeoJSON';
     import Overlay from 'ol/Overlay';
-    import { getDisplayNameFromStatus, getDisplayNameOfCategory, getStatusForColour, getApiaryFeatureStyle, zoomToCoordinates, checkIfValidlatitudeAndlongitude } from '@/components/common/apiary/site_colours.js'
-    import { getArea, getLength } from 'ol/sphere'
+    import { zoomToCoordinates } from '@/components/common/apiary/site_colours.js'
     import MeasureStyles, { formatLength } from '@/components/common/apiary/measure.js'
-    import Datatable from '@vue-utils/datatable.vue'
+    // import Datatable from '@vue-utils/datatable.vue'
     import Cluster from 'ol/source/Cluster';
     import 'select2/dist/css/select2.min.css'
     import 'select2-bootstrap-theme/dist/select2-bootstrap.min.css'
     import Awesomplete from 'awesomplete'
     import { api_endpoints, helpers } from '@/utils/hooks'
-    import { fromLonLat } from 'ol/proj'
     import {getCenter} from 'ol/extent'
     import {get as getProjection} from 'ol/proj';
     import {getTopLeft, getWidth} from 'ol/extent'
@@ -234,9 +223,6 @@
     export default {
         name: 'MapDashboard',
         data: function(){
-            let vm = this
-            let default_show_statuses = ['vacant', 'pending', 'denied', 'current', 'not_to_be_reissued', 'suspended']
-            let default_show_availabilities = ['available', 'unavailable']
 
             return {
                 newVectorLayer: null,
@@ -320,8 +306,6 @@
         },
         components: {
             FormSection,
-            ContactLicenceHolderModal,
-            Datatable
         },
         props: {
             is_external:{
@@ -389,8 +373,6 @@
                 }
             },
             loading_proposals: function(){
-                let vm = this
-                
                 return false
             },
             csrf_token: function() { 
@@ -527,20 +509,20 @@
                 vm.$http.post(url, JSON.stringify({"geojson": geojson, "filter_kwargs": filter_kwargs}),{
                     emulateJSON:true,
                 }).then((response)=>{
-                    swal(
-                        'Create shapefile',
+                    swal.fire({
+                        title: 'Create shapefile',
                         //response.body.message,
-                        response.body.message + "<br> Click <a href='/filelist' target='_blank'> here </a>to view downloaded file",
-                        'success'
-                    )
+                        text: response.body.message + "<br> Click <a href='/filelist' target='_blank'> here </a>to view downloaded file",
+                        icon: 'success'
+                    })
                     vm.show_spinner = false;
                     vm.download_shapefile_btn_disabled = false;
                 }, (error) => {
-                    swal(
-                        'Create shapefile Error',
-                        helpers.apiVueResourceError(error),
-                        'error'
-                    )
+                    swal.fire({
+                        title: 'Create shapefile Error',
+                        text: helpers.apiVueResourceError(error),
+                        icon: 'error'
+                    })
                     vm.show_spinner = false;
                     vm.download_shapefile_btn_disabled = false;
                 });
@@ -565,7 +547,7 @@
                         if (transform) {
                             // Get the transform parameters from the style's transform matrix
                             matrix = transform
-                            .match(/^matrix\(([^\(]*)\)$/)[1]
+                            .match(/^matrix\(([^(]*)\)$/)[1]
                             .split(',')
                             .map(Number);
                         } else {
@@ -613,10 +595,10 @@
                         data: vm.filter_status_options,
                         dropdownParent: $('#filters_parent'),
                     }).
-                    on('select2:select', function(e){
+                    on('select2:select', function(){
                         
                     }).
-                    on('select2:unselect', function(e){
+                    on('select2:unselect', function(){
                         
                     })
 
@@ -628,25 +610,21 @@
                         data: vm.filter_availability_options,
                         dropdownParent: $('#filters_parent'),
                     }).
-                    on("select2:select",function (e) {
+                    on("select2:select",function () {
                         
                     }).
-                    on("select2:unselect",function (e) {
+                    on("select2:unselect",function () {
                         
                     })
                     vm.select2Applied = true
                 }
             },
             clearProposalsFromMap: function(){
-                let vm = this
                 this.proposalQuerySource.clear()
             },
             clearAjaxObjects: function(){
-                let vm = this
-                
             },
             addProposalsToMap: function(proposal_geojson){
-                let vm = this
                 let features = (new GeoJSON()).readFeatures(proposal_geojson);
                 this.proposalQuerySource.addFeatures(features);
             },
@@ -694,10 +672,9 @@
                     }
                 }
             },
-            mouseLeave: function(e){
+            mouseLeave: function(){
                 let vm = this;
                 if (!vm.not_close_popup_by_mouseleave){
-                    //vm.$refs.component_map.closePopup()
                     vm.closePopup()
                 }
             },
@@ -738,7 +715,7 @@
 
                 return styles
             },
-            styleFunctionForMeasurement: function (feature, resolution){
+            styleFunctionForMeasurement: function (feature){
                 let vm = this
                 let for_layer = feature.get('for_layer', false)
 
@@ -799,38 +776,42 @@
             },
             addOptionalLayers: function(){
                 let vm = this
-                this.$http.get('/api/das_map_layers/').then(response => {
-                    let layers = response.body
-                    for (var i = 0; i < layers.length; i++ ){
-                        let l = new TileWMS({
-                            // url: env['kmi_server_url'] + '/geoserver/' + layers[i].layer_group_name + '/wms',
-                            //url:'/kb-proxy/geoserver/' + layers[i].layer_group_name + '/wms',
-                            url: layers[i].layer_group_name ? '/kb-proxy/geoserver/' + layers[i].layer_group_name + '/wms' : '/kb-proxy/geoserver/wms',
-                            //url:'/kmi-proxy/geoserver/' + layers[i].layer_group_name + '/wms',
-                            params: {
-                                'FORMAT': 'image/png',
-                                'VERSION': '1.1.1',
-                                tiled: true,
-                                STYLES: '',
-                                LAYERS: layers[i].layer_full_name
-                            },
-                            //crossOrigin: 'Anonymous',
-                        });
+                fetch('/api/das_map_layers/').then(
+                    async response => {
+                        let layers = await response.json();
+                        for (var i = 0; i < layers.length; i++ ){
+                            let l = new TileWMS({
+                                // url: env['kmi_server_url'] + '/geoserver/' + layers[i].layer_group_name + '/wms',
+                                //url:'/kb-proxy/geoserver/' + layers[i].layer_group_name + '/wms',
+                                url: layers[i].layer_group_name ? '/kb-proxy/geoserver/' + layers[i].layer_group_name + '/wms' : '/kb-proxy/geoserver/wms',
+                                //url:'/kmi-proxy/geoserver/' + layers[i].layer_group_name + '/wms',
+                                params: {
+                                    'FORMAT': 'image/png',
+                                    'VERSION': '1.1.1',
+                                    tiled: true,
+                                    STYLES: '',
+                                    LAYERS: layers[i].layer_full_name
+                                },
+                                //crossOrigin: 'Anonymous',
+                            });
 
-                        let tileLayer= new TileLayer({
-                            title: layers[i].display_name.trim(),
-                            visible: false,
-                            source: l,
-                        })
+                            let tileLayer= new TileLayer({
+                                title: layers[i].display_name.trim(),
+                                visible: false,
+                                source: l,
+                            })
 
-                        // Set additional attributes to the layer
-                        tileLayer.set('columns', layers[i].columns)
-                        tileLayer.set('display_all_columns', layers[i].display_all_columns)
+                            // Set additional attributes to the layer
+                            tileLayer.set('columns', layers[i].columns)
+                            tileLayer.set('display_all_columns', layers[i].display_all_columns)
 
-                        vm.optionalLayers.push(tileLayer)
-                        vm.map.addLayer(tileLayer)
+                            vm.optionalLayers.push(tileLayer)
+                            vm.map.addLayer(tileLayer)
+                        }
+                    },(error) => {
+                        console.log(error);
                     }
-                })
+                )
             },
             closePopup: function(){
                 this.content_element.innerHTML = null
@@ -952,7 +933,7 @@
                     distance: 50,
                     source: vm.proposalQuerySource,
                     geometryFunction: (feature) => {
-                        let resolution = this.map.getView().getResolution();
+                        // let resolution = this.map.getView().getResolution();
                         
                             let type = feature.getGeometry().getType();
                             if (type === 'Polygon') {
@@ -1120,13 +1101,13 @@
                 })
                 // Set a custom listener to the Measure tool
                 vm.drawForMeasure.set('escKey', '')
-                vm.drawForMeasure.on('change:escKey', function(evt){
+                vm.drawForMeasure.on('change:escKey', function(){
                     //vm.drawForMeasure.finishDrawing()
                 })
-                vm.drawForMeasure.on('drawstart', function(evt){
+                vm.drawForMeasure.on('drawstart', function(){
                     vm.measuring = true
                 })
-                vm.drawForMeasure.on('drawend', function(evt){
+                vm.drawForMeasure.on('drawend', function(){
                     vm.measuring = false
                 })
 
@@ -1172,7 +1153,7 @@
 
                 vm.map.on('singleclick', function(evt){
                     if (vm.mode === 'layer'){
-                        let feature = vm.map.forEachFeatureAtPixel(evt.pixel, function(feature, layer) {
+                        let feature = vm.map.forEachFeatureAtPixel(evt.pixel, function(feature) {
                             return feature;
                             
                         });
@@ -1186,7 +1167,7 @@
                                     let coord = geometry.getCoordinates();
                                     feature = vm.proposalQuerySource.getFeaturesAtCoordinate(coord)
                                 }
-                                let proposal = features[0].getProperties().proposal;
+                                // let proposal = features[0].getProperties().proposal;
                                 vm.showPopup(feature[0])
                             } else {
                                 //if proposal id is different but geometry is exactly same
@@ -1275,7 +1256,7 @@
                     let hit = vm.map.hasFeatureAtPixel(pixel);
                     vm.map.getTargetElement().style.cursor = hit ? 'pointer' : '';
                 });
-                vm.map.on('moveend', function(e){
+                vm.map.on('moveend', function(){
                     let extent = vm.map.getView().calculateExtent(vm.map.getSize());
                     let features = vm.proposalQuerySource.getFeaturesInExtent(extent)
                     vm.$emit('featuresDisplayed', features)
@@ -1294,7 +1275,7 @@
                         source: vm.proposalQuerySource,
                     });
                     modifyTool.on("modifystart", function(attributes){
-                            attributes.features.forEach(function(feature){
+                            attributes.features.forEach(function(){
                         })
                     });
                     modifyTool.on("modifyend", function(attributes){
@@ -1454,16 +1435,16 @@
                 }
             },
             showPopupforSameFeatures: function(features){
-                let unique_id = uuidv4()
+                // let unique_id = uuidv4()
                 // let proposal = feature.getProperties().proposal;
                 // console.log('selected proposal', proposal);
                 let proposal_rows='';
                 for (let feature of features){
                     if (feature){
-                        let geometry = feature.getGeometry();
-                        let coord = geometry.getCoordinates();
+                        // let geometry = feature.getGeometry();
+                        // let coord = geometry.getCoordinates();
                         let proposal = feature.getProperties().proposal;
-                        let type = feature.getGeometry().getType();
+                        // let type = feature.getGeometry().getType();
                         // if (type === 'Polygon') {
                         //     coord= feature.getGeometry().getInteriorPoint();
                         // } else if (type === 'LineString') {
@@ -1475,14 +1456,14 @@
                         // }
                         // coord=coord.getCoordinates();
                         let processing_status_str = proposal.processing_status_display
-                        let customer_status_str = proposal.customer_status_display
+                        // let customer_status_str = proposal.customer_status_display
                         let region_str = proposal.region_name
                         
                         //let proposal_type_str= proposal.proposal_type
                         let proposal_type_str= proposal.application_type_name
-                        let lodgement_date_str= proposal.lodgement_date ? moment(proposal.lodgement_date).format('DD/MM/YYYY') : ''
+                        // let lodgement_date_str= proposal.lodgement_date ? moment(proposal.lodgement_date).format('DD/MM/YYYY') : ''
                         let submitter_str=proposal.submitter_full_name
-                        let applicant_name=proposal.applicant_name
+                        // let applicant_name=proposal.applicant_name
                         let url = this.is_internal ? '/internal/proposal/' + proposal.id : '/external/proposal/' + proposal.id  
                         let proposal_row='<tr>' +
                                   '<td>' +proposal.lodgement_number + '</td>' +
@@ -1554,8 +1535,6 @@
                             tr.append(th)
                             tr.append(td)
                             tbody.append(tr)
-                        } else {
-
                         }
                     }
                     this.content_element.innerHTML += wrapper.html()  // Export contents as HTML string
@@ -1621,70 +1600,43 @@
                 }
             },
 
-            // Existed methods before merging
-            contactLicenceHolderClicked: function(apiary_site_id){
-                this.openOnSiteInformationModal(apiary_site_id)
-            },
             contactLicenceHolder: function(e){
-                let vm = this;
                 //let apiary_site_id = e.target.getAttribute("data-apiary-site-id");
-                let apiary_site_id = e.target.getAttribute("data-contact-licence-holder");
-                this.contactLicenceHolderClicked(apiary_site_id)
+                // let apiary_site_id = e.target.getAttribute("data-contact-licence-holder");
                 e.stopPropagation()
-            },
-            contactLicenceHolderOK: function(obj){
-                this.$http.post('/api/apiary_site/' + obj.apiary_site_id + '/contact_licence_holder/', obj).then(
-                    res => {
-                        this.$refs.contact_licence_holder_modal.close();
-                    },
-                    err => {
-
-                    }
-                )
-            },
-            openOnSiteInformationModal: async function(apiary_site_id) {
-                this.modalBindId = uuidv4()
-
-                try {
-                    this.$nextTick(() => {
-                        if (this.$refs.contact_licence_holder_modal){
-                            this.$refs.contact_licence_holder_modal.apiary_site_id = apiary_site_id
-                            this.$refs.contact_licence_holder_modal.openMe();
-                        }
-                    });
-                } catch (err) {
-
-                }
             },
             fetchFilterLists: function(){
                 let vm = this;
 
-                vm.$http.get(api_endpoints.filter_list_map).then((response) => {
-                    vm.regions = response.body.regions;
-                    vm.activity_titles = response.body.activities;
-                    vm.application_types = response.body.application_types;
-                    vm.proposal_submitters = response.body.submitters;
-                    vm.proposal_applicants = response.body.applicants;
-                    //vm.proposal_status = response.body.processing_status_choices;
-                    vm.proposal_status = vm.level == 'internal' ? vm.internal_status: vm.external_status;
-                },(error) => {
-                    console.log(error);
-                })
+                fetch(api_endpoints.filter_list_map).then(
+                    async (response) => {
+                        let filter_lists = await response.json();
+                        vm.regions = filter_lists.regions;
+                        vm.activity_titles = filter_lists.activities;
+                        vm.application_types = filter_lists.application_types;
+                        vm.proposal_submitters = filter_lists.submitters;
+                        vm.proposal_applicants = filter_lists.applicants;
+                        //vm.proposal_status = response.body.processing_status_choices;
+                        vm.proposal_status = vm.level == 'internal' ? vm.internal_status: vm.external_status;
+                    },(error) => {
+                        console.log(error);
+                    }
+                )
                 //console.log(vm.regions);
             },
             fetchProposals: async function(){
                 let vm=this;
-                let _ajax_obj=null;
+                // let _ajax_obj=null;
                 var ajax_data={"proposal_status": 'All'}
                 let url = api_endpoints.das_map_proposal 
-                _ajax_obj = $.ajax({
+                $.ajax({
                             url: url,
                             
                             //type:'GET',
                             
                             data: ajax_data,
                             dataType: 'json',
-                            success: function(re, status, xhr){
+                            success: function(re){
                                 vm.proposals = re;
                                 vm.filteredProposals = [...vm.proposals]
                                 // for (let proposal of re){
@@ -1946,6 +1898,10 @@
         top: 10%;
         left: 50%;
         z-index: 100000;
+    }
+    .map {
+        width: 100%;
+        height: 500px;
     }
     @import '../apiary/map_address_search_scoped.css'
 </style>

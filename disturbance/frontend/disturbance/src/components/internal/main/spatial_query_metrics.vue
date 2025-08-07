@@ -61,12 +61,14 @@
 </template>
 
 <script>
-import MetricsDetails from '@/components/internal/main/spatial_query_metrics.vue'
+// import MetricsDetails from '@/components/internal/main/spatial_query_metrics.vue'
+import { v4 as uuidv4 } from 'uuid';
 import datatable from '@/utils/vue/datatable.vue'
 import modal from '@vue-utils/bootstrap-modal.vue'
 import {
   api_endpoints,
-  helpers
+  helpers,
+  constants
 }
 from '@/utils/hooks'
 
@@ -75,7 +77,7 @@ export default {
     components: {
         modal,
         datatable,
-        MetricsDetails,
+        // MetricsDetails,
     },
     props:{
     },
@@ -87,11 +89,11 @@ export default {
         console.log(vm.spatial_query_layer_used_url)
 
         return {
-            spatial_query_metrics_id: 'spatial_query_metrics-datatable-'+vm._uid,
-            spatial_query_metrics_details_id: 'spatial_query_metrics_details-datatable-'+vm._uid,
-            spatial_query_layers_used_id: 'spatial_query_layers_used-datatable-'+vm._uid,
-            pOptionsBody: 'pOptionsBody' + vm._uid,
-            pQuestionBody: 'pQuestionBody' + vm._uid,
+            spatial_query_metrics_id: 'spatial_query_metrics-datatable-'+uuidv4(),
+            spatial_query_metrics_details_id: 'spatial_query_metrics_details-datatable-'+uuidv4(),
+            spatial_query_layers_used_id: 'spatial_query_layers_used-datatable-'+uuidv4(),
+            pOptionsBody: 'pOptionsBody' + uuidv4(),
+            pQuestionBody: 'pQuestionBody' + uuidv4(),
             isModalOpen: false,
             isNewEntry: false,
             missing_fields: [],
@@ -109,7 +111,7 @@ export default {
             dtHeadersSchemaQuestion: ["ID", "Lodgement Number", "When", "Query Time", "API Time (s)", "Request Type", "Action"],
             dtOptionsSchemaQuestion:{
                 language: {
-                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+                    processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
                 serverSide: true,
@@ -160,7 +162,7 @@ export default {
                     },
                     { 
                         data: "when",
-                        mRender:function (data,type,full) {
+                        mRender:function (data) {
                             return data.replace('T',' ').replace('Z','');
                         },
                         searchable: false,
@@ -202,7 +204,7 @@ export default {
 //            dtHeadersLayersUsed: ["ID", "Lodgement Number", "Layer name"],
 //            dtOptionsLayersUsed:{
 //                language: {
-//                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+//                    processing: constants.DATATABLE_PROCESSING_HTML,
 //                },
 //                responsive: true,
 //                serverSide: true,
@@ -237,7 +239,7 @@ export default {
             //dtHeadersSchemaMetrics: ["Question"],
             dtOptionsSchemaMetrics:{
                 language: {
-                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+                    processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
 //    fixedColumns: {

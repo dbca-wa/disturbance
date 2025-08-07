@@ -22,10 +22,10 @@
 </template>
 
 <script>
-//import $ from 'jquery'
+import { v4 as uuidv4 } from 'uuid';
 import datatable from '@/utils/vue/datatable.vue'
 import modal from '@vue-utils/bootstrap-modal.vue'
-import {helpers,api_endpoints} from "@/utils/hooks.js"
+import { constants } from '@/utils/hooks';
 export default {
     name:'Requirement-Detail',
     components:{
@@ -45,9 +45,9 @@ export default {
     data:function () {
         let vm = this;
         return {
-            spatial_query_metrics_details_id: 'spatial_query_metrics_details-datatable-'+vm._uid,
-            pOptionsBody: 'pOptionsBody' + vm._uid,
-            pQuestionBody: 'pQuestionBody' + vm._uid,
+            spatial_query_metrics_details_id: 'spatial_query_metrics_details-datatable-'+uuidv4(),
+            pOptionsBody: 'pOptionsBody' + uuidv4(),
+            pQuestionBody: 'pQuestionBody' + uuidv4(),
             isModalOpen: false,
             spatial_query_metrics: [],
             //dtHeadersSchemaMetrics: [],
@@ -63,13 +63,13 @@ export default {
             dtHeadersSchemaMetrics: ["Question"],
             dtOptionsSchemaMetrics:{
                 language: {
-                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+                    processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
                 serverSide: true,
                 autowidth: false,
                 processing: true,
-                "ajax": function (data, callback, settings) {
+                "ajax": function (data, callback) {
 		    callback(
                       vm.metricsData
 		    );
@@ -106,7 +106,7 @@ export default {
             $(this.$refs.standard_req).val(null).trigger('change');
         },
        eventListeners:function () {
-            let vm = this;
+            // let vm = this;
        }
    },
    mounted:function () {

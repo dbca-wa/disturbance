@@ -16,7 +16,7 @@
             /-->
 
         <template v-if="files">
-            <template v-for="v in documents">
+            <template v-for="v in documents" :key="v.id">
                 <div>
                     File: <a :href="v.file" target="_blank">{{v.name}}</a> &nbsp;
                     <span v-if="!readonly">
@@ -26,17 +26,19 @@
             </template>
             <div v-if="show_spinner"><i class='fa fa-2x fa-spinner fa-spin'></i></div>
         </template>
-        <template v-if="!readonly" v-for="n in repeat">
-            <template v-if="isRepeatable || (!isRepeatable && num_documents()==0) && !show_spinner">
-                <input 
-                    :id="name + n" 
-                    :name="name" type="file" 
-                    :data-que="n" 
-                    :accept="fileTypes" 
-                    @change="handleChangeWrapper" 
-                    :class="ffu_input_element_classname" />
-                <template v-if="replace_button_by_text">
-                    <span :id="'button-' + name + n" @click="button_clicked(name + n)" class="ffu-input-text">{{ text_string }}</span>
+        <template v-if="!readonly">
+            <template v-for="n in repeat" :key="n">
+                <template v-if="isRepeatable || (!isRepeatable && num_documents()==0) && !show_spinner">
+                    <input 
+                        :id="name + n" 
+                        :name="name" type="file" 
+                        :data-que="n" 
+                        :accept="fileTypes" 
+                        @change="handleChangeWrapper" 
+                        :class="ffu_input_element_classname" />
+                    <template v-if="replace_button_by_text">
+                        <span :id="'button-' + name + n" @click="button_clicked(name + n)" class="ffu-input-text">{{ text_string }}</span>
+                    </template>
                 </template>
             </template>
         </template>
@@ -49,10 +51,6 @@ import {
   helpers
 }
 from '@/utils/hooks';
-//import CommentBlock from './comment_block.vue';
-//import HelpText from './help_text.vue';
-import Vue from 'vue';
-//import { mapGetters } from 'vuex';
 export default {
     name: "FileField",
     props:{
@@ -213,7 +211,7 @@ export default {
             this.show_spinner = false;
 
         },
-        cancel: async function(file) {
+        cancel: async function() {
             this.show_spinner = true;
 
             let formData = new FormData();
@@ -224,7 +222,7 @@ export default {
             }
             formData.append('csrfmiddlewaretoken', this.csrf_token);
             if (this.document_action_url) {
-                let res = await Vue.http.post(this.document_action_url, formData)
+                await Vue.http.post(this.document_action_url, formData)
             }
             this.show_spinner = false;
         },
@@ -333,9 +331,6 @@ export default {
 <style lang="css">
     input {
         box-shadow:none;
-    }
-    .ffu-wrapper {
-
     }
     .ffu-input-elem {
         display: none !important;

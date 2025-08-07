@@ -28,7 +28,7 @@
                         </div>
                         <div class="col-md-6" v-else>
                             <div v-for="(c, cid) in a.conditions" v-bind:key="`condition_${cid}`" >
-                                <input type="checkbox" :value="true" v-model="getCheckedConditions(a,c).isChecked" >&nbsp;&nbsp;<label>{{c.label}}</label></input><input type='text' v-if="getCheckedConditions(a,c).isDisplay" class="pull-right" v-model="c.value" />                           
+                                <label><input type="checkbox" :value="true" v-model="getCheckedConditions(a,c).isChecked" />&nbsp;&nbsp;{{c.label}}<input type='text' v-if="getCheckedConditions(a,c).isDisplay" class="pull-right" v-model="c.value" /></label>
                             </div>
                         </div>
                     </div>
@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid';
 export default {
     name:"schema-add-option",
     props: {
@@ -47,9 +48,9 @@ export default {
         canAddMore: Boolean,
     },
     data:function () {
-        let vm = this;
+        // let vm = this;
         return {
-            pOptionBody: 'pOptionBody' + vm._uid,
+            pOptionBody: 'pOptionBody' + uuidv4(),
             addedOption: {
                 id: '',
                 label: '',

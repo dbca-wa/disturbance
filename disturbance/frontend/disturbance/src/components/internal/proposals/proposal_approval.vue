@@ -4,12 +4,12 @@
             <div class="col-md-12 alert alert-success" v-if="proposal.processing_status == 'Approved'">
                 <div v-if="proposal.proposal_apiary">
                     <p>The licence has been issued and has been emailed to {{proposal.applicant.name}}</p>
-                    <p>Expiry date: {{approvalExpiryDate}}
+                    <p>Expiry date: {{approvalExpiryDate}}</p>
                     <p>Licence: <a target="_blank" :href="proposal.permit">licence.pdf</a></p>
                 </div>
                 <div v-else>
                     <p>The approval has been issued and has been emailed to {{proposal.applicant.name}}</p>
-                    <p>Expiry date: {{approvalExpiryDate}}
+                    <p>Expiry date: {{approvalExpiryDate}}</p>
                     <p>Permit: <a target="_blank" :href="proposal.permit">approval.pdf</a></p>
                 </div>
             </div>
@@ -24,20 +24,6 @@
         </template>
 
         <template v-if="proposal.proposal_apiary">
-            <FormSection :formCollapse="false" label="Site(s)" Index="sites">
-                <ComponentSiteSelection
-                    :apiary_sites="apiary_sites_prop"
-                    :is_internal="true"
-                    :is_external="false"
-                    :key="component_site_selection_key"
-                    :show_col_checkbox="showColCheckbox"
-                    :enable_col_checkbox="false"
-                    :show_col_site="false"
-                    :show_col_site_when_submitted="true"
-                    :show_col_status_when_submitted="true"
-                    :apiary_proposal_id="proposal.proposal_apiary.id"
-                />
-            </FormSection>
         </template>
         <template v-else>
             <div class="col-md-12">
@@ -149,16 +135,12 @@
     </div>
 </template>
 <script>
+import { v4 as uuidv4 } from 'uuid';
 import {
     api_endpoints,
     helpers
 }
 from '@/utils/hooks'
-import datatable from '@vue-utils/datatable.vue'
-import RequirementDetail from './proposal_add_requirement.vue'
-import ComponentSiteSelection from '@/components/common/apiary/component_site_selection.vue'
-import FormSection from "@/components/forms/section_toggle.vue"
-import {v4 as uuidv4} from 'uuid';
 
 export default {
     name: 'InternalProposalRequirements',
@@ -166,19 +148,16 @@ export default {
         proposal: Object
     },
     data: function() {
-        let vm = this;
+        // let vm = this;
         return {
-            proposedDecision: "proposal-decision-"+vm._uid,
-            proposedLevel: "proposal-level-"+vm._uid,
+            proposedDecision: "proposal-decision-"+uuidv4(),
+            proposedLevel: "proposal-level-"+uuidv4(),
             uploadedFile: null,
-            component_site_selection_key: '',
         }
     },
     watch:{
     },
     components:{
-        FormSection,
-        ComponentSiteSelection,
     },
     computed:{
         /*
@@ -207,9 +186,11 @@ export default {
             return this.proposal.approval_level != null ? true : false;
         },
         apiary_sites: function() {
+            let apiary_sites = null;
             if (this.proposal && this.proposal.proposal_apiary) {
-                return this.proposal.proposal_apiary.apiary_sites;
+                apiary_sites = this.proposal.proposal_apiary.apiary_sites;
             }
+            return apiary_sites;
         },
         apiary_sites_prop: function() {
             let apiary_sites = [];
@@ -234,10 +215,6 @@ export default {
 
     },
     methods:{
-        updateComponentSiteSelectionKey: function(){
-            console.log('in updateComponentSiteSelectionKey')
-            this.component_site_selection_key = uuidv4()
-        },
         readFile: function() {
             let vm = this;
             let _file = null;
@@ -272,7 +249,7 @@ export default {
                 vm.$emit('refreshFromResponse',res);
 
                 },err=>{
-                swal(
+                swal.fire(
                     'Submit Error',
                     helpers.apiVueResourceError(err),
                     'error'
@@ -289,27 +266,29 @@ export default {
         },
         removeRequirement(_id){
             let vm = this;
-            swal({
+            swal.fire({
                 title: "Remove Requirement",
                 text: "Are you sure you want to remove this requirement?",
-                type: "warning",
+                icon: "warning",
                 showCancelButton: true,
                 confirmButtonText: 'Remove Requirement',
                 confirmButtonColor:'#d9534f'
-            }).then(() => {
-                vm.$http.delete(helpers.add_endpoint_json(api_endpoints.proposal_requirements,_id))
-                .then((response) => {
-                    vm.$refs.requirements_datatable.vmDataTable.ajax.reload();
-                }, (error) => {
-                    console.log(error);
-                });
+            }).then((swalresult) => {
+                if(swalresult.isConfirmed){
+                    vm.$http.delete(helpers.add_endpoint_json(api_endpoints.proposal_requirements,_id))
+                    .then(() => {
+                        vm.$refs.requirements_datatable.vmDataTable.ajax.reload();
+                    }, (error) => {
+                        console.log(error);
+                    });
+                }
             },(error) => {
+                console.log(error);
             });
         },
     },
     mounted: function(){
-        let vm = this;
-        this.updateComponentSiteSelectionKey()
+        // let vm = this;
     }
 }
 </script>

@@ -54,7 +54,7 @@
                         </ul>
                 </div>
 
-                <alert :show.sync="showError" type="danger" style="color: red" class="noPrint"><strong>{{errorString}}</strong></alert>
+                <alert v-if="showError" type="danger" style="color: red" class="noPrint"><strong>{{errorString}}</strong></alert>
                 <div class="noPrint button-sec">
                     <div class="row">
                         <div class="col-sm-2">
@@ -93,11 +93,11 @@
 </template>
 
 <script>
+    import { v4 as uuidv4 } from 'uuid';
     import File from '@/components/forms/map_file.vue'
-    import FileField from '@/components/forms/filefield_immediate.vue'
+    // import FileField from '@/components/forms/filefield_immediate.vue'
     import FormSection from "@/components/forms/section_toggle.vue"
     import ComponentMap from '@/components/common/das/das_component_map.vue'
-    import uuid from 'uuid'
     import { api_endpoints, helpers }from '@/utils/hooks'
     import alert from '@vue-utils/alert.vue'
     export default {
@@ -141,10 +141,10 @@
             },
         },
         data:function () {
-            let vm = this;
+            // let vm = this;
             return{
                 values:null,
-                pBody: 'pBody'+vm._uid,
+                pBody: 'pBody'+uuidv4(),
                 componentMapKey: 0,
                 fileKey: 0,
                 showError:false,
@@ -154,7 +154,6 @@
             }
         },
         components: {
-            FileField,
             FormSection,
             ComponentMap,
             File,
@@ -288,69 +287,71 @@
                 }
                 
 
-                await swal({
+                await swal.fire({
                     title: "Prefill Proposal",
                     //html: '<p>Are you sure you want to prefill this Proposal?<br>Select the Applicable:</p>',
                     html: html_text,
-                    type: "warning",
+                    icon: "warning",
                     showCancelButton: true,
                     confirmButtonText: 'Prefill Proposal',
                     confirmButtonColor:'#d9534f',
                     input: 'radio',
                     inputOptions: inputOptions,
                 }).then(async (result) => {
-                    if (Object.keys(inputOptions).length > 0 && !result) {
-                        swal(
-                            'Please select an option',
-                            null,
-                            'warning'
-                        )
-                        return;
-                    }  else if (Object.keys(inputOptions).length == 0) {
-                        result = 'clear_all';
-                    }
-                    //vm.prefilling=true;
-                    swal({
-                        title: "Loading...",
-                        //text: "Loading...",
-                        allowOutsideClick: false,
-                        allowEscapeKey:false,
-                        onOpen: () =>{
-                            swal.showLoading()
+                    if (result.isConfirmed) {
+                        if (Object.keys(inputOptions).length > 0 && !result.value) {
+                            swal.fire({
+                                title: 'Please select an option',
+                                text: null,
+                                icon: 'warning'
+                            })
+                            return;
+                        }  else if (Object.keys(inputOptions).length == 0) {
+                            result = 'clear_all';
                         }
-                    })
-                    var data={};
-                    data.option = result;
-                    await vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals_sqs,vm.proposal.id+'/prefill_proposal'), JSON.stringify(data),{
-                        emulateJSON:true
-                    }).then(res=>{
-                        swal.hideLoading();
-                        swal.close();
-                        var resp_proposal=null;
-                        resp_proposal=res['body']['proposal']
-                        //vm.$emit('refreshFromResponse',res);
-                        vm.$emit('refreshFromResponseProposal',resp_proposal);
-                        //console.log('URL:' + helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal.id+'/prefill_proposal'))
-                        //console.log('RES:' + JSON.stringify(res))
-                        let title = res['body']['message'].includes('updated') ? "Processing Proposal (UPDATED)" : "Processing Proposal"
-                        let queue_position = res['body']['position']
-	                swal({
-                            //title: "Processing Proposal",
-                            title: title,
-                            html: '<p><strong>Your proposal is in the process of being prefilled based on your uploaded shapefile.</strong><br>' +
-                                  '<span style="font-size:0.8em">You can close your browser and come back later. You will receive an email when it is complete. (' + queue_position+ ')</span>' +
-                                  '</p>',
+                        //vm.prefilling=true;
+                        swal.fire({
+                            title: "Loading...",
+                            //text: "Loading...",
+                            allowOutsideClick: false,
+                            allowEscapeKey:false,
+                            didOpen: () =>{
+                                swal.showLoading()
+                            }
                         })
-		
-                    },err=>{
-                        console.log(err);
-                        vm.showError=true;
-                        vm.errorString=helpers.apiVueResourceError(err);
-                        swal.hideLoading();
-                    });
-
+                        var data={};
+                        data.option = result;
+                        await vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals_sqs,vm.proposal.id+'/prefill_proposal'), JSON.stringify(data),{
+                            emulateJSON:true
+                        }).then(res=>{
+                            swal.hideLoading();
+                            swal.close();
+                            var resp_proposal=null;
+                            resp_proposal=res['body']['proposal']
+                            //vm.$emit('refreshFromResponse',res);
+                            vm.$emit('refreshFromResponseProposal',resp_proposal);
+                            //console.log('URL:' + helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal.id+'/prefill_proposal'))
+                            //console.log('RES:' + JSON.stringify(res))
+                            let title = res['body']['message'].includes('updated') ? "Processing Proposal (UPDATED)" : "Processing Proposal"
+                            let queue_position = res['body']['position']
+                        swal.fire({
+                                //title: "Processing Proposal",
+                                title: title,
+                                html: '<p><strong>Your proposal is in the process of being prefilled based on your uploaded shapefile.</strong><br>' +
+                                    '<span style="font-size:0.8em">You can close your browser and come back later. You will receive an email when it is complete. (' + queue_position+ ')</span>' +
+                                    '</p>',
+                            })
+            
+                        },err=>{
+                            console.log(err);
+                            vm.showError=true;
+                            vm.errorString=helpers.apiVueResourceError(err);
+                            swal.hideLoading();
+                        });
+                    }
                 },(error) => {
                    swal.hideLoading();
+                   console.log(error);
 
                 });
                 
@@ -374,12 +375,14 @@
             },
             fetchGlobalSettings: function(){
                 let vm = this;
-                vm.$http.get('/api/global_settings.json').then((response) => {
-                    vm.global_settings = response.body;
+                fetch('/api/global_settings.json').then(
+                    async (response) => {
+                        vm.global_settings = await response.json();
                     
-                },(error) => {
-                    console.log(error);
-                } );
+                    },(error) => {
+                        console.log(error);
+                    }
+                );
             },
             
         },

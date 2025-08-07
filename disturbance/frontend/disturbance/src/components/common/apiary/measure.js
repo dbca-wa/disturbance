@@ -1,5 +1,5 @@
-import { Circle as CircleStyle, Fill, Stroke, Style, Text, RegularShape } from 'ol/style';
-import { getArea, getLength } from 'ol/sphere'
+import { Fill, Stroke, Style, Text, RegularShape } from 'ol/style';
+import { getLength } from 'ol/sphere'
 
 let MeasureStyles = {
     'defaultStyle': new Style({

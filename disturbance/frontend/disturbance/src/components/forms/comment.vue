@@ -15,6 +15,7 @@
 
 <script>
 export default {
+    name: "CommentComponent",
     props:["name","question","value", "id", "readonly", "isRequired"]
 }
 </script>

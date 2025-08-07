@@ -22,52 +22,6 @@
                 ref="mu_details" 
             />
 
-            <FormSection :formCollapse="false" label="Site Locations" Index="site_locations">
-                <div v-if="draftApiaryApplication">
-
-                    <SiteLocations
-                        :proposal="proposal"
-                        id="site_locations"
-                        ref="apiary_site_locations"
-                        :is_external="is_external"
-                        :is_internal="is_internal"
-                        @button_text="button_text"
-                        @total_fee_south_west="total_fee_south_west"
-                        @total_fee_remote="total_fee_remote"
-                        @total_fee_south_west_renewal="total_fee_south_west_renewal"
-                        @total_fee_remote_renewal="total_fee_remote_renewal"
-                        @num_of_sites_remain_south_west="num_of_sites_remain_south_west"
-                        @num_of_sites_remain_remote="num_of_sites_remain_remote"
-                        @num_of_sites_remain_south_west_renewal="num_of_sites_remain_south_west_renewal"
-                        @num_of_sites_remain_remote_renewal="num_of_sites_remain_remote_renewal"
-                        @num_of_sites_south_west_to_add_as_remainder="num_of_sites_south_west_to_add_as_remainder"
-                        @num_of_sites_remote_to_add_as_remainder="num_of_sites_remote_to_add_as_remainder"
-                        @num_of_sites_south_west_renewal_to_add_as_remainder="num_of_sites_south_west_renewal_to_add_as_remainder"
-                        @num_of_sites_remote_renewal_to_add_as_remainder="num_of_sites_remote_renewal_to_add_as_remainder"
-                        @total_num_of_sites_on_map_unpaid="total_num_of_sites_on_map_unpaid"
-                        @total_num_of_sites_on_map="total_num_of_sites_on_map"
-                        @fee_remote_renewal="fee_remote_renewal"
-                        @fee_south_west_renewal="fee_south_west_renewal"
-                    />
-
-                </div>
-                <div v-else>
-                    <ComponentSiteSelection
-                        :apiary_sites="apiary_sites"
-                        :is_internal="is_internal"
-                        :is_external="is_external"
-                        :show_col_site="false"
-                        :show_col_site_when_submitted="true"
-                        :show_col_checkbox="false"
-                        :show_action_available_unavailable="showActionAvailableUnavailable"
-                        :show_col_status="false"
-                        :show_col_status_when_submitted="true"
-                        :show_col_vacant_when_submitted="show_col_vacant_when_submitted"
-                        :key="component_site_selection_key"
-                      />
-                </div>
-            </FormSection>
-
             <FormSection :formCollapse="false" label="Supporting Application Documents" Index="supporting_application_documents">
                 <div class="row">
                     <div class="col-sm-12">
@@ -128,58 +82,17 @@
             </FormSection>
 
             <FormSection :formCollapse="false" label="Deed Poll" Index="deed_poll">
-                <DeedPoll
-                    ref="deed_poll_component"
-                    :isRepeatable="false"
-                    :isReadonly="readonly"
-                    :documentActionUrl="deedPollDocumentUrl"
-                />
             </FormSection>
 
-            <ApiaryChecklist
-                :checklist="applicantChecklistAnswers"
-                section_title="Applicant Checklist"
-                :readonly="readonly"
-                ref="applicant_checklist"
-                index="1"
-            />
             <div v-if="assessorChecklistVisibility">
-                <ApiaryChecklist
-                :checklist="assessorChecklistAnswers"
-                section_title="Assessor Checklist"
-                :readonly="assessorChecklistReadonly"
-                ref="assessor_checklist"
-                index="2"
-                />
                 <div v-for="site in apiary_sites">
-                    <ApiaryChecklist
-                    :checklist="assessorChecklistAnswersPerSite(site.id)"
-                    :section_title="'Assessor checklist for site ' + site.id"
-                    :readonly="assessorChecklistReadonly"
-                    v-bind:key="'assessor_checklist_per_site_' + site.id"
-                    :index="'2_' + site.id"
-                    />
                 </div>
             </div>
             <div v-for="r in referrerChecklistAnswers">
                 <!--div v-if="(referral && r.referral_id === referral.id) || (assessorChecklistVisibility && proposal.processing_status === 'With Assessor')"-->
                 <div v-if="(referral && r.referral_id === referral.id) || (assessorChecklistVisibility)">
                 <!--div v-if="r.id = referral.id"-->
-                    <ApiaryChecklist
-                    :checklist="r.referral_data"
-                    :section_title="'Referral Checklist: ' + r.referrer_group_name"
-                    :readonly="referrerChecklistReadonly"
-                    ref="referrer_checklist"
-                    index="3"
-                    />
                     <div v-for="site in apiary_sites">
-                        <ApiaryChecklist
-                        :checklist="referrerChecklistAnswersPerSite(r.apiary_referral_id, site.id)"
-                        :section_title="'Referral Checklist: ' + r.referrer_group_name + ' for site ' + site.id"
-                        :readonly="referrerChecklistReadonly"
-                        v-bind:key="'referrer_checklist_per_site_' + r.apiary_referral_id + site.id"
-                        :index="'3_' + r.apiary_referral_id + '_' + site.id"
-                        />
                     </div>
                 </div>
             </div>
@@ -210,14 +123,10 @@
 
 <script>
     import ManageUser from '@/components/external/organisations/manage.vue'
-    import ComponentSiteSelection from '@/components/common/apiary/component_site_selection.vue'
     import FileField from '@/components/forms/filefield_immediate.vue'
     import FormSection from "@/components/forms/section_toggle.vue"
-    import SiteLocations from '@/components/common/apiary/site_locations.vue'
-    import ApiaryChecklist from '@/components/common/apiary/section_checklist.vue'
     import {v4 as uuidv4 } from 'uuid';
-    import DeedPoll from "@/components/common/apiary/section_deed_poll.vue"
-    import { api_endpoints, helpers }from '@/utils/hooks'
+    import { helpers }from '@/utils/hooks'
     export default {
         name: 'ApiaryForm',
         props:{
@@ -266,7 +175,7 @@
             let vm = this;
             return{
                 values:null,
-                pBody: 'pBody'+vm._uid,
+                pBody: 'pBody'+uuidv4(),
                 component_site_selection_key: '',
                 expiry_date_local: '',
                 deed_poll_url: '',
@@ -274,12 +183,8 @@
             }
         },
         components: {
-            SiteLocations,
-            ComponentSiteSelection,
             FileField,
             FormSection,
-            ApiaryChecklist,
-            DeedPoll,
             ManageUser,
         },
         computed:{
@@ -436,7 +341,7 @@
             },
             fetchDeedPollUrl: function(){
                 let vm = this;
-                vm.$http.get('/api/deed_poll_url').then((response) => {
+                fetch('/api/deed_poll_url').then((response) => {
                     vm.deed_poll_url = response.body;
                 },(error) => {
                     console.log(error);

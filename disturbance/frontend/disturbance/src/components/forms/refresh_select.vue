@@ -2,15 +2,13 @@
         <span>
             <template v-if="layer_data && !assessorMode">
             <!-- <template v-if="!assessorMode"> -->
-                <template>
-                    <label  for="refresh_time_value" class="inline" > {{ refresh_time_val }}</label>
-                    <input type="hidden" class="form-control" :name="refresh_timestamp_name" :value="refresh_time" />
-                </template>
+                <label  for="refresh_time_value" class="inline" > {{ refresh_time_val }}</label>
+                <input type="hidden" class="form-control" :name="refresh_timestamp_name" :value="refresh_time" />
                 <template v-if="!isRefreshing">
                     <a href="" @click.prevent="refresh">Refresh&nbsp;</a>
                 </template>
                 <template v-if="isRefreshing">
-                    <i class="fa fa-spin fa-spinner"></i>&nbsp;Refresh&nbsp;</i>
+                    <i class="fa fa-spin fa-spinner">&nbsp;Refresh&nbsp;</i>
                 </template>
             </template>
         </span>     
@@ -22,7 +20,7 @@ import {
 }
 from '@/utils/hooks'
 export default {
-    name:"Refresh",
+    name:"RefreshSelect",
     props:[
         "parent_name",
         "parent_label",
@@ -93,7 +91,7 @@ data: function() {
                 vm.refresh_time= response.body.sqs_timestamp;
                 vm.isRefreshing= false;   
             },(error)=>{
-                swal(
+                swal.fire(
                     'Error',
                     helpers.apiVueResourceError(error),
                     //error.body,
@@ -104,7 +102,7 @@ data: function() {
         },
         refresh: async function(){
             let vm=this;
-            var ele=$('[name='+vm.parent_name+']')[0]
+            // var ele=$('[name='+vm.parent_name+']')[0]
             //var ele=$('[name='+vm.parent_name+']')
             //add api call here to get the refresh value and refresh time stamp
             const mlq_data={label: '',
@@ -164,7 +162,7 @@ data: function() {
                     msg = "Processing refresh request";
                 }
                 let queue_position = response['body']['position']
-                swal({
+                swal.fire({
                     title: 'Refresh Question',
                     html: '<p><strong>' + msg + '</strong><br>' +
                           '<span style="font-size:0.8em">You can close your browser and come back later. You will receive an email when it is complete. (' + queue_position+ ')</span>' +
@@ -172,7 +170,7 @@ data: function() {
                 })
 
             },(error)=>{
-                swal(
+                swal.fire(
                     'Error',
                     helpers.apiVueResourceError(error),
                     //error.body,

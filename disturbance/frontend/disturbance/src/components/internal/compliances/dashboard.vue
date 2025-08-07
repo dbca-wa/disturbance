@@ -7,13 +7,12 @@
 import ComplianceDashTable from '@common-utils/compliances_dashboard.vue'
 import {
   api_endpoints,
-  helpers
 }
 from '@/utils/hooks'
 export default {
     name: 'InternalCompliancesDashboard',
     data() {
-        let vm = this;
+        // let vm = this;
         return {
             //compliances_url: api_endpoints.compliances,
             compliances_url: api_endpoints.compliances_paginated_external,

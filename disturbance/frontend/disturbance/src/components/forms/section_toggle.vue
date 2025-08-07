@@ -58,18 +58,23 @@ export default {
         },
         panel_collapse_class: function() {
             if (this.formCollapse) {
-                this.panel_chevron_class = "glyphicon glyphicon-chevron-down pull-right";
+                this.set_panel_chevron_class();
                 return "panel-body collapse";
             } else {
                 if (this.treeHeight) {
-                    this.panel_chevron_class = "glyphicon glyphicon-chevron-up pull-right";
+                    this.set_panel_chevron_class();
                     return "panel-body collapse in flex-container";
                 } else {
-                    this.panel_chevron_class = "glyphicon glyphicon-chevron-up pull-right";
+                    this.set_panel_chevron_class();
                     return "panel-body collapse in";
                 }
             }
         },
+    },
+    methods:{
+        set_panel_chevron_class: function() {
+            return this.formCollapse ? "glyphicon glyphicon-chevron-down pull-right" : "glyphicon glyphicon-chevron-up pull-right";
+        }
     },
     mounted: function() {
         $('#' + this.custom_id).on('click',function () {

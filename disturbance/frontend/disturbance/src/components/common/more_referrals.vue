@@ -6,9 +6,11 @@
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid';
 import {
     api_endpoints,
-    helpers
+    helpers,
+    constants,
 }from '@/utils/hooks'
 export default {
     name: 'MoreReferrals',
@@ -38,7 +40,7 @@ export default {
             datatable_url: '',
             datatable_options: {
                 language: {
-                    processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+                    processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
                 deferRender: true, 
@@ -62,7 +64,7 @@ export default {
                     {
                         title: 'Referral',
                         data: 'referral',
-                        render: function (data,type,full){
+                        render: function (data){
                             return `<span>${data.first_name} ${data.last_name}</span>`; 
                         },
                         defaultContent: '',
@@ -133,76 +135,88 @@ export default {
         remindReferral:function(_id,user){
             let vm = this;
             
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.referrals,_id+'/remind')).then(response => {
-                vm.$emit('refreshFromResponse',response);
-                vm.table.ajax.reload();
-                swal(
-                    'Referral Reminder',
-                    'A reminder has been sent to '+user,
-                    'success'
-                )
-            },
-            error => {
-                swal(
-                    'Proposal Error',
-                    helpers.apiVueResourceError(error),
-                    'error'
-                )
-            });
+            fetch(helpers.add_endpoint_json(api_endpoints.referrals,_id+'/remind')).then(
+                async response => {
+                    let referrals_remind_res = {};
+                    referrals_remind_res = await response.json();
+                    vm.$emit('refreshFromResponse',referrals_remind_res);
+                    vm.table.ajax.reload();
+                    swal.fire({
+                        title: 'Referral Reminder',
+                        text: 'A reminder has been sent to '+user,
+                        icon: 'success'
+                    })
+                },
+                error => {
+                    swal.fire({
+                        title: 'Proposal Error',
+                        text: helpers.apiVueResourceError(error),
+                        icon: 'error'
+                    })
+                }
+            );
         },
         resendReferral:function(_id,user){
             let vm = this;
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.referrals,_id+'/resend')).then(response => {
-                vm.$emit('refreshFromResponse',response);
-                vm.table.ajax.reload();
-                swal(
-                    'Referral Resent',
-                    'The referral has been resent to '+user,
-                    'success'
-                )
-            },
-            error => {
-                swal(
-                    'Proposal Error',
-                    helpers.apiVueResourceError(error),
-                    'error'
-                )
-            });
+            fetch(helpers.add_endpoint_json(api_endpoints.referrals,_id+'/resend')).then(
+                async response => {
+                    let referrals_resend_res = {};
+                    referrals_resend_res = await response.json();
+                    vm.$emit('refreshFromResponse',referrals_resend_res);
+                    vm.table.ajax.reload();
+                    swal.fire({
+                        title: 'Referral Resent',
+                        text: 'The referral has been resent to '+user,
+                        icon: 'success'
+                    })
+                },
+                error => {
+                    swal.fire({
+                        title: 'Proposal Error',
+                        text: helpers.apiVueResourceError(error),
+                        icon: 'error'
+                    })
+                }
+            );
         },
         recallReferral:function(_id,user){
             let vm = this;
-            swal({
+            swal.fire({
                     title: "Loading...",
                     //text: "Loading...",
                     allowOutsideClick: false,
                     allowEscapeKey:false,
-                    onOpen: () =>{
+                    didOpen: () =>{
                         swal.showLoading()
                     }
             })
-            vm.$http.get(helpers.add_endpoint_json(api_endpoints.referrals,_id+'/recall')).then(response => {
-                swal.hideLoading();
-                swal.close();
-                vm.$emit('refreshFromResponse',response);
-                vm.table.ajax.reload();
-                swal(
-                    'Referral Recall',
-                    'The referral has been recalled from '+user,
-                    'success'
-                )
-            },
-            error => {
-                swal(
-                    'Proposal Error',
-                    helpers.apiVueResourceError(error),
-                    'error'
-                )
-            });
+            fetch(helpers.add_endpoint_json(api_endpoints.referrals,_id+'/recall')).then(
+                async response => {
+                    swal.hideLoading();
+                    swal.close();
+                    let ref_recall_res = {};
+                    ref_recall_res = await response.json()
+                    vm.$emit('refreshFromResponse',ref_recall_res);
+                    vm.table.ajax.reload();
+                    swal.fire({
+                        title: 'Referral Recall',
+                        text: 'The referral has been recalled from '+user,
+                        icon: 'success'
+                    })
+                },
+                error => {
+                    swal.fire({
+                        title: 'Proposal Error',
+                        text: helpers.apiVueResourceError(error),
+                        icon: 'error'
+                    })
+                }
+            );
         },
         initialiseTable: function(){
             let vm = this;
-            let table_id = 'more-referrals-table'+vm._uid;
-            let popover_name = 'popover-'+ vm._uid;
+            let table_id = 'more-referrals-table'+uuidv4();
+            let popover_name = 'popover-'+ uuidv4();
             $(vm.$refs.showRef).popover({
                 content: function() {
                     return ` 
@@ -249,18 +263,18 @@ export default {
                 });
             }).on('shown.bs.popover', function () {
                 var el = vm.$refs.showRef;
-                var popoverheight = parseInt($('.'+popover_name).height());
+                // var popoverheight = parseInt($('.'+popover_name).height());
 
                 var popover_bounding_top = parseInt($('.'+popover_name)[0].getBoundingClientRect().top);
-                var popover_bounding_bottom = parseInt($('.'+popover_name)[0].getBoundingClientRect().bottom);
+                // var popover_bounding_bottom = parseInt($('.'+popover_name)[0].getBoundingClientRect().bottom);
 
                 var el_bounding_top = parseInt($(el)[0].getBoundingClientRect().top);
-                var el_bounding_bottom = parseInt($(el)[0].getBoundingClientRect().top);
+                // var el_bounding_bottom = parseInt($(el)[0].getBoundingClientRect().top);
                 
                 var diff = el_bounding_top - popover_bounding_top;
 
-                var position = parseInt($('.'+popover_name).position().top);
-                var pos2 = parseInt($(el).position().top) - 5;
+                // var position = parseInt($('.'+popover_name).position().top);
+                // var pos2 = parseInt($(el).position().top) - 5;
 
                 var x = diff + 5;
                 $('.'+popover_name).children('.arrow').css('top', x + 'px');

@@ -30,7 +30,7 @@
             <span v-if="show_spinner"><i class='fa fa-2x fa-spinner fa-spin'></i></span>
             <!-- <i id="file-spinner" class=""></i> -->
             <div v-if="files" class="files">
-                <div v-for="v in documents" :data-file-name="v.name">
+                <div v-for="v in documents" :key="v.id" :data-file-name="v.name">
                     <p>
                         File: <a :href="v.file" target="_blank">{{v.name}}</a> &nbsp;
                         <span v-if="!readonly && v.can_delete">
@@ -47,11 +47,13 @@
                     </p>
                 </div>
             </div>
-            <div v-if="!readonly" v-for="n in repeat">
-                <div v-if="isRepeatable || (!isRepeatable && num_documents()==0)">
-                    <input :name="name" type="file" class="form-control" :data-que="n" :accept="fileTypes" @change="handleChange" :required="isRequired"/>
-                    <alert :show.sync="showError" type="danger" style="color: red"><strong>{{errorString}}</strong></alert>
-                </div>
+            <div v-if="!readonly">
+                <template v-for="n in repeat" :key="n">
+                    <div v-if="isRepeatable || (!isRepeatable && num_documents()==0)">
+                        <input :name="name" type="file" class="form-control" :data-que="n" :accept="fileTypes" @change="handleChange" :required="isRequired"/>
+                        <alert v-if="showError" type="danger" style="color: red"><strong>{{errorString}}</strong></alert>
+                    </div>
+                </template>
             </div>
 
         </div>
@@ -62,16 +64,16 @@
 
 <script>
 import {
-  api_endpoints,
   helpers
 }
 from '@/utils/hooks'
-import Comment from './comment.vue'
+// import Comment from './comment.vue'
 import CommentBox from './comment_box_referral.vue'
 import HelpText from './help_text.vue'
 import HelpTextUrl from './help_text_url.vue'
 import alert from '@vue-utils/alert.vue'
 export default {
+    name: 'FileUpload',
     props:{
         proposal_id: null,
         proposal_lodgement_date: String,
@@ -112,10 +114,14 @@ export default {
         isRepeatable: [String, Boolean],
         readonly:Boolean,
         docsUrl: String,
-        comment_boxes: "",
+        comment_boxes: {
+            default:function () {
+                return "";
+            }
+        },
         //comment_boxes: [String, Array]
     },
-    components: {Comment, HelpText, HelpTextUrl, CommentBox, alert },
+    components: {HelpText, HelpTextUrl, CommentBox, alert },
     data:function(){
         return {
             repeat:1,
@@ -146,7 +152,7 @@ export default {
             let has_value=false;
             let boxes=JSON.parse(this.comment_boxes)
             for(var i=0; i<boxes.length; i++){
-                if(boxes[i].hasOwnProperty('value')){
+                if (Object.prototype.hasOwnProperty.call(boxes[i], 'value')) {
                     if(boxes[i].value!=null && boxes[i].value!=undefined && boxes[i].value!= '' ){
                         has_value=true;
                     }
@@ -230,7 +236,7 @@ export default {
             formData.append('csrfmiddlewaretoken', vm.csrf_token);
 
             vm.$http.post(vm.proposal_document_action, formData)
-                .then(res=>{
+                .then(()=>{
                     vm.documents = vm.get_documents()
                     //vm.documents = res.body;
                     vm.show_spinner = false;
@@ -248,7 +254,7 @@ export default {
             formData.append('csrfmiddlewaretoken', vm.csrf_token);
 
             vm.$http.post(vm.proposal_document_action, formData)
-                .then(res=>{
+                .then(()=>{
                     vm.documents = vm.get_documents()
                     //vm.documents = res.body;
                     vm.show_spinner = false;
@@ -257,7 +263,6 @@ export default {
         },
         
         uploadFile(e){
-            let vm = this;
             let _file = null;
 
             if (e.target.files && e.target.files[0]) {
@@ -298,6 +303,7 @@ export default {
                     //$spinner.toggleClass("fa fa-cog fa-spin");
                     vm.show_spinner = false;
                 },err=>{
+                    console.error(err);
                 });
             }
         },

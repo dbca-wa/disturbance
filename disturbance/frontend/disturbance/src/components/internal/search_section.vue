@@ -21,7 +21,7 @@
                                   <div class="form-group">
                                       <select class="form-control" style="width:40%" v-model="selected_application_name" @change="chainedSelectAppType(selected_application_name)">
                                           <option value="" selected disabled>Proposal Type</option>
-                                          <option v-for="application_type in application_types" :value="application_type.text">
+                                          <option v-for="application_type in application_types" :value="application_type.text" :key="application_type.text">
                                                 {{ application_type.text }}
                                           </option>
                                       </select>
@@ -35,7 +35,7 @@
                                         <select v-model="selected_region" class="form-control" style="width:40%" @change="chainedSelectDistricts(selected_region)">
                                             <!-- <option value="" selected disabled>Select region</option> -->
                                             <option value="" selected>All</option>
-                                            <option v-for="region in regions" :value="region.value">
+                                            <option v-for="region in regions" :value="region.value" :key="region.value">
                                                 {{ region.text }}
                                             </option>
                                         </select>
@@ -50,7 +50,7 @@
                                         <select  v-model="selected_district" class="form-control" style="width:40%">
                                         <!-- <option value="" selected disabled>Select district</option> -->
                                         <option value="" selected >All</option>
-                                            <option v-for="district in districts" :value="district.value">
+                                            <option v-for="district in districts" :value="district.value" :key="district.value">
                                                 {{ district.text }}
                                             </option>
                                         </select>
@@ -66,7 +66,7 @@
                                     <select v-model="selected_activity" class="form-control" style="width:40%">
                                       <!-- <option value="" selected disabled>Select activity</option> -->
                                       <option value="" selected>All</option>
-                                      <option v-for="activity in activities" :value="activity.value">
+                                      <option v-for="activity in activities" :value="activity.value" :key="activity.value">
                                         {{ activity.text }}
                                       </option>
                                     </select>
@@ -82,7 +82,7 @@
                                   <div class="form-group">
                                     <select v-model="selected_section" class="form-control" style="width:40%" @change="chainedSelectSections(selected_section)">
                                       <option value="" selected disabled>Select section</option>
-                                      <option v-for="section in sections" :value="section.value">
+                                      <option v-for="section in sections" :value="section.value" :key="section.value">
                                         {{ section.text }}
                                       </option>
                                     </select>
@@ -98,7 +98,7 @@
                                   <div class="form-group">
                                     <select v-model="selected_question" class="form-control" style="width:40%" @change="chainedSelectOptions(selected_question)">
                                       <option value="" selected disabled>Select question</option>
-                                      <option v-for="question in questions" :value="question.value">
+                                      <option v-for="question in questions" :value="question.value" :key="question.value">
                                         {{ question.text }}
                                       </option>
                                     </select>
@@ -126,7 +126,7 @@
                                   <div class="form-group">
                                     <select v-model="selected_option" class="form-control" style="width:40%" >
                                       <option value="" selected disabled>Select option</option>
-                                      <option v-for="option in options" :value="option.value">
+                                      <option v-for="option in options" :value="option.value" :key="option.value">
                                         {{ option.text }}
                                       </option>
                                     </select>
@@ -151,7 +151,7 @@
                     <div class="row">
                       <div class="col-lg-12">
                           <ul class="list-inline" style="display: inline; width: auto;">                          
-                              <li class="list-inline-item" v-for="(item,i) in searchKeywords">
+                              <li class="list-inline-item" v-for="(item,i) in searchKeywords" :key="i">
                                 <button @click.prevent="" class="btn btn-light" style="margin-top:5px; margin-bottom: 5px">{{item}}</button><a href="" @click.prevent="removeKeyword(i)"><span class="glyphicon glyphicon-remove "></span></a>
                               </li>
                           </ul>
@@ -161,9 +161,9 @@
                     <div class="row">
                       <div class="col-lg-12">
                         <div >
-                          <input type="button" @click.prevent="search" class="btn btn-primary btn-margin" style="margin-bottom: 5px"value="Search"/>
-                          <input type="reset" @click.prevent="reset" class="btn btn-primary btn-margin" style="margin-bottom: 5px"value="Clear"/>
-                          <input type="geoJsonButtonClicked" @click.prevent="geoJsonButtonClicked" class="btn btn-primary" style="margin-bottom: 5px"value="Get Spatial File"/>
+                          <input type="button" @click.prevent="search" class="btn btn-primary btn-margin" style="margin-bottom: 5px" value="Search"/>
+                          <input type="reset" @click.prevent="reset" class="btn btn-primary btn-margin" style="margin-bottom: 5px" value="Clear"/>
+                          <input type="geoJsonButtonClicked" @click.prevent="geoJsonButtonClicked" class="btn btn-primary" style="margin-bottom: 5px" value="Get Spatial File"/>
                         </div>
                       </div> 
                     </div>
@@ -184,15 +184,15 @@
     </div>
 </template>
 <script>
+import { v4 as uuidv4 } from 'uuid';
 import $ from 'jquery'
-//import alert from '@vue-utils/alert.vue'
 import datatable from '@/utils/vue/datatable.vue'
 import {
   api_endpoints,
-  helpers
+  helpers,
+  constants
 }
 from '@/utils/hooks'
-import utils from './utils'
 export default {
   name: 'SearchSection',
   props: {
@@ -201,9 +201,9 @@ export default {
   data() {
     let vm = this;
     return {
-      rBody: 'rBody' + vm._uid,
-      oBody: 'oBody' + vm._uid,
-      kBody: 'kBody' + vm._uid,
+      rBody: 'rBody' + uuidv4(),
+      oBody: 'oBody' + uuidv4(),
+      kBody: 'kBody' + uuidv4(),
       loading: [],
       searchKeywords: [],
       searchProposal: true,
@@ -217,10 +217,9 @@ export default {
       errors: false,
       errorString: '',
       form: null,
-      pBody: 'pBody' + vm._uid,
-      pBody2: 'pBody2' + vm._uid,
+      pBody: 'pBody' + uuidv4(),
+      pBody2: 'pBody2' + uuidv4(),
 
-      selected_application_name: '',
       selected_application_name: '',
       selected_region: '',
       selected_district: '',
@@ -252,11 +251,11 @@ export default {
                 allowInputToggle:true
             },
       site_url: (api_endpoints.site_url.endsWith("/")) ? (api_endpoints.site_url): (api_endpoints.site_url + "/"),
-      datatable_id: 'proposal-datatable-'+vm._uid,
+      datatable_id: 'proposal-datatable-'+uuidv4(),
       proposal_headers:["Number","Type","Proponent","Text found","Action"],
       proposal_options:{
           language: {
-              processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
+              processing: constants.DATATABLE_PROCESSING_HTML,
           },
           responsive: true,
           /*ajax: {
@@ -274,7 +273,7 @@ export default {
               {data: "applicant"},
               {//data: "text.value"
                 data: "text",
-                mRender: function (data,type,full) {
+                mRender: function (data) {
                   if(data.value){
                     return data.value;
                   }
@@ -315,7 +314,7 @@ export default {
     components: {
         datatable,
     },
-    beforeRouteEnter:function(to,from,next){
+    // beforeRouteEnter:function(to,from,next){
         // utils.fetchOrganisations().then((response)=>{
         //     next(vm => {
         //         vm.organisations = response;
@@ -324,7 +323,7 @@ export default {
         // (error) =>{
         //     console.log(error);
         // });
-    },
+    // },
     computed: {
         showError: function() {
             var vm = this;
@@ -333,7 +332,7 @@ export default {
     },
     methods: {
         addListeners: function(){
-            let vm = this;
+            // let vm = this;
             // Initialise select2 for region
             // $(vm.$refs.searchOrg).select2({
             //     "theme": "bootstrap",
@@ -394,7 +393,7 @@ export default {
 
         search: function() {
           let vm = this;
-          // swal(
+          // swal.fire(
           //         'Missing fields',
           //         'Please select all the mandatory fields',
           //         'error'
@@ -402,7 +401,7 @@ export default {
           if(!vm.selected_application_name || !vm.selected_section || !vm.selected_question || !vm.selected_option )
           {
             //console.log('here');
-            swal(
+            swal.fire(
                   'Missing fields',
                   'Please select all the mandatory fields',
                   'error'
@@ -470,30 +469,32 @@ export default {
       fetchRegions: function(){
         let vm = this;
 
-        vm.$http.get(api_endpoints.regions).then((response) => {
-            vm.api_regions = response.body;
+        fetch(api_endpoints.regions).then(
+          async (response) => {
+            vm.api_regions = await response.json();
             //console.log('api_regions ' + response.body);
-
-                    for (var i = 0; i < vm.api_regions.length; i++) {
-                        this.regions.push( {text: vm.api_regions[i].name, value: vm.api_regions[i].id, districts: vm.api_regions[i].districts} );
-                    }
-        },(error) => {
-          console.log(error);
-        })
+            for (var i = 0; i < vm.api_regions.length; i++) {
+                this.regions.push( {text: vm.api_regions[i].name, value: vm.api_regions[i].id, districts: vm.api_regions[i].districts} );
+            }
+          },(error) => {
+            console.log(error);
+          }
+        )
       },
       fetchSections: function(){
         let vm = this;
 
-        vm.$http.get(api_endpoints.proposal_type_sections).then((response) => {
-            vm.api_sections = response.body;
+        fetch(api_endpoints.proposal_type_sections).then(
+          async (response) => {
+            vm.api_sections = await response.json();
             //console.log('api_regions ' + response.body);
-
-                    for (var i = 0; i < vm.api_sections.length; i++) {
-                        this.sections.push( {text: vm.api_sections[i].section_label, value: vm.api_sections[i].section_label, questions: vm.api_sections[i].section_questions} );
-                    }
-        },(error) => {
-          console.log(error);
-        })
+            for (var i = 0; i < vm.api_sections.length; i++) {
+              this.sections.push( {text: vm.api_sections[i].section_label, value: vm.api_sections[i].section_label, questions: vm.api_sections[i].section_questions} );
+            }
+          },(error) => {
+            console.log(error);
+          }
+        )
       },
       chainedSelectAppType: function(application_name){
         /* reset */
@@ -604,18 +605,21 @@ export default {
             vm.categories = [];
             vm.approval_level = '';
 
-        vm.$http.get(api_endpoints.activity_matrix).then((response) => {
-            this.activity_matrix = response.body[0].schema[0];
-            this.keys_ordered = response.body[0].ordered;
+        fetch(api_endpoints.activity_matrix).then(
+          async (response) => {
+            let data = await response.json();
+            this.activity_matrix = data[0].schema[0];
+            this.keys_ordered = data[0].ordered;
             //console.log('this.activity_matrix ' + response.body[0].schema);
 
-                    var keys = this.keys_ordered ? Object.keys(this.activity_matrix).sort() : Object.keys(this.activity_matrix)
-                    for (var i = 0; i < keys.length; i++) {
-                        this.activities.push( {text: keys[i], value: keys[i]} );
-                    }
-        },(error) => {
-          console.log(error);
-        })
+            var keys = this.keys_ordered ? Object.keys(this.activity_matrix).sort() : Object.keys(this.activity_matrix)
+            for (var i = 0; i < keys.length; i++) {
+                this.activities.push( {text: keys[i], value: keys[i]} );
+            }
+          },(error) => {
+            console.log(error);
+          }
+        )
       },
       chainedSelectSubActivities1: function(activity_name){
         let vm = this;
@@ -648,37 +652,39 @@ export default {
 
                 } else {
                     // go to sub_activity2 widget
-                    for (var i = 0; i < api_sub_activities.length; i++) {
-                        var key = Object.keys(api_activities[i])[0];
-                        this.sub_activities1.push( {text: key, value: key, sub_matrix: api_activities[i][key]} );
+                    for (var k = 0; k < api_sub_activities.length; k++) {
+                        var key = Object.keys(api_activities[k])[0];
+                        this.sub_activities1.push( {text: key, value: key, sub_matrix: api_activities[k][key]} );
                     }
                 }
             } else {
-                for (var i = 0; i < api_activities.length; i++) {
-                    var key = Object.keys(api_activities[i])[0];
-                    this.sub_activities1.push( {text: key, value: key, sub_matrix: api_activities[i][key]} );
+                for (var m = 0; m < api_activities.length; m++) {
+                    var act_key = Object.keys(api_activities[m])[0];
+                    this.sub_activities1.push( {text: act_key, value: act_key, sub_matrix: api_activities[m][act_key]} );
                 }
             }
       },
       fetchApplicationTypes: function(){
         let vm = this;
 
-        vm.$http.get(api_endpoints.searchable_application_types).then((response) => {
-            vm.api_app_types = response.body;
+        fetch(api_endpoints.searchable_application_types).then(
+          async (response) => {
+            vm.api_app_types = await response.json();
             //console.log('api_app_types ' + response.body);
 
-                    for (var i = 0; i < vm.api_app_types.length; i++) {
-                        this.application_types.push( {
-                            text: vm.api_app_types[i].name,
-                            value: vm.api_app_types[i].id,
-                            domain_used: vm.api_app_types[i].domain_used,
-                            //activities: (vm.api_app_types[i].activity_app_types.length > 0) ? vm.api_app_types[i].activity_app_types : [],
-                            //tenures: (vm.api_app_types[i].tenure_app_types.length > 0) ? vm.api_app_types[i].tenure_app_types : [],
-                        } );
-                    }
-        },(error) => {
-          console.log(error);
-        })
+            for (var i = 0; i < vm.api_app_types.length; i++) {
+                this.application_types.push( {
+                    text: vm.api_app_types[i].name,
+                    value: vm.api_app_types[i].id,
+                    domain_used: vm.api_app_types[i].domain_used,
+                    //activities: (vm.api_app_types[i].activity_app_types.length > 0) ? vm.api_app_types[i].activity_app_types : [],
+                    //tenures: (vm.api_app_types[i].tenure_app_types.length > 0) ? vm.api_app_types[i].tenure_app_types : [],
+                } );
+            }
+          },(error) => {
+            console.log(error);
+          }
+        )
       },
       eventListeners:function () {
             let vm = this;
@@ -726,7 +732,7 @@ export default {
                   });
                 }
                 else{
-                    swal(
+                    swal.fire(
                       'Missing records',
                       'No search results to include in the Spatial file',
                       'error'

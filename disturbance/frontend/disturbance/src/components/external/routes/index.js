@@ -1,30 +1,20 @@
+import { RouterView } from 'vue-router';
 import ExternalDashboard from '../dashboard.vue'
-//import Proposal from '../proposal_external.vue'
 import Proposal from '../proposal_wrapper.vue'
-// import ProposalApply from '../proposal_apply.vue'
 import ProposalApply from '../proposal_apply_latest.vue'
 import ProposalSubmit from '../proposal_submit.vue'
 import Organisation from '../organisations/manage.vue'
 import Compliance from '../compliances/access.vue'
 import ComplianceSubmit from '../compliances/submit.vue'
-//import Approval from '../approvals/approval.vue'
 import Approval from '../approvals/approval_wrapper.vue'
-//import AvailableSites from '../available_sites.vue'
-import AvailableSites from '@/components/common/apiary/available_sites.vue'
 
 export default
 {
     path: '/external',
-    component:
-    {
-        render(c)
-        {
-            return c('router-view')
-        }
-    },
+    component: RouterView,
     children: [
         {
-            path: '/',
+            path: '',
             component: ExternalDashboard,
             name: 'external-proposals-dash'
         },
@@ -42,28 +32,16 @@ export default
             name:"submit_compliance"
         },
         {
-            path: 'sites',
-            component: AvailableSites,
-            name: 'sites',
-            props: { is_external: true }
-        },
-        {
             path: 'approval/:approval_id',
             component: Approval,
             name: "external-approval"
         },
         {
             path: 'proposal',
-            component:
-            {
-                render(c)
-                {
-                    return c('router-view')
-                }
-            },
+            component: RouterView,
             children: [
                 {
-                    path: '/',
+                    path: '',
                     component: ProposalApply,
                     name:"apply_proposal"
                 },
