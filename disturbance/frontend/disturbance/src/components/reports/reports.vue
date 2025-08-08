@@ -316,7 +316,8 @@ export default {
             if (vm.oracle_form.valid()){
                 let data = vm.oracleDatePicker.data("DateTimePicker").date().format('DD/MM/YYYY');
                 let override = vm.oracle_override ? 'true': 'false';
-                fetch('/api/oracle_job?date='+data+'&override='+override).then(() => {
+                fetch('/api/oracle_job?date='+data+'&override='+override)
+                .then(() => {
                     swal.fire({
                         icon: 'success',
                         title: 'Job Success',

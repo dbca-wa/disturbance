@@ -567,7 +567,8 @@ export default {
         },
         initSelects: function() {
 
-            fetch(helpers.add_endpoint_json(api_endpoints.schema_masterlist,'1/get_masterlist_selects')).then(async res=>{
+            fetch(helpers.add_endpoint_json(api_endpoints.schema_masterlist,'1/get_masterlist_selects'))
+            .then(async (res)=>{
                 let data = await res.json();
                 this.answerTypes = data.all_answer_types;
 

@@ -336,7 +336,8 @@ export default {
         },
         initSelects: function() {
 
-            fetch(helpers.add_endpoint_json(api_endpoints.schema_proposal_type,'1/get_proposal_type_selects')).then(async res=>{
+            fetch(helpers.add_endpoint_json(api_endpoints.schema_proposal_type,'1/get_proposal_type_selects'))
+            .then(async (res)=>{
                 let data = await res.json();
                 this.schemaProposalTypes = data.all_proposal_type;
             },err=>{

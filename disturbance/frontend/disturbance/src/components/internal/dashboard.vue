@@ -54,7 +54,7 @@ export default {
         let vm= this;
         // retrieve template group
         fetch('/template_group',{ emulateJSON:true }).then(
-            async res=>{
+            async (res)=>{
                 //this.template_group = res.body.template_group;
                 vm.template_group_res = await res.json();
                 if (vm.template_group_res.template_group === 'apiary') {

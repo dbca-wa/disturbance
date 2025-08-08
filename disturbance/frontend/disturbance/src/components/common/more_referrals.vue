@@ -136,9 +136,8 @@ export default {
             let vm = this;
             
             fetch(helpers.add_endpoint_json(api_endpoints.referrals,_id+'/remind')).then(
-                async response => {
-                    let referrals_remind_res = {};
-                    referrals_remind_res = await response.json();
+                async (response) => {
+                    let referrals_remind_res = await response.json();
                     vm.$emit('refreshFromResponse',referrals_remind_res);
                     vm.table.ajax.reload();
                     swal.fire({
@@ -159,9 +158,8 @@ export default {
         resendReferral:function(_id,user){
             let vm = this;
             fetch(helpers.add_endpoint_json(api_endpoints.referrals,_id+'/resend')).then(
-                async response => {
-                    let referrals_resend_res = {};
-                    referrals_resend_res = await response.json();
+                async (response) => {
+                    let referrals_resend_res = await response.json();
                     vm.$emit('refreshFromResponse',referrals_resend_res);
                     vm.table.ajax.reload();
                     swal.fire({
@@ -191,11 +189,10 @@ export default {
                     }
             })
             fetch(helpers.add_endpoint_json(api_endpoints.referrals,_id+'/recall')).then(
-                async response => {
+                async (response) => {
                     swal.hideLoading();
                     swal.close();
-                    let ref_recall_res = {};
-                    ref_recall_res = await response.json()
+                    let ref_recall_res = await response.json()
                     vm.$emit('refreshFromResponse',ref_recall_res);
                     vm.table.ajax.reload();
                     swal.fire({

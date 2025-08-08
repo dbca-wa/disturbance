@@ -1182,7 +1182,7 @@ export default {
 
         let vm = this;
         fetch(`/api/proposal/${ proposal_id }.json`).then(
-            async res => {
+            async (res) => {
                 vm.loading.push('fetching proposal')
                 vm.proposal = await res.json();
                 console.log('vm.proposal')

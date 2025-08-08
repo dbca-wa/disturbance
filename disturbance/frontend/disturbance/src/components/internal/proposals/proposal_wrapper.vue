@@ -76,25 +76,27 @@ export default {
     mounted: function () {
     },
     beforeRouteEnter: function(to, from, next) {
-          fetch(`/api/proposal/${to.params.proposal_id}/internal_proposal_wrapper.json`).then(res => {
-              next(vm => {
-                  vm.proposalId = res.body.id;
-                  vm.applicationTypeName = res.body.application_type_name;
-                  /*
-                  vm.original_proposal = helpers.copyObject(res.body);
-                  if (vm.proposal.applicant) {
-                      vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
-                  }
-                  // Create boolean values for each application type and add logic to the following conditional
-                  if (vm.proposal && vm.proposal.application_type === 'Apiary') {
-                      vm.apiaryApplication = true;
-                  }
-                  */
-              });
-            },
-            err => {
-              console.log(err);
+        fetch(`/api/proposal/${to.params.proposal_id}/internal_proposal_wrapper.json`)
+        .then(async res => {
+            const data = await res.json();
+            next(vm => {
+                vm.proposalId = data.id;
+                vm.applicationTypeName = data.application_type_name;
+                /*
+                vm.original_proposal = helpers.copyObject(res.body);
+                if (vm.proposal.applicant) {
+                    vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
+                }
+                // Create boolean values for each application type and add logic to the following conditional
+                if (vm.proposal && vm.proposal.application_type === 'Apiary') {
+                    vm.apiaryApplication = true;
+                }
+                */
             });
+        },
+        err => {
+            console.log(err);
+        });
     },
 }
 </script>

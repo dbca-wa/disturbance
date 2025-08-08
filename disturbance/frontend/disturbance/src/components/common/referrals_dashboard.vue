@@ -648,7 +648,7 @@ export default {
     created: function() {
         // retrieve template group
         fetch('/template_group',{ emulateJSON:true }).then(
-            async res=>{
+            async (res)=>{
                 //this.template_group = res.body.template_group;
                 let template_group_res = await res.json();
                 if (template_group_res.template_group === 'apiary') {

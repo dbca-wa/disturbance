@@ -607,9 +607,9 @@ export default {
 
         fetchOrgRequestList: function() { //Fetch all the Organisation requests submitted by user which are pending for approval.
             let vm = this;
-            fetch(helpers.add_endpoint_json(api_endpoints.organisation_requests,'get_pending_requests')).then((response) => {
-
-                vm.orgRequest_list=response.body;
+            fetch(helpers.add_endpoint_json(api_endpoints.organisation_requests,'get_pending_requests'))
+            .then(async (response) => {
+                vm.orgRequest_list=await response.json();
             }, (error) => {
                 console.log(error);
             });
@@ -639,8 +639,9 @@ export default {
                     vm.uploadedFile = null;
                     vm.addingCompany = false;
                     vm.resetNewOrg();
-                    fetch(api_endpoints.profile).then((response) => {
-                        vm.profile = response.body
+                    fetch(api_endpoints.profile)
+                    .then(async (response) => {
+                        vm.profile = await response.json();
                         if (vm.profile.residential_address == null){ vm.profile.residential_address = {}; }
                         if ( vm.profile.disturbance_organisations && vm.profile.disturbance_organisations.length > 0 ) { vm.managesOrg = 'Yes' }
                     },(error) => {
@@ -784,8 +785,9 @@ export default {
         fetchCountries:function (){
             let vm =this;
             vm.loading.push('fetching countries');
-            fetch(api_endpoints.countries).then((response)=>{
-                vm.countries = response.body;
+            fetch(api_endpoints.countries)
+            .then(async (response)=>{
+                vm.countries = await response.json();
                 vm.loading.splice('fetching countries',1);
             },()=>{
                 //console.log(response);
@@ -809,8 +811,9 @@ export default {
                     'mobile_number':vm.profile.mobile_number, 'phone_number':vm.profile.phone_number},{
                         emulateJSON:true
                     }).then(() => {
-                        fetch(api_endpoints.profile).then((response) => {
-                            vm.profile = response.body
+                        fetch(api_endpoints.profile)
+                        .then(async (response) => {
+                            vm.profile = await response.json();
                             if (vm.profile.residential_address == null){ vm.profile.residential_address = {}; }
                             if ( vm.profile.disturbance_organisations && vm.profile.disturbance_organisations.length > 0 ) { vm.managesOrg = 'Yes' }
                         },(error) => {
@@ -835,8 +838,9 @@ export default {
         },
         fetchProfile: function(){
           let vm=this;
-          fetch(api_endpoints.profile).then((response) => {
-                    vm.profile = response.body
+          fetch(api_endpoints.profile)
+          .then(async (response) => {
+                    vm.profile = await response.json();
                     if (vm.profile.residential_address == null){ vm.profile.residential_address = {}; }
                     if ( vm.profile.disturbance_organisations && vm.profile.disturbance_organisations.length > 0 ) { vm.managesOrg = 'Yes' }
                     vm.phoneNumberReadonly = vm.profile.phone_number === '' || vm.profile.phone_number === null || vm.profile.phone_number === 0 ?  false : true;
@@ -848,13 +852,15 @@ export default {
         },
     },
     beforeRouteEnter: function(to,from,next){
-        fetch(api_endpoints.profile).then((response) => {
-            if (response.body.address_details && response.body.personal_details && response.body.contact_details && to.name == 'first-time'){
+        fetch(api_endpoints.profile)
+        .then(async (response) => {
+            const data = await response.json();
+            if (data.address_details && data.personal_details && data.contact_details && to.name == 'first-time'){
                 window.location.href='/';
             }
             else{
                 next(vm => {
-                    vm.profile = response.body
+                    vm.profile = data;
                     if (vm.profile.residential_address == null){ vm.profile.residential_address = {}; }
                     if ( vm.profile.disturbance_organisations && vm.profile.disturbance_organisations.length > 0 ) { vm.managesOrg = 'Yes' }
                 });
@@ -877,11 +883,11 @@ export default {
     },
     created: function() {
         // retrieve template group
-        fetch('/template_group',{
-            emulateJSON:true
-            }).then(res=>{
+        fetch('/template_group',{ emulateJSON:true })
+        .then(async (res)=>{
                 //this.template_group = res.body.template_group;
-                if (res.body.template_group === 'apiary') {
+                const data = await res.json();
+                if (data.template_group === 'apiary') {
                     this.apiaryTemplateGroup = true;
                 } else {
                     this.dasTemplateGroup = true;

@@ -493,10 +493,9 @@ export default {
           async (response) => {
               vm.api_regions = await response.json();
               //console.log('api_regions ' + response.body);
-
-                      for (var i = 0; i < vm.api_regions.length; i++) {
-                          this.regions.push( {text: vm.api_regions[i].name, value: vm.api_regions[i].id, districts: vm.api_regions[i].districts} );
-                      }
+              for (var i = 0; i < vm.api_regions.length; i++) {
+                  this.regions.push( {text: vm.api_regions[i].name, value: vm.api_regions[i].id, districts: vm.api_regions[i].districts} );
+              }
           },(error) => {
             console.log(error);
           }
@@ -509,10 +508,9 @@ export default {
           async (response) => {
             vm.api_sections = await response.json();
             //console.log('api_regions ' + response.body);
-
-                    for (var i = 0; i < vm.api_sections.length; i++) {
-                        this.sections.push( {text: vm.api_sections[i].section_label, value: vm.api_sections[i].section_label, questions: vm.api_sections[i].section_questions} );
-                    }
+            for (var i = 0; i < vm.api_sections.length; i++) {
+                this.sections.push( {text: vm.api_sections[i].section_label, value: vm.api_sections[i].section_label, questions: vm.api_sections[i].section_questions} );
+            }
           },(error) => {
             console.log(error);
           }
@@ -619,10 +617,10 @@ export default {
             this.keys_ordered = data[0].ordered;
             //console.log('this.activity_matrix ' + response.body[0].schema);
 
-                    var keys = this.keys_ordered ? Object.keys(this.activity_matrix).sort() : Object.keys(this.activity_matrix)
-                    for (var i = 0; i < keys.length; i++) {
-                        this.activities.push( {text: keys[i], value: keys[i]} );
-                    }
+            var keys = this.keys_ordered ? Object.keys(this.activity_matrix).sort() : Object.keys(this.activity_matrix)
+            for (var i = 0; i < keys.length; i++) {
+                this.activities.push( {text: keys[i], value: keys[i]} );
+            }
           },(error) => {
             console.log(error);
           }
@@ -710,17 +708,17 @@ export default {
             vm.api_proposal_types = await response.json();
             //console.log('api_proposal_types ' + response.body);
 
-                    for (var i = 0; i < vm.api_proposal_types.length; i++) {
-                        this.proposal_types.push( {
-                            text: vm.api_proposal_types[i].name_with_version,
-                            value: vm.api_proposal_types[i].id,
-                            sections: vm.api_proposal_types[i].sections,
-                            name: vm.api_proposal_types[i].name,
-                            //domain_used: vm.api_proposal_types[i].domain_used,
-                            //activities: (vm.api_proposal_types[i].activity_app_types.length > 0) ? vm.api_proposal_types[i].activity_app_types : [],
-                            //tenures: (vm.api_proposal_types[i].tenure_app_types.length > 0) ? vm.api_proposal_types[i].tenure_app_types : [],
-                        } );
-                    }
+            for (var i = 0; i < vm.api_proposal_types.length; i++) {
+                this.proposal_types.push( {
+                    text: vm.api_proposal_types[i].name_with_version,
+                    value: vm.api_proposal_types[i].id,
+                    sections: vm.api_proposal_types[i].sections,
+                    name: vm.api_proposal_types[i].name,
+                    //domain_used: vm.api_proposal_types[i].domain_used,
+                    //activities: (vm.api_proposal_types[i].activity_app_types.length > 0) ? vm.api_proposal_types[i].activity_app_types : [],
+                    //tenures: (vm.api_proposal_types[i].tenure_app_types.length > 0) ? vm.api_proposal_types[i].tenure_app_types : [],
+                } );
+            }
           },(error) => {
             console.log(error);
           }

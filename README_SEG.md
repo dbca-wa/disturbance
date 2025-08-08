@@ -57,7 +57,6 @@ delete from django_migrations where app = 'django_cron';
 # Step 6: Run all other migrations
 ```
 ./manage_ds.py migrate disturbance
-./manage_ds.py migrate taggit
 ./manage_ds.py migrate
 ```
 

@@ -757,7 +757,8 @@ export default {
         },
         initSelects: function() {
 
-            fetch(helpers.add_endpoint_json(api_endpoints.schema_question,'1/get_question_selects')).then(async res=>{
+            fetch(helpers.add_endpoint_json(api_endpoints.schema_question,'1/get_question_selects'))
+            .then(async (res)=>{
                     let data = await res.json();
                     this.masterlist = data.all_masterlist;
                     this.schemaProposalTypes = data.all_proposal_types;

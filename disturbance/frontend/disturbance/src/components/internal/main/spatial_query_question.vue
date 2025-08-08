@@ -1497,16 +1497,16 @@ export default {
 	},
 
 
-        check_sqs_layer: async function(url) {
+        check_sqs_layer: function(url) {
             //await fetch(helpers.add_endpoint_json(api_endpoints.spatial_query, self.spatialquerylayer.layer.layer_name+'/check_sqs_layer'))
             const self = this;
             self.show_spinner = true;
-            await fetch(url)
-            .then((response) => {
+            fetch(url).then(async (response) => {
                 //console.log(JSON.stringify(response))
+                let data = await response.json();
                 swal.fire(
                     'Layer Exists in SQS!',
-                    response.body.message,
+                    data.message,
                     'success'
                 )
                 self.show_spinner = false;
@@ -1543,17 +1543,17 @@ export default {
             });
         },
 
-        check_cddp_question: async function(url) {
+        check_cddp_question: function(url) {
             const self = this;
             self.show_spinner = true;
 
             //console.log(url)
             //await fetch(api_endpoints.spatial_query + '/' + spatialquery_id + '/check_cddp_question?proposal_id='+proposal_id)
-            await fetch(url)
-            .then((response) => {
+            fetch(url).then(async (response) => {
+                let data = await response.json();
                 swal.fire(
                     'Question Found in Proposal Schema!',
-                    response.body.message,
+                    data.message,
                     'success'
                 )
                 self.show_spinner = false;
@@ -1580,13 +1580,16 @@ export default {
                 if(swalresult.isConfirmed) {
                     vm.show_spinner = true;
                     vm.export_layers_btn_disabled = true;
-                    fetch('/api/proposal_sqs/layers_used/')
-                    .then((response) => {
+                    fetch('/api/proposal_sqs/layers_used/').then(async (response) => {
+                        let data = await response.blob();
                         var FileSaver = require('file-saver');
-                        const blob = new Blob([response.body], {type: 'text/csv'});
+                        const blob = new Blob([data], {type: 'text/csv'});
                         //const blob = new Blob([response.bodyText], {type: 'text/csv'});
                         //console.log(response.headers.map.filename)
-                        FileSaver.saveAs(blob, response.headers.map.filename);
+                        
+                        // FileSaver.saveAs(blob, response.headers.map.filename);
+                        const filename = response.headers.get('filename')
+                        FileSaver.saveAs(blob, filename);
                         vm.show_spinner = false;
                         vm.export_layers_btn_disabled = false;
 
@@ -1729,72 +1732,75 @@ export default {
 
             self.$refs.spatial_query_question_table.vmDataTable.on('click','.edit-row', function(e) {
 
-		//fetch('/api/spatial_query_paginated/spatial_query_question_datatable_list/?format=datatables&length=all').then(res=>{
-		//fetch('/api/spatial_query_paginated/spatial_query_layer_datatable_list/?format=datatables&length=all&sqq_id=257').then(res=>{
-		fetch('/api/spatial_query_paginated/spatial_query_layer_datatable_list/?format=datatables&length=all&sqq_id=225').then(res=>{
-		    //self.sq_questions = res.body['data'].map((item) => item.question);
-		    console.log(res.body['data'])
-		    self.sq_questions = res.body['data']
+                //fetch('/api/spatial_query_paginated/spatial_query_question_datatable_list/?format=datatables&length=all').then(res=>{
+                //fetch('/api/spatial_query_paginated/spatial_query_layer_datatable_list/?format=datatables&length=all&sqq_id=257').then(res=>{
+                fetch('/api/spatial_query_paginated/spatial_query_layer_datatable_list/?format=datatables&length=all&sqq_id=225').then(
+                    async (res)=>{
+                        //self.sq_questions = res.body['data'].map((item) => item.question);
 
+                        const spatial_data = await res.json();
+                        console.log(spatial_data['data'])
+                        self.sq_questions = spatial_data['data']
+                    
+                    }).then(()=>{
+                        e.preventDefault();
+                        self.isNewEntry = false;
+                        self.$refs.spatial_query_question_table.row_of_data = self.$refs.spatial_query_question_table.vmDataTable.row('#'+$(this).attr('data-rowid'));
 
-                }).then(()=>{
-		    e.preventDefault();
-		    self.isNewEntry = false;
-		    self.$refs.spatial_query_question_table.row_of_data = self.$refs.spatial_query_question_table.vmDataTable.row('#'+$(this).attr('data-rowid'));
+                        console.log(self.$refs.spatial_query_question_table.row_of_data.data().id)
+                        console.log(self.$refs.spatial_query_question_table.row_of_data.data().masterlist_question.question)
+                        console.log(self.$refs.spatial_query_question_table.row_of_data.data().answer_mlq)
+                        console.log(self.$refs.spatial_query_question_table.row_of_data.data().group)
+                        console.log(self.$refs.spatial_query_question_table.row_of_data.data().other_data)
 
-		    console.log(self.$refs.spatial_query_question_table.row_of_data.data().id)
-		    console.log(self.$refs.spatial_query_question_table.row_of_data.data().masterlist_question.question)
-		    console.log(self.$refs.spatial_query_question_table.row_of_data.data().answer_mlq)
-		    console.log(self.$refs.spatial_query_question_table.row_of_data.data().group)
-		    console.log(self.$refs.spatial_query_question_table.row_of_data.data().other_data)
+                        self.spatialquery.id = self.$refs.spatial_query_question_table.row_of_data.data().id;
+                            self.spatial_query_layer_url = helpers.add_endpoint_join(api_endpoints.spatial_query_paginated, 'spatial_query_layer_datatable_list/?format=datatables&sqq_id=') + self.spatialquery.id
+                        console.log(self.spatial_query_layer_url)
+            
 
-		    self.spatialquery.id = self.$refs.spatial_query_question_table.row_of_data.data().id;
-       		    self.spatial_query_layer_url = helpers.add_endpoint_join(api_endpoints.spatial_query_paginated, 'spatial_query_layer_datatable_list/?format=datatables&sqq_id=') + self.spatialquery.id
-		    console.log(self.spatial_query_layer_url)
- 
+                        //self.filterMasterlistQuestion = self.$refs.spatial_query_question_table.row_of_data.data().filterMasterlistQuestion;
+                        self.spatialquery.question = self.$refs.spatial_query_question_table.row_of_data.data().masterlist_question.question;
+                        self.spatialquery.answer_mlq = self.$refs.spatial_query_question_table.row_of_data.data().answer_mlq;
+                        self.spatialquery.other_data = self.$refs.spatial_query_question_table.row_of_data.data().other_data;
+                        self.spatialquery.group = self.$refs.spatial_query_question_table.row_of_data.data().group;
 
-		    //self.filterMasterlistQuestion = self.$refs.spatial_query_question_table.row_of_data.data().filterMasterlistQuestion;
-		    self.spatialquery.question = self.$refs.spatial_query_question_table.row_of_data.data().masterlist_question.question;
-		    self.spatialquery.answer_mlq = self.$refs.spatial_query_question_table.row_of_data.data().answer_mlq;
-		    self.spatialquery.other_data = self.$refs.spatial_query_question_table.row_of_data.data().other_data;
-		    self.spatialquery.group = self.$refs.spatial_query_question_table.row_of_data.data().group;
+                        self.filterMasterlistQuestion = self.spatialquery.question
+                        self.filterMasterlistOption = self.spatialquery.answer_mlq
+                        self.filterCddpOperator = self.spatialquery.operator
 
-		    self.filterMasterlistQuestion = self.spatialquery.question
-		    self.filterMasterlistOption = self.spatialquery.answer_mlq
-		    self.filterCddpOperator = self.spatialquery.operator
+                        self.addedOptions = self.$refs.spatial_query_question_table.row_of_data.data().options;
+                        self.addedHeaders = self.$refs.spatial_query_question_table.row_of_data.data().headers;       
+                        self.addedExpanders = self.$refs.spatial_query_question_table.row_of_data.data().expanders;
 
-		    self.addedOptions = self.$refs.spatial_query_question_table.row_of_data.data().options;
-		    self.addedHeaders = self.$refs.spatial_query_question_table.row_of_data.data().headers;       
-		    self.addedExpanders = self.$refs.spatial_query_question_table.row_of_data.data().expanders;
+                        //self.isModalOpen = true;
+                        self.showQuestionModal = true;
+                        self.showLayerModal = false;
+                        self.showTestModal = false;
+                        self.showLayerAttrsModal = false;
+                        self.showTestJsonResponse = false;
 
-		    //self.isModalOpen = true;
-		    self.showQuestionModal = true;
-		    self.showLayerModal = false;
-		    self.showTestModal = false;
-		    self.showLayerAttrsModal = false;
-		    self.showTestJsonResponse = false;
+                                /* start of data setup for 'spatial_query_layer' dialog */
 
-                    /* start of data setup for 'spatial_query_layer' dialog */
+                                let spatial_query_layers = self.$refs.spatial_query_question_table.row_of_data.data().layers; 
+                                console.log('JM6 ' + JSON.stringify(spatial_query_layers))
 
-                    let spatial_query_layers = self.$refs.spatial_query_question_table.row_of_data.data().layers; 
-                    console.log('JM6 ' + JSON.stringify(spatial_query_layers))
+                        self.$refs.spatial_query_layer_table.vmDataTable.clear().draw()
+                        self.$refs.spatial_query_layer_table.vmDataTable.rows.add( spatial_query_layers )
+                        self.$refs.spatial_query_layer_table.vmDataTable.columns.adjust().draw()
 
-		    self.$refs.spatial_query_layer_table.vmDataTable.clear().draw()
-		    self.$refs.spatial_query_layer_table.vmDataTable.rows.add( spatial_query_layers )
-		    self.$refs.spatial_query_layer_table.vmDataTable.columns.adjust().draw()
+                                /* end of data setup for 'spatial_query_layer' dialog */
 
-                    /* end of data setup for 'spatial_query_layer' dialog */
-
-		    //self.isQuestionModalOpen = true;
-		    self.showQuestionModal = true;
-		    $(self.$refs.select_question).val(self.spatialquery.question).trigger('change');
-		},err=>{
-		    swal.fire(
-			'Get Application Selects Error',
-			helpers.apiVueResourceError(err),
-			'error'
-		    )
-		});
+                        //self.isQuestionModalOpen = true;
+                        self.showQuestionModal = true;
+                        $(self.$refs.select_question).val(self.spatialquery.question).trigger('change');
+                    },err=>{
+                        swal.fire(
+                        'Get Application Selects Error',
+                        helpers.apiVueResourceError(err),
+                        'error'
+                        )
+                    }
+                );
 
             });
 
@@ -2073,20 +2079,22 @@ export default {
                     self.filterMasterlistQuestion=selected.val()
                 });
         },
-        initSelects: async function() {
+        initSelects: function() {
 
             //console.log(helpers.add_endpoint_json(api_endpoints.spatial_query,'get_spatialquery_selects'))
-            await fetch(helpers.add_endpoint_json(api_endpoints.spatial_query,'get_spatialquery_selects')).then(res=>{
-                    this.spatialquery_selects = res.body
+            fetch(helpers.add_endpoint_json(api_endpoints.spatial_query,'get_spatialquery_selects')).then(
+                async (res)=>{
+                    this.spatialquery_selects = await res.json();
                     this.masterlist_questions = this.spatialquery_selects.all_masterlist
                     this.is_admin = this.spatialquery_selects.permissions.is_admin
-            },err=>{
-                swal.fire(
-                    'Get Application Selects Error',
-                    helpers.apiVueResourceError(err),
-                    'error'
-                )
-            });
+                },err=>{
+                    swal.fire(
+                        'Get Application Selects Error',
+                        helpers.apiVueResourceError(err),
+                        'error'
+                    )
+                }
+            );
 
 //            await fetch(helpers.add_endpoint_json(api_endpoints.spatial_query,'get_sqs_layers')).then(res=>{
 //                    this.available_sqs_layers = res.body
@@ -2103,12 +2111,10 @@ export default {
 
         fetchProfile: function(){
             let vm = this;
-            fetch(api_endpoints.profile).then((response) => {
-                vm.profile = response.body
-
+            fetch(api_endpoints.profile).then(async (response) => {
+                vm.profile = await response.json();
             },(error) => {
                 console.log(error);
-
             })
         },
 
