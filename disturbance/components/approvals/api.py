@@ -155,6 +155,19 @@ class ApprovalPaginatedViewSet(viewsets.ModelViewSet):
             #queryset =  Approval.objects.filter(applicant_id__in = user_orgs)
             return queryset
         return Approval.objects.none()
+    
+    def get_external_queryset(self):
+        if is_internal(self.request):
+            user_orgs = [org.id for org in self.request.user.disturbance_organisations.all()]
+            queryset =  Approval.objects.filter(Q(applicant_id__in = user_orgs)|Q(proxy_applicant_id=self.request.user.id)).exclude(status='hidden')
+            return queryset
+            #return Approval.objects.all().exclude(status='hidden')
+        elif is_customer(self.request):
+            user_orgs = [org.id for org in self.request.user.disturbance_organisations.all()]
+            queryset =  Approval.objects.filter(Q(applicant_id__in = user_orgs)|Q(proxy_applicant_id=self.request.user.id)).exclude(status='hidden')
+            #queryset =  Approval.objects.filter(applicant_id__in = user_orgs)
+            return queryset
+        return Approval.objects.none()
 
 #    def list(self, request, *args, **kwargs):
 #        response = super(ProposalPaginatedViewSet, self).list(request, args, kwargs)
@@ -208,14 +221,17 @@ class ApprovalPaginatedViewSet(viewsets.ModelViewSet):
         template_group = get_template_group(request)
         if template_group == 'apiary':
             #qs = self.get_queryset().filter(application_type__apiary_group_application_type=True)
-            qs = self.get_queryset().filter(
+            # qs = self.get_queryset().filter(
+            #         apiary_approval=True
+            #         ).filter(id__in=ids)
+            qs = self.get_external_queryset().filter(
                     apiary_approval=True
                     ).filter(id__in=ids)
         else:
             if is_das_apiary_admin(self.request):
-                qs = self.get_queryset()
+                qs = self.get_external_queryset()
             else:
-                qs = self.get_queryset().exclude(
+                qs = self.get_external_queryset().exclude(
                         apiary_approval=True
                         ).filter(id__in=ids)
 
