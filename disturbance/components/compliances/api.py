@@ -480,10 +480,10 @@ class ComplianceViewSet(viewsets.ModelViewSet):
                 serializer.is_valid(raise_exception=True)
                 comms = serializer.save()
                 # Save the files
-                for f in request.FILES:
+                for f in request.FILES.getlist("files"):
                     document = comms.documents.create(
-                        name = str(request.FILES[f]),
-                        _file = request.FILES[f]
+                        name = str(f),
+                        _file = f
                         )
                 # End Save Documents
 
