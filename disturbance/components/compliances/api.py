@@ -165,6 +165,43 @@ class CompliancePaginatedViewSet(viewsets.ModelViewSet):
             queryset =  Compliance.objects.filter(id__in=compliance_id_list)
             return queryset
         return Compliance.objects.none()
+    
+    def get_external_queryset(self):
+        if is_internal(self.request):
+            #return Compliance.objects.all()
+            #return Compliance.objects.all().exclude(processing_status='discarded')
+            user_orgs = [org.id for org in self.request.user.disturbance_organisations.all()]
+            compliance_id_list = []
+            # Apiary logic for individual applicants
+            for apiary_compliance in Compliance.objects.filter( 
+                    Q(approval__applicant_id__in = user_orgs) | Q(approval__proxy_applicant = self.request.user
+                        )).exclude(processing_status='discarded'):
+                        compliance_id_list.append(apiary_compliance.id)
+            # DAS logic
+            for das_compliance in Compliance.objects.filter( 
+                    Q(proposal__applicant_id__in = user_orgs) | Q(proposal__submitter = self.request.user
+                        ) ).exclude(processing_status='discarded'):
+                        compliance_id_list.append(das_compliance.id)
+            # Return all records
+            queryset =  Compliance.objects.filter(id__in=compliance_id_list)
+            return queryset
+        elif is_customer(self.request):
+            user_orgs = [org.id for org in self.request.user.disturbance_organisations.all()]
+            compliance_id_list = []
+            # Apiary logic for individual applicants
+            for apiary_compliance in Compliance.objects.filter( 
+                    Q(approval__applicant_id__in = user_orgs) | Q(approval__proxy_applicant = self.request.user
+                        )).exclude(processing_status='discarded'):
+                        compliance_id_list.append(apiary_compliance.id)
+            # DAS logic
+            for das_compliance in Compliance.objects.filter( 
+                    Q(proposal__applicant_id__in = user_orgs) | Q(proposal__submitter = self.request.user
+                        ) ).exclude(processing_status='discarded'):
+                        compliance_id_list.append(das_compliance.id)
+            # Return all records
+            queryset =  Compliance.objects.filter(id__in=compliance_id_list)
+            return queryset
+        return Compliance.objects.none()
 
 #    def list(self, request, *args, **kwargs):
 #        response = super(ProposalPaginatedViewSet, self).list(request, args, kwargs)
@@ -190,11 +227,14 @@ class CompliancePaginatedViewSet(viewsets.ModelViewSet):
            template_group = 'das'
         if template_group == 'apiary':
             #qs = self.get_queryset().filter(application_type__apiary_group_application_type=True).exclude(processing_status='discarded')
-            qs = self.get_queryset().filter(
+            # qs = self.get_queryset().filter(
+            #         apiary_compliance=True
+            #         )
+            qs = self.get_external_queryset().filter(
                     apiary_compliance=True
                     )
         else:
-            qs = self.get_queryset().exclude(
+            qs = self.get_external_queryset().exclude(
                     apiary_compliance=True
                     )
         #qs = self.get_queryset().exclude(processing_status='future')
