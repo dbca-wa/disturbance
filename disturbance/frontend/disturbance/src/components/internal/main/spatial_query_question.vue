@@ -1735,7 +1735,7 @@ export default {
                 //fetch('/api/spatial_query_paginated/spatial_query_question_datatable_list/?format=datatables&length=all').then(res=>{
                 //fetch('/api/spatial_query_paginated/spatial_query_layer_datatable_list/?format=datatables&length=all&sqq_id=257').then(res=>{
                 fetch('/api/spatial_query_paginated/spatial_query_layer_datatable_list/?format=datatables&length=all&sqq_id=225').then(
-                    async res=>{
+                    async (res)=>{
                         //self.sq_questions = res.body['data'].map((item) => item.question);
 
                         const spatial_data = await res.json();
@@ -2083,7 +2083,7 @@ export default {
 
             //console.log(helpers.add_endpoint_json(api_endpoints.spatial_query,'get_spatialquery_selects'))
             fetch(helpers.add_endpoint_json(api_endpoints.spatial_query,'get_spatialquery_selects')).then(
-                async res=>{
+                async (res)=>{
                     this.spatialquery_selects = await res.json();
                     this.masterlist_questions = this.spatialquery_selects.all_masterlist
                     this.is_admin = this.spatialquery_selects.permissions.is_admin

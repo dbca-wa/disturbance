@@ -94,9 +94,10 @@ export default {
         // retrieve template group
         fetch('/template_group',{
             emulateJSON:true
-            }).then(res=>{
+            }).then(async (res)=>{
                 //this.template_group = res.body.template_group;
-                if (res.body.template_group === 'apiary') {
+                let data = await res.json();
+                if (data.template_group === 'apiary') {
                     this.apiaryTemplateGroup = true;
                 } else {
                     this.dasTemplateGroup = true;

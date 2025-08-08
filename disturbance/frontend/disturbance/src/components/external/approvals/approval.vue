@@ -195,7 +195,7 @@ export default {
         loadApproval: function(approval_id){
             let vm = this
             fetch(helpers.add_endpoint_json(api_endpoints.approvals,approval_id)).then(
-                async res => {
+                async (res) => {
                     let data = await res.json();
                     vm.approval = data;
                     vm.approval.applicant_id = data.applicant_id;

@@ -564,8 +564,7 @@
                                         credentials: 'include'
                                     })
 
-                                    //p.then(res => res.text()).then(function(data){
-                                    p.then(res => res.json()).then(function(data){
+                                    p.then(async (res) => await res.json()).then(function(data){
                                         //vm.showPopupForLayersHTML(data, evt.coordinate, column_names, display_all_columns)
                                         vm.showPopupForLayersJson(data, evt.coordinate, column_names, display_all_columns, vm.optionalLayers[i])
                                     })

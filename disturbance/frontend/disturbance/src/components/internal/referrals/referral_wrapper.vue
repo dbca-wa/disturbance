@@ -33,10 +33,12 @@ export default {
     mounted: function () {
     },
     beforeRouteEnter: function(to, from, next) {
-          fetch(`/api/referrals/${to.params.referral_id}/referral_wrapper.json`).then(res => {
+          fetch(`/api/referrals/${to.params.referral_id}/referral_wrapper.json`)
+          .then(async (res) => {
+            const data = await res.json();
           //fetch(helpers.add_endpoint_json(api_endpoints.referrals,to.params.referral_id)).then(res => {
               next(vm => {
-                  vm.referralId = res.body.id;
+                  vm.referralId = data.id;
                 //   vm.apiaryReferral = res.body.apiary_referral_exists;
               });
             },

@@ -152,7 +152,7 @@ export default {
         }).then(
             async res=>{
                 //this.template_group = res.body.template_group;
-                let template_group_res= await res.json();
+                const template_group_res= await res.json();
                 if (template_group_res.template_group === 'apiary') {
                     this.apiaryTemplateGroup = true;
                 } else {

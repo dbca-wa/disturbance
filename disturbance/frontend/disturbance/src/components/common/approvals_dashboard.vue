@@ -932,9 +932,7 @@ export default {
                 //confirmButtonColor:'#d9534f'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    fetch(helpers.add_endpoint_json(api_endpoints.proposals,(proposal_id+'/renew_approval')),{
-
-                    }).then(
+                    fetch(helpers.add_endpoint_json(api_endpoints.proposals,(proposal_id+'/renew_approval')),{}).then(
                         async (response) => {
                             let proposal = {}
                             proposal = await response.json();

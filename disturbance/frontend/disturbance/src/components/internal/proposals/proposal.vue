@@ -603,9 +603,9 @@ export default {
 
             // Get the required Proposal data
             const res = await fetch(url);
-
+            const data = await res.json();
             // Set the model data to the version requested
-            this.proposal = Object.assign({}, res.body);
+            this.proposal = Object.assign({}, data);
 
             /*  If we are not viewing the current version (which is always 0),
                 disable any action buttons and fields.
@@ -624,7 +624,7 @@ export default {
             }
 
             // Update the DOM values to the correct data.
-            this.$refs.proposal_disturbance.values = Object.assign({}, res.body.data[0]);
+            this.$refs.proposal_disturbance.values = Object.assign({}, data.data[0]);
 
             // Rerender the form so it drops any unused sections and creates any required sections
             this.$nextTick(function(){
@@ -657,22 +657,26 @@ export default {
             'data/' +
             '?differences_only=True';
 
-            const data_diffs = await fetch(url).then();
+            const verion_response = await fetch(url);
+            const data_diffs = await verion_response.json();
             this.applyRevisionNotes(data_diffs.data)
 
             // Compare the assessor_data field and apply revision notes
             const assessor_data_url = `/api/proposal/${this.proposal.id}/version_differences_assessor_data.json?newer_version=${this.versionCurrentlyShowing}&older_version=${compare_version}`
-            const assessor_data_diffs = await fetch(assessor_data_url);
+            const assessor_res = await fetch(assessor_data_url);
+            const assessor_data_diffs = await assessor_res.json();
             this.applyRevisionNotes(assessor_data_diffs.data)
 
             // Compare the comment_data field and apply revision notes
             const comment_data_url = `/api/proposal/${this.proposal.id}/version_differences_comment_data.json?newer_version=${this.versionCurrentlyShowing}&older_version=${compare_version}`
-            const comment_data_diffs = await fetch(comment_data_url);
+            const comment_res = await fetch(comment_data_url);
+            const comment_data_diffs = await comment_res.json()
             this.applyRevisionNotes(comment_data_diffs.data)
 
             // Compare the proposal documents and apply revision notes
             const document_data_url = `/api/proposal/${this.proposal.id}/version_differences_documents.json?newer_version=${this.versionCurrentlyShowing}&older_version=${compare_version}`
-            const document_data_diffs = await fetch(document_data_url);
+            const document_res = await fetch(document_data_url);
+            const document_data_diffs = await document_res.json();
             this.applyFileRevisionNotes(document_data_diffs.data)            
         },
         applyRevisionNotes: async function (diffdata) {
@@ -1115,9 +1119,10 @@ export default {
         assignRequestUser: function(){
             let vm = this;
             fetch(helpers.add_endpoint_json(api_endpoints.proposals,(vm.proposal.id+'/assign_request_user')))
-            .then((response) => {
-                vm.proposal = response.body;
-                vm.original_proposal = helpers.copyObject(response.body);
+            .then(async (response) => {
+                const data = await response.json();
+                vm.proposal = data;
+                vm.original_proposal = helpers.copyObject(data);
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
                 vm.updateAssignedOfficerSelect();
             }, (error) => {
@@ -1184,9 +1189,10 @@ export default {
             }
             else{
                 fetch(helpers.add_endpoint_json(api_endpoints.proposals,(vm.proposal.id+'/unassign')))
-                .then((response) => {
-                    vm.proposal = response.body;
-                    vm.original_proposal = helpers.copyObject(response.body);
+                .then(async (response) => {
+                    const data = await response.json();
+                    vm.proposal = data;
+                    vm.original_proposal = helpers.copyObject(data);
                     vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
                     vm.updateAssignedOfficerSelect();
                 }, (error) => {
@@ -1439,9 +1445,11 @@ export default {
         remindReferral:function(r){
             let vm = this;
 
-            fetch(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/remind')).then(response => {
-                vm.original_proposal = helpers.copyObject(response.body);
-                vm.proposal = response.body;
+            fetch(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/remind'))
+            .then(async (response) => {
+                const data = await response.json();
+                vm.original_proposal = helpers.copyObject(data);
+                vm.proposal = data;
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
                 swal.fire({
                     title: 'Referral Reminder',
@@ -1460,9 +1468,11 @@ export default {
         resendReferral:function(r){
             let vm = this;
 
-            fetch(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/resend')).then(response => {
-                vm.original_proposal = helpers.copyObject(response.body);
-                vm.proposal = response.body;
+            fetch(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/resend'))
+            .then(async (response) => {
+                const data = await response.json();
+                vm.original_proposal = helpers.copyObject(data);
+                vm.proposal = data;
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
                 swal.fire({
                     title: 'Referral Resent',
@@ -1490,11 +1500,13 @@ export default {
                     }
             })
 
-            fetch(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/recall')).then(response => {
+            fetch(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/recall'))
+            .then(async (response) => {
                 swal.hideLoading();
                 swal.close();
-                vm.original_proposal = helpers.copyObject(response.body);
-                vm.proposal = response.body;
+                const data = await response.json();
+                vm.original_proposal = helpers.copyObject(data);
+                vm.proposal = data;
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
                 swal.fire({
                     title: 'Referral Recall',
@@ -1584,9 +1596,11 @@ export default {
         // window.addEventListener('afterprint', this.afterPrinting);
     },
     created: function() {
-        fetch(`/api/proposal/${this.proposalId}/internal_proposal.json`).then(res => {
-            this.proposal = res.body;
-            this.original_proposal = helpers.copyObject(res.body);
+        fetch(`/api/proposal/${this.proposalId}/internal_proposal.json`)
+        .then(async (res) => {
+            const data = await res.json();
+            this.proposal = data;
+            this.original_proposal = helpers.copyObject(data);
             this.proposal.applicant.address = this.proposal.applicant.address != null ? this.proposal.applicant.address : {};
             this.hasAmendmentRequest=this.proposal.hasAmendmentRequest;
             this.reversion_history_length = Object.keys(this.proposal.reversion_history).length
@@ -1616,10 +1630,12 @@ export default {
     */
     beforeRouteUpdate: function(to, from, next) {
         console.log("beforeRouteUpdate")
-          fetch(`/api/proposal/${to.params.proposal_id}.json`).then(res => {
+          fetch(`/api/proposal/${to.params.proposal_id}.json`)
+          .then(async (res) => {
+            const data = await res.json();
               next(vm => {
-                vm.proposal = res.body;
-                vm.original_proposal = helpers.copyObject(res.body);
+                vm.proposal = data;
+                vm.original_proposal = helpers.copyObject(data);
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
               });
             },

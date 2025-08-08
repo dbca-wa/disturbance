@@ -272,18 +272,21 @@ export default {
             if (this.proposal.proposal_apiary) {
                 url = api_endpoints.apiary_standard_requirements;
             }
-            fetch(url).then((response) => {
-                vm.requirements = response.body
-            },(error) => {
-                console.log(error);
-            })
+            fetch(url).then(
+                async (response) => {
+                    vm.requirements = await response.json();
+                },(error) => {
+                    console.log(error);
+                }
+            )
         },
         editRequirement(_id){
-            let vm = this;
-            fetch(helpers.add_endpoint_json(api_endpoints.proposal_requirements,_id)).then((response) => {
-                this.$refs.target_requirement_detail.requirement = response.body;
-                this.$refs.target_requirement_detail.requirement.due_date =  response.body.due_date != null && response.body.due_date != undefined ? moment(response.body.due_date).format('DD/MM/YYYY'): '';
-                response.body.standard ? $(this.$refs.target_requirement_detail.$refs.standard_req).val(response.body.standard_requirement).trigger('change'): '';
+            fetch(helpers.add_endpoint_json(api_endpoints.proposal_requirements,_id))
+            .then(async (response) => {
+                const data = await response.json();
+                this.$refs.target_requirement_detail.requirement = data;
+                this.$refs.target_requirement_detail.requirement.due_date =  data.due_date != null && data.due_date != undefined ? moment(data.due_date).format('DD/MM/YYYY'): '';
+                data.standard ? $(this.$refs.target_requirement_detail.$refs.standard_req).val(data.standard_requirement).trigger('change'): '';
                 this.addRequirement();
             },(error) => {
                 console.log(error);

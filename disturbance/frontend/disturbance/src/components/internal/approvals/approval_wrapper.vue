@@ -34,7 +34,7 @@ export default {
     },
     beforeRouteEnter: function(to, from, next) {
         fetch(`/api/approvals/${to.params.approval_id}/approval_wrapper.json`).then(
-            async res => {
+            async (res) => {
                 let data = await res.json();
                 next(vm => {
                   vm.approvalId = data.id;

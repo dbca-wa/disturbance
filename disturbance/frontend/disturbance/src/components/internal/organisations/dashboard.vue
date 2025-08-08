@@ -275,15 +275,13 @@ export default {
                 url = api_endpoints.apiary_organisation_access_group_members;
             }
             const response = await fetch(url)
-            const data = await response.json();
-            this.members = data;
+            this.members = await response.json();
             //this.loading.splice('Loading Access Group Members',1);
             this.table_id = uuidv4()
         },
         fetchProfile: async function(){
             const response = await fetch(api_endpoints.profile);
-            const data = await response.json();
-            this.profile = data;
+            this.profile = await response.json();
         },
 
         check_assessor: function(){
