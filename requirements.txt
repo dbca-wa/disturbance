@@ -1,113 +1,58 @@
-# Django==1.11.29
-# Django==3.2.25
-# Django==5.0.13
 Django==5.2.3
 django-extensions~=3.2.3
-# psycopg2==2.8.6
 psycopg2==2.9.4
-#git+https://github.com/xzzy/django-proxy.git#egg=proxy
 git+https://github.com/dbca-wa/wagov_utils.git#egg=wagov_utils
-# removed-jm  git+https://github.com/dbca-wa/ledger#egg=ledger
-#git+https://github.com/dbca-wa/ledger@v2022.08.19.01#egg=ledger
-#git+https://github.com/dbca-wa/ledger@4818666a1bda5fac274e9d0b48008797f04f6545
-
-# git+https://github.com/dbca-wa/dpaw-utils.git@0.3a16#egg=dpaw-utils
 git+https://github.com/dbca-wa/dbca-utils.git@2.1.0#egg=dbca-utils
 git+https://github.com/dbca-wa/wagov_utils.git#egg=wagov_utils
 
-# removed-jm git+https://github.com/django-oscar/django-oscar.git@8a3288da439cc2a878f44ae5c5101043e658d2a2#egg=django-oscar
-# social-auth-app-django==2.1.0
 social-auth-app-django==5.4.3
-# git+https://github.com/scottp-dpaw/social-core.git@email_fix#egg=social-auth-core
 social-auth-core~=4.4
 coverage==6.5.0
 coveralls==3.3.1
 reportlab==4.3.1
-# django_bootstrap3==12.1.0
 django_bootstrap3==24.2
-# django-datatables-view==1.13.0
 django-datatables-view==1.20.0
-# django-reversion==3.0.0
-# django-reversion==4.0.0
 django-reversion==5.1.0
 django-reversion-compare==0.18.1
 git+https://github.com/xzzy/django-preserialize.git#egg=django-preserialize
-# django-countries==6.1.3
-# django-countries==7.5
 django-countries==7.6.1
-# django-cron==0.5.0
-# django-cron==0.6.0
-# git+https://github.com/jorenham/django-cron.git@cec74656a6cada4c40fec43f46594bf332268ab1
 git+https://github.com/dbca-wa/django-cron#egg=django-cron
-# django-dynamic-fixture==1.9.1
 django-dynamic-fixture==4.0.1
-# openpyxl==3.0.9
 openpyxl==3.1.5
-# datapackage==0.8.1
 datapackage==1.15.4
-# py4j==0.10.2.1
 py4j==0.10.9.9
-# djangorestframework==3.5.2
 djangorestframework==3.15.2
-# djangorestframework-gis==0.11
-# djangorestframework-gis==1.0
 djangorestframework-gis==1.1
-# djangorestframework-csv==2.0.0
 djangorestframework-csv==3.0.2
-# pycountry==17.1.8
 pycountry==24.6.1
 six==1.17.0
-# django-ical==1.4
 django-ical==1.9.2
-# django-taggit==0.21.3
 django-taggit==6.1.0
-# geojson==1.3.3
-# geojson==3.1.0
 geojson==3.2.0
 unicodecsv==0.14.1
-# django-extra-fields==0.9
 django-extra-fields==3.0.2
-# django-crispy-forms==1.7.0
-# django-crispy-forms==1.13.0
 django-crispy-forms==2.3
-# django-reset-migrations==0.3.1
 django-reset-migrations==0.4.0
-# django-ckeditor==5.4.0
 django-ckeditor==6.7.2
 # django-ckeditor-5==0.2.17
-# djangorestframework-datatables==0.4.0
 djangorestframework-datatables==0.7.2
 django-confy==1.0.4
 xlwt==1.3.0
-# xlsxwriter==1.1.2
 xlsxwriter==3.2.2
-#gunicorn==19.9.0
 gunicorn==23.0.0
 dj-static==0.0.6
-# mixer==6.1.3
 mixer==7.2.2
-# django-dirtyfields==1.3.1 
 django-dirtyfields==1.9.6
-# dj-database-url==0.5.0
 dj-database-url==2.3.0
-# python-docx==0.8.10
 python-docx==1.1.2
 docxtpl==0.10.0
-# phonenumbers==8.12.15
 phonenumbers==8.13.55
-# django-treebeard==4.3.1
 django-treebeard==4.7.1
-# git+https://github.com/digi604/django-smart-selects.git@js-unlinting-fixes
 git+https://github.com/jazzband/django-smart-selects.git@1.7.2
-# django-multiselectfield==0.1.12
 django-multiselectfield==0.1.13
-# deepdiff==5.7.0
-# deepdiff==7.0.0
 deepdiff==8.4.2
-# whitenoise==5.3.0
 whitenoise==6.9.0 
 git+https://github.com/dbca-wa/django-media-serv.git#egg=django_media_serv
-# drf-writable-nested==0.7.0
 drf-writable-nested==0.7.2
 gevent==25.5.1
 
@@ -116,28 +61,17 @@ gevent==25.5.1
 click-plugins==1.1.1
 cligj==0.7.2
 fiona==1.10.1
-# munch==2.5.0
 munch==4.0.0
-#numpy==1.21.5
-# numpy==1.18.5
 numpy==2.1.1
-# pandas==1.3.5
 pandas==2.2.3
-# pyproj==3.2.1
 pyproj==3.7.1
-# python-dateutil==2.8.2
 python-dateutil==2.9.0.post0
-# shapely==1.8.0
 shapely==2.1.0
-# geopandas==0.10.2
-# geopandas==0.12.0
 geopandas==1.0.1
-# rtree==0.9.7
 rtree==1.4.0
 
 git+https://github.com/dbca-wa/appmonitor_client.git#egg=appmonitor_client
 python-decouple==3.8
-# django-phonenumber-field==5.2.0
 django-phonenumber-field==7.3.0
 django-utils-six==2.0
 setuptools~=80.9.0
