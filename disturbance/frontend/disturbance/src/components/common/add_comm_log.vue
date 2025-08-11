@@ -226,6 +226,8 @@ export default {
                 if (!response.ok) {
                     vm.errors = true;
                     vm.addingComms = false;
+                    //TODO the apiVueResourceError need to be updated
+                    // vm.errorString = helpers.apiVueResourceError(data);
                     vm.errorString = data;
                     return;
                 }

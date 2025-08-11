@@ -855,22 +855,26 @@ export default {
             }).then(
                 (result) => {
                 if (result.isConfirmed) {
-                    vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,(proposal_id+'/reissue_approval')),JSON.stringify(data),{
-                        emulateJSON:true,
+                    fetch(helpers.add_endpoint_json(api_endpoints.proposals,(proposal_id+'/reissue_approval')),{
+                        headers: { 'Content-Type': 'application/json' },
+                        method: 'POST',
+                        body: JSON.stringify(data),
                     })
-                    .then(() => {
+                    .then(async (response) => {
 
-                    vm.$router.push({
-                    name:"internal-proposal",
-                    params:{proposal_id:proposal_id}
-                    });
-                    }, (error) => {
-                        console.log(error);
-                        swal.fire({
-                        title: "Reissue Approval",
-                        text: error.body,
-                        icon: "error",
-                        })
+                        if (!response.ok) {
+                            const data = await response.json();
+                            swal.fire({
+                                title: "Reissue Approval",
+                                text: JSON.stringify(data),
+                                icon: "error",
+                            });
+                            return;
+                        }
+                        vm.$router.push({
+                        name:"internal-proposal",
+                        params:{proposal_id:proposal_id}
+                        });
                     });
                 }
                 },(error) => {
@@ -893,10 +897,20 @@ export default {
             }).then(
                 (result) => {
                     if (result.isConfirmed) {
-                        vm.$http.post(helpers.add_endpoint_json(api_endpoints.approvals,(approval_id+'/approval_reinstate')),{
-
+                        fetch(helpers.add_endpoint_json(api_endpoints.approvals,(approval_id+'/approval_reinstate')),{
+                            method: 'PATCH',
+                            headers: { 'Content-Type': 'application/json' },
                         })
-                        .then(() => {
+                        .then(async (response) => {
+                            if (!response.ok) {
+                                const data = await response.json();
+                                swal.fire({
+                                    icon: "error",
+                                    title: "Reinstate Approval",
+                                    text: JSON.stringify(data),
+                                });
+                                return;
+                            }
                             swal.fire({
                                 title: 'Reinstate',
                                 text: 'Your approval has been reinstated',
@@ -904,13 +918,6 @@ export default {
                             })
                             vm.$refs.proposal_datatable.vmDataTable.ajax.reload();
 
-                        }, (error) => {
-                            console.log(error);
-                            swal.fire({
-                            title: "Reinstate Approval",
-                            text: error.body,
-                            icon: "error",
-                            })
                         });
                     }
                 },(error) => {
