@@ -214,17 +214,25 @@ export default {
             let vm = this;
             vm.errors = false;
             let comms = new FormData(vm.form); 
+             for (let i = 0; i < vm.files.length; i++) {
+                comms.append('files', vm.files[i].file);
+            }
             vm.addingComms = true;
-            vm.$http.post(vm.url,comms,{
-                }).then(()=>{
-                    vm.addingComms = false;
-                    vm.close();
-                    //vm.$emit('refreshFromResponse',response);
-                },(error)=>{
+            fetch(vm.url,{
+                method: 'POST',
+                body: comms,
+            }).then(async (response)=>{
+                const data = await response.json();
+                if (!response.ok) {
                     vm.errors = true;
                     vm.addingComms = false;
-                    vm.errorString = helpers.apiVueResourceError(error);
-                });
+                    vm.errorString = data;
+                    return;
+                }
+                vm.addingComms = false;
+                vm.close();
+                //vm.$emit('refreshFromResponse',response);
+            });
             
         },
         addFormValidations: function() {

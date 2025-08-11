@@ -484,10 +484,10 @@ class OrganisationViewSet(viewsets.ModelViewSet):
                 serializer.is_valid(raise_exception=True)
                 comms = serializer.save()
                 # Save the files
-                for f in request.FILES:
+                for f in request.FILES.getlist("files"):
                     document = comms.documents.create(
-                            name = str(request.FILES[f]),
-                            _file = request.FILES[f]
+                            name = str(f),
+                            _file = f
                             )
 #                for f in request.FILES:
 #                    document = comms.documents.create()
@@ -820,10 +820,10 @@ class OrganisationRequestsViewSet(viewsets.ModelViewSet):
                 serializer.is_valid(raise_exception=True)
                 comms = serializer.save()
                 # Save the files
-                for f in request.FILES:
+                for f in request.FILES.getlist("files"):
                     document = comms.documents.create()
-                    document.name = str(request.FILES[f])
-                    document._file = request.FILES[f]
+                    document.name = str(f)
+                    document._file = f
                     document.save()
                 # End Save Documents
                 
