@@ -137,6 +137,9 @@ export default {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(approval),
             }).then(async (response)=>{
+                if (!response.ok) {
+                    return await response.json().then(err => { throw err });
+                }
                 const data = await response.json();
                 vm.issuingApproval = false;
                 vm.close();
@@ -147,14 +150,11 @@ export default {
                 );
                 vm.$emit('refreshFromResponse',data );
 
-
-            },(error)=>{
+            }).catch((error)=>{
                 vm.errors = true;
                 vm.issuingApproval = false;
                 vm.errorString = helpers.apiVueResourceError(error);
             });
-
-
         },
         addFormValidations: function() {
             let vm = this;

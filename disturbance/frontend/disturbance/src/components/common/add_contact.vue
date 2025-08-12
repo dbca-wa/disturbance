@@ -138,17 +138,17 @@ export default {
                     method: 'PUT',
                     body: JSON.stringify(contact),
                 }).then(async (response)=>{
-                    let data = await response.json();
                     if (!response.ok) {
-                        vm.errors = true;
-                        // vm.errorString = helpers.apiVueResourceError(error);
-                        vm.errorString = data;
-                        return;
+                            return await response.json().then(err => { throw err });
                     }
                     //vm.$parent.loading.splice('processing contact',1);
                     vm.$parent.refreshDatatable();
                     vm.close();
-                })
+                }).catch((error)=>{
+                    console.log(error);
+                    vm.errors = true;
+                    vm.errorString = helpers.apiVueResourceError(error);
+                });
             } else {
                 let contact = JSON.parse(JSON.stringify(vm.contact));
                 contact.organisation = vm.org_id;
@@ -157,16 +157,16 @@ export default {
                         method: 'POST',
                         body: JSON.stringify(contact),
                     }).then(async (response)=>{
-                        const data = await response.json();
                         if (!response.ok) {
-                            vm.errors = true;
-                            // vm.errorString = helpers.apiVueResourceError(error);
-                            vm.errorString = data;
-                            return;
+                            return await response.json().then(err => { throw err });
                         }
                         //vm.$parent.loading.splice('processing contact',1);
                         vm.close();
                         vm.$parent.addedContact();
+                    }).catch((error)=>{
+                        console.log(error);
+                        vm.errors = true;
+                        vm.errorString = helpers.apiVueResourceError(error);
                     });
                 
             }

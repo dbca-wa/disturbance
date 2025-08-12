@@ -152,29 +152,33 @@ export default {
             let approval = JSON.parse(JSON.stringify(vm.approval));
             vm.issuingApproval = true;
 
-            vm.$http.post(helpers.add_endpoint_json(api_endpoints.approvals,vm.approval_id+'/approval_suspension'),JSON.stringify(approval),{
-                        emulateJSON:true,
-                    }).then((response)=>{
-                        vm.issuingApproval = false;
-                        vm.approval={};
-                        vm.close();
-                        swal.fire(
-                             'Suspend',
-                             'An email has been sent to the proponent about suspension of this approval',
-                             'success'
-                        );
-                        vm.$emit('refreshFromResponse',response);
+            fetch(helpers.add_endpoint_json(api_endpoints.approvals,vm.approval_id+'/approval_suspension'),{
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(approval),
+            }).then(async (response)=>{
+                if (!response.ok) {
+                    return await response.json().then(err => { throw err });
+                }
+                const data = await response.json();
+                vm.issuingApproval = false;
+                vm.approval={};
+                vm.close();
+                swal.fire(
+                        'Suspend',
+                        'An email has been sent to the proponent about suspension of this approval',
+                        'success'
+                );
+                vm.$emit('refreshFromResponse',data);
 
 
-                    },(error)=>{
-                        vm.errors = true;
-                        vm.issuingApproval = false;
-                        vm.errorString = helpers.apiVueResourceError(error);
-                        //vm.approval={};
-                        //vm.close();
-                    });
-
-
+            }).catch((error)=>{
+                vm.errors = true;
+                vm.issuingApproval = false;
+                vm.errorString = helpers.apiVueResourceError(error);
+                //vm.approval={};
+                //vm.close();
+            });
         },
         addFormValidations: function() {
             let vm = this;

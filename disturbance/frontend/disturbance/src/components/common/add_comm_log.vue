@@ -222,20 +222,18 @@ export default {
                 method: 'POST',
                 body: comms,
             }).then(async (response)=>{
-                const data = await response.json();
                 if (!response.ok) {
-                    vm.errors = true;
-                    vm.addingComms = false;
-                    //TODO the apiVueResourceError need to be updated
-                    // vm.errorString = helpers.apiVueResourceError(data);
-                    vm.errorString = data;
-                    return;
+                    return await response.json().then(err => { throw err });
                 }
                 vm.addingComms = false;
                 vm.close();
                 //vm.$emit('refreshFromResponse',response);
+            }).catch((error) => {
+                vm.errors = true;
+                vm.addingComms = false;
+                //TODO the apiVueResourceError need to be updated
+                vm.errorString = helpers.apiVueResourceError(error);
             });
-            
         },
         addFormValidations: function() {
             let vm = this;
