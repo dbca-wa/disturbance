@@ -95,7 +95,7 @@
                                         <select class="form-control" style="width:40%" v-model="selected_application_id" @change="chainedSelectAppType(selected_application_id)">
                                             <option value="" selected disabled>{{ objectTypeListLabel }}</option>
                                             <option v-for="application_type in applicationTypesList" :value="application_type.value" :key="application_type.value">
-                                                {{ application_type.text }}
+                                                <!-- {{ application_type.text }} -->
                                                 {{ application_type.display_text }}
                                             </option>
                                         </select>
@@ -499,49 +499,104 @@ export default {
         console.log('createProposal');
         let vm = this;
         vm.creatingProposal = true;
-		vm.$http.post('/api/proposal.json',{
-			behalf_of: vm.behalf_of,
-			application: vm.selected_application_id, 
+		// vm.$http.post('/api/proposal.json',{
+		// 	behalf_of: vm.behalf_of,
+		// 	application: vm.selected_application_id, 
             
-			region: vm.selected_region,
-			district: vm.selected_district,
-			//tenure: vm.selected_tenure,
-			activity: vm.selected_activity,
-            sub_activity1: vm.selected_sub_activity1,
-            sub_activity2: vm.selected_sub_activity2,
-            category: vm.selected_category,
-            approval_level: vm.approval_level,
-            profile: this.profile.id,
-            // Site Transfer
-            originating_approval_id: vm.currentApiaryApproval,
-            // Temporary Use
-            approval_id: vm.currentApiaryApproval,
-		}).then(res => {
-		    vm.proposal = res.body;
-			vm.$router.push({
-			    name:"draft_proposal",
-				params:{proposal_id:vm.proposal.id}
-			});
+		// 	region: vm.selected_region,
+		// 	district: vm.selected_district,
+		// 	//tenure: vm.selected_tenure,
+		// 	activity: vm.selected_activity,
+        //     sub_activity1: vm.selected_sub_activity1,
+        //     sub_activity2: vm.selected_sub_activity2,
+        //     category: vm.selected_category,
+        //     approval_level: vm.approval_level,
+        //     profile: this.profile.id,
+        //     // Site Transfer
+        //     originating_approval_id: vm.currentApiaryApproval,
+        //     // Temporary Use
+        //     approval_id: vm.currentApiaryApproval,
+		// }).then(res => {
+		//     vm.proposal = res.body;
+		// 	vm.$router.push({
+		// 	    name:"draft_proposal",
+		// 		params:{proposal_id:vm.proposal.id}
+		// 	});
+        //     vm.creatingProposal = false;
+		// },
+		// err => {
+		// 	console.log(err);
+        //     console.log(err.bodyText);
+        //     if (err.bodyText.includes("null_applicant_address")) {
+        //         swal.fire({
+        //             title: "Cannot create application",
+        //             text: "Please add your address",
+        //             icon: "error",
+        //             confirmButtonText: 'Ok'
+        //         }).then((swalresult) => {
+        //             if(swalresult.isConfirmed) {
+        //                 vm.$router.push({
+        //                     name:"account",
+        //                 });
+        //             }
+        //         });
+        //     }
+		// });
+        fetch('/api/proposal.json', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                behalf_of: vm.behalf_of,
+                application: vm.selected_application_id,
+                region: vm.selected_region,
+                district: vm.selected_district,
+                //tenure: vm.selected_tenure,
+                activity: vm.selected_activity,
+                sub_activity1: vm.selected_sub_activity1,
+                sub_activity2: vm.selected_sub_activity2,
+                category: vm.selected_category,
+                approval_level: vm.approval_level,
+                profile: vm.profile.id,
+                // Site Transfer
+                originating_approval_id: vm.currentApiaryApproval,
+                // Temporary Use
+                approval_id: vm.currentApiaryApproval
+            })
+        })
+        .then(async response => {
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            vm.proposal = data;
+            vm.$router.push({
+                name: "draft_proposal",
+                params: { proposal_id: vm.proposal.id }
+            });
             vm.creatingProposal = false;
-		},
-		err => {
-			console.log(err);
-            console.log(err.bodyText);
-            if (err.bodyText.includes("null_applicant_address")) {
+        })
+        .catch(err => {
+            console.log(err);
+            const errorText = err.message;
+            console.log(errorText);
+            if (errorText.includes("null_applicant_address")) {
                 swal.fire({
                     title: "Cannot create application",
                     text: "Please add your address",
                     icon: "error",
                     confirmButtonText: 'Ok'
                 }).then((swalresult) => {
-                    if(swalresult.isConfirmed) {
-                        vm.$router.push({
-                            name:"account",
-                        });
+                    if (swalresult.isConfirmed) {
+                        vm.$router.push({ name: "account" });
                     }
                 });
             }
-		});
+        });
     },
     isDisabled: function() {
         let vm = this;
