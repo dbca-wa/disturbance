@@ -21,8 +21,8 @@
                     <!--Footer-->
                     <div class="modal-footer">
                         <slot name="footer">
-                            <button id="okBtn" type="button" :class="okClass" @click="ok" :disabled="okButtonDisabled">{{okText}}</button>
-                            <button type="button" :class="cancelClass" @click="cancel">{{cancelText}}</button>
+                            <button v-if="showCancel" id="okBtn" type="button" :class="okClass" @click="ok" :disabled="okButtonDisabled">{{okText}}</button>
+                            <button v-if="showOK" type="button" :class="cancelClass" @click="cancel">{{cancelText}}</button>
                         </slot>
                     </div>
                 </div>
@@ -91,7 +91,15 @@
             closeWhenOK: {
                 type: Boolean,
                 default: false
-            }
+            },
+            showOK: {
+                type: Boolean,
+                default: true,
+            },
+            showCancel: {
+                type: Boolean,
+                default: true,
+            },
         },
         data () {
             return {

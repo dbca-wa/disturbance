@@ -1,7 +1,7 @@
 <template lang="html">
     <div id="historyDetail" v-show='showApprovalHistory'>
 
-        <modal transition="modal fade" :title="dashboardTitle" large force>
+        <modal transition="modal fade" :title="dashboardTitle" :showOK='false' :showCancel="false" large force>
             <div class="container-fluid">
 
                 <form class="form-horizontal" name="approvalHistoryForm">

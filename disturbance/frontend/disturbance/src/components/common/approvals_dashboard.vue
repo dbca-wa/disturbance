@@ -854,31 +854,31 @@ export default {
                 //confirmButtonColor:'#d9534f'
             }).then(
                 (result) => {
-                if (result.isConfirmed) {
-                    fetch(helpers.add_endpoint_json(api_endpoints.proposals,(proposal_id+'/reissue_approval')),{
-                        headers: { 'Content-Type': 'application/json' },
-                        method: 'POST',
-                        body: JSON.stringify(data),
-                    })
-                    .then(async (response) => {
+                    if (result.isConfirmed) {
+                        fetch(helpers.add_endpoint_json(api_endpoints.proposals,(proposal_id+'/reissue_approval')),{
+                            headers: { 'Content-Type': 'application/json' },
+                            method: 'POST',
+                            body: JSON.stringify(data),
+                        })
+                        .then(async (response) => {
 
-                        if (!response.ok) {
-                            const data = await response.json();
-                            swal.fire({
-                                title: "Reissue Approval",
-                                text: JSON.stringify(data),
-                                icon: "error",
+                            if (!response.ok) {
+                                const data = await response.json();
+                                swal.fire({
+                                    title: "Reissue Approval",
+                                    text: JSON.stringify(data),
+                                    icon: "error",
+                                });
+                                return;
+                            }
+                            vm.$router.push({
+                            name:"internal-proposal",
+                            params:{proposal_id:proposal_id}
                             });
-                            return;
-                        }
-                        vm.$router.push({
-                        name:"internal-proposal",
-                        params:{proposal_id:proposal_id}
-                        });
-                    });
-                }
-                },(error) => {
-                console.log(error);
+                        }).catch((error) => {
+                            console.log(error);
+                        })
+                    }
                 }
             );
         },
@@ -898,7 +898,7 @@ export default {
                 (result) => {
                     if (result.isConfirmed) {
                         fetch(helpers.add_endpoint_json(api_endpoints.approvals,(approval_id+'/approval_reinstate')),{
-                            method: 'PATCH',
+                            method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                         })
                         .then(async (response) => {
@@ -918,10 +918,10 @@ export default {
                             })
                             vm.$refs.proposal_datatable.vmDataTable.ajax.reload();
 
+                        }).catch((error) => {
+                            console.log(error);
                         });
                     }
-                },(error) => {
-                    console.log(error);
                 }
             );
         },
