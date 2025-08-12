@@ -5,6 +5,7 @@ import { createApp } from 'vue';
 import App from './App'
 import router from './router'
 import helpers from '@/utils/helpers'
+import 'bootstrap'
 // import api_endpoints from './api'
 
 
@@ -35,7 +36,7 @@ import 'select2-bootstrap-theme/dist/select2-bootstrap.min.css';
 
 extendMoment(moment);
 
-// require( '../node_modules/bootstrap/dist/css/bootstrap.css' );
+require( '../node_modules/bootstrap/dist/css/bootstrap.css' );
 require('../node_modules/eonasdan-bootstrap-datetimepicker')
 require('../node_modules/font-awesome/css/font-awesome.min.css' )
 require('../node_modules/jquery.easing')
