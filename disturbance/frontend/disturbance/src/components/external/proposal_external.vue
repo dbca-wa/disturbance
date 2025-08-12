@@ -567,58 +567,62 @@ export default {
             let vm = this;
             vm.form=document.forms.new_proposal;
 
-            let formData = new FormData(vm.form);
-            // Add apiary_sites data if needed
-            formData = this.attach_apiary_sites_data(formData)
-            // Add site_transfer_apiary_sites data if needed
-            /*
-            if (this.$refs.apiary_site_transfer && this.$refs.apiary_site_transfer.site_transfer_apiary_sites) {
-                console.log(this.$refs.apiary_site_transfer.site_transfer_apiary_sites)
-                formData.append('site_transfer_apiary_sites', JSON.stringify(this.$refs.apiary_site_transfer.site_transfer_apiary_sites));
-            }
-            */
-            if (this.$refs.apiary_site_transfer && this.$refs.apiary_site_transfer.apiary_sites_local) {
-                //console.log(this.$refs.apiary_site_transfer.site_transfer_apiary_sites)
-                formData.append('apiary_sites_local', JSON.stringify(this.$refs.apiary_site_transfer.apiary_sites_local));
-            }
-            if (this.$refs.apiary_site_transfer && this.$refs.apiary_site_transfer.selectedLicenceHolder){
-                //let selectedLicenceHolder = this.$refs.apiary_site_transfer.selectedLicenceHolder
-                formData.append('selected_licence_holder', JSON.stringify(this.$refs.apiary_site_transfer.selectedLicenceHolder));
-            }
-            if (this.$refs.apiary_site_transfer && this.$refs.apiary_site_transfer.transfereeEmail){
-                let transfereeEmail = this.$refs.apiary_site_transfer.transfereeEmail
-                formData.append('transferee_email_text', transfereeEmail);
-            }
-
+            let formData = new FormData(vm.form);          
             console.log('http.post: ' + vm.proposal_form_url)
-            vm.$http.post(vm.proposal_form_url, formData).then(() => {
-                    if (confirmation_required){
-                        if (this.apiaryTemplateGroup) {
-                            swal.fire({
-                                title: 'Saved',
-                                text: 'Your application has been saved',
-                                icon: 'success'
-                            });
-                        } else {
-                            swal.fire({
-                                title: 'Saved',
-                                text: 'Your proposal has been saved',
-                                icon: 'success'
-                            });
-                        }
-                    }
-                    this.isSaving = false;
-                },
-                err=>{
-                    console.log('err')
-                    console.log(err)
-                    if(err.body.type && err.body.type[0] === 'site_no_longer_available'){
-                        vm.display_site_no_longer_available_modal(err)
-                    } else {
-                        helpers.processError(err)
-                    }
+            // vm.$http.post(vm.proposal_form_url, formData).then(() => {
+            //         if (confirmation_required){
+            //             if (this.apiaryTemplateGroup) {
+            //                 swal.fire({
+            //                     title: 'Saved',
+            //                     text: 'Your application has been saved',
+            //                     icon: 'success'
+            //                 });
+            //             } else {
+            //                 swal.fire({
+            //                     title: 'Saved',
+            //                     text: 'Your proposal has been saved',
+            //                     icon: 'success'
+            //                 });
+            //             }
+            //         }
+            //         this.isSaving = false;
+            //     },
+            //     err=>{
+            //         console.log('err')
+            //         console.log(err)
+            //         if(err.body.type && err.body.type[0] === 'site_no_longer_available'){
+            //             vm.display_site_no_longer_available_modal(err)
+            //         } else {
+            //             helpers.processError(err)
+            //         }
+            //     }
+            // );
+            fetch(vm.proposal_form_url, {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw err });
                 }
-            );
+                return response.json();
+            })
+            .then(() => {
+                if (confirmation_required) {
+                        swal.fire({
+                            title: 'Saved',
+                            text: 'Your proposal has been saved',
+                            icon: 'success'
+                        });
+                }
+                vm.isSaving = false;
+            })
+            .catch(err => {
+                console.log('err');
+                console.log(err);
+                helpers.processError(err);
+                
+            });
         },
         save_exit: async function() {
             let vm = this;
@@ -989,23 +993,28 @@ export default {
             }).then(async (swalresult) => {
                 if (swalresult.isConfirmed) {
                     vm.submittingProposal = true;
-                    // Only Apiary has an application fee
-                    //if (!vm.proposal.fee_paid && ['Apiary', 'Site Transfer'].includes(vm.proposal.application_type)) {
-                    if (['Apiary', 'Site Transfer'].includes(vm.proposal.application_type)) {
-                        //if (this.submit_button_text === 'Pay and submit' && ['Apiary', 'Site Transfer'].includes(vm.proposal.application_type)) {
-                        vm.save_and_redirect();
-                    } else {
                         /* just save and submit - no payment required (probably application was pushed back by assessor for amendment */
                         try {
                             console.log('http.post(submit)')
                             console.log('http.post: ' + helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal.id+'/submit'))
 
-                            const res = await vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal.id+'/submit'),formData);
-                            vm.proposal = res.body;
+                            const response = await fetch(
+                                helpers.add_endpoint_json(api_endpoints.proposals, vm.proposal.id + '/submit'),
+                                {
+                                    method: 'POST',
+                                    body: formData,
+                                }
+                            );
+                            if (!response.ok) {
+                                const errorData = await response.json();
+                                throw errorData;
+                            }
+                            const resBody = await response.json();
+                            vm.proposal = resBody;
                             vm.$router.push({
                                 name: 'submit_proposal',
-                                params: { proposal: vm.proposal}
-                            });
+                                params: { proposal: vm.proposal }
+                            }); 
                         } catch (err) {
                             swal.fire({
                                 title: 'Submit Error',
@@ -1013,22 +1022,7 @@ export default {
                                 icon: 'error'
                             })
                         }
-                        /*
-                        vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal.id+'/submit'),formData).then(res=>{
-                            vm.proposal = res.body;
-                            vm.$router.push({
-                                name: 'submit_proposal',
-                                params: { proposal: vm.proposal}
-                            });
-                        },err=>{
-                            swal.fire(
-                                'Submit Error',
-                                helpers.apiVueResourceError(err),
-                                'error'
-                            )
-                        });
-                        */
-                    }
+                    
                 }
             },(error) => {
                 console.log(error);
@@ -1036,72 +1030,7 @@ export default {
             });
             vm.submittingProposal= false;
         },
-        // Apiary submission
-        save_and_redirect: async function() {
-            this.isSaving = true;
-            let vm = this;
-            vm.form=document.forms.new_proposal;
-            let formData = new FormData(vm.form);
-            // Add apiary_sites data if needed
-            if (this.proposal.application_type === 'Apiary') {
-                formData = this.attach_apiary_sites_data(formData);
-            }
-            if (this.$refs.apiary_site_transfer && this.$refs.apiary_site_transfer.apiary_sites_local) {
-                //console.log(this.$refs.apiary_site_transfer.site_transfer_apiary_sites)
-                formData.append('apiary_sites_local', JSON.stringify(this.$refs.apiary_site_transfer.apiary_sites_local));
-            }
-            if (this.$refs.apiary_site_transfer && this.$refs.apiary_site_transfer.selectedLicenceHolder){
-                //let selectedLicenceHolder = this.$refs.apiary_site_transfer.selectedLicenceHolder
-                formData.append('selected_licence_holder', JSON.stringify(this.$refs.apiary_site_transfer.selectedLicenceHolder));
-            }
-            if (this.$refs.apiary_site_transfer && this.$refs.apiary_site_transfer.transfereeEmail){
-                let transfereeEmail = this.$refs.apiary_site_transfer.transfereeEmail
-                formData.append('transferee_email_text', transfereeEmail);
-            }
-            vm.$http.post(vm.proposal_submit_url, formData).then(()=>{
-                    /* after the above save, redirect to the Django post() method in ApplicationFeeView */
-                    vm.post_and_redirect(vm.application_fee_url, {'csrfmiddlewaretoken' : vm.csrf_token});
-                },
-                err=>{
-                    if (err.body.type && err.body.type[0] === 'site_no_longer_available'){
-                        vm.display_site_no_longer_available_modal(err)
-                    } else {
-                        helpers.processError(err)
-                        vm.submittingProposal = false
-                    }
-                }
-            );
-            this.isSaving = false;
-        },
-        display_site_no_longer_available_modal: function(err){
-            let vm = this
-            let apiary_site_id = err.body.apiary_site_id[0]
-
-            swal.fire({
-                title: "Vacant site no longer available",
-                text: err.body.message[0],
-                icon: "warning",
-                confirmButtonText: 'Remove the site from the application',
-                allowOutsideClick: false
-            }).then(function(swalresult) {
-                if (swalresult.isConfirmed) {
-                    console.log('confirmed')
-                    vm.$refs.proposal_apiary.remove_apiary_site(apiary_site_id)
-                    console.log('confirmed2')
-                    // vm.save(false)
-                    vm.$http.post(vm.remove_apiary_site_url, {'apiary_site_id': apiary_site_id}).then(
-                        res => {
-                            console.log('res')
-                            console.log(res);
-                        },
-                        err => {
-                            console.log('err')
-                            console.log(err);
-                        },
-                    );
-                }
-            });
-        },
+        
         post_and_redirect: function(url, postData) {
             console.log('in post_and_redirect')
             console.log('url: ' + url)
