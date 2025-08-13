@@ -24,8 +24,8 @@
                             />
                         </svg>
                     </div-->
-                    <div style="position:relative">
-                        <transition>
+                    <div style="position:relative">                        
+                        <transition>                            
                             <div v-if="optionalLayers.length" class="optional-layers-button" @mouseover="hover=true">
                                 <img src="../../../assets/layers.svg" />
                             </div>
@@ -87,6 +87,7 @@
     import MeasureStyles, { formatLength } from '@/components/common/apiary/measure.js'
     import {get as getProjection} from 'ol/proj';
     import {getTopLeft, getWidth} from 'ol/extent';
+    import { toRaw } from 'vue';
 
     export default {
         props:{
@@ -409,8 +410,8 @@
 
                 vm.map = new Map({
                     layers: [
-                        vm.tileLayerOsm, 
-                        vm.tileLayerSat,
+                        toRaw(vm.tileLayerOsm), 
+                        toRaw(vm.tileLayerSat),
                     ],
                     //target: 'map',
                     target: vm.elem_id,
@@ -913,5 +914,9 @@
     }
     .layer_option:hover {
         cursor: pointer;
+    }
+    .map {
+        width: 100%;
+        height: 500px;
     }
 </style>
