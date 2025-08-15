@@ -834,9 +834,10 @@ def save_proponent_data_apiary(proposal_obj, request, viewset):
                 save_checklist_answers('applicant', proposal_apiary_data.get('applicant_checklist_answers'))
 
                 # Delete existing
-                sites_delete = ApiarySite.objects.filter(id__in=site_ids_delete)
-                for site_to_delete in sites_delete:
-                    proposal_obj.proposal_apiary.delete_relation(site_to_delete)
+                if is_internal(request) or not renewal:
+                    sites_delete = ApiarySite.objects.filter(id__in=site_ids_delete)
+                    for site_to_delete in sites_delete:
+                        proposal_obj.proposal_apiary.delete_relation(site_to_delete)
 
             # Save Temporary Use data
             temporary_use_data = request.data.get('apiary_temporary_use', None)

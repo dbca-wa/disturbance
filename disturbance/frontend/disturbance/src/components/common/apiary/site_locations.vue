@@ -1,6 +1,6 @@
 <template lang="html">
     <div>
-        <div class="row col-sm-12">
+        <div class="row col-sm-12" v-if="!readonly && (!is_proposal_type_renewal || is_internal)">
             Mark the location of the new proposed site either by entering the latitude and longitude or by clicking the location in the map.
         </div>
 
@@ -12,7 +12,7 @@
                 max="-12"
                 class="form-control grow1 ml-1"
                 v-model.number="proposal.proposal_apiary.latitude"
-                :readonly="readonly"
+                :readonly="readonly || (is_proposal_type_renewal && !is_internal)"
             />
             <label class="inline grow1 ml-2">Longitude:</label>
             <input
@@ -21,10 +21,10 @@
                 max="129"
                 class="form-control grow1 ml-1"
                 v-model.number="proposal.proposal_apiary.longitude"
-                :readonly="readonly"
+                :readonly="readonly || (is_proposal_type_renewal && !is_internal)"
             />
             <input
-                v-if="!readonly"
+                v-if="!readonly && (!is_proposal_type_renewal || is_internal)"
                 type="button"
                 @click="tryCreateNewSiteFromForm"
                 value="Add proposed site"
@@ -434,7 +434,7 @@
                                 let status = feature.get('status')
 
                                 action_list.push(ret_str_view)
-                                if (!vm.readonly){
+                                if (!vm.readonly && (!vm.is_proposal_type_renewal || vm.is_internal)){
                                     action_list.push(ret_str_delete)
                                 }
                                 return action_list.join('<br />');
@@ -1582,7 +1582,7 @@
                 }));
 
                 // Draw and modify tools
-                if (!vm.readonly){
+                if (!vm.readonly && (!vm.is_proposal_type_renewal || vm.is_internal)){
                     let modifyInProgressList = [];
                     vm.drawForApiarySite = new Draw({
                         source: vm.drawingLayerSource,
@@ -1616,7 +1616,7 @@
                         }
                     });
                     vm.drawForApiarySite.on('drawend', async function(attributes){
-                        if (!vm.readonly){
+                        if (!vm.readonly && (!vm.is_proposal_type_renewal || vm.is_internal)){
                             let feature = attributes.feature;
                             let draw_id = vm.uuidv4();
                             let draw_coords = feature.getGeometry().getCoordinates();
