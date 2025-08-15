@@ -208,7 +208,7 @@ export default {
         },
 		*/
 
-        get_documents: function() {
+        get_documents: async function() {
             let vm = this;
 
             var formData = new FormData();
@@ -218,11 +218,25 @@ export default {
             if(vm.proposal_lodgement_date){
                 formData.append('proposal_lodgement_date', vm.proposal_lodgement_date);
             }
-            vm.$http.post(vm.proposal_document_action, formData)
-                .then(res=>{
-                    vm.documents = res.body;
-                    //console.log(vm.documents);
-                });
+             await fetch(vm.proposal_document_action, {
+                method: 'POST',
+                body: formData // No need to set Content-Type; browser handles it for FormData
+            })
+            .then(async response => {
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText);
+                }
+                const data = await response.json();
+                vm.documents = data;
+            })
+            // .then(data => {
+                
+            //     vm.documents = data;
+            // })
+            .catch(err => {
+                console.error('Get documents failed:', err.message);
+            });
 
         },
 
@@ -235,12 +249,23 @@ export default {
             formData.append('document_id', file.id);
             formData.append('csrfmiddlewaretoken', vm.csrf_token);
 
-            vm.$http.post(vm.proposal_document_action, formData)
-                .then(()=>{
-                    vm.documents = vm.get_documents()
-                    //vm.documents = res.body;
-                    vm.show_spinner = false;
-                });
+            fetch(vm.proposal_document_action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return;
+                }
+            })
+            .then(() => {
+                vm.documents = vm.get_documents();
+                vm.show_spinner = false;
+            })
+            .catch(err => {
+                console.error('Delete document failed:', err.message);
+                vm.show_spinner = false;
+            });
 
         },
 
@@ -253,12 +278,23 @@ export default {
             formData.append('document_id', file.id);
             formData.append('csrfmiddlewaretoken', vm.csrf_token);
 
-            vm.$http.post(vm.proposal_document_action, formData)
-                .then(()=>{
-                    vm.documents = vm.get_documents()
-                    //vm.documents = res.body;
-                    vm.show_spinner = false;
-                });
+            fetch(vm.proposal_document_action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return;
+                }
+            })
+            .then(() => {
+                vm.documents = vm.get_documents(); // Assuming this is a synchronous method
+                vm.show_spinner = false;
+            })
+            .catch(err => {
+                console.error('Hide document failed:', err.message);
+                vm.show_spinner = false;
+            });
 
         },
         
@@ -297,14 +333,24 @@ export default {
             formData.append('_file', vm.uploadFile(e));
             formData.append('csrfmiddlewaretoken', vm.csrf_token);
 
-            vm.$http.post(vm.proposal_document_action, formData)
-                .then(res=>{
-                    vm.documents = res.body;
-                    //$spinner.toggleClass("fa fa-cog fa-spin");
-                    vm.show_spinner = false;
-                },err=>{
-                    console.error(err);
-                });
+            fetch(vm.proposal_document_action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(async response => {
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText);
+                }
+                const data = await response.json();
+                vm.documents = data;
+            })
+            .catch(err => {
+                vm.show_spinner = false;
+                vm.showError = true;
+                //vm.errorString = helpers.apiVueResourceError(err);
+                vm.errorString = err.message || 'An error occurred while saving the document';
+            });
             }
         },
 
