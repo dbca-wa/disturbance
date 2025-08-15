@@ -250,21 +250,31 @@
                 vm.showError=false;
                 vm.errorString='';
                 vm.isValidating=true;
-                await vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal.id+'/validate_map_files')).then(res=>{
-                    //vm.proposal = res.body;
-                    //vm.refreshFromResponse(res);
-                    //vm.isValidating=false;
-                    vm.$emit('refreshFromResponse',res);
-                    },err=>{
-                        //console.log(err);
-                        vm.showError=true;
-                        vm.errorString=helpers.apiVueResourceError(err);
-                        vm.proposal.shapefile_json=null;
+                try {
+                        const response = await fetch(helpers.add_endpoint_json(api_endpoints.proposals, vm.proposal.id + '/validate_map_files'), {
+                            method: 'POST',
+                            headers: {
+                            'Content-Type': 'application/json',
+                            },
+                            
+                        });
+
+                        if (!response.ok) {
+                            const errorText = await response.text();
+                            throw new Error(errorText);
+                        }
+
+                        const res = await response.json();
+                        vm.$emit('refreshFromResponse', res);
+                    } catch (err) {
+                        vm.showError = true;
+                        //vm.errorString = helpers.apiVueResourceError(err);
+                        vm.errorString = err.message || 'An error occurred while validating the map files';
+                        vm.proposal.shapefile_json = null;
                         vm.incrementFileKey();
                         vm.incrementComponentMapKey();
-                        // vm.proposal.shapefile_json=null;
-                    });
-                    //vm.isValidating=false;
+                    }
+                    
                 vm.$refs.component_map.updateShape();
                 vm.isValidating=false;
             },
@@ -285,19 +295,37 @@
                     }
                     html_text ='<p>Are you sure you want to prefill this Proposal?<br>Select the Applicable:</p>'
                 }
-                
-
-                await swal.fire({
+                const swalConfig = {
                     title: "Prefill Proposal",
-                    //html: '<p>Are you sure you want to prefill this Proposal?<br>Select the Applicable:</p>',
                     html: html_text,
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonText: 'Prefill Proposal',
-                    confirmButtonColor:'#d9534f',
-                    input: 'radio',
-                    inputOptions: inputOptions,
-                }).then(async (result) => {
+                    confirmButtonColor: '#d9534f'
+                };
+
+                if (Object.keys(inputOptions).length > 0) {
+                    swalConfig.input = 'radio';
+                    swalConfig.inputOptions = { ...inputOptions };
+                    swalConfig.inputValidator = (value) => {
+                        if (!value) {
+                            return 'Please select an option';
+                        }
+                        return null;
+                    };
+                }
+                await swal.fire(
+                    // title: "Prefill Proposal",
+                    // //html: '<p>Are you sure you want to prefill this Proposal?<br>Select the Applicable:</p>',
+                    // html: html_text,
+                    // icon: "warning",
+                    // showCancelButton: true,
+                    // confirmButtonText: 'Prefill Proposal',
+                    // confirmButtonColor:'#d9534f',
+                    // input: 'radio',
+                    // inputOptions: inputOptions,
+                    swalConfig
+                ).then(async (result) => {
                     if (result.isConfirmed) {
                         if (Object.keys(inputOptions).length > 0 && !result.value) {
                             swal.fire({
@@ -320,34 +348,49 @@
                             }
                         })
                         var data={};
-                        data.option = result;
-                        await vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals_sqs,vm.proposal.id+'/prefill_proposal'), JSON.stringify(data),{
-                            emulateJSON:true
-                        }).then(res=>{
+                        // data.option = result;
+                        data.option = result && result.value ? result.value : result;
+                        try {
+                            const response = await fetch(
+                                helpers.add_endpoint_json(api_endpoints.proposals_sqs, vm.proposal.id + '/prefill_proposal'),
+                                {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify(data)
+                                }
+                            );
+
+                            const res = await response.json();
                             swal.hideLoading();
                             swal.close();
-                            var resp_proposal=null;
-                            resp_proposal=res['body']['proposal']
-                            //vm.$emit('refreshFromResponse',res);
-                            vm.$emit('refreshFromResponseProposal',resp_proposal);
-                            //console.log('URL:' + helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal.id+'/prefill_proposal'))
-                            //console.log('RES:' + JSON.stringify(res))
-                            let title = res['body']['message'].includes('updated') ? "Processing Proposal (UPDATED)" : "Processing Proposal"
-                            let queue_position = res['body']['position']
-                        swal.fire({
-                                //title: "Processing Proposal",
+                            if (!response.ok) {
+                                const errorText = await res;
+                                throw new Error(errorText);
+                            }
+                            let resp_proposal = null;
+                            resp_proposal = res.proposal;
+                            vm.$emit('refreshFromResponseProposal', resp_proposal);
+
+                            let title = res.message.includes('updated') ? "Processing Proposal (UPDATED)" : "Processing Proposal";
+                            let queue_position = res.position;
+
+                            swal.fire({
                                 title: title,
-                                html: '<p><strong>Your proposal is in the process of being prefilled based on your uploaded shapefile.</strong><br>' +
-                                    '<span style="font-size:0.8em">You can close your browser and come back later. You will receive an email when it is complete. (' + queue_position+ ')</span>' +
-                                    '</p>',
-                            })
-            
-                        },err=>{
+                                html: `<p><strong>Your proposal is in the process of being prefilled based on your uploaded shapefile.</strong><br>
+                                    <span style="font-size:0.8em">You can close your browser and come back later. You will receive an email when it is complete. (${queue_position})</span>
+                                    </p>`
+                            });
+
+                        } catch (err) {
                             console.log(err);
-                            vm.showError=true;
-                            vm.errorString=helpers.apiVueResourceError(err);
+                            vm.showError = true;
+                            //vm.errorString = helpers.apiVueResourceError(err);
+                            vm.errorString = err.message || 'An error occurred while pre-filling the proposal';
                             swal.hideLoading();
-                        });
+                        }
+                        
                     }
                 },(error) => {
                    swal.hideLoading();
