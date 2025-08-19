@@ -512,20 +512,29 @@ export default {
               vm.showContactError = true;
             }
             else{
-              vm.showContactError = false;
-            vm.updatingContact = true;
-            vm.$http.post(helpers.add_endpoint_json(api_endpoints.users,(vm.profile.id+'/update_contact')),JSON.stringify(vm.profile),{
-                emulateJSON:true
-            }).then((response) => {
-                console.log(response);
-                vm.updatingContact = false;
-                vm.profile = response.body;
-                if (vm.profile.residential_address == null){ vm.profile.residential_address = {}; }
-            }, (error) => {
-                console.log(error);
-                vm.updatingContact = false;
-            });
-          }
+                vm.showContactError = false;
+                vm.updatingContact = true;
+                fetch(helpers.add_endpoint_json(api_endpoints.users,(vm.profile.id+'/update_contact')),{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(vm.profile)
+                }).then(async (response) => {
+                    const res = await response.json();
+                    if (!response.ok) {
+                        const errorText = res;
+                        throw new Error(errorText);
+                    }
+                    console.log(res);
+                    vm.updatingContact = false;
+                    vm.profile = res;
+                    if (vm.profile.residential_address == null){ vm.profile.residential_address = {}; }
+                }).catch((error) => {
+                    console.log(error.message);
+                    vm.updatingContact = false;
+                });
+            }
         },
         updateAddress: function() {
             let vm = this;
@@ -552,15 +561,23 @@ export default {
 
 
             vm.updatingAddress = true;
-            vm.$http.post(helpers.add_endpoint_json(api_endpoints.users,(vm.profile.id+'/update_address')),JSON.stringify(vm.profile.residential_address),{
-                emulateJSON:true
-            }).then((response) => {
-                //console.log(response);
+            fetch(helpers.add_endpoint_json(api_endpoints.users,(vm.profile.id+'/update_address')),{
+                method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(vm.profile.residential_address)
+            }).then(async (response) => {
+                const res = await response.json();
+                if (!response.ok) {
+                    const errorText = res;
+                    throw new Error(errorText);
+                }
                 vm.updatingAddress = false;
-                vm.profile = response.body;
+                vm.profile = res;
                 if (vm.profile.residential_address == null){ vm.profile.residential_address = {}; }
-            }, (error) => {
-                console.log(error);
+            }).catch((error) => {
+                console.log(error.message);
                 vm.updatingAddress = false;
             });
           }
@@ -585,20 +602,22 @@ export default {
             }
 
 
-            vm.$http.post(helpers.add_endpoint_json(api_endpoints.organisations,'existance'),JSON.stringify(this.newOrg),{
-                emulateJSON:true
-            }).then((response) => {
+            fetch(helpers.add_endpoint_json(api_endpoints.organisations,'existance'),{
+                method: 'POST',
+                body: JSON.stringify(this.newOrg)
+            }).then(async (response) => {
                 //console.log(response);
-                this.newOrg.exists = response.body.exists;
+                const data = await response.json();
+                this.newOrg.exists = data.exists;
                 this.newOrg.detailsChecked = true;
-                this.newOrg.id = response.body.id;
-                if (response.body.first_five){this.newOrg.first_five = response.body.first_five }
-            }, (error) => {
-                console.log(error);
+                this.newOrg.id = data.id;
+                if (data.first_five){this.newOrg.first_five = data.first_five }
+            }).catch((error) => {
+                console.log(error.message);
                 swal.fire(
                     {
                         title: 'Check Organisation',
-                        text: error.bodyText,
+                        text: error.message,
                         icon: 'error'
                     }
                 )
@@ -676,9 +695,15 @@ export default {
                     icon: 'error'
                 })
             } else {
-                vm.$http.post(api_endpoints.organisation_requests,data,{
-                    emulateJSON:true
-                }).then(() => {
+                fetch(api_endpoints.organisation_requests,{
+                    method: 'POST',
+                    body: data
+                }).then(async (response) => {
+                    const res = await response.json();
+                    if (!response.ok) {
+                        const errorText = res.message;
+                        throw new Error(errorText);
+                    }
                     vm.registeringOrg = false;
                     vm.uploadedFile = null;
                     vm.addingCompany = false;
@@ -692,12 +717,17 @@ export default {
                             window.location.reload(true);
                         }
                     });
-                }, (error) => {
-                    console.log(error);
+                }).catch((error) => {
+                    console.log(error.message);
                     vm.registeringOrg = false;
                     let error_msg = '<br/>';
-                    for (var key in error.body) {
-                        error_msg += key + ': ' + error.body[key] + '<br/>';
+                    if (error.body) {
+                        for (var key in error.body) {
+                            error_msg += key + ': ' + error.body[key] + '<br/>';
+                        }
+                    }
+                    else {
+                            error_msg += error.message + '<br/>';
                     }
                     swal.fire({
                         title: 'Error submitting organisation request',
