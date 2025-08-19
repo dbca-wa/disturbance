@@ -769,9 +769,15 @@ export default {
                     icon: 'error'
                 })
             } else {
-                vm.$http.post(api_endpoints.organisation_requests,data,{
-                    emulateJSON:true
-                }).then(() => {
+                fetch(api_endpoints.organisation_requests,{
+                    method: 'POST',
+                    body: data
+                }).then(async (response) => {
+                    const res = await response.json();
+                    if (!response.ok) {
+                        const errorText = res.message;
+                        throw new Error(errorText);
+                    }
                     vm.registeringOrg = false;
                     vm.uploadedFile = null;
                     vm.addingCompany = false;
@@ -787,8 +793,8 @@ export default {
                             }
                         }
                     });
-                }, (error) => {
-                    console.log(error);
+                }).catch((error) => {
+                    console.log(error.message);
                     vm.registeringOrg = false;
                     let error_msg = '<br/>';
                     for (var key in error.body) {
