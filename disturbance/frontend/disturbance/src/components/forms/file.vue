@@ -344,6 +344,7 @@ export default {
                 }
                 const data = await response.json();
                 vm.documents = data;
+                vm.show_spinner = false;
             })
             .catch(err => {
                 vm.show_spinner = false;
