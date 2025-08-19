@@ -344,7 +344,7 @@ export default {
                     vm.$router.push({
                         name: 'submit_compliance',
                         state: {
-                            compliance: JSON.parse(vm.compliance)
+                            compliance: JSON.stringify(vm.compliance)
                         },
                     });
                 }

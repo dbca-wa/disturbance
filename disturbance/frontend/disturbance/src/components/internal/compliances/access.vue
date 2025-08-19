@@ -193,12 +193,12 @@ export default {
             }).then(async (response) => {  
                 const res = await response.json();            
                 if (!response.ok) {
-                    const errorText = await res;
+                    const errorText = res;
                     throw new Error(errorText);
                 }
                 vm.compliance = res;
             }).catch((error) => {
-                console.log(error);
+                console.log(error.message);
             });
             
         }
