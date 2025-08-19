@@ -219,6 +219,7 @@
     import {getCenter} from 'ol/extent'
     import {get as getProjection} from 'ol/proj';
     import {getTopLeft, getWidth} from 'ol/extent'
+    import { toRaw } from 'vue';
 
     export default {
         name: 'MapDashboard',
@@ -913,8 +914,8 @@
 
                 vm.map = new Map({
                     layers: [
-                        vm.tileLayerOsm, 
-                        vm.tileLayerSat,
+                        toRaw(vm.tileLayerOsm), 
+                        toRaw(vm.tileLayerSat),
                     ],
                     //target: 'map',
                     target: vm.elem_id,
