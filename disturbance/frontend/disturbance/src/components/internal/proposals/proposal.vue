@@ -979,12 +979,16 @@ export default {
                     let vm = this;
                     let data = new FormData();
                     data.append('approval_level_comment', vm.proposal.approval_level_comment)
-                    vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal.id+'/approval_level_comment'),data,{
-                        emulateJSON:true
-                        }).then(res=>{
-                    vm.proposal = res.body;
-                    vm.refreshFromResponse(res);
-                    },err=>{
+                    fetch(helpers.add_endpoint_json(api_endpoints.proposals, vm.proposal.id + '/approval_level_comment'), {
+                    method: 'POST',
+                    body: data
+                    })
+                    .then(response => response.json())
+                    .then(res => {
+                        vm.proposal = res;
+                        vm.refreshFromResponse(res);
+                    })
+                    .catch(err => {
                     console.log(err);
                     });
                 }
@@ -1061,27 +1065,44 @@ export default {
             vm.highlight_deficient_fields(deficient_fields);
         },
         save: function() {
-          let vm = this;
-          vm.checkAssessorData();
-          let formData = new FormData(vm.form);
-          vm.$http.post(vm.proposal_form_url,formData).then(()=>{
-              swal.fire({
-                title: 'Saved',
-                text: 'Your proposal has been saved',
-                icon: 'success'
-              })
-          },err=>{
-            console.log(err);
-          });
+            let vm = this;
+            vm.checkAssessorData();
+            let formData = new FormData(vm.form);
+            fetch(vm.proposal_form_url, {
+                method: 'POST',
+                body: formData,
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => { throw err });
+                    }
+                    swal.fire({
+                        title: 'Saved',
+                        text: 'Your proposal has been saved',
+                        icon: 'success'
+                    });
+                })
+                .catch(err => {
+                console.log(err);
+            });
         },
         save_exit: function() {
           let vm = this;
           vm.checkAssessorData();
           let formData = new FormData(vm.form);
-          vm.$http.post(vm.proposal_form_url,formData).then(()=>{
-          },err=>{
-            console.log(err);
-          });
+            fetch(vm.proposal_form_url, {
+                method: 'POST',
+                body: formData,
+                })
+                .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw err });
+                }
+                // No action needed on success
+                })
+                .catch(err => {
+                console.log(err);
+            });
           // redirect back to dashboard
             vm.$router.push({
                 name: 'internal-dashboard'
@@ -1091,12 +1112,19 @@ export default {
           let vm = this;
           vm.checkAssessorData();
           let formData = new FormData(vm.form);
-          vm.$http.post(vm.proposal_form_url,formData).then(()=>{
-
-
-          },err=>{
-              console.log(err);
-          });
+          fetch(vm.proposal_form_url, {
+            method: 'POST',
+            body: formData,
+            })
+            .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { throw err });
+            }
+            // No success action needed
+            })
+            .catch(err => {
+            console.log(err);
+            });
         },
 
         toggleProposal:function(){
@@ -1168,23 +1196,35 @@ export default {
                 data = {'assessor_id': vm.proposal.assigned_officer};
             }
             if (!unassign){
-                vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,(vm.proposal.id+'/assign_to')),JSON.stringify(data),{
-                    emulateJSON:true
-                }).then((response) => {
-                    console.log('data', data);
-                    vm.proposal = response.body;
-                    vm.original_proposal = helpers.copyObject(response.body);
-                    vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
-                    vm.updateAssignedOfficerSelect();
-                }, (error) => {
-                    vm.proposal = helpers.copyObject(vm.original_proposal)
+                
+                fetch(helpers.add_endpoint_json(api_endpoints.proposals, `${vm.proposal.id}/assign_to`), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+                })
+                .then(async response => {
+                if (!response.ok) {
+                    const errorBody = await response.json();
+                    throw errorBody;
+                }
+                const responseBody = await response.json();
+                console.log('data', data);
+                vm.proposal = responseBody;
+                vm.original_proposal = helpers.copyObject(responseBody);
+                vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
+                vm.updateAssignedOfficerSelect();
+                })
+                .catch(error => {
+                    vm.proposal = helpers.copyObject(vm.original_proposal);
                     vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
                     vm.updateAssignedOfficerSelect();
                     swal.fire({
                         title: 'Proposal Error',
                         text: helpers.apiVueResourceError(error),
                         icon: 'error'
-                    })
+                    });
                 });
             }
             else{
@@ -1209,96 +1249,133 @@ export default {
         },
         switchStatus: function(status){
             let vm = this;
-            //vm.save_wo();
-            //let vm = this;
             if(vm.checkAssignedOfficer()){
             if(vm.proposal.processing_status == 'With Assessor' && status == 'with_assessor_requirements'){
             vm.checkAssessorData();
             let formData = new FormData(vm.form);
-            vm.$http.post(vm.proposal_form_url,formData).then(()=>{ //save Proposal before changing status so that unsaved assessor data is saved.
 
-            let data = {'status': status, 'approver_comment': vm.approver_comment}
-            vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,(vm.proposal.id+'/switch_status')),JSON.stringify(data),{
-                emulateJSON:true,
+            // First POST: Save proposal form
+            fetch(vm.proposal_form_url, {
+            method: 'POST',
+            body: formData
             })
-            .then((response) => {
-                vm.proposal = response.body;
-                vm.original_proposal = helpers.copyObject(response.body);
-                vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
-                vm.approver_comment='';
-                vm.$nextTick(() => {
-                    vm.initialiseAssignedOfficerSelect(true);
-                    vm.updateAssignedOfficerSelect();
-                });
+            .then(() => {
+            // Second POST: Switch status after saving
+            const data = {
+                status: status,
+                approver_comment: vm.approver_comment
+            };
 
-            }, (error) => {
-                vm.proposal = helpers.copyObject(vm.original_proposal)
+            fetch(helpers.add_endpoint_json(api_endpoints.proposals, vm.proposal.id + '/switch_status'), {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/x-www-form-urlencoded' // emulateJSON
+                },
+                body: new URLSearchParams(data)
+            })
+            .then(response => response.json())
+            .then(response => {
+                vm.proposal = response;
+                vm.original_proposal = helpers.copyObject(response);
+                vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
+                vm.approver_comment = '';
+
+                vm.$nextTick(() => {
+                vm.initialiseAssignedOfficerSelect(true);
+                vm.updateAssignedOfficerSelect();
+                });
+            })
+            .catch(error => {
+                vm.proposal = helpers.copyObject(vm.original_proposal);
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
                 swal.fire({
-                    title: 'Proposal Error',
-                    text: helpers.apiVueResourceError(error),
-                    icon: 'error'
-                })
+                title: 'Proposal Error',
+                //text: helpers.apiVueResourceError(error),
+                text: error,
+                icon: 'error'
+                });
             });
-
-          },err=>{
-            console.log(err);
-          });
+            })
+            .catch(error => {
+            console.log('Error saving proposal form:', error);
+            });
         }
 
         //if approver is pushing back proposal to Assessor then navigate the approver back to dashboard page
         if(vm.proposal.processing_status == 'With Approver' && (status == 'with_assessor_requirements' || status=='with_assessor')) {
-            let data = {'status': status, 'approver_comment': vm.approver_comment}
-            vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,(vm.proposal.id+'/switch_status')),JSON.stringify(data),{
-                emulateJSON:true,
+            let data = {
+            status: status,
+            approver_comment: vm.approver_comment
+            };
+
+            fetch(helpers.add_endpoint_json(api_endpoints.proposals, vm.proposal.id + '/switch_status'), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded' // emulateJSON
+            },
+            body: new URLSearchParams(data)
             })
-            .then((response) => {
-                vm.proposal = response.body;
-                vm.original_proposal = helpers.copyObject(response.body);
-                vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
-                vm.approver_comment='';
-                vm.$nextTick(() => {
-                    vm.initialiseAssignedOfficerSelect(true);
-                    vm.updateAssignedOfficerSelect();
-                });
-                vm.$router.push({ path: '/internal' });
-            }, (error) => {
-                vm.proposal = helpers.copyObject(vm.original_proposal)
-                vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
-                swal.fire({
-                    title: 'Proposal Error',
-                    text: helpers.apiVueResourceError(error),
-                    icon: 'error'
-                })
+            .then(response => response.json())
+            .then(response => {
+            vm.proposal = response;
+            vm.original_proposal = helpers.copyObject(response);
+            vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
+            vm.approver_comment = '';
+
+            vm.$nextTick(() => {
+                vm.initialiseAssignedOfficerSelect(true);
+                vm.updateAssignedOfficerSelect();
             });
 
+            vm.$router.push({ path: '/internal' });
+            })
+            .catch(error => {
+            vm.proposal = helpers.copyObject(vm.original_proposal);
+            vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
+            swal.fire({
+                title: 'Proposal Error',
+                //text: helpers.apiVueResourceError(error),
+                text: error,
+                icon: 'error'
+            });
+            });
         }
 
         else{
+                let data = {
+                status: status,
+                approver_comment: vm.approver_comment
+                };
 
-
-         let data = {'status': status, 'approver_comment': vm.approver_comment}
-            vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,(vm.proposal.id+'/switch_status')),JSON.stringify(data),{
-                emulateJSON:true,
-            })
-            .then((response) => {
-                vm.proposal = response.body;
-                vm.original_proposal = helpers.copyObject(response.body);
+                fetch(helpers.add_endpoint_json(api_endpoints.proposals, vm.proposal.id + '/switch_status'), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams(data)
+                })
+                .then(response => response.json())
+                .then(response => {
+                vm.proposal = response;
+                vm.original_proposal = helpers.copyObject(response);
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
-                vm.approver_comment='';
+                vm.approver_comment = '';
+
                 vm.$nextTick(() => {
                     vm.initialiseAssignedOfficerSelect(true);
                     vm.updateAssignedOfficerSelect();
                 });
-            }, (error) => {
-                vm.proposal = helpers.copyObject(vm.original_proposal)
+                })
+                .catch(error => {
+                vm.proposal = helpers.copyObject(vm.original_proposal);
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
                 swal.fire({
                     title: 'Proposal Error',
-                    text: helpers.apiVueResourceError(error),
+                    //text: helpers.apiVueResourceError(error),
+                    text: error,
                     icon: 'error'
-                })
-            });
+                });
+                });
             }
             }
         },
@@ -1379,68 +1456,58 @@ export default {
             vm.checkAssessorData();
             let formData = new FormData(vm.form);
             vm.sendingReferral = true;
-            vm.$http.post(vm.proposal_form_url,formData).then(()=>{
 
-            let data = {'email':vm.selected_referral, 'text': vm.referral_text};
-            //vm.sendingReferral = true;
-            vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,(vm.proposal.id+'/assesor_send_referral')),JSON.stringify(data),{
-                emulateJSON:true
-            }).then((response) => {
+            // First POST: Save proposal form
+            fetch(vm.proposal_form_url, {
+            method: 'POST',
+            body: formData
+            })
+            .then(() => {
+            // Second POST: Send referral
+            const data = {
+                email: vm.selected_referral,
+                text: vm.referral_text
+            };
+
+            fetch(helpers.add_endpoint_json(api_endpoints.proposals, vm.proposal.id + '/assesor_send_referral'), {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/x-www-form-urlencoded' // emulateJSON
+                },
+                body: new URLSearchParams(data)
+            })
+            .then(response => response.json())
+            .then(response => {
                 vm.sendingReferral = false;
-                vm.original_proposal = helpers.copyObject(response.body);
-                vm.proposal = response.body;
+                vm.original_proposal = helpers.copyObject(response);
+                vm.proposal = response;
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
+
                 swal.fire({
-                    title: 'Referral Sent',
-                    text: 'The referral has been sent to '+ vm.selected_referral,
-                    icon: 'success'
-                })
+                title: 'Referral Sent',
+                text: 'The referral has been sent to ' + vm.selected_referral,
+                icon: 'success'
+                });
+
                 $(vm.$refs.department_users).val(null).trigger("change");
                 vm.selected_referral = '';
                 vm.referral_text = '';
-            }, (error) => {
+            })
+            .catch(error => {
                 console.log(error);
                 swal.fire({
-                    title: 'Referral Error',
-                    text: helpers.apiVueResourceError(error),
-                    icon: 'error'
-                })
+                title: 'Referral Error',
+                //text: helpers.apiVueResourceError(error),
+                text:error,
+                icon: 'error'
+                });
                 vm.sendingReferral = false;
             });
-
-
-          },err=>{
+            })
+            .catch(err => {
             console.log(err);
-          });
+            });
 
-        //this.$refs.referral_comment.selected_referral = vm.selected_referral;
-        //this.$refs.referral_comment.isModalOpen = true;
-
-          /*  let data = {'email':vm.selected_referral};
-            vm.sendingReferral = true;
-            vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,(vm.proposal.id+'/assesor_send_referral')),JSON.stringify(data),{
-                emulateJSON:true
-            }).then((response) => {
-                vm.sendingReferral = false;
-                vm.original_proposal = helpers.copyObject(response.body);
-                vm.proposal = response.body;
-                vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
-                swal.fire(
-                    'Referral Sent',
-                    'The referral has been sent to '+vm.department_users.find(d => d.email == vm.selected_referral).name,
-                    'success'
-                )
-                $(vm.$refs.department_users).val(null).trigger("change");
-                vm.selected_referral = '';
-            }, (error) => {
-                console.log(error);
-                swal.fire(
-                    'Referral Error',
-                    helpers.apiVueResourceError(error),
-                    'error'
-                )
-                vm.sendingReferral = false;
-            }); */
         },
         remindReferral:function(r){
             let vm = this;

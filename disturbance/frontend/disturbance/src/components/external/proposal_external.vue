@@ -602,12 +602,12 @@ export default {
                 body: formData,
             })
             .then(response => {
+                console.log('response: ')
+                console.log(response);
                 if (!response.ok) {
                     return response.json().then(err => { throw err });
                 }
-                return response.json();
-            })
-            .then(() => {
+                //return response.json();
                 if (confirmation_required) {
                         swal.fire({
                             title: 'Saved',
@@ -617,10 +617,26 @@ export default {
                 }
                 vm.isSaving = false;
             })
+            // .then(() => {
+            //     if (confirmation_required) {
+            //             swal.fire({
+            //                 title: 'Saved',
+            //                 text: 'Your proposal has been saved',
+            //                 icon: 'success'
+            //             });
+            //     }
+            //     vm.isSaving = false;
+            // })
             .catch(err => {
                 console.log('err');
                 console.log(err);
-                helpers.processError(err);
+                var errorText= err;
+                swal.fire({
+                    title: "Error",
+                    text: errorText,
+                    icon: "error"
+                });
+                //helpers.processError(err);
                 
             });
         },

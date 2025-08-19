@@ -85,8 +85,9 @@ class ProposalSqsViewSet(viewsets.ModelViewSet):
         user = self.request.user
         if is_internal(self.request):
             return Proposal.objects.filter(
-                Q(region__isnull=False) |
-                Q(application_type__name__in=[ApplicationType.APIARY, ApplicationType.SITE_TRANSFER, ApplicationType.TEMPORARY_USE])
+                # Q(region__isnull=False) |
+                # Q(application_type__name__in=[ApplicationType.APIARY, ApplicationType.SITE_TRANSFER, ApplicationType.TEMPORARY_USE])
+                Q(region__isnull=False)
             )
         elif is_customer(self.request):
             user_orgs = [org.id for org in user.disturbance_organisations.all()]
@@ -705,6 +706,7 @@ class ProposalSqsViewSet(viewsets.ModelViewSet):
             #         return Response(resp_data, status=resp.status_code)
             #     else:
             #         raise serializers.ValidationError(str('Please upload a valid shapefile'))
+            
 
             if instance.shapefile_json:
                 start_time = time.time()

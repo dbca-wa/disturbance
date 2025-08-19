@@ -1,11 +1,11 @@
 <template lang="html">
     <div>
         <div class="form-group">
-
             <!-- using num_files to determine if files have been uploaded for this question/label (used in disturbance/frontend/disturbance/src/components/external/proposal.vue) -->
             <label :id="id" :num_files="num_documents()">{{label}}</label>
             <span v-if="show_spinner"><i class='fa fa-2x fa-spinner fa-spin'></i></span>
             <!-- <i id="file-spinner" class=""></i> -->
+            <!-- <div v-if="numDocuments > 0"> -->
             <div v-if="files">
                 <div v-for="v in documents" :key="v.id">
                     <p>
@@ -102,6 +102,13 @@ export default {
         },
         proposal_document_action: function() {
           return (this.proposal_id) ? `/api/proposal/${this.proposal_id}/process_map_document/` : '';
+        },
+        numDocuments: function() {
+            let vm = this;
+            if (this.documents) {
+                return this.documents.length;
+            }
+            return 0;
         },  
     },
 
@@ -138,7 +145,7 @@ export default {
                 vm.save_document(e);
             }
 
-            //vm.show_spinner = false;
+            vm.show_spinner = false;
         },
 
         /*
@@ -148,32 +155,29 @@ export default {
         },
 		*/
 
-        get_documents: function() {
+        get_documents: async function() {
             let vm = this;
 
             var formData = new FormData();
             formData.append('action', 'list');
             formData.append('input_name', vm.name);
             formData.append('csrfmiddlewaretoken', vm.csrf_token);
-            // vm.$http.post(vm.proposal_document_action, formData)
-            //     .then(res=>{
-            //         vm.documents = res.body;
-            //         //console.log(vm.documents);
-            //     });
-            fetch(vm.proposal_document_action, {
+            await fetch(vm.proposal_document_action, {
                 method: 'POST',
                 body: formData // No need to set Content-Type; browser handles it for FormData
             })
             .then(async response => {
                 if (!response.ok) {
                     const errorText = await response.text();
-                    //throw new Error(errorText);
+                    throw new Error(errorText);
                 }
-                return;
-            })
-            .then(data => {
+                const data = await response.json();
                 vm.documents = data;
             })
+            // .then(data => {
+                
+            //     vm.documents = data;
+            // })
             .catch(err => {
                 console.error('Get documents failed:', err.message);
             });
@@ -191,12 +195,6 @@ export default {
             formData.append('document_id', file.id);
             formData.append('csrfmiddlewaretoken', vm.csrf_token);
 
-            // vm.$http.post(vm.proposal_document_action, formData)
-            //     .then(()=>{
-            //         vm.documents = vm.get_documents()
-            //         //vm.documents = res.body;
-            //         vm.show_spinner = false;
-            //     });
             fetch(vm.proposal_document_action, {
                 method: 'POST',
                 body: formData
@@ -209,7 +207,6 @@ export default {
             .then(() => {
                 vm.documents = vm.get_documents();
                 vm.show_spinner = false;
-                // vm.documents = res.body; // commented out as in original
             })
             .catch(err => {
                 console.error('Delete document failed:', err.message);
@@ -227,12 +224,6 @@ export default {
             formData.append('document_id', file.id);
             formData.append('csrfmiddlewaretoken', vm.csrf_token);
 
-            // vm.$http.post(vm.proposal_document_action, formData)
-            //     .then(()=>{
-            //         vm.documents = vm.get_documents()
-            //         //vm.documents = res.body;
-            //         vm.show_spinner = false;
-            //     });
             fetch(vm.proposal_document_action, {
                 method: 'POST',
                 body: formData
@@ -289,17 +280,6 @@ export default {
             formData.append('_file', vm.uploadFile(e));
             formData.append('csrfmiddlewaretoken', vm.csrf_token);
 
-            // vm.$http.post(vm.proposal_document_action, formData)
-            //     .then(res=>{
-            //         vm.documents = res.body;
-            //         //$spinner.toggleClass("fa fa-cog fa-spin");
-            //         vm.show_spinner = false;
-            //     },err=>{
-            //         vm.show_spinner = false;
-            //         vm.showError=true;
-            //         vm.errorString=helpers.apiVueResourceError(err);
-            //     });
-            // }
             fetch(vm.proposal_document_action, {
                 method: 'POST',
                 body: formData
@@ -309,32 +289,36 @@ export default {
                     const errorText = await response.text();
                     throw new Error(errorText);
                 }
-                return response.json(); // Assuming the response body is JSON
+                const data = await response.json();
+                vm.documents = data;
+                //return response.json(); // Assuming the response body is JSON
             })
-            .then(res => {
-                vm.documents = res.body;
-                vm.show_spinner = false;
-            })
+            // .then(res => {
+            //     vm.documents = res.body;
+            //     vm.show_spinner = false;
+            // })
             .catch(err => {
                 vm.show_spinner = false;
                 vm.showError = true;
-                vm.errorString = helpers.apiVueResourceError(err);
+                //vm.errorString = helpers.apiVueResourceError(err);
+                vm.errorString = err.message || 'An error occurred while saving the document';
             });
         }
         },
 
         num_documents: function() {
             let vm = this;
-            if (vm.documents) {
-                return vm.documents.length;
+            if (this.documents) {
+                return this.documents.length;
             }
             return 0;
         },
 
     },
-    mounted:function () {
+    mounted: async function () {
         let vm = this;
-        vm.documents = vm.get_documents();
+        //vm.documents = vm.get_documents();
+        await this.get_documents();
         if (vm.value) {
             //vm.files = (Array.isArray(vm.value))? vm.value : [vm.value];
             if (Array.isArray(vm.value)) {
