@@ -160,40 +160,41 @@ export default {
 
             formData.append('data', JSON.stringify(amendment));
 
-            // vm.$http.post('/api/amendment_request.json',JSON.stringify(amendment),{
-                vm.$http.post('/api/amendment_request.json', formData,{
-                        emulateJSON:true,
-                    }).then(()=>{
-                        //vm.$parent.loading.splice('processing contact',1);
-                        let proposal_or_licence = vm.is_apiary_proposal ? 'application' : 'proposal'
-                        swal.fire({
-                             title: 'Sent',
-                             text: 'An email has been sent to the proponent with the request to amend this ' + proposal_or_licence,
-                             icon: 'success'
-                        });
-                        vm.amendingProposal = true;
-                        vm.close();
-                        //vm.$emit('refreshFromResponse',response);
-                        fetch(`/api/proposal/${vm.proposal_id}/internal_proposal.json`)
-                        .then(async (response)=>
-                        {
-                            let res_data = await response.json();
-                            // vm.$emit('refreshFromResponse',response);
-                            vm.$emit('refreshFromResponse',res_data);
+            fetch('/api/amendment_request.json', {
+            method: 'POST',
+            body: formData
+            })
+            .then(() => {
+            let proposal_or_licence = vm.is_apiary_proposal ? 'application' : 'proposal';
 
-                        },(error)=>{
-                            console.log(error);
-                        });
-                        vm.$router.push({ path: '/internal' }); //Navigate to dashboard after creating Amendment request
+            swal.fire({
+                title: 'Sent',
+                text: 'An email has been sent to the proponent with the request to amend this ' + proposal_or_licence,
+                icon: 'success'
+            });
 
-                    },(error)=>{
-                        console.log(error);
-                        vm.errors = true;
-                        vm.errorString = helpers.apiVueResourceError(error);
-                        vm.amendingProposal = true;
+            vm.amendingProposal = true;
+            vm.close();
 
-                    });
+            // Fetch updated proposal data
+            fetch(`/api/proposal/${vm.proposal_id}/internal_proposal.json`)
+                .then(response => response.json())
+                .then(res_data => {
+                vm.$emit('refreshFromResponse', res_data);
+                })
+                .catch(error => {
+                console.log(error);
+                });
 
+            vm.$router.push({ path: '/internal' }); // Navigate to dashboard
+            })
+            .catch(error => {
+            console.log(error);
+            vm.errors = true;
+            //vm.errorString = helpers.apiVueResourceError(error);
+            vm.errorString = error;
+            vm.amendingProposal = true;
+            });
 
         },
         addFormValidations: function() {
