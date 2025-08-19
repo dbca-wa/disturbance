@@ -58,9 +58,19 @@ export default {
   },
   beforeRouteEnter: function(to, from, next) {
     next(vm => {
-        vm.compliance = to.params.compliance;
+        // vm.compliance = to.params.compliance;
+        if (!window.history.state.compliance) {
+            this.$router.push({
+                name: 'external-proposals-dash',
+            });
+            return;
+        }
+        Object.assign(
+            vm.compliance,
+            JSON.parse(window.history.state.compliance)
+        );
     })
-  }
+  },
 }
 </script>
 

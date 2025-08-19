@@ -29,7 +29,7 @@ export default
         {
             path: 'compliance/submit',
             component: ComplianceSubmit,
-            name:"submit_compliance"
+            name:"submit_compliance",
         },
         {
             path: 'approval/:approval_id',

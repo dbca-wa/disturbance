@@ -72,7 +72,7 @@
                                         <div class="col-sm-6">
                                             <div class="row" v-for="d in compliance.documents" :key="d.id">
                                                 <a :href="d[1]" target="_blank" class="control-label pull-left">{{d[0]   }}</a>
-                                                <span v-if="!isFinalisedi && d.can_delete">
+                                                <span v-if="!isFinalised && d.can_delete">
                                                     <a @click="delete_document(d)" class="fa fa-trash-o control-label" title="Remove file" style="cursor: pointer; color:red;"></a>
                                                 </span>
                                                 <span v-else >
@@ -131,6 +131,7 @@
 <script>
 import $ from 'jquery';
 import { v4 as uuidv4 } from 'uuid';
+import alert from '@vue-utils/alert.vue'
 import {
   api_endpoints,
   helpers
@@ -170,9 +171,10 @@ export default {
     },
     hasDocuments: function(){             
         return this.compliance && this.compliance.documents;
-   }
+    }
   },
   components: {
+    alert,
   },
   computed: {
     showError: function() {
@@ -290,51 +292,75 @@ export default {
         let data = {'document': doc}
         if(doc)
         {
-          vm.$http.post(helpers.add_endpoint_json(api_endpoints.compliances,vm.compliance.id+'/delete_document'),JSON.stringify(data),{
-                emulateJSON:true
-                }).then((response)=>{
-                    vm.refreshFromResponse(response);                   
-                    vm.compliance = response.body;       
-                },(error)=>{
-                    vm.errors = true;
-                    vm.errorString = helpers.apiVueResourceError(error);
-                });              
+          fetch(helpers.add_endpoint_json(api_endpoints.compliances,vm.compliance.id+'/delete_document'),{
+                method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+            }).then(async (response)=>{
+                if (!response.ok) {
+                    return await response.json().then(err => { throw err });
+                }
+                const data = await response.json();
+                if(data){
+                    vm.refreshFromResponse(data);
+                    vm.compliance = data;
+                }
+            }).catch((error)=>{
+                vm.errors = true;
+                // vm.errorString = helpers.apiVueResourceError(error);
+                vm.errorString = error.message;
+            });              
         }
     },
 
 
-    sendData:function(){
+    sendData: async function(){
             let vm = this;
             vm.errors = false;
             let data = new FormData(vm.form);
-            vm.addingComms = true;            
-            vm.$http.post(helpers.add_endpoint_json(api_endpoints.compliances,vm.compliance.id+'/submit'),data,{
-                emulateJSON:true
-                }).then((response)=>{
+            for (let i = 0; i < vm.files.length; i++) {
+                data.append('files', vm.files[i].file);
+            }
+            vm.addingComms = true;        
+            fetch(helpers.add_endpoint_json(api_endpoints.compliances,vm.compliance.id+'/submit'),{
+                method: 'POST',
+                body: data,
+            }).then(async (response)=>{
+                if (!response.ok) {
+                    return await response.json().then(err => { throw err });
+                }
+                const data = await response.json();
+                if(data){
                     vm.addingCompliance = false;
-                    vm.refreshFromResponse(response);                   
+                    vm.refreshFromResponse(data);                   
                     /*swal.fire(
-                     'Submit',
-                     'Your Compliance with Requirement has been submitted',
-                     'success'
+                    'Submit',
+                    'Your Compliance with Requirement has been submitted',
+                    'success'
                     );*/
-                    vm.compliance = response.body;
+                    vm.compliance = data;
                     vm.$router.push({
-                    name: 'submit_compliance',
-                    params: { compliance: vm.compliance} 
-                });
-                        
-                },(error)=>{
-                    vm.errors = true;
-                    vm.addingCompliance = false;
-                    vm.errorString = helpers.apiVueResourceError(error);
-                });     
+                        name: 'submit_compliance',
+                        state: {
+                            compliance: JSON.parse(vm.compliance)
+                        },
+                    });
+                }
+            }).catch((error)=>{
+                vm.errors = true;
+                vm.addingCompliance = false;
+                // vm.errorString = helpers.apiVueResourceError(error);
+                vm.errorString = error.message || 'An error occurred while submitting the compliance';
+            });
+                
     },
 
     refreshFromResponse:function(response){
             let vm = this;
-            vm.original_compliance = helpers.copyObject(response.body);
-            vm.compliance = helpers.copyObject(response.body);
+            vm.original_compliance = helpers.copyObject(response);
+            vm.compliance = helpers.copyObject(response);
             if ( vm.compliance.customer_status == "Under Review" || vm.compliance.customer_status == "Approved" ) { vm.isFinalised = true }
             if (vm.compliance && vm.compliance.documents){ vm.hasDocuments = true}
            
