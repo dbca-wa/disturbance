@@ -689,6 +689,8 @@ class DTReferralSerializer(serializers.ModelSerializer):
 class ProposalRequirementSerializer(serializers.ModelSerializer):
     due_date = serializers.DateField(input_formats=['%d/%m/%Y'],required=False,allow_null=True)
     apiary_renewal = serializers.SerializerMethodField()
+    recurrence_schedule = serializers.IntegerField(required=False, allow_null=True)
+
     class Meta:
         model = ProposalRequirement
         fields = (

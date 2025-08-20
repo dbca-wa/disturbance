@@ -10,10 +10,16 @@
                     </h3>
                 </div>
                 <div class="panel-body panel-collapse collapse in" :id="panelBody">
+                    
                     <form class="form-horizontal" action="index.html" method="post">
-                        <div class="col-sm-12">
-                            <button v-if="hasAssessorMode" @click.prevent="addRequirement()" style="margin-bottom:10px;" class="btn btn-primary pull-right">Add Requirement</button>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <button v-if="hasAssessorMode" @click.prevent="addRequirement()" style="margin-bottom:10px;" class="btn btn-primary pull-right">Add Requirement</button>
+                            </div>
                         </div>
+                        <!-- <div class="col-sm-12">
+                            <button v-if="hasAssessorMode" @click.prevent="addRequirement()" style="margin-bottom:10px;" class="btn btn-primary pull-right">Add Requirement</button>
+                        </div> -->
                         <datatable ref="requirements_datatable" :id="'requirements-datatable-'+_uid" :dtOptions="requirement_options" :dtHeaders="requirement_headers"/>
                     </form>
                 </div>
@@ -350,7 +356,7 @@ export default {
 }
 </script>
 <style scoped>
-.dataTables_wrapper .dt-buttons{
+/* .dataTables_wrapper .dt-buttons{
     float: right;
-}
+} */
 </style>
