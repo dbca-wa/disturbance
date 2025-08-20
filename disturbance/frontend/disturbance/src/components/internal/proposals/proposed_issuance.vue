@@ -310,33 +310,64 @@ export default {
             let approval = JSON.parse(JSON.stringify(vm.approval));
             
             vm.issuingApproval = true;
-            if (vm.state == 'proposed_approval'){
-                vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal_id+'/proposed_approval'),JSON.stringify(approval),{
-                        emulateJSON:true,
-                    }).then((response)=>{
-                        vm.issuingApproval = false;
-                        vm.close();
-                        vm.$emit('refreshFromResponse',response);
-                        vm.$router.push({ path: '/internal' }); //Navigate to dashboard page after Propose issue.
-
-                    },(error)=>{
-                        vm.errors = true;
-                        vm.issuingApproval = false;
-                        vm.errorString = helpers.apiVueResourceError(error);
-                    });
+            if (vm.state == 'proposed_approval') {
+                fetch(helpers.add_endpoint_json(api_endpoints.proposals, vm.proposal_id + '/proposed_approval'), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded' // emulateJSON
+                    },
+                    body: new URLSearchParams(approval)
+                })
+                .then(response => {
+                    if (!response.ok) throw response;
+                    return response.json();
+                })
+                .then(response => {
+                    vm.issuingApproval = false;
+                    vm.close();
+                    vm.$emit('refreshFromResponse', response);
+                    vm.$router.push({ path: '/internal' }); // Navigate to dashboard page after Propose issue.
+                })
+                .catch(async error => {
+                    vm.errors = true;
+                    vm.issuingApproval = false;
+                    try {
+                        const errData = await error.json();
+                        //vm.errorString = helpers.apiVueResourceError(errData);
+                        vm.errorString = errData;
+                    } catch {
+                        vm.errorString = 'An unexpected error occurred.';
+                    }
+                });
             }
-            else if (vm.state == 'final_approval'){
-                vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal_id+'/final_approval'),JSON.stringify(approval),{
-                        emulateJSON:true,
-                    }).then((response)=>{
-                        vm.issuingApproval = false;
-                        vm.close();
-                        vm.$emit('refreshFromResponse',response);
-                    },(error)=>{
-                        vm.errors = true;
-                        vm.issuingApproval = false;
-                        vm.errorString = helpers.apiVueResourceError(error);
-                    });
+            else if (vm.state == 'final_approval') {
+                fetch(helpers.add_endpoint_json(api_endpoints.proposals, vm.proposal_id + '/final_approval'), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded' // emulateJSON
+                    },
+                    body: new URLSearchParams(approval)
+                })
+                .then(response => {
+                    if (!response.ok) throw response;
+                    return response.json();
+                })
+                .then(response => {
+                    vm.issuingApproval = false;
+                    vm.close();
+                    vm.$emit('refreshFromResponse', response);
+                })
+                .catch(async error => {
+                    vm.errors = true;
+                    vm.issuingApproval = false;
+                    try {
+                        const errData = await error.json();
+                        //vm.errorString = helpers.apiVueResourceError(errData);
+                        vm.errorString = errData;
+                    } catch {
+                        vm.errorString = 'An unexpected error occurred.';
+                    }
+                });
             }
            
         },

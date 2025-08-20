@@ -290,17 +290,6 @@ export default {
 
             } else {
                 vm.addingRequirement = true;
-                // vm.$http.post(api_endpoints.proposal_requirements,JSON.stringify(requirement),{
-                //         emulateJSON:true,
-                //     }).then(()=>{
-                //         vm.addingRequirement = false;
-                //         vm.close();
-                //         vm.$parent.updatedRequirements();
-                //     },(error)=>{
-                //         vm.errors = true;
-                //         vm.addingRequirement = false;
-                //         vm.errorString = helpers.apiVueResourceError(error);
-                //     });
                 fetch(api_endpoints.proposal_requirements, {
                     method: 'POST',
                     headers: {
