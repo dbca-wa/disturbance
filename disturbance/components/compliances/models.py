@@ -133,9 +133,9 @@ class Compliance(RevisionedMixin):
                     self.submitter = request.user
 
                     if request.FILES:
-                        for f in request.FILES:
-                            document = self.documents.create(name=str(request.FILES[f]))
-                            document._file = request.FILES[f]
+                        for f in request.FILES.getlist("files"):
+                            document = self.documents.create(name=str(f))
+                            document._file = f
                             document.save()
                     if (self.amendment_requests):
                         qs = self.amendment_requests.filter(status = "requested")

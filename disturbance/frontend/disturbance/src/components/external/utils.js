@@ -43,30 +43,20 @@ export default {
         });
 
     },
-    fetchOrganisationPermissions: function(id){
-        return new Promise ((resolve,reject) => {
-            fetch(helpers.add_endpoint_json(api.my_organisations,id)).then(
-                async (response) => {
-                    const data = await response.json();
-                    resolve(data);
-                },
-                (error) => {
-                    reject(error);
-                }
-            );
-        });
+    fetchOrganisationPermissions: async function(id){
+        const response = await fetch(helpers.add_endpoint_json(api.my_organisations, id));
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw errorData;
+        }
+        return await response.json();
     },
-    fetchOrganisation: function(id){
-        return new Promise ((resolve,reject) => {
-            fetch(helpers.add_endpoint_json(api.organisations,id)).then(
-                async (response) => {
-                    const data = await response.json();
-                    resolve(data);
-                },
-                (error) => {
-                    reject(error);
-                }
-            );
-        });
-    },
+    fetchOrganisation: async function(id) {
+        const response = await fetch(helpers.add_endpoint_json(api.organisations, id));
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw errorData;
+        }
+        return await response.json();
+    }
 }

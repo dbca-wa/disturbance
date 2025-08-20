@@ -108,29 +108,38 @@ export default {
             vm.errors = false;
             //console.log(vm.amendment);
             let amendment = JSON.parse(JSON.stringify(vm.amendment));
-            vm.$http.post('/api/compliance_amendment_request.json',JSON.stringify(amendment),{
-                        emulateJSON:true,
-                    }).then((response)=>{
-                        //vm.$parent.loading.splice('processing contact',1);
-                        swal.fire(
-                             'Sent',
-                             'An email has been sent to the proponent with the request to amend this compliance',
-                             'success'
-                        );
-                        vm.amendingcompliance = true;
-                        console.log(response)
-                        vm.close();
-                        //vm.$emit('refreshFromResponse',response);
+            fetch('/api/compliance_amendment_request.json',{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(amendment)
+            }).then(async (response)=>{
+                //vm.$parent.loading.splice('processing contact',1);
+                const res = await response.json();
+                if (!response.ok) {
+                    const errorText = res;
+                    throw new Error(errorText);
+                }
+                swal.fire(
+                        'Sent',
+                        'An email has been sent to the proponent with the request to amend this compliance',
+                        'success'
+                );
+                vm.amendingcompliance = true;
+                console.log(response.message)
+                vm.close();
+                //vm.$emit('refreshFromResponse',response);
 
-                        vm.$router.push({ path: '/internal' }); //Navigate to dashboard after creating Amendment request
+                vm.$router.push({ path: '/internal' }); //Navigate to dashboard after creating Amendment request
 
-                    },(error)=>{
-                        console.log(error);
-                        vm.errors = true;
-                        vm.errorString = helpers.apiVueResourceError(error);
-                        vm.amendingcompliance = true;
-
-                    });
+            }).catch((error)=>{
+                console.log(error);
+                vm.errors = true;
+                // vm.errorString = helpers.apiVueResourceError(error);
+                vm.errorString = error.message || 'An error occurred while requesting compliance amendment';
+                vm.amendingcompliance = true;
+            });
 
 
         },

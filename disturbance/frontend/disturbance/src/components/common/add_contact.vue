@@ -145,9 +145,10 @@ export default {
                     vm.$parent.refreshDatatable();
                     vm.close();
                 }).catch((error)=>{
-                    console.log(error);
+                    console.log(error.message);
                     vm.errors = true;
-                    vm.errorString = helpers.apiVueResourceError(error);
+                    // vm.errorString = helpers.apiVueResourceError(error);
+                    vm.errorString = error.message;
                 });
             } else {
                 let contact = JSON.parse(JSON.stringify(vm.contact));
@@ -164,9 +165,10 @@ export default {
                         vm.close();
                         vm.$parent.addedContact();
                     }).catch((error)=>{
-                        console.log(error);
+                        console.log(error.message);
                         vm.errors = true;
-                        vm.errorString = helpers.apiVueResourceError(error);
+                        // vm.errorString = helpers.apiVueResourceError(error);
+                        vm.errorString = error.message;
                     });
                 
             }

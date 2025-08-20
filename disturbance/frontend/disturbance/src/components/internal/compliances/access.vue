@@ -184,12 +184,21 @@ export default {
         let vm = this;
         if ( vm.compliance.assigned_to != 'null'){
             let data = {'user_id': vm.compliance.assigned_to};
-            vm.$http.post(helpers.add_endpoint_json(api_endpoints.compliances,(vm.compliance.id+'/assign_to')),JSON.stringify(data),{
-                emulateJSON:true
-            }).then((response) => {                
-                vm.compliance = response.body;
-            }, (error) => {
-                console.log(error);
+            fetch(helpers.add_endpoint_json(api_endpoints.compliances,(vm.compliance.id+'/assign_to')),{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then(async (response) => {  
+                const res = await response.json();            
+                if (!response.ok) {
+                    const errorText = res;
+                    throw new Error(errorText);
+                }
+                vm.compliance = res;
+            }).catch((error) => {
+                console.log(error.message);
             });
             
         }

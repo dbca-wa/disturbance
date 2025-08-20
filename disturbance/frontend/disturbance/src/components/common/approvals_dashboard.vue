@@ -872,8 +872,8 @@ export default {
                                 return;
                             }
                             vm.$router.push({
-                            name:"internal-proposal",
-                            params:{proposal_id:proposal_id}
+                                name:"internal-proposal",
+                                params:{proposal_id:proposal_id}
                             });
                         }).catch((error) => {
                             console.log(error);

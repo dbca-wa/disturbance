@@ -29,7 +29,8 @@
               </div>
             </form>
         </FormSection>
-        <FormSection v-if="org && show_address" :formCollapse="address_collapse" label="Address Details" Index="add_details" subheading="View and update the organisation's address details">
+        <!-- <FormSection v-if="org && show_address" :formCollapse="address_collapse" label="Address Details" Index="add_details" subheading="View and update the organisation's address details"> -->
+        <FormSection v-if="org && show_address" label="Address Details" Index="add_details" subheading="View and update the organisation's address details">
             <form class="form-horizontal" action="index.html" method="post">
               <div class="form-group">
                 <label for="" class="col-sm-3 control-label">Street</label>
@@ -70,7 +71,8 @@
             </form>
         </FormSection>
 
-        <FormSection v-if="org && show_linked" :formCollapse="linked_collapse" label="Linked Details" Index="linked_details" subheading="Manage the user accounts linked to the organisation">
+        <!-- <FormSection v-if="org && show_linked" :formCollapse="linked_collapse" label="Linked Details" Index="linked_details" subheading="Manage the user accounts linked to the organisation"> -->
+        <FormSection v-if="org && show_linked" label="Linked Details" Index="linked_details" subheading="Manage the user accounts linked to the organisation">
             <div class="col-sm-12 row">
                 <h6>Use the Organisation Administrator pin codes if you want the new user to be linked as organisation administrator.<br> Use the Organisation User pin codes if you want the new user to be linked as organisation user.</h6>
             </div>
@@ -563,9 +565,17 @@ export default {
                     confirmButtonText: 'Accept'
                 }).then((result) => {
                     if (result.isConfirmed){
-                        vm.$http.post(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/accept_user'),JSON.stringify(vm.contact_user),{
-                            emulateJSON:true
-                        }).then(() => {
+                        fetch(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/accept_user'),{
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(vm.contact_user)
+                        }).then(async (response) => {
+                            if (!response.ok) {
+                                const errorText = await response.text();
+                                throw new Error(errorText);
+                            }
                             swal.fire({
                                 title: 'Contact Accept',
                                 text: 'You have successfully accepted ' + name + '.',
@@ -576,9 +586,9 @@ export default {
                             },(error) => {
                                 console.log(error);
                             });
-                        }, (error) => {
+                        }).catch((error) => {
                             swal.fire('Contact Accept','There was an error accepting ' + name + '.','error')
-                            console.log(error);
+                            console.log(error?.message || JSON.stringify(error));
                         });
                     }
                 },(error) => {
@@ -606,9 +616,17 @@ export default {
                     confirmButtonText: 'Accept'
                 }).then((result) => {
                     if (result.isConfirmed){
-                        vm.$http.post(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/accept_declined_user'),JSON.stringify(vm.contact_user),{
-                            emulateJSON:true
-                        }).then(() => {
+                        fetch(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/accept_declined_user'),{
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(vm.contact_user)
+                        }).then(async (response) => {
+                            if (!response.ok) {
+                                const errorText = await response.text();
+                                throw new Error(errorText);
+                            }
                             swal.fire({
                                 title: 'Contact Accept (Previously Declined)',
                                 text: 'You have successfully accepted ' + name + '.',
@@ -621,9 +639,9 @@ export default {
                             },(error) => {
                                 console.log(error);
                             });
-                        }, (error) => {
+                        }).catch((error) => {
                             swal.fire('Contact Accept (Previously Declined)','There was an error accepting ' + name + '.','error')
-                            console.log(error);
+                            console.log(error?.message || JSON.stringify(error));
                         });
                     }
                 },(error) => {
@@ -652,9 +670,17 @@ export default {
                     confirmButtonText: 'Accept'
                 }).then((result) => {
                     if (result){
-                        vm.$http.post(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/decline_user'),JSON.stringify(vm.contact_user),{
-                            emulateJSON:true
-                        }).then(() => {
+                        fetch(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/decline_user'),{
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(vm.contact_user)
+                        }).then(async (response) => {
+                            if (!response.ok) {
+                                const errorText = await response.text();
+                                throw new Error(errorText);
+                            }
                             swal.fire({
                                 title: 'Contact Decline',
                                 text: 'You have successfully declined ' + name + '.',
@@ -665,11 +691,11 @@ export default {
                                     vm.$refs.contacts_datatable_user.vmDataTable.ajax.reload();
                                 }
                             },(error) => {
-                                console.log(error);
+                                console.log(error?.message || JSON.stringify(error));
                             });
                         }, (error) => {
                             swal.fire('Contact Decline','There was an error declining ' + name + '.','error');
-                            console.log(error);
+                            console.log(error?.message || JSON.stringify(error));
                         });
                     }
                 },(error) => {
@@ -697,9 +723,30 @@ export default {
                     confirmButtonText: 'Accept'
                 }).then((result) => {
                     if (result.isConfirmed){
-                        vm.$http.post(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/unlink_user'),JSON.stringify(vm.contact_user),{
-                            emulateJSON:true
-                        }).then(() => {
+                        fetch(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/unlink_user'),{
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(vm.contact_user)
+                        }).then(async (response) => {
+                            if (!response.ok) {
+                                const errorData = await response.json();
+
+                                // Check for specific status code
+                                if (response.status === 500) {
+                                    swal.fire(
+                                        'Unlink',
+                                        'Last Organisation Admin cannot be unlinked.',
+                                        'error',
+                                    );
+                                } else {
+                                    console.log(JSON.stringify(errorData));
+                                }
+
+                                throw errorData;
+                            }
+
                             swal.fire({
                                 title: 'Unlink',
                                 text: 'You have successfully unlinked ' + name + '.',
@@ -712,11 +759,8 @@ export default {
                             },(error) => {
                                 console.log(error);
                             });
-                        }, (error) => {
-                            if (error.status ==500){
-                                swal.fire('Unlink','Last Organisation Admin can not be unlinked.','error');
-                                console.log(error);
-                            }
+                        }).catch((error) => {
+                            console.log(error.message);
                         });
                     }
                 },(error) => {
@@ -744,9 +788,17 @@ export default {
                     confirmButtonText: 'Accept'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        vm.$http.post(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/make_admin_user'),JSON.stringify(vm.contact_user),{
-                            emulateJSON:true
-                        }).then(() => {
+                        fetch(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/make_admin_user'),{
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(vm.contact_user)
+                        }).then(async (response) => {
+                            if (!response.ok) {
+                                const errorText = await response.text();
+                                throw new Error(errorText);
+                            }
                             swal.fire({
                                 title: 'Organisation Admin',
                                 text: 'You have successfully made ' + name + ' an Organisation Admin.',
@@ -759,9 +811,9 @@ export default {
                             },(error) => {
                                 console.log(error);
                             });
-                        }, (error) => {
+                        }).catch((error) => {
                             swal.fire('Organisation Admin','There was an error making ' + name + ' an Organisation Admin.','error')
-                            console.log(error);
+                            console.log(error?.message || JSON.stringify(error));
                         });
                     }
                 },(error) => {
@@ -790,9 +842,17 @@ export default {
                 }).then((result) => {
                     console.log(result);
                     if (result.isConfirmed) {
-                        vm.$http.post(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/make_user'),JSON.stringify(vm.contact_user),{
-                            emulateJSON:true
-                        }).then(() => {
+                        fetch(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/make_user'),{
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(vm.contact_user)
+                        }).then(async (response) => {
+                            if (!response.ok) {
+                                const errorText = await response.text();
+                                throw new Error(errorText);
+                            }
                             swal.fire({
                                 title: 'Organisation User',
                                 text: 'You have successfully made ' + name + ' an Organisation User.',
@@ -805,9 +865,9 @@ export default {
                             },(error) => {
                                 console.log(error);
                             });
-                        }, (error) => {
+                        }).catch((error) => {
                             swal.fire('Company Admin','There was an error making ' + name + ' an Organisation User.','error')
-                            console.log(error);
+                            console.log(error?.message || JSON.stringify(error));
                         });
                     }
                 },(error) => {
@@ -835,9 +895,17 @@ export default {
                     confirmButtonText: 'Accept'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        vm.$http.post(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/suspend_user'),JSON.stringify(vm.contact_user),{
-                            emulateJSON:true
-                        }).then(() => {
+                        fetch(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/suspend_user'),{
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(vm.contact_user)
+                        }).then(async (response) => {
+                            if (!response.ok) {
+                                const errorText = await response.text();
+                                throw new Error(errorText);
+                            }
                             swal.fire({
                                 title: 'Suspend User',
                                 text: 'You have successfully suspended ' + name + ' as a User.',
@@ -850,9 +918,9 @@ export default {
                             },(error) => {
                                 console.log(error);
                             });
-                        }, (error) => {
+                        }).catch((error) => {
                             swal.fire('Suspend User','There was an error suspending ' + name + ' as a User.','error')
-                            console.log(error);
+                            console.log(error?.message || JSON.stringify(error));
                         });
                     }
                 },(error) => {
@@ -880,9 +948,17 @@ export default {
                     confirmButtonText: 'Accept'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        vm.$http.post(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/reinstate_user'),JSON.stringify(vm.contact_user),{
-                            emulateJSON:true
-                        }).then(() => {
+                        fetch(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/reinstate_user'),{
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(vm.contact_user)
+                        }).then(async (response) => {
+                            if (!response.ok) {
+                                const errorText = await response.text();
+                                throw new Error(errorText);
+                            }
                             swal.fire({
                                 title: 'Reinstate User',
                                 text: 'You have successfully reinstated ' + name + '.',
@@ -895,9 +971,9 @@ export default {
                             },(error) => {
                                 console.log(error);
                             });
-                        }, (error) => {
+                        }).catch((error) => {
                             swal.fire('Reinstate User','There was an error reinstating ' + name + '.','error')
-                            console.log(error);
+                            console.log(error?.message || JSON.stringify(error));
                         });
                     }
                 },(error) => {
@@ -925,9 +1001,17 @@ export default {
                     confirmButtonText: 'Accept'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        vm.$http.post(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/relink_user'),JSON.stringify(vm.contact_user),{
-                            emulateJSON:true
-                        }).then(() => {
+                        fetch(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/relink_user'),{
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(vm.contact_user)
+                        }).then(async (response) => {
+                            if (!response.ok) {
+                                const errorText = await response.text();
+                                throw new Error(errorText);
+                            }
                             swal.fire({
                                 title: 'Relink User',
                                 text: 'You have successfully relinked ' + name + '.',
@@ -940,9 +1024,9 @@ export default {
                             },(error) => {
                                 console.log(error);
                             });
-                        }, (error) => {
+                        }).catch((error) => {
                             swal.fire('Relink User','There was an error relink ' + name + '.','error')
-                            console.log(error);
+                            console.log(error?.message || JSON.stringify(error));
                         });
                     }
                 },(error) => {
@@ -953,11 +1037,19 @@ export default {
         updateDetails: function(show_alert) {
             let vm = this;
             vm.updatingDetails = true;
-            vm.$http.post(helpers.add_endpoint_json(api_endpoints.organisations,(vm.org.id+'/update_details')),JSON.stringify(vm.org),{
-                emulateJSON:true
-            }).then((response) => {
+            fetch(helpers.add_endpoint_json(api_endpoints.organisations,(vm.org.id+'/update_details')),{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(vm.org)
+            }).then(async (response) => {
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText);
+                }
                 vm.updatingDetails = false;
-                vm.org = response.body;
+                vm.org = await response.json();
                 if (vm.org.address == null){ vm.org.address = {}; }
                 if (show_alert || show_alert==null) {
                     swal.fire(
@@ -969,9 +1061,9 @@ export default {
                     console.log('Org: ' + JSON.stringify(vm.org));
                 }
             }, (error) => {
-                console.log(error);
-                //var another=error;
-                var text= helpers.apiVueResourceError(error);
+                console.log(error.message);
+                var text= error.message;
+                // var text= helpers.apiVueResourceError(error);
                 if(typeof text == 'object'){
                     if (Object.prototype.hasOwnProperty.call(text, 'email')) {
                         text=text.email[0];
@@ -997,41 +1089,66 @@ export default {
         deleteContact: function(id){
             let vm = this;
             
-            vm.$http.delete(helpers.add_endpoint_json(api.organisation_contacts,id),{
-                emulateJSON:true
-            }).then(() => {
+            fetch(helpers.add_endpoint_json(api.organisation_contacts,id),{
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(async (response) => {
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw errorData;
+                }
                 swal.fire(
                     'Contact Deleted', 
                     'The contact was successfully deleted',
                     'success'
                 )
                 vm.$refs.contacts_datatable.vmDataTable.ajax.reload();
-            }, (error) => {
+            }).catch((error) => {
                 console.log(error);
+                let errorMessage = 'The contact could not be deleted because of the following error: [';
+
+                if (error && typeof error === 'object') {
+                    errorMessage += JSON.stringify(error);
+                } else {
+                    errorMessage += error;
+                }
+
+                errorMessage += ']';
+
                 swal.fire(
-                    'Contact Deleted', 
-                    'The contact could not be deleted because of the following error : [' + error.body + ']',
+                    'Contact Deletion',
+                    errorMessage,
                     'error'
-                )
-            });
+                );
+            })
         },
         updateContact: function(id){
             let vm = this;
             
-            vm.$http.post(helpers.add_endpoint_json(api.organisation_contacts,id),{
-                emulateJSON:true
-            }).then(() => {
+            fetch(helpers.add_endpoint_json(api.organisation_contacts,id),{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            }).then(async (response) => {
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText);
+                }
                 swal.fire(
                     'Update Contact', 
                     'The contact was successfully updated',
                     'success'
                 )
                 vm.$refs.contacts_datatable.vmDataTable.ajax.reload();
-            }, (error) => {
-                console.log(error);
+            }).catch((error) => {
+                console.log(error.message);
+                var text= error.message;
                 swal.fire(
                     'Contact Edit', 
-                    'The contact could not be updated because of the following error : [' + error.body + ']',
+                    'The contact could not be updated because of the following error : [' + text + ']',
                     'error'
                 )
             });
@@ -1040,11 +1157,19 @@ export default {
         updateAddress: function(show_alert) {
             let vm = this;
             vm.updatingAddress = true;
-            vm.$http.post(helpers.add_endpoint_json(api_endpoints.organisations,(vm.org.id+'/update_address')),JSON.stringify(vm.org.address),{
-                emulateJSON:true
-            }).then((response) => {
+            fetch(helpers.add_endpoint_json(api_endpoints.organisations,(vm.org.id+'/update_address')),{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(vm.org.address)
+            }).then(async (response) => {
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText);
+                }
                 vm.updatingAddress = false;
-                vm.org = response.body;
+                vm.org = await response.json();
                 if (show_alert || show_alert==null) {
                     swal.fire(
                         'Saved',
@@ -1055,8 +1180,8 @@ export default {
                     console.log('Org: ' + JSON.stringify(vm.org));
                 }
                 if (vm.org.address == null){ vm.org.address = {}; }
-            }, (error) => {
-                console.log(error);
+            }).catch((error) => {
+                console.log(error.message);
                 vm.updatingAddress = false;
             });
         },
@@ -1073,20 +1198,26 @@ export default {
                 confirmButtonText: 'Accept'
             }).then((result) => {
                 if(result.isConfirmed){
-                    vm.$http.post(helpers.add_endpoint_json(api_endpoints.organisations,org.id+'/unlink_user'),{'user':person.id},{
-                        emulateJSON:true
-                    }).then((response) => {
-                        vm.org = response.body;
+                    fetch(helpers.add_endpoint_json(api_endpoints.organisations,org.id+'/unlink_user'),{
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ user: person.id })
+                    }).then(async (response) => {
+                        const data = await response.json();
+                        vm.org = data;
                         if (vm.org.address == null){ vm.org.address = {}; }
                         swal.fire(
                             'Unlink',
                             'You have successfully unlinked '+person.name+' from '+org_name+'.',
                             'success'
                         )
-                    }, (error) => {
+                    }).catch((error) => {
+
                         swal.fire(
                             'Unlink',
-                            'There was an error unlinking '+person.name+' from '+org_name+'. '+error.body,
+                            'There was an error unlinking '+person.name+' from '+org_name+'. '+error?.message || JSON.stringify(error),
                             'error'
                         )
                     });
