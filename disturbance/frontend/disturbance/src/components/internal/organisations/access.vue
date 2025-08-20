@@ -355,13 +355,22 @@ export default {
         let vm = this;
         if ( vm.access.assigned_officer != 'null'){
             let data = {'user_id': vm.access.assigned_officer};
-            vm.$http.post(helpers.add_endpoint_json(api_endpoints.organisation_requests,(vm.access.id+'/assign_to')),JSON.stringify(data),{
-                emulateJSON:true
-            }).then((response) => {
+            fetch(helpers.add_endpoint_json(api_endpoints.organisation_requests,(vm.access.id+'/assign_to')),{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then(async (response) => {
+                const data = await response.json();            
+                if (!response.ok) {
+                    const errorText = data;
+                    throw new Error(errorText);
+                }
                 console.log(response);
-                vm.access = response.body;
-            }, (error) => {
-                console.log(error);
+                vm.access = data;
+            }).catch((error) => {
+                console.log(error.message);
             });
             console.log('there');
         }

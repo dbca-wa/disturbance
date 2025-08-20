@@ -419,20 +419,29 @@ export default {
         updateDetails: function() {
             let vm = this;
             vm.updatingDetails = true;
-            vm.$http.post(helpers.add_endpoint_json(api_endpoints.organisations,(vm.org.id+'/update_details')),JSON.stringify(vm.org),{
-                emulateJSON:true
-            }).then((response) => {
+            fetch(helpers.add_endpoint_json(api_endpoints.organisations,(vm.org.id+'/update_details')),{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(vm.org)
+            }).then(async (response) => {
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText);
+                }
                 vm.updatingDetails = false;
-                vm.org = response.body;
+                vm.org = await response.json();
                 if (vm.org.address == null){ vm.org.address = {}; }
                 swal.fire(
                     'Saved',
                     'Organisation details have been saved',
                     'success'
                 )
-            }, (error) => {
-                console.log(error);
-                var text= helpers.apiVueResourceError(error);
+            }).catch((error) => {
+                console.log(error.message);
+                var text= error.message;
+                // var text= helpers.apiVueResourceError(error);
                 if(typeof text == 'object'){
                     if (Object.prototype.hasOwnProperty.call(text, 'email')) {
                         text=text.email[0];
@@ -458,40 +467,68 @@ export default {
         deleteContact: function(id){
             let vm = this;
             
-            vm.$http.delete(helpers.add_endpoint_json(api_endpoints.organisation_contacts,id),{
-                emulateJSON:true
-            }).then(() => {
+            fetch(helpers.add_endpoint_json(api_endpoints.organisation_contacts,id),{
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(async (response) => {
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw errorData;
+                }
+                
                 swal.fire(
                     'Contact Deleted', 
                     'The contact was successfully deleted',
                     'success'
                 )
                 vm.$refs.contacts_datatable.vmDataTable.ajax.reload();
-            }, (error) => {
+            }).catch((error) => {
                 console.log(error);
+                let errorMessage = 'The contact could not be deleted because of the following error: [';
+
+                if (error && typeof error === 'object') {
+                    errorMessage += JSON.stringify(error);
+                } else {
+                    errorMessage += error;
+                }
+
+                errorMessage += ']';
+
                 swal.fire(
-                    'Contact Deleted', 
-                    'The contact could not be deleted because of the following error : [' + error.body + ']',
+                    'Contact Deletion Failed',
+                    errorMessage,
                     'error'
-                )
+                );
             });
+
+
         },
         updateAddress: function() {
             let vm = this;
             vm.updatingAddress = true;
-            vm.$http.post(helpers.add_endpoint_json(api_endpoints.organisations,(vm.org.id+'/update_address')),JSON.stringify(vm.org.address),{
-                emulateJSON:true
-            }).then((response) => {
+            fetch(helpers.add_endpoint_json(api_endpoints.organisations,(vm.org.id+'/update_address')),{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(vm.org.address)
+            }).then(async (response) => {
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText);
+                }
                 vm.updatingAddress = false;
-                vm.org = response.body;
+                vm.org = await response.json();
                 swal.fire(
                     'Saved',
                     'Address details have been saved',
                     'success'
                 )
                 if (vm.org.address == null){ vm.org.address = {}; }
-            }, (error) => {
-                console.log(error);
+            }).catch((error) => {
+                console.log(error.message);
                 vm.updatingAddress = false;
             });
         },
