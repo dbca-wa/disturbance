@@ -477,7 +477,6 @@ export default {
                     const errorData = await response.json();
                     throw errorData;
                 }
-                
                 swal.fire(
                     'Contact Deleted', 
                     'The contact was successfully deleted',
