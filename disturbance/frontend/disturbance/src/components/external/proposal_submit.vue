@@ -31,6 +31,7 @@
 </template>
 <script>
 export default {
+    //props: ['proposal'],
   data: function() {
     // let vm = this;
     return {
@@ -50,9 +51,20 @@ export default {
     let vm = this;
     vm.form = document.forms.new_proposal;
   },
+  created: function () {
+        if (!window.history.state.proposal) {
+            this.$router.push({
+                name: 'external-proposals-dash',
+            });
+            return;
+        }
+        Object.assign(
+            this.proposal,
+            JSON.parse(window.history.state.proposal)
+        );
+    },
   beforeRouteEnter: function(to, from, next) {
     next(vm => {
-        vm.proposal = to.params.proposal;
     })
   }
 }

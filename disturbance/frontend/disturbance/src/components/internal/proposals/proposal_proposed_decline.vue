@@ -112,31 +112,62 @@ export default {
             let decline = JSON.parse(JSON.stringify(vm.decline));
             vm.decliningProposal = true;
             if (vm.processing_status != 'With Approver'){
-                vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal_id+'/proposed_decline'),JSON.stringify(decline),{
-                        emulateJSON:true,
-                    }).then((response)=>{
-                        vm.decliningProposal = false;
-                        vm.close();
-                        vm.$emit('refreshFromResponse',response);
-                        vm.$router.push({ path: '/internal' }); //Navigate to dashboard after propose decline.
-                    },(error)=>{
-                        vm.errors = true;
-                        vm.decliningProposal = false;
-                        vm.errorString = helpers.apiVueResourceError(error);
-                    });
+                fetch(helpers.add_endpoint_json(api_endpoints.proposals, vm.proposal_id + '/proposed_decline'), {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded' // emulateJSON
+                    },
+                    body: new URLSearchParams(decline)
+                })
+                .then(response => {
+                    if (!response.ok) throw response;
+                    return response.json();
+                })
+                .then(response => {
+                    vm.decliningProposal = false;
+                    vm.close();
+                    vm.$emit('refreshFromResponse', response);
+                    vm.$router.push({ path: '/internal' }); // Navigate to dashboard after propose decline.
+                })
+                .catch(async error => {
+                    vm.errors = true;
+                    vm.decliningProposal = false;
+                    try {
+                    const errData = await error.json();
+                    //vm.errorString = helpers.apiVueResourceError(errData);
+                    vm.errorString = errData;
+                    } catch {
+                    vm.errorString = 'An unexpected error occurred.';
+                    }
+                });
             }
             else{
-                vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal_id+'/final_decline'),JSON.stringify(decline),{
-                        emulateJSON:true,
-                    }).then((response)=>{
-                        vm.decliningProposal = false;
-                        vm.close();
-                        vm.$emit('refreshFromResponse',response);
-                    },(error)=>{
-                        vm.errors = true;
-                        vm.decliningProposal = false;
-                        vm.errorString = helpers.apiVueResourceError(error);
-                    });
+                fetch(helpers.add_endpoint_json(api_endpoints.proposals, vm.proposal_id + '/final_decline'), {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded' // emulateJSON
+                    },
+                    body: new URLSearchParams(decline)
+                })
+                .then(response => {
+                    if (!response.ok) throw response;
+                    return response.json();
+                })
+                .then(response => {
+                    vm.decliningProposal = false;
+                    vm.close();
+                    vm.$emit('refreshFromResponse', response);
+                })
+                .catch(async error => {
+                    vm.errors = true;
+                    vm.decliningProposal = false;
+                    try {
+                    const errData = await error.json();
+                    vm.errorString = errData;
+                    } catch {
+                    vm.errorString = 'An unexpected error occurred.';
+                    }
+                });
             }
         },
         addFormValidations: function() {

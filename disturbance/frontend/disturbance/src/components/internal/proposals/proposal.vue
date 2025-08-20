@@ -1004,7 +1004,8 @@ export default {
             else{
             this.$refs.proposed_approval.approval = this.proposal.proposed_issuance_approval != null ? helpers.copyObject(this.proposal.proposed_issuance_approval) : {};
             this.$refs.proposed_approval.state = 'final_approval';
-            this.$refs.proposed_approval.isApprovalLevelDocument = this.isApprovalLevelDocument;
+            //this.$refs.proposed_approval.isApprovalLevelDocument = this.isApprovalLevelDocument;
+            Object.assign(this.$refs.proposed_approval.isApprovalLevelDocument, this.isApprovalLevelDocument);
             if(this.proposal.proposed_issuance_approval != null && this.proposal.proposed_issuance_approval.start_date!=null){
                 var start_date=new Date();
                 start_date=moment(this.proposal.proposed_issuance_approval.start_date, 'DD/MM/YYYY')
