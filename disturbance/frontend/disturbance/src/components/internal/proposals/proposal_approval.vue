@@ -237,26 +237,35 @@ export default {
         },
         save: function(){
             let vm = this;
-                let data = new FormData(vm.form);
-                data.append('approval_level_document', vm.uploadedFile)
-                if (vm.proposal.approval_level_document) {
-                    data.append('approval_level_document_name', vm.proposal.approval_level_document[0])
-                }
-                vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal.id+'/approval_level_document'),data,{
-                emulateJSON:true
-            }).then(res=>{
-                vm.proposal = res.body;
-                vm.$emit('refreshFromResponse',res);
+            let data = new FormData(vm.form);
+            data.append('approval_level_document', vm.uploadedFile)
+            if (vm.proposal.approval_level_document) {
+                data.append('approval_level_document_name', vm.proposal.approval_level_document[0])
+            }
+            fetch(helpers.add_endpoint_json(api_endpoints.proposals, vm.proposal.id + '/approval_level_document'), {
+                method: 'POST',
+                body: data // FormData handles headers automatically
+                })
+                .then(response => {
+                if (!response.ok) throw response;
+                    return response.json();
+                })
+                .then(res => {
+                    //vm.proposal = res;
+                    Object.assign(vm.proposal, res);
+                    vm.$emit('refreshFromResponse', res);
+                })
+                .catch(async err => {
+                    console.log(err);
+                    let errorText = 'An unexpected error occurred.';
+                    try {
+                    const errData = await err.json();
+                    // errorText = helpers.apiVueResourceError(errData);
+                    errorText = errData;
+                } catch {}
 
-                },err=>{
-                swal.fire(
-                    'Submit Error',
-                    helpers.apiVueResourceError(err),
-                    'error'
-                )
+                swal.fire('Submit Error', errorText, 'error');
             });
-
-
         },
         uploadedFileName: function() {
             return this.uploadedFile != null ? this.uploadedFile.name: '';

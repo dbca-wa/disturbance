@@ -1029,7 +1029,9 @@ export default {
                             vm.proposal = resBody;
                             vm.$router.push({
                                 name: 'submit_proposal',
-                                params: { proposal: vm.proposal }
+                                //params: { proposal: vm.proposal },
+                                state:
+                                    { proposal: JSON.stringify(vm.proposal) }
                             }); 
                         } catch (err) {
                             swal.fire({
