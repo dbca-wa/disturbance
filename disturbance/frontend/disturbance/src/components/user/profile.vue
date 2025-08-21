@@ -645,10 +645,19 @@ export default {
         validatePins: function() {
             let vm = this;
             vm.validatingPins = true;
-            vm.$http.post(helpers.add_endpoint_json(api_endpoints.organisations,(vm.newOrg.id+'/validate_pins')),JSON.stringify(this.newOrg),{
-                emulateJSON:true
-            }).then((response) => {
-                if (response.body.valid){
+            fetch(helpers.add_endpoint_json(api_endpoints.organisations,(vm.newOrg.id+'/validate_pins')),{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(this.newOrg)
+            }).then(async (response) => {
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText);
+                }
+                const data = await response.json();
+                if (data.valid){
                     swal.fire({
                         title: 'Validate Pins',
                         text: 'The pins you entered have been validated and your request will be processed by Organisation Administrator.',
@@ -674,9 +683,9 @@ export default {
                     })
                 }
                 vm.validatingPins = false;
-            }, (error) => {
+            }).catch((error) => {
                 vm.validatingPins = false;
-                console.log(error);
+                console.log(error.message);
             });
         },
         orgRequest: function() {
@@ -842,11 +851,19 @@ export default {
             }).then((swalresult) => {
                 if(swalresult.isConfirmed) {
                     console.log(vm.profile.first_name);
-                    vm.$http.post(helpers.add_endpoint_json(api_endpoints.organisations,org.id+'/unlink_user'),{'user':vm.profile.id,
-                    'first_name':vm.profile.first_name,'last_name':vm.profile.last_name,'email':vm.profile.email,
-                    'mobile_number':vm.profile.mobile_number, 'phone_number':vm.profile.phone_number},{
-                        emulateJSON:true
-                    }).then(() => {
+                    fetch(helpers.add_endpoint_json(api_endpoints.organisations,org.id+'/unlink_user'),{
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({'user':vm.profile.id,
+                        'first_name':vm.profile.first_name,'last_name':vm.profile.last_name,'email':vm.profile.email,
+                        'mobile_number':vm.profile.mobile_number, 'phone_number':vm.profile.phone_number})
+                    }).then(async (response) => {
+                        if (!response.ok) {
+                            const errorText = await response.text();
+                            throw new Error(errorText);
+                        }
                         fetch(api_endpoints.profile)
                         .then(async (response) => {
                             vm.profile = await response.json();
@@ -860,10 +877,10 @@ export default {
                             text: 'You have been successfully unlinked from '+org_name+'.',
                             icon: 'success'
                         })
-                    }, (error) => {
+                    }).catch((error) => {
                         swal.fire({
                             title: 'Unlink',
-                            text: 'There was an error unlinking you from '+org_name+'. '+error.body,
+                            text: 'There was an error unlinking you from '+org_name+'. '+(error?.message || JSON.stringify(error)),
                             icon: 'error'
                         })
                     });
