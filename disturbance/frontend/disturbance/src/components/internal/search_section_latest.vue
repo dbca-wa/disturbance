@@ -428,25 +428,34 @@ export default {
           {
             //$('#loadingSpinner2').show();
             vm.search_btn_disabled = true;
-            vm.$http.post('/api/search_sections.json',{
-              proposal_type_id: vm.selected_proposal_type_id,
-              region: vm.selected_region,
-              district: vm.selected_district,
-              activity: vm.selected_activity,
-              section_label: vm.selected_section,
-              question_id: vm.selected_question,
-              option_label: vm.selected_option,
-              is_internal: true,
-            }).then(res => {
-              vm.results = res.body;
+            fetch('/api/search_sections.json',{
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                proposal_type_id: vm.selected_proposal_type_id,
+                region: vm.selected_region,
+                district: vm.selected_district,
+                activity: vm.selected_activity,
+                section_label: vm.selected_section,
+                question_id: vm.selected_question,
+                option_label: vm.selected_option,
+                is_internal: true,
+              })
+            }).then(async (res) => {
+              if (!res.ok) {
+                  const errorText = await res.text();
+                  throw new Error(errorText);
+              }
+              vm.results = await res.json();
               vm.$refs.proposal_datatable.vmDataTable.clear()
               vm.$refs.proposal_datatable.vmDataTable.rows.add(vm.results);
               vm.$refs.proposal_datatable.vmDataTable.draw();
               //$('#loadingSpinner2').hide();
               vm.search_btn_disabled = false;
-            },
-            err => {
-              console.log(err);
+            }).catch(err => {
+              console.log(err.message);
               //$('#loadingSpinner2').hide();
               vm.search_btn_disabled = false;
             });
@@ -459,19 +468,29 @@ export default {
           let vm = this;
           if(vm.referenceWord)
           {
-            vm.$http.post('/api/search_reference.json',{
-              reference_number: vm.referenceWord,
-              
-            }).then(res => {
+            fetch('/api/search_reference.json',{
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                reference_number: vm.referenceWord,
+              })
+            }).then(async (res) => {
+              if (!res.ok) {
+                  const errorText = await res.text();
+                  throw new Error(errorText);
+              }
+              const responseBody = await res.json();
               console.log(res)
               vm.errors = false; 
               vm.errorString = '';
-              vm.$router.push({ path: '/internal/'+res.body.type+'/'+res.body.id });
-              },
-            error => {
-              console.log(error);
+              vm.$router.push({ path: '/internal/'+responseBody.type+'/'+responseBody.id });
+              }).catch(error => {
+              console.log(error.message);
               vm.errors = true;
-              vm.errorString = helpers.apiVueResourceError(error);
+              // vm.errorString = helpers.apiVueResourceError(error);
+              vm.errorString = error.message;
             });
           }
 
@@ -751,24 +770,34 @@ export default {
                 vm.get_spatialfile_btn_disabled = true;
                 let proposal_lodgement_numbers=vm.$refs.proposal_datatable.vmDataTable.columns(0).data().toArray()
                 if(proposal_lodgement_numbers[0].length>0){
-                    vm.$http.post('/api/get_search_geojson.json',{
-                    proposal_lodgement_numbers: proposal_lodgement_numbers[0],
-                    
-                  }).then(res => {
-                    if(res.body && res.body.search_geojson)
+                  fetch('/api/get_search_geojson.json',{
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                      proposal_lodgement_numbers: proposal_lodgement_numbers[0],
+                    })
+                  }).then(async (res) => {
+                    if (!res.ok) {
+                        const errorText = await res.text();
+                        throw new Error(errorText);
+                    }
+                    const responseBody = await res.json();
+                    if(responseBody && responseBody.search_geojson)
                     {
-                      var geojsonContent = JSON.stringify(res.body.search_geojson);
+                      var geojsonContent = JSON.stringify(responseBody.search_geojson);
                       vm.download_content(geojsonContent, 'DAS_layers.geojson', 'text/plain');
                     }
                     //vm.download_content(res.body.search_geojson, 'DAS_layers.geojson', 'text/plain');
                     vm.errors = false; 
                     vm.errorString = '';
                     vm.get_spatialfile_btn_disabled = false;
-                    },
-                  error => {
-                    console.log(error);
+                  }).catch((error) => {
+                    console.log(error.message);
                     vm.errors = true;
-                    vm.errorString = helpers.apiVueResourceError(error);
+                    // vm.errorString = helpers.apiVueResourceError(error);
+                    vm.errorString = error.message;
                     vm.get_spatialfile_btn_disabled = false;
                   });
                 }
