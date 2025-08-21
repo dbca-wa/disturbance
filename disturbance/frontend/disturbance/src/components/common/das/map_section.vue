@@ -95,7 +95,6 @@
 <script>
     import { v4 as uuidv4 } from 'uuid';
     import File from '@/components/forms/map_file.vue'
-    // import FileField from '@/components/forms/filefield_immediate.vue'
     import FormSection from "@/components/forms/section_toggle.vue"
     import ComponentMap from '@/components/common/das/das_component_map.vue'
     import { api_endpoints, helpers }from '@/utils/hooks'
