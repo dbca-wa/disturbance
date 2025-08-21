@@ -973,8 +973,6 @@ export default {
                     vm.submittingProposal = true;
                         /* just save and submit - no payment required (probably application was pushed back by assessor for amendment */
                         try {
-                            console.log('http.post(submit)')
-                            console.log('http.post: ' + helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal.id+'/submit'))
 
                             const response = await fetch(
                                 helpers.add_endpoint_json(api_endpoints.proposals, vm.proposal.id + '/submit'),

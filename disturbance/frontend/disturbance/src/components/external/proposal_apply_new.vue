@@ -303,23 +303,6 @@ export default {
 
   },
   methods: {
-    submit: function() {
-        let vm = this;
-			
-        swal.fire({
-            title: "Create ",
-            text: "Are you sure you want to create ",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonText: 'Accept1'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                vm.createProposal();
-            }
-        },(error) => {
-            console.log(error);
-        });
-    },
     alertText: function() {
         let vm = this;
 		if (vm.selected_application_name == 'Apiary') {
@@ -328,29 +311,6 @@ export default {
         	return "a " + vm.selected_application_name.toLowerCase();
 		}
 	},
-    createProposal:function () {
-        let vm = this;
-        vm.creatingProposal = true;
-		vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals,vm.proposal.id+'/update_region_section'),{
-			region: vm.selected_region,
-			district: vm.selected_district,
-			activity: vm.selected_activity,
-            sub_activity1: vm.selected_sub_activity1,
-            sub_activity2: vm.selected_sub_activity2,
-            category: vm.selected_category,
-            approval_level: vm.approval_level
-		}).then(res => {
-		    vm.proposal = res.body;
-			// vm.$router.push({
-			//     name:"draft_proposal",
-			// 	params:{proposal_id:vm.proposal.id}
-			// });
-            vm.creatingProposal = false;
-		},
-		err => {
-			console.log(err);
-		});
-    },
     isDisabled: function() {
         let vm = this;
 
