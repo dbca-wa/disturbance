@@ -7,12 +7,7 @@
         <ReturnDashTable level='external' :url='returns_url'/>
     </div-->
     <div v-if="proposalId">
-        <div v-if="apiaryGroupApplication">
-            <ProposalApiary :proposalId="proposalId"/>
-        </div>
-        <div v-else-if="temporaryUseApplication">
-        </div>
-        <div v-else>
+        <div>
             <Proposal :proposalId="proposalId"/>
         </div>
     </div>
@@ -21,7 +16,6 @@
 </template>
 <script>
 
-import ProposalApiary from './proposal_apiary.vue';
 import Proposal from './proposal.vue';
 export default {
     name: 'InternalProposalWrapper',
@@ -34,7 +28,6 @@ export default {
     },
     components:{
         Proposal,
-        ProposalApiary,
     },
     watch: {},
     computed: {
