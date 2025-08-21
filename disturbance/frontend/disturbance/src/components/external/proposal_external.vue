@@ -568,35 +568,7 @@ export default {
             vm.form=document.forms.new_proposal;
 
             let formData = new FormData(vm.form);          
-            console.log('http.post: ' + vm.proposal_form_url)
-            // vm.$http.post(vm.proposal_form_url, formData).then(() => {
-            //         if (confirmation_required){
-            //             if (this.apiaryTemplateGroup) {
-            //                 swal.fire({
-            //                     title: 'Saved',
-            //                     text: 'Your application has been saved',
-            //                     icon: 'success'
-            //                 });
-            //             } else {
-            //                 swal.fire({
-            //                     title: 'Saved',
-            //                     text: 'Your proposal has been saved',
-            //                     icon: 'success'
-            //                 });
-            //             }
-            //         }
-            //         this.isSaving = false;
-            //     },
-            //     err=>{
-            //         console.log('err')
-            //         console.log(err)
-            //         if(err.body.type && err.body.type[0] === 'site_no_longer_available'){
-            //             vm.display_site_no_longer_available_modal(err)
-            //         } else {
-            //             helpers.processError(err)
-            //         }
-            //     }
-            // );
+            
             fetch(vm.proposal_form_url, {
                 method: 'POST',
                 body: formData,
@@ -617,16 +589,6 @@ export default {
                 }
                 vm.isSaving = false;
             })
-            // .then(() => {
-            //     if (confirmation_required) {
-            //             swal.fire({
-            //                 title: 'Saved',
-            //                 text: 'Your proposal has been saved',
-            //                 icon: 'success'
-            //             });
-            //     }
-            //     vm.isSaving = false;
-            // })
             .catch(err => {
                 console.log('err');
                 console.log(err);
