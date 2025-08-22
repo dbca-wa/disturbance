@@ -238,36 +238,56 @@ export default {
 
             if (data.id === '') {
 
-                await self.$http.post(api_endpoints.schema_proposal_type, JSON.stringify(data),{
-                    emulateJSON:true
+                await fetch(api_endpoints.schema_proposal_type,{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
 
-                }).then(() => {
+                }).then(async (response) => {
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new Error(errorText);
+                    }
 
                     self.$refs.schema_purpose_table.vmDataTable.ajax.reload();
                     self.close();
 
-                }, (error) => {
+                }).catch(error => {
+                    
                     swal.fire(
                         'Save Error',
-                        helpers.apiVueResourceError(error),
+                        // helpers.apiVueResourceError(error),
+                        error.message,
                         'error'
                     )
                 });
 
             } else {
 
-                await self.$http.post(helpers.add_endpoint_json(api_endpoints.schema_proposal_type,data.id+'/save_proposal_type'),JSON.stringify(data),{
-                        emulateJSON:true,
+                await fetch(helpers.add_endpoint_json(api_endpoints.schema_proposal_type,data.id+'/save_proposal_type'),{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
 
-                }).then(()=>{
+                }).then(async (response) => {
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new Error(errorText);
+                    }
 
                     self.$refs.schema_purpose_table.vmDataTable.ajax.reload();
                     self.close();
 
-                },(error)=>{
+                }).catch(error => {
+                    
                     swal.fire(
                         'Save Error',
-                        helpers.apiVueResourceError(error),
+                        // helpers.apiVueResourceError(error),
+                        error.message,
                         'error'
                     )
                 });
@@ -317,14 +337,21 @@ export default {
 
                     if (result.isConfirmed) {
 
-                        await self.$http.delete(helpers.add_endpoint_json(api_endpoints.schema_proposal_type,(self.sectionProposalType.id+'/delete_proposal_type')))
-    
-                        .then(() => {
+                        await fetch(helpers.add_endpoint_json(api_endpoints.schema_proposal_type,(self.sectionProposalType.id+'/delete_proposal_type')),{
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        }).then(async (response) => {
+                            if (!response.ok) {
+                                const errorData = await response.json();
+                                throw errorData;
+                            }
 
                             self.$refs.schema_purpose_table.vmDataTable.ajax.reload();
 
-                        }, (error) => {
-                            console.error(error);
+                        }).catch((error) => {
+                            console.log(error.message);
                         });
     
                     }

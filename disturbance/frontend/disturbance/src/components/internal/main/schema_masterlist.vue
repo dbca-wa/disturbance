@@ -430,30 +430,48 @@ export default {
             if (data.id === '') {
                 console.log(data);
 
-                await self.$http.post(api_endpoints.schema_masterlist, JSON.stringify(data),{
-                    emulateJSON:true
-                }).then(() => {
+                await fetch(api_endpoints.schema_masterlist,{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }).then(async (response) => {
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new Error(errorText);
+                    }
                     self.$refs.schema_masterlist_table.vmDataTable.ajax.reload();
                     self.close();
-                }, (error) => {
+                }).catch((error) => {
                     swal.fire(
                         'Save Error',
-                        helpers.apiVueResourceError(error),
+                        // helpers.apiVueResourceError(error),
+                        error.message,
                         'error'
                     )
                 });
 
             } else {
 
-                await self.$http.post(helpers.add_endpoint_json(api_endpoints.schema_masterlist,data.id+'/save_masterlist'),JSON.stringify(data),{
-                        emulateJSON:true,
-                }).then(()=>{
+                await fetch(helpers.add_endpoint_json(api_endpoints.schema_masterlist,data.id+'/save_masterlist'),{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }).then(async (response) => {
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new Error(errorText);
+                    }
                     self.$refs.schema_masterlist_table.vmDataTable.ajax.reload();
                     self.close();
-                },(error)=>{
+                }).catch((error) => {
                     swal.fire(
                         'Save Error',
-                        helpers.apiVueResourceError(error),
+                        // helpers.apiVueResourceError(error),
+                        error.message,
                         'error'
                     )
                 });
@@ -515,13 +533,22 @@ export default {
 
                 }).then(async (result) => {
                     if (result.isConfirmed) {
-                        await self.$http.delete(helpers.add_endpoint_json(api_endpoints.schema_masterlist,(self.masterlist.id+'/delete_masterlist')))
-                        .then(() => {
+                        await fetch(helpers.add_endpoint_json(api_endpoints.schema_masterlist,(self.masterlist.id+'/delete_masterlist')), {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                        .then(async (response) => {
+                            if (!response.ok) {
+                                const errorText = await response.text();
+                                throw new Error(errorText);
+                            }
                             self.$refs.schema_masterlist_table.vmDataTable.ajax.reload();
                         }, (error) => {
                             swal.fire(
                                 'Delete Error',
-                                helpers.apiVueResourceError(error),
+                                error.message,
                                 'error'
                             )
                         });
