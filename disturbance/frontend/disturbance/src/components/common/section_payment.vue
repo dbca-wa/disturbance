@@ -89,22 +89,35 @@ export default {
                 'invoice_reference': vm.invoice_reference,
                 'invoice_date': vm.invoice_date,
             }
-            vm.$http.post('/validate_invoice_details/', data).then(res => {
-                console.log('in post')
-                console.log(res)
-                // Invoice details are correct
-                // Go to the payment screen
-                if (res.body.unpaid_invoice_exists){
-                    vm.alert_message = ''
-                    helpers.mimic_redirect('/invoice_payment/' + vm.invoice_reference + '/', {'csrfmiddlewaretoken' : vm.csrf_token});
+            
+            fetch('/validate_invoice_details/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': vm.csrf_token  // Include CSRF token in header
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(res => {
+                console.log('in post');
+                console.log(res);
+
+                if (res.unpaid_invoice_exists) {
+                    vm.alert_message = '';
+                    helpers.mimic_redirect('/invoice_payment/' + vm.invoice_reference + '/', {
+                        csrfmiddlewaretoken: vm.csrf_token
+                    });
                 } else {
-                    console.log(res.body)
-                    vm.alert_message = res.body.alert_message
+                    console.log(res);
+                    vm.alert_message = res.alert_message;
                 }
-            },
-            err => {
+            })
+            .catch(err => {
                 console.log(err);
             });
+
+
         },
         addEventListeners: function(){
             let vm = this;

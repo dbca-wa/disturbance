@@ -47,11 +47,8 @@
                         {{ error.label }}
                     </li>
                 </ul>
-            </div>
-
-
-            
-            <template>
+            </div> 
+            <!-- <template> -->
                 <MapSection v-if="proposal && show_das_map" :proposal="proposal" @refreshFromResponse="refreshFromResponse" @refreshFromResponseProposal="refreshFromResponseProposal" ref="mapSection" :is_external="true" />
                 <ProposalDisturbance v-if="proposal" :proposal="proposal" id="proposalStart" :showSections="sectionShow" :key="proposalComponentMapKey">
                 <NewApply v-if="proposal" :proposal="proposal" ref="proposal_apply"></NewApply>
@@ -107,9 +104,7 @@
                     </div>
                 </div>
                 </ProposalDisturbance>
-            </template>
-
-
+            <!-- </template> -->
         </form>
         <div v-if="isSubmitting" id="overlay">
         </div>
