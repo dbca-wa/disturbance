@@ -689,7 +689,6 @@ export default {
             vm.proposal = helpers.copyObject(response.body);
             this.incrementProposalComponentMapKey();
             // vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
-            
         },
         refreshFromResponseProposal:function(new_proposal){
             let vm = this;

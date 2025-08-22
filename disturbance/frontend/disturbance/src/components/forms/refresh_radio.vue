@@ -42,7 +42,7 @@ data: function() {
  },
 
  methods:{
-         refresh: async function(){
+         refresh_old: async function(){
             let vm=this;
             // var ele=document.querySelectorAll('[name='+vm.parent_name+']')
             const mlq_data={label: '',
@@ -112,6 +112,55 @@ data: function() {
                 vm.isRefreshing=false;
             });
             vm.isRefreshing=false;
+        },
+        refresh: async function(){
+            const vm = this;
+            const mlq_data = {
+                label: vm.parent_label,
+                name: vm.parent_name
+            };
+            const url = '/refresh';
+            vm.isRefreshing = true;
+            try {
+                const response = await fetch(
+                    helpers.add_endpoint_json(api_endpoints.proposals_sqs, vm.proposal_id + url),
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(mlq_data)
+                    }
+                );
+                const data = await response.json();
+                swal.close();
+                var resp_proposal = data['proposal'];
+                vm.$emit('refreshFromResponseProposal', resp_proposal);
+                
+                let msg = '';
+                if (data['message'].includes('already updated')) {
+                    msg = "Refresh request is already running. Cannot request another until completed.";
+                } else if (data['message'].includes('already queued')) {
+                    msg = "Refresh request is already queued. Cannot request another until completed.";
+                } else {
+                    msg = "Processing refresh request";
+                }
+                let queue_position = data['position'];
+                swal.fire({
+                    title: 'Refresh Question',
+                    html: '<p><strong>' + msg + '</strong><br>' +
+                          '<span style="font-size:0.8em">You can close your browser and come back later. You will receive an email when it is complete. (' + queue_position + ')</span>' +
+                          '</p>',
+                });
+            } catch (error) {
+                swal.fire(
+                    'Error',
+                    error,
+                    'error'
+                );
+            } finally {
+                vm.isRefreshing = false;
+            }
         },
    }
 }

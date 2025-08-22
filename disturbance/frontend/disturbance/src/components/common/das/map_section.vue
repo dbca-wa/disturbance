@@ -259,12 +259,14 @@
                         });
 
                         if (!response.ok) {
+                            console.error('validate_map_docs response error', response);
                             const errorText = await response.text();
                             throw new Error(errorText);
                         }
 
                         const res = await response.json();
-                        vm.$emit('refreshFromResponse', res);
+                        // vm.$emit('refreshFromResponse', res);
+                        vm.$emit('refreshFromResponseProposal', res);
                     } catch (err) {
                         vm.showError = true;
                         //vm.errorString = helpers.apiVueResourceError(err);

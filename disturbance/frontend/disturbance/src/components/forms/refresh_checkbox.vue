@@ -39,10 +39,8 @@ data: function() {
  },
 
  methods:{
-         refresh: async function(){
+         refresh_old: async function(){
             let vm=this;
-            // var checkboxes=document.getElementsByClassName(vm.parent_name)
-            //console.log('checkboxes', checkboxes)
 
             const mlq_data={label: '',
                             name: ''};
@@ -53,25 +51,10 @@ data: function() {
             await this.$http.post(helpers.add_endpoint_json(api_endpoints.proposals_sqs,this.proposal_id + url),JSON.stringify(mlq_data),{
                     emulateJSON:true,
             }).then((response)=>{
-                //self.isModalOpen = true;
-//                var values=response.body.value;
-//                if(values && typeof(values)=='object'){
-//                    for (const val of values){
-//                        for (const op of checkboxes){
-//                            console.log('options', op.name, 'value', val)
-//                            if(op.labels && op.labels[0] && op.labels[0].innerText== val){
-//                                op.checked=true;
-//                            }
-//                        }
-//                    }
-//                }
-//                vm.refresh_time= response.body.sqs_timestamp
-//                vm.isRefreshing=false;
-
           	swal.close();
-		var resp_proposal=null;
-		resp_proposal=response['body']['proposal']
-		vm.$emit('refreshFromResponseProposal',resp_proposal);
+		    var resp_proposal=null;
+		    resp_proposal=response['body']['proposal']
+		    vm.$emit('refreshFromResponseProposal',resp_proposal);
 
                 //let title = response['body']['message'].includes('updated') ? "Processing refresh request (UPDATED)" : "Processing refresh request"
                 let msg = '';
@@ -89,7 +72,6 @@ data: function() {
                           '<span style="font-size:0.8em">You can close your browser and come back later. You will receive an email when it is complete. (' + queue_position+ ')</span>' +
                           '</p>',
                 })
-
             },(error)=>{
                 swal.fire(
                     'Error',
@@ -99,8 +81,69 @@ data: function() {
                 )
                 vm.isRefreshing=false;
             });
-            vm.isRefreshing=false;
-            
+            vm.isRefreshing=false;        
+        },
+        refresh: async function(){
+            const vm = this;
+            const mlq_data = {
+                label: vm.parent_label,
+                name: vm.parent_name
+            };
+            const url = '/refresh';
+            vm.isRefreshing = true;
+            try {
+                const response = await fetch(
+                    helpers.add_endpoint_json(api_endpoints.proposals_sqs, vm.proposal_id + url),
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(mlq_data),
+                        credentials: 'same-origin'
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const responseData = await response.json();
+
+                swal.close();
+
+                const resp_proposal = responseData.proposal;
+                vm.$emit('refreshFromResponseProposal', resp_proposal);
+
+                let msg = '';
+                const message = responseData.message || '';
+                if (message.includes('already updated')) {
+                    msg = "Refresh request is already running. Cannot request another until completed.";
+                } else if (message.includes('already queued')) {
+                    msg = "Refresh request is already queued. Cannot request another until completed.";
+                } else {
+                    msg = "Processing refresh request";
+                }
+
+                const queue_position = responseData.position || 'unknown';
+
+                swal.fire({
+                    title: 'Refresh Question',
+                    html: `<p><strong>${msg}</strong><br>
+                        <span style="font-size:0.8em">
+                        You can close your browser and come back later. You will receive an email when it is complete. (${queue_position})
+                        </span></p>`
+                });
+
+            } catch (error) {
+                swal.fire(
+                    'Error',
+                    error,
+                    'error'
+                );
+            } finally {
+                vm.isRefreshing = false;
+            }
         },
    }
 }
