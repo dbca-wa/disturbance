@@ -26,7 +26,8 @@
                                 </div>
                             </div>
                             <div class="col-md-12 text-center">
-                                <router-link :disabled="selected_organisation == ''" :to="{name:'internal-org-detail',params:{'org_id':parseInt(selected_organisation)}}" class="btn btn-primary">View Details</router-link>
+                                <router-link v-if="selected_organisation !== ''" :to="{name:'internal-org-detail',params:{'org_id':parseInt(selected_organisation)}}" class="btn btn-primary">View Details</router-link>
+                                <span v-else class="btn btn-primary disabled" style="pointer-events: none; opacity: 0.6;">View Details</span>
                             </div>
                         </form>
                     </div>
@@ -405,21 +406,30 @@ export default {
           if(this.searchKeywords.length > 0)
           {
             vm.searching=true;
-            vm.$http.post('/api/search_keywords.json',{
-              searchKeywords: vm.searchKeywords,
-              searchProposal: vm.searchProposal,
-              searchApproval: vm.searchApproval,
-              searchCompliance: vm.searchCompliance,
-              is_internal: true,
-            }).then(res => {
-              vm.results = res.body;
+            fetch('/api/search_keywords.json',{
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                searchKeywords: vm.searchKeywords,
+                searchProposal: vm.searchProposal,
+                searchApproval: vm.searchApproval,
+                searchCompliance: vm.searchCompliance,
+                is_internal: true,
+              })
+            }).then(async (res) => {
+              if (!res.ok) {
+                  const errorText = await res.text();
+                  throw new Error(errorText);
+              }
+              vm.results = await res.json();
               vm.$refs.proposal_datatable.vmDataTable.clear()
               vm.$refs.proposal_datatable.vmDataTable.rows.add(vm.results);
               vm.$refs.proposal_datatable.vmDataTable.draw();
               vm.searching=false;
-            },
-            err => {
-              console.log(err);
+            }).catch(err => {
+              console.log(err.message);
               vm.searching=false;
             });
           }
@@ -430,19 +440,29 @@ export default {
           let vm = this;
           if(vm.referenceWord)
           {
-            vm.$http.post('/api/search_reference.json',{
-              reference_number: vm.referenceWord,
-              
-            }).then(res => {
-              console.log(res)
-              vm.errors = false; 
-              vm.errorString = '';
-              vm.$router.push({ path: '/internal/'+res.body.type+'/'+res.body.id });
+            fetch('/api/search_reference.json',{
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
               },
-            error => {
-              console.log(error);
+              body: JSON.stringify({
+                reference_number: vm.referenceWord,
+              })
+            }).then(async (res) => {
+              if (!res.ok) {
+                  const errorText = await res.text();
+                  throw new Error(errorText);
+              }
+              const responseBody = await res.json();
+              console.log(responseBody);
+              vm.errors = false;
+              vm.errorString = '';
+              vm.$router.push({ path: '/internal/'+responseBody.type+'/'+responseBody.id });
+            }).catch(error => {
+              console.log(error.message);
               vm.errors = true;
-              vm.errorString = helpers.apiVueResourceError(error);
+              // vm.errorString = helpers.apiVueResourceError(error);
+              vm.errorString = error.message;
             });
           }
 
