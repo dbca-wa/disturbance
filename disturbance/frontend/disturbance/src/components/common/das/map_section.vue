@@ -95,7 +95,6 @@
 <script>
     import { v4 as uuidv4 } from 'uuid';
     import File from '@/components/forms/map_file.vue'
-    // import FileField from '@/components/forms/filefield_immediate.vue'
     import FormSection from "@/components/forms/section_toggle.vue"
     import ComponentMap from '@/components/common/das/das_component_map.vue'
     import { api_endpoints, helpers }from '@/utils/hooks'
@@ -398,16 +397,6 @@
 
                 });
                 
-//                vm.$http.post(helpers.add_endpoint_json(api_endpoints.proposals_sqs,vm.proposal.id+'/prefill_proposal')).then(res=>{
-//                    //vm.proposal = res.body;
-//                    //vm.refreshFromResponse(res);
-//                    vm.$emit('refreshFromResponse',res);
-//                    },err=>{
-//                    console.log(err);
-//                    vm.showError=true;
-//                    vm.errorString=helpers.apiVueResourceError(err);
-//                    });
-                //vm.$refs.component_map.updateShape();
             },
             refreshFromResponse:function(response){
                 let vm = this;

@@ -499,49 +499,6 @@ export default {
         console.log('createProposal');
         let vm = this;
         vm.creatingProposal = true;
-		// vm.$http.post('/api/proposal.json',{
-		// 	behalf_of: vm.behalf_of,
-		// 	application: vm.selected_application_id, 
-            
-		// 	region: vm.selected_region,
-		// 	district: vm.selected_district,
-		// 	//tenure: vm.selected_tenure,
-		// 	activity: vm.selected_activity,
-        //     sub_activity1: vm.selected_sub_activity1,
-        //     sub_activity2: vm.selected_sub_activity2,
-        //     category: vm.selected_category,
-        //     approval_level: vm.approval_level,
-        //     profile: this.profile.id,
-        //     // Site Transfer
-        //     originating_approval_id: vm.currentApiaryApproval,
-        //     // Temporary Use
-        //     approval_id: vm.currentApiaryApproval,
-		// }).then(res => {
-		//     vm.proposal = res.body;
-		// 	vm.$router.push({
-		// 	    name:"draft_proposal",
-		// 		params:{proposal_id:vm.proposal.id}
-		// 	});
-        //     vm.creatingProposal = false;
-		// },
-		// err => {
-		// 	console.log(err);
-        //     console.log(err.bodyText);
-        //     if (err.bodyText.includes("null_applicant_address")) {
-        //         swal.fire({
-        //             title: "Cannot create application",
-        //             text: "Please add your address",
-        //             icon: "error",
-        //             confirmButtonText: 'Ok'
-        //         }).then((swalresult) => {
-        //             if(swalresult.isConfirmed) {
-        //                 vm.$router.push({
-        //                     name:"account",
-        //                 });
-        //             }
-        //         });
-        //     }
-		// });
         fetch('/api/proposal.json', {
             method: 'POST',
             headers: {

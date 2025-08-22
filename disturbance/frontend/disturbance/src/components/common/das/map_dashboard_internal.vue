@@ -270,7 +270,7 @@
                 
 
                 useSelect2: true,
-                select2Applied: false,
+                select2Applied: true,
                 select2Obj: null,
 
                 
@@ -507,26 +507,37 @@
 		if (vm.filterProposalLodgedFrom)             { filter_kwargs['lodgement_date__gte'] = vm.filterProposalLodgedFrom; }
 		if (vm.filterProposalLodgedTo)               { filter_kwargs['lodgement_date__lte'] = vm.filterProposalLodgedTo; }
 
-                vm.$http.post(url, JSON.stringify({"geojson": geojson, "filter_kwargs": filter_kwargs}),{
-                    emulateJSON:true,
-                }).then((response)=>{
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        geojson: geojson,
+                        filter_kwargs: filter_kwargs
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
                     swal.fire({
                         title: 'Create shapefile',
-                        //response.body.message,
-                        text: response.body.message + "<br> Click <a href='/filelist' target='_blank'> here </a>to view downloaded file",
+                        html: data.message + "<br> Click <a href='/filelist' target='_blank'> here </a> to view downloaded file",
                         icon: 'success'
-                    })
+                    });
                     vm.show_spinner = false;
                     vm.download_shapefile_btn_disabled = false;
-                }, (error) => {
+                })
+                .catch(error => {
                     swal.fire({
                         title: 'Create shapefile Error',
-                        text: helpers.apiVueResourceError(error),
+                        //text: helpers.apiVueResourceError(error),
+                        text: error,
                         icon: 'error'
-                    })
+                    });
                     vm.show_spinner = false;
                     vm.download_shapefile_btn_disabled = false;
                 });
+
             },
             exportPNG: function () {
                 let vm = this;

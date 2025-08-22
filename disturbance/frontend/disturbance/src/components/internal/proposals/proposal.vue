@@ -339,11 +339,7 @@
                     <div class="col-md-12">
                         <div class="row">
                             <form :action="proposal_form_url" method="post" name="new_proposal" enctype="multipart/form-data">
-
-                                <div v-if="proposal.application_type=='Apiary'">
-                                    <ProposalApiary v-if="proposal" :proposal="proposal" id="proposalStart" :showSections="sectionShow" ref="proposal_apiary" :is_external="false" :is_internal="true" :hasAssessorMode="hasAssessorMode"></ProposalApiary>
-                                </div>
-                                <div v-else>
+                                <div>
                                     <MapSection v-if="proposal && show_das_map" :proposal="proposal" @refreshFromResponse="refreshFromResponse" ref="mapSection" :is_internal="true"/>
                                     <ProposalDisturbance 
                                     ref="proposal_disturbance"
@@ -397,7 +393,6 @@ require("select2/dist/css/select2.min.css");
 require("select2-bootstrap-theme/dist/select2-bootstrap.min.css");
 import { v4 as uuidv4 } from 'uuid';
 import ProposalDisturbance from '../../form.vue'
-import ProposalApiary from '@/components/form_apiary.vue'
 import NewApply from '../../external/proposal_apply_new.vue'
 import MapSection from '@/components/common/das/map_section.vue'
 import ProposedDecline from './proposal_proposed_decline.vue'
@@ -503,7 +498,6 @@ export default {
     },
     components: {
         ProposalDisturbance,
-        ProposalApiary,
         ProposedDecline,
         AmendmentRequest,
         Requirements,
