@@ -39,7 +39,7 @@ data: function() {
  },
 
  methods:{
-         refresh: async function(){
+         refreshOld: async function(){
             let vm=this;
             // var ele=$('[name='+vm.parent_name+']')[0]
             const mlq_data={label: '',
@@ -94,6 +94,73 @@ data: function() {
             // var sqs_timestamp="2023-05-24 11:52:37";
             // vm.refresh_time_value= sqs_timestamp;
         },
+        refresh: async function () {
+            const vm = this;
+            const mlq_data={label: '',
+                            name: ''};
+            mlq_data.label=vm.parent_label;
+            mlq_data.name=vm.parent_name;
+
+            const url = '/refresh';
+            vm.isRefreshing = true;
+
+            try {
+                const response = await fetch(
+                    helpers.add_endpoint_json(api_endpoints.proposals_sqs, vm.proposal_id + url),
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(mlq_data),
+                        credentials: 'same-origin'
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const responseData = await response.json();
+
+                swal.close();
+
+                const resp_proposal = responseData.proposal;
+                vm.$emit('refreshFromResponseProposal', resp_proposal);
+
+                let msg = '';
+                const message = responseData.message || '';
+                if (message.includes('already updated')) {
+                    msg = "Refresh request is already running. Cannot request another until completed.";
+                } else if (message.includes('already queued')) {
+                    msg = "Refresh request is already queued. Cannot request another until completed.";
+                } else {
+                    msg = "Processing refresh request";
+                }
+
+                const queue_position = responseData.position || 'unknown';
+
+                swal.fire({
+                    title: 'Refresh Question',
+                    html: `<p><strong>${msg}</strong><br>
+                        <span style="font-size:0.8em">
+                        You can close your browser and come back later. You will receive an email when it is complete. (${queue_position})
+                        </span></p>`
+                });
+
+                vm.refresh_time = responseData.sqs_timestamp;
+
+            } catch (error) {
+                swal.fire(
+                    'Error',
+                    error,
+                    'error'
+                );
+            } finally {
+                vm.isRefreshing = false;
+            }
+        },
+
    }
 }
 </script>
