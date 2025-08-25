@@ -145,10 +145,9 @@
                             <div class="col-md-4">
                                 <!-- <select class="form-control" ref="select_group" name="select-group" v-model="spatialquery.group" :disabled="sqq_is_disabled()"> -->
                                 <select class="form-control" ref="select_group" name="select-group" v-model="spatialquery.group">
-                                    <!-- <template v-if="group.can_user_edit">
+                                    <template v-if="group.can_user_edit">
                                         <option v-for="group in spatialquery_selects.cddp_groups" :value="group" :key="group.id">{{group.name}}</option>
-                                    </template> -->
-                                    <option v-for="group in spatialquery_selects.cddp_groups" :value="group" :key="group.id">{{group.name}}</option>
+                                    </template>
                                 </select>     
                             </div>
                             <div class="col-md-1"></div>
