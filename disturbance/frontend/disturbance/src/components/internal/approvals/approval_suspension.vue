@@ -139,12 +139,12 @@ export default {
             let vm = this;
             fetch(api_endpoints.contact(id)).then(
                 async (response) => {
+                    if (!response.ok) { return response.json().then(err => { throw err }); }
                     vm.contact = await response.json(); 
                     vm.isModalOpen = true;
-                },(error) => {
+                }).catch((error) => {
                     console.log(error);
-                }
-            );
+                });
         },
         sendData:function(){
             let vm = this;
@@ -158,7 +158,7 @@ export default {
                 body: JSON.stringify(approval),
             }).then(async (response)=>{
                 if (!response.ok) {
-                    return await response.json().then(err => { throw err });
+                    throw new Error(`Approval Suspension Failed: ${response.status}`);
                 }
                 const data = await response.json();
                 vm.issuingApproval = false;
@@ -176,7 +176,7 @@ export default {
                 vm.errors = true;
                 vm.issuingApproval = false;
                 // vm.errorString = helpers.apiVueResourceError(error);
-                vm.errorString = error.message;
+                vm.errorString = error;
                 //vm.approval={};
                 //vm.close();
             });

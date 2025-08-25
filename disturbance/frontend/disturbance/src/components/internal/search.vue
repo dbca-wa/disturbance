@@ -420,8 +420,7 @@ export default {
               })
             }).then(async (res) => {
               if (!res.ok) {
-                  const errorText = await res.text();
-                  throw new Error(errorText);
+                  throw new Error(`HTTP error! Status: ${res.status}`);
               }
               vm.results = await res.json();
               vm.$refs.proposal_datatable.vmDataTable.clear()
@@ -429,7 +428,7 @@ export default {
               vm.$refs.proposal_datatable.vmDataTable.draw();
               vm.searching=false;
             }).catch(err => {
-              console.log(err.message);
+              console.log(err);
               vm.searching=false;
             });
           }
@@ -450,8 +449,7 @@ export default {
               })
             }).then(async (res) => {
               if (!res.ok) {
-                  const errorText = await res.text();
-                  throw new Error(errorText);
+                  throw new Error(`HTTP error! Status: ${res.status}`);
               }
               const responseBody = await res.json();
               console.log(responseBody);
@@ -459,10 +457,10 @@ export default {
               vm.errorString = '';
               vm.$router.push({ path: '/internal/'+responseBody.type+'/'+responseBody.id });
             }).catch(error => {
-              console.log(error.message);
+              console.log(error);
               vm.errors = true;
               // vm.errorString = helpers.apiVueResourceError(error);
-              vm.errorString = error.message;
+              vm.errorString = error;
             });
           }
 

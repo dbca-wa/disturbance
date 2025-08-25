@@ -137,6 +137,9 @@ export default {
             
             fetch(helpers.add_endpoint_json(api_endpoints.referrals,_id+'/remind')).then(
                 async (response) => {
+                    if (!response.ok) {
+                        return response.json().then(err => { throw err });
+                    }
                     let referrals_remind_res = await response.json();
                     vm.$emit('refreshFromResponse',referrals_remind_res);
                     vm.table.ajax.reload();
@@ -145,11 +148,10 @@ export default {
                         text: 'A reminder has been sent to '+user,
                         icon: 'success'
                     })
-                },
-                error => {
+                }).catch(error => {
                     swal.fire({
                         title: 'Proposal Error',
-                        text: helpers.apiVueResourceError(error),
+                        text: error,
                         icon: 'error'
                     })
                 }
@@ -159,6 +161,9 @@ export default {
             let vm = this;
             fetch(helpers.add_endpoint_json(api_endpoints.referrals,_id+'/resend')).then(
                 async (response) => {
+                    if (!response.ok) {
+                        return response.json().then(err => { throw err });
+                    }
                     let referrals_resend_res = await response.json();
                     vm.$emit('refreshFromResponse',referrals_resend_res);
                     vm.table.ajax.reload();
@@ -167,11 +172,10 @@ export default {
                         text: 'The referral has been resent to '+user,
                         icon: 'success'
                     })
-                },
-                error => {
+                }).catch(error => {
                     swal.fire({
                         title: 'Proposal Error',
-                        text: helpers.apiVueResourceError(error),
+                        text: error,
                         icon: 'error'
                     })
                 }
@@ -192,6 +196,9 @@ export default {
                 async (response) => {
                     swal.hideLoading();
                     swal.close();
+                    if (!response.ok) {
+                        return response.json().then(err => { throw err });
+                    }
                     let ref_recall_res = await response.json()
                     vm.$emit('refreshFromResponse',ref_recall_res);
                     vm.table.ajax.reload();
@@ -200,11 +207,10 @@ export default {
                         text: 'The referral has been recalled from '+user,
                         icon: 'success'
                     })
-                },
-                error => {
+                }).catch(error => {
                     swal.fire({
                         title: 'Proposal Error',
-                        text: helpers.apiVueResourceError(error),
+                        text: error,
                         icon: 'error'
                     })
                 }

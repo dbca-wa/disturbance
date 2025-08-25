@@ -445,8 +445,7 @@ export default {
               })
             }).then(async (res) => {
               if (!res.ok) {
-                  const errorText = await res.text();
-                  throw new Error(errorText);
+                  throw new Error(`HTTP error! Status: ${res.status}`);
               }
               vm.results = await res.json();
               vm.$refs.proposal_datatable.vmDataTable.clear()
@@ -455,7 +454,7 @@ export default {
               //$('#loadingSpinner2').hide();
               vm.search_btn_disabled = false;
             }).catch(err => {
-              console.log(err.message);
+              console.log(err);
               //$('#loadingSpinner2').hide();
               vm.search_btn_disabled = false;
             });
@@ -478,8 +477,7 @@ export default {
               })
             }).then(async (res) => {
               if (!res.ok) {
-                  const errorText = await res.text();
-                  throw new Error(errorText);
+                 throw new Error(`HTTP error! Status: ${res.status}`);
               }
               const responseBody = await res.json();
               console.log(res)
@@ -510,30 +508,30 @@ export default {
 
         fetch(api_endpoints.regions).then(
           async (response) => {
+              if (!response.ok) { return response.json().then(err => { throw err }); }
               vm.api_regions = await response.json();
               //console.log('api_regions ' + response.body);
               for (var i = 0; i < vm.api_regions.length; i++) {
                   this.regions.push( {text: vm.api_regions[i].name, value: vm.api_regions[i].id, districts: vm.api_regions[i].districts} );
               }
-          },(error) => {
+          }).catch((error) => {
             console.log(error);
-          }
-        )
+          });
       },
       fetchSections: function(){
         let vm = this;
 
         fetch(api_endpoints.proposal_type_sections).then(
           async (response) => {
+            if (!response.ok) { return response.json().then(err => { throw err }); }
             vm.api_sections = await response.json();
             //console.log('api_regions ' + response.body);
             for (var i = 0; i < vm.api_sections.length; i++) {
                 this.sections.push( {text: vm.api_sections[i].section_label, value: vm.api_sections[i].section_label, questions: vm.api_sections[i].section_questions} );
             }
-          },(error) => {
+          }).catch((error) => {
             console.log(error);
-          }
-        )
+          });
       },
       chainedSelectAppType: function(proposal_type_id){
         /* reset */
@@ -631,6 +629,7 @@ export default {
 
         fetch(api_endpoints.activity_matrix).then(
           async (response) => {
+            if (!response.ok) { return response.json().then(err => { throw err }); }
             let data = await response.json();
             this.activity_matrix = data[0].schema[0];
             this.keys_ordered = data[0].ordered;
@@ -640,10 +639,9 @@ export default {
             for (var i = 0; i < keys.length; i++) {
                 this.activities.push( {text: keys[i], value: keys[i]} );
             }
-          },(error) => {
-            console.log(error);
-          }
-        )
+          }).catch((error) => {
+              console.log(error);
+          });
       },
       fetchAllActivityMatrices: function(){
         let vm = this;
@@ -653,9 +651,10 @@ export default {
         vm.approval_level = '';
         fetch(api_endpoints.activity_matrix).then(
           async (response) => {
+            if (!response.ok) { return response.json().then(err => { throw err }); }
             this.all_activity_matrices = await response.json();
             //vm.fetchRegions();
-          },(error) => {
+          }).catch((error) => {
             console.log(error);
           }
         )
@@ -724,6 +723,7 @@ export default {
 
         fetch(api_endpoints.searchable_proposal_types).then(
           async (response) => {
+            if (!response.ok) { return response.json().then(err => { throw err }); }
             vm.api_proposal_types = await response.json();
             //console.log('api_proposal_types ' + response.body);
 
@@ -738,7 +738,7 @@ export default {
                     //tenures: (vm.api_proposal_types[i].tenure_app_types.length > 0) ? vm.api_proposal_types[i].tenure_app_types : [],
                 } );
             }
-          },(error) => {
+          }).catch((error) => {
             console.log(error);
           }
         )
@@ -780,8 +780,7 @@ export default {
                     })
                   }).then(async (res) => {
                     if (!res.ok) {
-                        const errorText = await res.text();
-                        throw new Error(errorText);
+                        throw new Error(`HTTP error! Status: ${res.status}`);
                     }
                     const responseBody = await res.json();
                     if(responseBody && responseBody.search_geojson)
@@ -794,10 +793,10 @@ export default {
                     vm.errorString = '';
                     vm.get_spatialfile_btn_disabled = false;
                   }).catch((error) => {
-                    console.log(error.message);
+                    console.log(error);
                     vm.errors = true;
                     // vm.errorString = helpers.apiVueResourceError(error);
-                    vm.errorString = error.message;
+                    vm.errorString = error;
                     vm.get_spatialfile_btn_disabled = false;
                   });
                 }

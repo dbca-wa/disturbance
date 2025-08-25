@@ -411,14 +411,16 @@
                 let vm = this;
                 fetch('/api/global_settings.json').then(
                     async (response) => {
+                        if (!response.ok) {
+                            console.error('fetchGlobalSettings response error', response);
+                            return;
+                        }
                         vm.global_settings = await response.json();
-                    
-                    },(error) => {
+
+                    }).catch((error) => {
                         console.log(error);
-                    }
-                );
+                    });
             },
-            
         },
         created: function() {
         },

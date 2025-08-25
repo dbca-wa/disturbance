@@ -223,7 +223,7 @@ export default {
                 body: comms,
             }).then(async (response)=>{
                 if (!response.ok) {
-                    return await response.json().then(err => { throw err });
+                    throw new Error(`HTTP error! Status: ${response.status}`);
                 }
                 vm.addingComms = false;
                 vm.close();
@@ -233,7 +233,7 @@ export default {
                 vm.addingComms = false;
                 //TODO the apiVueResourceError need to be updated
                 // vm.errorString = helpers.apiVueResourceError(error);
-                vm.errorString = error.message;
+                vm.errorString = error;
             });
         },
         addFormValidations: function() {

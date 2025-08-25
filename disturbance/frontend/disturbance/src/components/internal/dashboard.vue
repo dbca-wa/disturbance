@@ -55,6 +55,7 @@ export default {
         // retrieve template group
         fetch('/template_group',{ emulateJSON:true }).then(
             async (res)=>{
+                if (!res.ok) { return res.json().then(err => { throw err }); }
                 //this.template_group = res.body.template_group;
                 vm.template_group_res = await res.json();
                 if (vm.template_group_res.template_group === 'apiary') {
@@ -62,10 +63,9 @@ export default {
                 } else {
                     this.dasTemplateGroup = true;
                 }
-            },err=>{
+            }).catch(err=>{
                 console.log(err);
-            }
-        );
+            });
     },
 
 }
