@@ -232,7 +232,8 @@ export default {
                 vm.errors = true;
                 vm.addingComms = false;
                 //TODO the apiVueResourceError need to be updated
-                vm.errorString = helpers.apiVueResourceError(error);
+                // vm.errorString = helpers.apiVueResourceError(error);
+                vm.errorString = error.message;
             });
         },
         addFormValidations: function() {

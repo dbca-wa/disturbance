@@ -2269,7 +2269,7 @@ class SchemaMasterlistViewSet(viewsets.ModelViewSet):
                 raise serializers.ValidationError(repr(e[0]))
 
         except Exception as e:
-            logger.exception()
+            logger.exception(e)
             raise serializers.ValidationError(str(e))
 
     @action(methods=['GET', ], detail=True)
@@ -2306,7 +2306,7 @@ class SchemaMasterlistViewSet(viewsets.ModelViewSet):
                 raise serializers.ValidationError(repr(e[0]))
 
         except Exception as e:
-            logger.exception()
+            logger.exception(e)
             raise serializers.ValidationError(str(e))
 
     @action(methods=['DELETE', ], detail=True)
@@ -2338,7 +2338,7 @@ class SchemaMasterlistViewSet(viewsets.ModelViewSet):
                 raise serializers.ValidationError(repr(e[0]))
 
         except Exception as e:
-            logger.exception()
+            logger.exception(e)
             raise serializers.ValidationError(str(e))
 
     @action(methods=['POST', ], detail=True)
@@ -2384,7 +2384,7 @@ class SchemaMasterlistViewSet(viewsets.ModelViewSet):
                 raise serializers.ValidationError(repr(e[0]))
 
         except Exception as e:
-            logger.exception()
+            logger.exception(e)
             raise serializers.ValidationError(str(e))
 
 class SchemaQuestionFilterBackend(DatatablesFilterBackend):
@@ -2557,7 +2557,7 @@ class SchemaQuestionViewSet(viewsets.ModelViewSet):
                 raise serializers.ValidationError(repr(e[0]))
 
         except Exception as e:
-            logger.exception()
+            logger.exception(e)
             raise serializers.ValidationError(str(e))
 
     @action(methods=['GET', ], detail=True)
@@ -2606,7 +2606,7 @@ class SchemaQuestionViewSet(viewsets.ModelViewSet):
                 raise serializers.ValidationError(repr(e[0]))
 
         except Exception as e:
-            logger.exception()
+            logger.exception(e)
             raise serializers.ValidationError(str(e))
 
     @action(methods=['GET', ], detail=True)
@@ -2638,7 +2638,7 @@ class SchemaQuestionViewSet(viewsets.ModelViewSet):
                 raise serializers.ValidationError(repr(e[0]))
 
         except Exception as e:
-            logger.exception()
+            logger.exception(e)
             raise serializers.ValidationError(str(e))
 
     @action(methods=['GET', ], detail=True)
@@ -2696,7 +2696,7 @@ class SchemaQuestionViewSet(viewsets.ModelViewSet):
                 raise serializers.ValidationError(repr(e[0]))
 
         except Exception as e:
-            logger.exception()
+            logger.exception(e)
             raise serializers.ValidationError(str(e))
 
     @action(methods=['DELETE', ], detail=True)
@@ -2705,6 +2705,7 @@ class SchemaQuestionViewSet(viewsets.ModelViewSet):
         Delete Section Question record.
         '''
         try:
+            import ipdb; ipdb.set_trace()
             instance = self.get_object()
 
             with transaction.atomic():
@@ -2728,7 +2729,7 @@ class SchemaQuestionViewSet(viewsets.ModelViewSet):
                 raise serializers.ValidationError(repr(e[0]))
 
         except Exception as e:
-            logger.exception()
+            logger.exception(e)
             raise serializers.ValidationError(str(e))
 
     @action(methods=['POST', ], detail=True)
@@ -2768,7 +2769,7 @@ class SchemaQuestionViewSet(viewsets.ModelViewSet):
                 raise serializers.ValidationError(repr(e[0]))
 
         except Exception as e:
-            logger.exception()
+            logger.exception(e)
             raise serializers.ValidationError(str(e))
 
 class SchemaProposalTypeFilterBackend(DatatablesFilterBackend):
@@ -2903,7 +2904,7 @@ class SchemaProposalTypeViewSet(viewsets.ModelViewSet):
                 raise serializers.ValidationError(repr(e[0]))
 
         except Exception as e:
-            logger.exception()
+            logger.exception(e)
             raise serializers.ValidationError(str(e))
 
     @action(methods=['GET', ], detail=True)
@@ -2939,7 +2940,7 @@ class SchemaProposalTypeViewSet(viewsets.ModelViewSet):
                 raise serializers.ValidationError(repr(e[0]))
 
         except Exception as e:
-            logger.exception()
+            logger.exception(e)
             raise serializers.ValidationError(str(e))
 
     @action(methods=['DELETE', ], detail=True)
@@ -2971,7 +2972,7 @@ class SchemaProposalTypeViewSet(viewsets.ModelViewSet):
                 raise serializers.ValidationError(repr(e[0]))
 
         except Exception as e:
-            logger.exception()
+            logger.exception(e)
             raise serializers.ValidationError(str(e))
 
     @action(methods=['POST', ], detail=True)
@@ -3004,7 +3005,7 @@ class SchemaProposalTypeViewSet(viewsets.ModelViewSet):
                 raise serializers.ValidationError(repr(e[0]))
 
         except Exception as e:
-            logger.exception()
+            logger.exception(e)
             raise serializers.ValidationError(str(e))
 
 

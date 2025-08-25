@@ -429,8 +429,10 @@ export default {
             if (this.filterQuestionProposalType==='All') {
                 return true
             }
-            fetch(helpers.add_endpoint_json(api_endpoints.schema_question,'1/get_question_sections'),{
-                params: { proposal_type_id: this.filterQuestionProposalType },
+            const proposal_type_id = this.filterQuestionProposalType;
+            var url = api_endpoints.schema_question.split( ".json" )
+            fetch(url[ 0 ] + `/1/get_question_sections?proposal_type_id=${encodeURIComponent(proposal_type_id)}`,{
+                // params: { proposal_type_id: this.filterQuestionProposalType },
             }).then(async (res)=>{
                 let data = await res.json();
                 this.schemaGroups = data.question_groups; 
@@ -443,8 +445,10 @@ export default {
             if (this.filterQuestionSection==='All') {
                 return true
             }
-            fetch(helpers.add_endpoint_json(api_endpoints.schema_question,'1/get_question_parents'),{
-                params: { section_id: this.filterQuestionSection },
+            const section_id = this.filterQuestionSection;
+            var url = api_endpoints.schema_question.split( ".json" )
+            fetch(url[ 0 ] + `/1/get_question_parents?section_id=${encodeURIComponent(section_id)}`,{
+                // params: { section_id: this.filterQuestionSection },
             }).then(async (res)=>{
                 let data = await res.json();
                 this.sectionQuestion.section = this.filterQuestionSection;
@@ -552,38 +556,57 @@ export default {
 
             if (data.id === '') {
 
-                await self.$http.post(api_endpoints.schema_question, JSON.stringify(data),{
-                    emulateJSON:true
+                await fetch(api_endpoints.schema_question,{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
 
-                }).then(() => {
-
+                }).then(async (response) => {
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new Error(errorText);
+                    }
                     self.$refs.schema_question_table.vmDataTable.ajax.reload();
                     self.close();
 
-                }, (error) => {
-
+                }).catch(error => {
+                    
                     swal.fire(
                         'Save Error',
-                        helpers.apiVueResourceError(error),
+                        // helpers.apiVueResourceError(error),
+                        error.message,
                         'error'
                     )
                 });
 
             } else {
 
-                await self.$http.post(helpers.add_endpoint_json(api_endpoints.schema_question,data.id+'/save_question'),JSON.stringify(data),{
-                        emulateJSON:true,
+                await fetch(helpers.add_endpoint_json(api_endpoints.schema_question,data.id+'/save_question'),{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
 
-                    }).then(()=>{
+                }).then(async (response)=>{
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new Error(errorText);
+                    }
+                    self.$refs.schema_question_table.vmDataTable.ajax.reload();
+                    self.close();
 
-                        self.$refs.schema_question_table.vmDataTable.ajax.reload();
-                        self.close();
-
-                    },(error)=>{
+                }).catch(error => {
+                    
+                    swal.fire(
                         'Save Error',
-                        helpers.apiVueResourceError(error),
+                        // helpers.apiVueResourceError(error),
+                        error.message,
                         'error'
-                    });
+                    )
+                });
 
             }
             this.isNewEntry = false;
@@ -667,14 +690,20 @@ export default {
 
                     if (result.isConfirmed) {
 
-                        await self.$http.delete(helpers.add_endpoint_json(api_endpoints.schema_question,(self.sectionQuestion.id+'/delete_question')))
-    
-                        .then(() => {
-
+                        await fetch(helpers.add_endpoint_json(api_endpoints.schema_question,(self.sectionQuestion.id+'/delete_question')),{
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        }).then(async (response) => {
+                            if (!response.ok) {
+                                const errorData = await response.json();
+                                throw errorData;
+                            }
                             self.$refs.schema_question_table.vmDataTable.ajax.reload();
 
-                        }, (error) => {
-                            console.log(error);
+                        }).catch((error) => {
+                            console.log(error.message);
                         });
     
                     }

@@ -153,7 +153,8 @@ export default {
             }).catch((error)=>{
                 vm.errors = true;
                 vm.issuingApproval = false;
-                vm.errorString = helpers.apiVueResourceError(error);
+                // vm.errorString = helpers.apiVueResourceError(error);
+                vm.errorString = error.message;
             });
         },
         addFormValidations: function() {
