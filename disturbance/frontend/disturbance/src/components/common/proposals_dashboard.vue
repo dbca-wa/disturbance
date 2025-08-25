@@ -725,16 +725,24 @@ export default {
                 confirmButtonColor:'#d9534f'
             }).then((swalresult) => {
                 if (swalresult.isConfirmed) {
-                    vm.$http.delete(api_endpoints.discard_proposal(proposal_id))
-                    .then(() => {
+                    fetch(api_endpoints.discard_proposal(proposal_id),{
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                   }).then(async (response) => {
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw errorData;
+                        }
                         swal.fire({
                             title: 'Discarded',
                             text: 'Your proposal has been discarded',
                             icon: 'success'
                         })
                         vm.$refs.proposal_datatable.vmDataTable.ajax.reload();
-                    }, (error) => {
-                        console.log(error);
+                    }).catch((error) => {
+                        console.log(error.text);
                     });
                 }
             },(error) => {
