@@ -150,7 +150,10 @@ export default {
         fetch('/template_group',{
             emulateJSON:true
         }).then(
-            async res=>{
+            async (res)=>{
+                if (!res.ok) {
+                    return await res.json().then(err => { throw err });
+                }
                 //this.template_group = res.body.template_group;
                 const template_group_res= await res.json();
                 if (template_group_res.template_group === 'apiary') {

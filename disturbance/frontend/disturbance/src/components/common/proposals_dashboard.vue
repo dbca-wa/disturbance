@@ -697,6 +697,9 @@ export default {
             fetch(
                 api_endpoints.filter_list
             ).then( async (response) => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw err });
+                }
                 vm.filterListsProposal = await response.json();
                 vm.proposal_regions = vm.filterListsProposal.regions;
                 vm.proposal_districts = vm.filterListsProposal.districts;
@@ -709,8 +712,8 @@ export default {
                 vm.proposal_applicants = vm.filterListsProposal.applicants;
                 //vm.proposal_status = vm.level == 'internal' ? response.body.processing_status_choices: response.body.customer_status_choices;
                 vm.proposal_status = vm.level == 'internal' ? vm.internal_status: vm.external_status;
-            },(error) => {
-                    console.log(error);
+            }).catch(error => {
+                console.log(error);
             })
         },
 
@@ -732,8 +735,7 @@ export default {
                         }
                    }).then(async (response) => {
                         if (!response.ok) {
-                            const errorData = await response.json();
-                            throw errorData;
+                            throw new Error(`Discard Proposal failed: ${response.status}`);
                         }
                         swal.fire({
                             title: 'Discarded',
@@ -742,7 +744,7 @@ export default {
                         })
                         vm.$refs.proposal_datatable.vmDataTable.ajax.reload();
                     }).catch((error) => {
-                        console.log(error.text);
+                        console.log(error);
                     });
                 }
             },(error) => {
@@ -930,8 +932,11 @@ export default {
             let vm = this;
             fetch(api_endpoints.profile).then(
                 async (response) => {
+                    if (!response.ok) {
+                        return response.json().then(err => { throw err });
+                    }
                     vm.profile = await response.json();
-                },(error) => {
+                }).catch(error => {
                     console.log(error);
 
                 }
@@ -995,6 +1000,9 @@ export default {
         // retrieve template group
         fetch('/template_group',{ emulateJSON: true }).then(
             async res=>{
+                if (!res.ok) {
+                    return res.json().then(err => { throw err });
+                }
                 //this.template_group = res.body.template_group;
                 vm.templateGroupResponse = await res.json();
                 if (vm.templateGroupResponse.template_group === 'apiary') {
@@ -1009,11 +1017,9 @@ export default {
                 this.is_das_admin = vm.templateGroupResponse.is_das_admin
                 this.is_apiary_admin = vm.templateGroupResponse.is_apiary_admin
                 this.is_das_apiary_admin = vm.templateGroupResponse.is_das_apiary_admin
-            },
-            err=>{
+            }).catch(err=>{
                 console.log(err);
-            }
-        );
+            });
     },
 }
 </script>

@@ -214,14 +214,15 @@ export default {
             let vm=this;
             fetch(helpers.add_endpoint_json(api_endpoints.organisations,applicant_id)).then(
                 async (response) => {
+                    if (!response.ok) {
+                        return await response.json().then(err => { throw err });
+                    }
                     let data = await response.json();
                     vm.org = data;
                     vm.org.address = data.address;
-                },(error) => {
+                }).catch((error) => {
                     console.log(error);
-                }
-            )
-
+                });
         },
     },
     mounted: function () {

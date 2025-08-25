@@ -300,7 +300,7 @@ export default {
                     body: JSON.stringify(data),
             }).then(async (response)=>{
                 if (!response.ok) {
-                    return await response.json().then(err => { throw err });
+                    throw new Error(`Deleted Document Failed: ${response.status}`);
                 }
                 const data = await response.json();
                 if(data){
@@ -329,7 +329,7 @@ export default {
                 body: data,
             }).then(async (response)=>{
                 if (!response.ok) {
-                    return await response.json().then(err => { throw err });
+                    throw new Error(`Compliance submit failed: ${response.status}`);
                 }
                 const data = await response.json();
                 if(data){
@@ -351,8 +351,7 @@ export default {
             }).catch((error)=>{
                 vm.errors = true;
                 vm.addingCompliance = false;
-                // vm.errorString = helpers.apiVueResourceError(error);
-                vm.errorString = error.message || 'An error occurred while submitting the compliance';
+                vm.errorString = error || 'An error occurred while submitting the compliance';
             });
                 
     },
@@ -375,6 +374,9 @@ export default {
  beforeRouteEnter: function(to, from, next){
     fetch(helpers.add_endpoint_json(api_endpoints.compliances,to.params.compliance_id)).then(
         async (response) => {
+            if (!response.ok) {
+                return response.json().then(err => { throw err });
+            }
             let compliance_data = await response.json();
             next(vm => {
                 vm.compliance = compliance_data;
@@ -382,18 +384,19 @@ export default {
                 if (vm.compliance && vm.compliance.documents){ vm.hasDocuments = true}
 
                 fetch(helpers.add_endpoint_json(api_endpoints.compliances,to.params.compliance_id+'/amendment_request')).then(
-                    async (res) => {     
+                    async (res) => { 
+                        if (!res.ok) {
+                            return res.json().then(err => { throw err });
+                        }    
                         let amend_data = await res.json();                
                         vm.setAmendmentData(amend_data);                  
-                    },err => {
+                    }).catch(err => {
                             console.log(err);
-                    }
-                );
+                    });
             })
-        },(error) => {
+        }).catch((error) => {
             console.log(error);
-        }
-    )
+        });
   }
 }
 

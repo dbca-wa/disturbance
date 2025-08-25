@@ -500,11 +500,14 @@ export default {
         editContact: function(_id){
             fetch(helpers.add_endpoint_json(api_endpoints.organisation_contacts,_id)).then(
                 async (response) => {
+                    if (!response.ok) {
+                        throw new Error(`Edit contact failed: ${response.status}`);
+                    }
                     this.$refs.add_contact.contact = await response.json();
                     this.addContact();
                 }).then(() => {
                     this.$refs.contacts_datatable.vmDataTable.ajax.reload();
-                },(error) => {
+                }).catch((error) => {
                     console.log(error);
                 })
         },
@@ -573,8 +576,7 @@ export default {
                             body: JSON.stringify(vm.contact_user)
                         }).then(async (response) => {
                             if (!response.ok) {
-                                const errorText = await response.text();
-                                throw new Error(errorText);
+                                throw new Error(`Contact Accept failed: ${response.status}`);
                             }
                             swal.fire({
                                 title: 'Contact Accept',
@@ -584,7 +586,7 @@ export default {
                             }).then(() => {
                                 vm.$refs.contacts_datatable_user.vmDataTable.ajax.reload();
                             },(error) => {
-                                console.log(error);
+                                console.log('Swal error: '+error);
                             });
                         }).catch((error) => {
                             swal.fire('Contact Accept','There was an error accepting ' + name + '.','error')
@@ -624,8 +626,7 @@ export default {
                             body: JSON.stringify(vm.contact_user)
                         }).then(async (response) => {
                             if (!response.ok) {
-                                const errorText = await response.text();
-                                throw new Error(errorText);
+                                throw new Error(`Contact Accept (Previously Declined) failed: ${response.status}`);
                             }
                             swal.fire({
                                 title: 'Contact Accept (Previously Declined)',
@@ -678,8 +679,7 @@ export default {
                             body: JSON.stringify(vm.contact_user)
                         }).then(async (response) => {
                             if (!response.ok) {
-                                const errorText = await response.text();
-                                throw new Error(errorText);
+                                throw new Error(`Contact Decline failed: ${response.status}`);
                             }
                             swal.fire({
                                 title: 'Contact Decline',
@@ -731,7 +731,6 @@ export default {
                             body: JSON.stringify(vm.contact_user)
                         }).then(async (response) => {
                             if (!response.ok) {
-                                const errorData = await response.json();
 
                                 // Check for specific status code
                                 if (response.status === 500) {
@@ -741,10 +740,10 @@ export default {
                                         'error',
                                     );
                                 } else {
-                                    console.log(JSON.stringify(errorData));
+                                    console.log(JSON.stringify(await response.json()));
                                 }
 
-                                throw errorData;
+                                throw new Error(`Unlink user failed: ${response.status}`);
                             }
 
                             swal.fire({
@@ -760,7 +759,7 @@ export default {
                                 console.log(error);
                             });
                         }).catch((error) => {
-                            console.log(error.message);
+                            console.log(error);
                         });
                     }
                 },(error) => {
@@ -796,8 +795,7 @@ export default {
                             body: JSON.stringify(vm.contact_user)
                         }).then(async (response) => {
                             if (!response.ok) {
-                                const errorText = await response.text();
-                                throw new Error(errorText);
+                                throw new Error(`Organisation Admin failed: ${response.status}`);
                             }
                             swal.fire({
                                 title: 'Organisation Admin',
@@ -809,7 +807,7 @@ export default {
                                     vm.$refs.contacts_datatable_user.vmDataTable.ajax.reload();
                                 }
                             },(error) => {
-                                console.log(error);
+                                console.log('Swal error:'+error);
                             });
                         }).catch((error) => {
                             swal.fire('Organisation Admin','There was an error making ' + name + ' an Organisation Admin.','error')
@@ -850,8 +848,7 @@ export default {
                             body: JSON.stringify(vm.contact_user)
                         }).then(async (response) => {
                             if (!response.ok) {
-                                const errorText = await response.text();
-                                throw new Error(errorText);
+                                throw new Error(`Company Admin failed: ${response.status}`);
                             }
                             swal.fire({
                                 title: 'Organisation User',
@@ -863,7 +860,7 @@ export default {
                                     vm.$refs.contacts_datatable_user.vmDataTable.ajax.reload();
                                 }
                             },(error) => {
-                                console.log(error);
+                                console.log('Swal error:'+error);
                             });
                         }).catch((error) => {
                             swal.fire('Company Admin','There was an error making ' + name + ' an Organisation User.','error')
@@ -903,8 +900,7 @@ export default {
                             body: JSON.stringify(vm.contact_user)
                         }).then(async (response) => {
                             if (!response.ok) {
-                                const errorText = await response.text();
-                                throw new Error(errorText);
+                                throw new Error(`Suspend User failed: ${response.status}`);
                             }
                             swal.fire({
                                 title: 'Suspend User',
@@ -916,7 +912,7 @@ export default {
                                     vm.$refs.contacts_datatable_user.vmDataTable.ajax.reload();
                                 }
                             },(error) => {
-                                console.log(error);
+                                console.log('Swal error:'+error);
                             });
                         }).catch((error) => {
                             swal.fire('Suspend User','There was an error suspending ' + name + ' as a User.','error')
@@ -956,8 +952,7 @@ export default {
                             body: JSON.stringify(vm.contact_user)
                         }).then(async (response) => {
                             if (!response.ok) {
-                                const errorText = await response.text();
-                                throw new Error(errorText);
+                                throw new Error(`Reinstate User failed: ${response.status}`);
                             }
                             swal.fire({
                                 title: 'Reinstate User',
@@ -969,7 +964,7 @@ export default {
                                     vm.$refs.contacts_datatable_user.vmDataTable.ajax.reload();
                                 }
                             },(error) => {
-                                console.log(error);
+                                console.log('Swal error:'+error);
                             });
                         }).catch((error) => {
                             swal.fire('Reinstate User','There was an error reinstating ' + name + '.','error')
@@ -1009,8 +1004,7 @@ export default {
                             body: JSON.stringify(vm.contact_user)
                         }).then(async (response) => {
                             if (!response.ok) {
-                                const errorText = await response.text();
-                                throw new Error(errorText);
+                                throw new Error(`Relink User failed: ${response.status}`);
                             }
                             swal.fire({
                                 title: 'Relink User',
@@ -1022,7 +1016,7 @@ export default {
                                     vm.$refs.contacts_datatable_user.vmDataTable.ajax.reload();
                                 }
                             },(error) => {
-                                console.log(error);
+                                console.log('Swal error:'+error);
                             });
                         }).catch((error) => {
                             swal.fire('Relink User','There was an error relink ' + name + '.','error')
@@ -1045,8 +1039,7 @@ export default {
                 body: JSON.stringify(vm.org)
             }).then(async (response) => {
                 if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(errorText);
+                    throw new Error(`Save Organisation details failed: ${response.status}`);
                 }
                 vm.updatingDetails = false;
                 vm.org = await response.json();
@@ -1071,7 +1064,7 @@ export default {
                 }
                 swal.fire(
                     'Error', 
-                    'Organisation details have cannot be saved because of the following error: '+text,
+                    'Organisation details cannot be saved because of the following error: '+text,
                     'error'
                 )
                 vm.updatingDetails = false;
@@ -1096,8 +1089,7 @@ export default {
                 }
             }).then(async (response) => {
                 if (!response.ok) {
-                    const errorData = await response.json();
-                    throw errorData;
+                    throw new Error(`Contact Deletion failed: ${response.status}`);
                 }
                 swal.fire(
                     'Contact Deleted', 
@@ -1134,8 +1126,7 @@ export default {
                 },
             }).then(async (response) => {
                 if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(errorText);
+                   throw new Error(`Contact Edit failed: ${response.status}`);
                 }
                 swal.fire(
                     'Update Contact', 
@@ -1165,8 +1156,7 @@ export default {
                 body: JSON.stringify(vm.org.address)
             }).then(async (response) => {
                 if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(errorText);
+                    throw new Error(`Save Address Details failed: ${response.status}`);
                 }
                 vm.updatingAddress = false;
                 vm.org = await response.json();
@@ -1205,6 +1195,9 @@ export default {
                         },
                         body: JSON.stringify({ user: person.id })
                     }).then(async (response) => {
+                        if (!response.ok) {
+                            throw new Error(`Unlink User failed: ${response.status}`);
+                        }
                         const data = await response.json();
                         vm.org = data;
                         if (vm.org.address == null){ vm.org.address = {}; }

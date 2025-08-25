@@ -465,6 +465,9 @@ export default {
 
             fetch(api_endpoints.filter_list_referrals).then(
                 async (response) => {
+                    if (!response.ok) {
+                        return response.json().then(err => { throw err });
+                    }
                     let filter_list_ref = await response.json();
                     vm.proposal_regions = filter_list_ref.regions;
                     //vm.proposal_districts = filter_list_ref.districts;
@@ -472,11 +475,9 @@ export default {
                     vm.proposal_applicationTypes = filter_list_ref.application_types;
                     vm.proposal_submitters = filter_list_ref.submitters;
                     vm.proposal_status = filter_list_ref.processing_status_choices;
-                },(error) => {
+                }).catch((error) => {
                     console.log(error);
-                }
-            )
-            //console.log(vm.regions);
+                });
         },
 
         addEventListeners: function(){
@@ -649,6 +650,9 @@ export default {
         // retrieve template group
         fetch('/template_group',{ emulateJSON:true }).then(
             async (res)=>{
+                if (!res.ok) {
+                    return await res.json().then(err => { throw err });
+                }
                 //this.template_group = res.body.template_group;
                 let template_group_res = await res.json();
                 if (template_group_res.template_group === 'apiary') {
@@ -657,10 +661,9 @@ export default {
                     this.dasTemplateGroup = true;
                     this.applySelect2()
                 }
-            },err=>{
-            console.log(err);
-            }
-        );
+            }).catch(err=>{
+                console.log(err);
+            });
     },
     /*
     created: function() {

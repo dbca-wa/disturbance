@@ -132,6 +132,9 @@ data: function() {
                         body: JSON.stringify(mlq_data)
                     }
                 );
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
                 const data = await response.json();
                 swal.close();
                 var resp_proposal = data['proposal'];

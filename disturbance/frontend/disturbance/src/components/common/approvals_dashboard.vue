@@ -621,12 +621,15 @@ export default {
 
             fetch(api_endpoints.filter_list_approvals).then(
                 async (response) => {
+                    
+                    if (!response.ok) { return response.json().then(err => { throw err }); }
+
                     vm.filter_lists_approval = await response.json();
                     vm.proposal_regions = vm.filter_lists_approval.regions;
                     vm.proposal_activityTitles = vm.filter_lists_approval.activities;
                     vm.proposal_submitters = vm.filter_lists_approval.submitters;
                     vm.approval_status = vm.filter_lists_approval.approval_status_choices;
-                },(error) => {
+                }).catch((error) => {
                     console.log(error);
                 }
             )
@@ -818,11 +821,11 @@ export default {
             let vm = this;
             fetch(api_endpoints.profile).then(
                 async (response) => {
+                    if (!response.ok) { return response.json().then(err => { throw err }); }
                     vm.profile = await response.json();
-                },(error) => {
+                }).catch((error) => {
                     console.log(error);
-                }
-            )
+                });
         },
 
         check_assessor: function(proposal){
@@ -941,17 +944,26 @@ export default {
                 if (result.isConfirmed) {
                     fetch(helpers.add_endpoint_json(api_endpoints.proposals,(proposal_id+'/renew_approval')),{}).then(
                         async (response) => {
+                            if (!response.ok) {
+                                const data = await response.json();
+                                swal.fire({
+                                    title: "Renew Approval",
+                                    text: JSON.stringify(data),
+                                    icon: "error",
+                                });
+                                return;
+                            }
                             let proposal = {}
                             proposal = await response.json();
                             vm.$router.push({
                                 name:"draft_proposal",
                                 params:{proposal_id: proposal.id}
                             });
-                        }, (error) => {
+                        }).catch((error) => {
                             console.log(error);
                             swal.fire({
                                 title: "Renew Approval",
-                                text: error.body,
+                                text: error,
                                 icon: "error",
                             })
                         }
@@ -974,9 +986,17 @@ export default {
             }).then((result) => {
                 if (result.isConfirmed) {
                     fetch(helpers.add_endpoint_json(api_endpoints.proposals,(proposal_id+'/amend_approval')),{
-
                     }).then(
                         async (response) => {
+                            if (!response.ok) {
+                                const data = await response.json();
+                                swal.fire({
+                                    title: "Ammend Approval",
+                                    text: JSON.stringify(data),
+                                    icon: "error",
+                                });
+                                return;
+                            }
                             let proposal = {}
                             proposal = await response.json();
                             vm.$router.push({
@@ -984,11 +1004,11 @@ export default {
                                 params:{proposal_id: proposal.id}
                             });
 
-                        }, (error) => {
+                        }).catch((error) => {
                             console.log(error);
                             swal.fire({
                                 title: "Amend Approval",
-                                text: error.body,
+                                text: error.text,
                                 icon: "error",
                             })
 
@@ -1026,9 +1046,12 @@ export default {
             //console.log(approval);
             fetch(helpers.add_endpoint_json(api_endpoints.approvals,(id+'/approval_pdf_view_log')),{
                 })
-                .then(() => {
+                .then(async (response) => {
+                    if (!response.ok) {
+                        return response.json().then(err => { throw err });
+                    }
                     //console.log(response)
-                }, (error) => {
+                }).catch((error) => {
                     console.log(error);
                 });
             window.open(media_link, '_blank');
@@ -1079,6 +1102,9 @@ export default {
             emulateJSON:true
         }).then(
             async res=>{
+                if (!res.ok) {
+                    return await res.json().then(err => { throw err });
+                }
                 //this.template_group = res.body.template_group;
                 let template_group_res = {}
                 template_group_res = await res.json()
@@ -1089,8 +1115,8 @@ export default {
                 }
                 this.setDashboardText();
                 this.templateGroupDetermined = true;
-            },err=>{
-            console.log(err);
+            }).catch(err=>{
+                console.log(err);
             }
         );
     },

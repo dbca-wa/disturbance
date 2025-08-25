@@ -95,6 +95,9 @@ export default {
         fetch('/template_group',{
             emulateJSON:true
             }).then(async (res)=>{
+                if (!res.ok) {
+                    return await res.json().then(err => { throw err });
+                }
                 //this.template_group = res.body.template_group;
                 let data = await res.json();
                 if (data.template_group === 'apiary') {
@@ -102,8 +105,8 @@ export default {
                 } else {
                     this.dasTemplateGroup = true;
                 }
-        },err=>{
-        console.log(err);
+        }).catch(err=>{
+            console.log(err);
         });
     },
 

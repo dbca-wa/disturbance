@@ -119,9 +119,12 @@ export default {
             let vm = this;
             fetch(api_endpoints.contact(id)).then(
                 async (response) => {
+                    if (!response.ok) {
+                            return await response.json().then(err => { throw err });
+                    }
                     vm.contact = await response.json(); 
                     vm.isModalOpen = true;
-                },(error) => {
+                }).catch((error) => {
                     console.log(error);
                 }
             );
@@ -145,10 +148,9 @@ export default {
                     vm.$parent.refreshDatatable();
                     vm.close();
                 }).catch((error)=>{
-                    console.log(error.message);
+                    console.log(error);
                     vm.errors = true;
-                    // vm.errorString = helpers.apiVueResourceError(error);
-                    vm.errorString = error.message;
+                    vm.errorString = error;
                 });
             } else {
                 let contact = JSON.parse(JSON.stringify(vm.contact));
@@ -165,10 +167,9 @@ export default {
                         vm.close();
                         vm.$parent.addedContact();
                     }).catch((error)=>{
-                        console.log(error.message);
+                        console.log(error);
                         vm.errors = true;
-                        // vm.errorString = helpers.apiVueResourceError(error);
-                        vm.errorString = error.message;
+                        vm.errorString = error;
                     });
                 
             }
