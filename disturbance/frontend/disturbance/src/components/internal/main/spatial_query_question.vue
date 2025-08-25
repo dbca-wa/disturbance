@@ -145,9 +145,10 @@
                             <div class="col-md-4">
                                 <!-- <select class="form-control" ref="select_group" name="select-group" v-model="spatialquery.group" :disabled="sqq_is_disabled()"> -->
                                 <select class="form-control" ref="select_group" name="select-group" v-model="spatialquery.group">
-                                    <template v-if="group.can_user_edit">
+                                    <!-- <template v-if="group.can_user_edit">
                                         <option v-for="group in spatialquery_selects.cddp_groups" :value="group" :key="group.id">{{group.name}}</option>
-                                    </template>
+                                    </template> -->
+                                    <option v-for="group in spatialquery_selects.cddp_groups" :value="group" :key="group.id">{{group.name}}</option>
                                 </select>     
                             </div>
                             <div class="col-md-1"></div>
@@ -1196,18 +1197,28 @@ export default {
                 console.log(api_endpoints.spatial_query);
                 console.log(api_endpoints.spatial_query + '.json');
 
-                await self.$http.post(api_endpoints.spatial_query + '.json',JSON.stringify(data),{
-                    emulateJSON:true
-                }).then((response) => {
+                await fetch(api_endpoints.spatial_query + '.json', {
+                    method: 'POST',
+                    body: JSON.stringify(data),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then(async (response) => {
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw errorData;
+                    }
+                    const response_data = await response.json();
                     self.$refs.spatial_query_question_table.vmDataTable.ajax.reload();
-                    self.spatialquerylayer.spatial_query_question_id = response.data.id // to allow adding layers immediately from same modal
-                    self.spatialquery.id = response.data.id // to allow adding layers immediately from same modal
+                    self.spatialquerylayer.spatial_query_question_id = response_data.data.id // to allow adding layers immediately from same modal
+                    self.spatialquery.id = response_data.data.id // to allow adding layers immediately from same modal
                     //self.close();
-                }, (error) => {
-                    console.log('Error: ' + JSON.stringify(error))
+                }).catch((error) => {
+                    console.log('Error: ' + JSON.stringify(error.message))
                     swal.fire(
                         'Save Error',
-                        helpers.apiVueResourceError(error),
+                        // helpers.apiVueResourceError(error),
+                        error.message,
                         'error'
                     )
                 });
@@ -1217,16 +1228,24 @@ export default {
 
                 if (data.operator=='IsNotNull') { data.value = '' } 
 
-                await self.$http.post(helpers.add_endpoint_json(api_endpoints.spatial_query,data.id+'/save_spatialquery'),JSON.stringify(data),{
-                        emulateJSON:true,
-                }).then(()=>{
+                await fetch(helpers.add_endpoint_json(api_endpoints.spatial_query,data.id+'/save_spatialquery'),{
+                    method: 'POST',
+                    body: JSON.stringify(data),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then(async (response) => {
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw errorData;
+                    }
                     self.$refs.spatial_query_question_table.vmDataTable.ajax.reload();
                     //self.close();
-                },(error)=>{
-                    console.log('Error: ' + JSON.stringify(error))
+                }).catch((error)=>{
+                    console.log('Error: ' + JSON.stringify(error.message))
                     swal.fire(
                         'Save Error',
-                        helpers.apiVueResourceError(error),
+                        error.message,
                         'error'
                     )
                 });
@@ -1269,22 +1288,32 @@ export default {
                 console.log(api_endpoints.spatial_query);
                 console.log(api_endpoints.spatial_query + '.json');
 
-                await self.$http.post(api_endpoints.spatial_query_layer + '.json',JSON.stringify(data),{
-                    emulateJSON:true
-                }).then((response) => {
+                await fetch(api_endpoints.spatial_query_layer + '.json',{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }).then(async (response) => {
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw errorData;
+                    }
                     //self.$refs.spatial_query_question_table.vmDataTable.ajax.reload();
-		    self.$refs.spatial_query_layer_table.vmDataTable.clear().draw()
-	            self.$refs.spatial_query_layer_table.vmDataTable.rows.add( response.body.data.layers )
-		    self.$refs.spatial_query_layer_table.vmDataTable.columns.adjust().draw()
+                    const res_body = await response.json();
+		            self.$refs.spatial_query_layer_table.vmDataTable.clear().draw()
+	                self.$refs.spatial_query_layer_table.vmDataTable.rows.add( res_body.data.layers )
+		            self.$refs.spatial_query_layer_table.vmDataTable.columns.adjust().draw()
 
                     self.$refs.spatial_query_question_table.vmDataTable.ajax.reload();
                     //self.close();
-                }, (error) => {
-                    console.log('Error: ' + JSON.stringify(error))
+                }).catch(error => {
+                    console.log('Error: ' + JSON.stringify(error.message));
                     swal.fire(
                         'Save Error',
-                        helpers.apiVueResourceError(error),
-                        'error'
+                        // helpers.apiVueResourceError(error),
+                        error.message,
+                        'error',
                     )
                 });
 
@@ -1294,16 +1323,25 @@ export default {
                 if (data.operator=='IsNotNull') { data.value = '' } 
                 if (data.expiry=='') { data.expiry = null } 
 
-                await self.$http.post(helpers.add_endpoint_json(api_endpoints.spatial_query_layer,data.id+'/save_spatialquerylayer'),JSON.stringify(data),{
-                        emulateJSON:true,
-                }).then((response)=>{
-                    console.log('JM8 ' + JSON.stringify(response.body))
-		    self.$refs.spatial_query_layer_table.vmDataTable.clear().draw()
-	            self.$refs.spatial_query_layer_table.vmDataTable.rows.add( response.body.data.layers )
-		    self.$refs.spatial_query_layer_table.vmDataTable.columns.adjust().draw()
+                await fetch(helpers.add_endpoint_json(api_endpoints.spatial_query_layer,data.id+'/save_spatialquerylayer'),{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }).then(async (response)=>{
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new Error(errorText);
+                    }
+                    const res_body = await response.json();
+                    console.log('JM8 ' + JSON.stringify(res_body));
+		            self.$refs.spatial_query_layer_table.vmDataTable.clear().draw()
+	                self.$refs.spatial_query_layer_table.vmDataTable.rows.add( res_body.data.layers )
+		             self.$refs.spatial_query_layer_table.vmDataTable.columns.adjust().draw()
                     //self.$refs.spatial_query_layer_table.vmDataTable.ajax.reload();
 
-	            self.$refs.spatial_query_question_table.vmDataTable.rows.add( response.body.data )
+	                self.$refs.spatial_query_question_table.vmDataTable.rows.add( res_body.data )
                     //self.$refs.spatial_query_question_table.vmDataTable.ajax.reload();
                     self.$refs.spatial_query_question_table.vmDataTable.draw();
 
@@ -1312,14 +1350,16 @@ export default {
                     self.filterCddpOperator = self.spatialquery.operator
 
                     //self.close();
-                },(error)=>{
-                    console.log('Error: ' + JSON.stringify(error))
+                }).catch(error => {
+                    console.log('Error: ' + JSON.stringify(error.message));
                     swal.fire(
                         'Save Error',
-                        helpers.apiVueResourceError(error),
-                        'error'
+                        // helpers.apiVueResourceError(error),
+                        error.message,
+                        'error',
                     )
                 });
+
 
             }
             this.isNewEntry = false;
@@ -1348,22 +1388,32 @@ export default {
             const uniq = (items) => [...new Set(items)];
 
             console.log('JM100: ' + helpers.add_endpoint_json(api_endpoints.proposals_sqs,self.proposal.lodgement_number + url));
-            await self.$http.post(helpers.add_endpoint_json(api_endpoints.proposals_sqs,self.proposal.lodgement_number + url),JSON.stringify(data),{
-                    emulateJSON:true,
-            }).then((response)=>{
-                console.log('Response: ' + JSON.stringify(response));
+            await fetch(helpers.add_endpoint_json(api_endpoints.proposals_sqs,self.proposal.lodgement_number + url),{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': self.csrf_token
+                },
+                body: JSON.stringify(data)
+            }).then(async (response)=>{
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText);
+                }
+                const res_body = await response.json();
+                console.log('Response: ' + JSON.stringify(res_body));
                 if (self.is_admin) {
-		    self.sqs_response = JSON.stringify(response.body, null, 4);
+		            self.sqs_response = JSON.stringify(res_body, null, 4);
                 } else {
                     // summary response
-		    let sqs_response_basic = response.body.layer_data[0].sqs_data
-		    sqs_response_basic.section = response.body.layer_data[0].name
-		    sqs_response_basic.layer_name = response.body.layer_data[0].layer_name
-		    sqs_response_basic.result = response.body.layer_data[0].result
+                    let sqs_response_basic = res_body.layer_data[0].sqs_data
+                    sqs_response_basic.section = res_body.layer_data[0].name
+                    sqs_response_basic.layer_name = res_body.layer_data[0].layer_name
+                    sqs_response_basic.result = res_body.layer_data[0].result
                     delete sqs_response_basic.operator_response
 
                     if (!sqs_response_basic.answer) { delete sqs_response_basic.answer }
-		    self.sqs_response = JSON.stringify(sqs_response_basic, null, 4);
+		            self.sqs_response = JSON.stringify(sqs_response_basic, null, 4);
                 }
                 //swal.fire(
                 //    'Request Queued on Spatial Query Server',
@@ -1373,13 +1423,14 @@ export default {
                 self.isModalOpen = true;
                 //self.close();
                 self.requesting = false;
-                self.num_questions = response.body['layer_data'].length;
-                self.num_layers_utilised = uniq(response.body['layer_data'].map((item) => item.layer_name)).length // unique layers used
-            },(error)=>{
-                console.log('Error: ' + JSON.stringify(error))
+                self.num_questions = res_body['layer_data'].length;
+                self.num_layers_utilised = uniq(res_body['layer_data'].map((item) => item.layer_name)).length // unique layers used
+            }).catch(error => {
+                console.log('Error: ' + JSON.stringify(error.message))
                 swal.fire(
                     'Error',
-                    helpers.apiVueResourceError(error),
+                    // helpers.apiVueResourceError(error),
+                    error.message,
                     'error'
                 )
             });
@@ -1524,19 +1575,29 @@ export default {
             self.show_spinner = true;
 
             //await self.$http.post(helpers.add_endpoint_json(api_endpoints.spatial_query, self.spatialquerylayer.layer.layer_name + '/create_or_update_sqs_layer'),JSON.stringify(data),{
-            await self.$http.post(url ,JSON.stringify(data),{
-                emulateJSON:true,
-            }).then((response)=>{
+            await fetch(url ,{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then(async (response)=>{
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText);
+                }
+                let data = await response.json();
                 swal.fire(
                     'Create/Update SQS Layer!',
-                    response.body.message,
+                    data.message,
                     'success'
                 )
                 self.show_spinner = false;
-            }, (error) => {
+            }).catch((error) => {
                 swal.fire(
                     'Create/Update Error',
-                    helpers.apiVueResourceError(error),
+                    // helpers.apiVueResourceError(error),
+                    error.message,
                     'error'
                 )
                 self.show_spinner = false;
@@ -1581,6 +1642,10 @@ export default {
                     vm.show_spinner = true;
                     vm.export_layers_btn_disabled = true;
                     fetch('/api/proposal_sqs/layers_used/').then(async (response) => {
+                        if (!response.ok) {
+                            const errorText = await response.text();
+                            throw new Error(errorText);
+                        }
                         let data = await response.blob();
                         var FileSaver = require('file-saver');
                         const blob = new Blob([data], {type: 'text/csv'});
@@ -1904,13 +1969,22 @@ export default {
 
                 }).then(async (result) => {
                     if (result.isConfirmed) {
-                        await self.$http.delete(helpers.add_endpoint_json(api_endpoints.spatial_query,(self.spatialquery.id+'/delete_spatialquery')))
-                        .then(() => {
+                        await fetch(helpers.add_endpoint_json(api_endpoints.spatial_query,(self.spatialquery.id+'/delete_spatialquery')),{
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                        .then(async (response) => {
+                            if (!response.ok) {
+                                const errorText = await response.text();
+                                throw new Error(errorText);
+                            }
                             self.$refs.spatial_query_question_table.vmDataTable.ajax.reload();
-                        }, (error) => {
+                        }).catch((error) => {
                             swal.fire(
                                 'Delete Error',
-                                helpers.apiVueResourceError(error),
+                                error.message,
                                 'error'
                             )
                         });
@@ -1935,20 +2009,30 @@ export default {
 
                 }).then(async (result) => {
                     if (result.isConfirmed) {
-                        await self.$http.delete(helpers.add_endpoint_json(api_endpoints.spatial_query_layer,(id+'/delete_spatialquerylayer')))
-                        .then((response) => {
+                        await fetch(helpers.add_endpoint_json(api_endpoints.spatial_query_layer,(id+'/delete_spatialquerylayer')),{
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        }).then(async (response) => {
+                            if (!response.ok) {
+                                const errorData = await response.json();
+                                throw errorData;
+                            }
+                            const res_body = await response.json();
                             //self.$refs.spatial_query_layer_table.vmDataTable.ajax.reload();
 
-			    self.$refs.spatial_query_layer_table.vmDataTable.clear().draw()
- 	                    self.$refs.spatial_query_layer_table.vmDataTable.rows.add( response.body.data.layers )
-        	            self.$refs.spatial_query_layer_table.vmDataTable.columns.adjust().draw()
-                	    //self.$refs.spatial_query_layer_table.vmDataTable.ajax.reload();
-                	    self.$refs.spatial_query_question_table.vmDataTable.ajax.reload();
+                            self.$refs.spatial_query_layer_table.vmDataTable.clear().draw()
+                            self.$refs.spatial_query_layer_table.vmDataTable.rows.add( res_body.data.layers )
+                            self.$refs.spatial_query_layer_table.vmDataTable.columns.adjust().draw()
+                            //self.$refs.spatial_query_layer_table.vmDataTable.ajax.reload();
+                            self.$refs.spatial_query_question_table.vmDataTable.ajax.reload();
 
-                        }, (error) => {
+                        }).catch((error) => {
                             swal.fire(
                                 'Delete Error',
-                                helpers.apiVueResourceError(error),
+                                // helpers.apiVueResourceError(error),
+                                error.message,
                                 'error'
                             )
                         });
