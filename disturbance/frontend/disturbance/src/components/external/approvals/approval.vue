@@ -144,28 +144,28 @@ export default {
         }
     },
     watch: {
-        approval: {
-            deep: true,
-            handler(){
-                console.log('approval in watch');
+        // approval: {
+        //     deep: true,
+        //     handler(){
+        //         console.log('approval in watch');
 
-                // Construct the array, which is passed to the child component, SiteAvailability
-                // Construct the array, which is passed to the child component, OnSiteInformation
-                this.test_apiary_sites = []
-                this.on_site_information_list = []
+        //         // Construct the array, which is passed to the child component, SiteAvailability
+        //         // Construct the array, which is passed to the child component, OnSiteInformation
+        //         this.test_apiary_sites = []
+        //         this.on_site_information_list = []
 
-                for (let i=0; i<this.approval.apiary_sites.length; i++){
-                    console.log(this.approval.apiary_sites[i]);
-                    this.test_apiary_sites.push(this.approval.apiary_sites[i].apiary_site)
-                    for (let j=0; j<this.approval.apiary_sites[i].apiary_site.onsiteinformation_set.length; j++){
-                        this.on_site_information_list.push(this.approval.apiary_sites[i].apiary_site.onsiteinformation_set[j])
-                    }
-                }
+        //         for (let i=0; i<this.approval.apiary_sites.length; i++){
+        //             console.log(this.approval.apiary_sites[i]);
+        //             this.test_apiary_sites.push(this.approval.apiary_sites[i].apiary_site)
+        //             for (let j=0; j<this.approval.apiary_sites[i].apiary_site.onsiteinformation_set.length; j++){
+        //                 this.on_site_information_list.push(this.approval.apiary_sites[i].apiary_site.onsiteinformation_set[j])
+        //             }
+        //         }
 
-                // Construct the array, which is passed to the child component, TemporaryUse
+        //         // Construct the array, which is passed to the child component, TemporaryUse
 
-            }
-        }
+        //     }
+        // }
     },
     created: function() {
         if (this.approvalId) {
@@ -196,15 +196,16 @@ export default {
             let vm = this
             fetch(helpers.add_endpoint_json(api_endpoints.approvals,approval_id)).then(
                 async (res) => {
+                    if (!res.ok) {
+                        return await res.json().then(err => { throw err });
+                    }
                     let data = await res.json();
                     vm.approval = data;
                     vm.approval.applicant_id = data.applicant_id;
                     vm.fetchOrganisation(vm.approval.applicant_id)
-                },
-                error => {
+                }).catch(error => {
                     console.log(error);
-                }
-            )
+                });
         },
         commaToNewline(s){
             return s.replace(/[,;]/g, '\n');
