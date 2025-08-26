@@ -692,7 +692,8 @@ export default {
                                 if(result.isConfirmed){
                                     vm.$refs.contacts_datatable_user.vmDataTable.ajax.reload();
                                 }
-                            },(error) => {
+                            }).catch((error) => {
+                                swal.fire('Contact Decline','There was an error declining ' + name + '.','error');
                                 console.log(error?.message || JSON.stringify(error));
                             });
                         }, (error) => {
