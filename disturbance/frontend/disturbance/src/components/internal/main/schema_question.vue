@@ -416,6 +416,13 @@ export default {
 
     },
     watch:{
+        isNewEntry(newVal) {
+            if (newVal) {
+            this.$nextTick(() => {
+                this.initQuestionSelector();
+            });
+            }
+        },
         filterTableProposalType: function() {
             this.$refs.schema_question_table.vmDataTable.draw();
         },
@@ -792,15 +799,16 @@ export default {
                 this.schemaProposalTypes = data.all_proposal_types;
                 this.schemaSections = data.all_section;
                 this.schemaGroups = data.all_group
-
+                this.initQuestionSelector();
             }).catch(err=>{
+
                 swal.fire(
                     'Get Application Selects Error',
                     err,
                     'error'
                 )
             });
-            this.initQuestionSelector();
+            //this.initQuestionSelector();
             this.initParentSelector();
             // this.initAnswerSelector();
             this.initGroupSelector();

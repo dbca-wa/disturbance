@@ -3497,7 +3497,7 @@ class SectionQuestion(models.Model):
         blank=True,
         related_name='children_question',
         #limit_choices_to=Q(option__isnull=False)
-        limit_choices_to=limit_sectionquestion_choices_sql(),
+        #limit_choices_to=limit_sectionquestion_choices_sql(),
         on_delete=models.SET_NULL
     )
     #parent_question=models.ForeignKey('disturbance.MasterlistQuestion', related_name='children_question', null=True, blank=True, on_delete=models.SET_NULL)

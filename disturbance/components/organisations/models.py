@@ -532,7 +532,7 @@ class OrganisationContactDeclinedDetails(models.Model):
     # reason = models.TextField(blank=True)
 
     class Meta:
-        app_label = 'commercialoperator'
+        app_label = 'disturbance'
 
 
 class UserDelegation(models.Model):

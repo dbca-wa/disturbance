@@ -2705,7 +2705,6 @@ class SchemaQuestionViewSet(viewsets.ModelViewSet):
         Delete Section Question record.
         '''
         try:
-            import ipdb; ipdb.set_trace()
             instance = self.get_object()
 
             with transaction.atomic():
