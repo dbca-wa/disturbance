@@ -185,6 +185,7 @@ export default {
                     }
                 },
                 drawCallback: function () {
+                    if (!vm.$refs.requirements_datatable || !vm.$refs.requirements_datatable.table) return;
                     $(vm.$refs.requirements_datatable.table).find('tr:last .dtMoveDown').remove();
                     $(vm.$refs.requirements_datatable.table).children('tbody').find('tr:first .dtMoveUp').remove();
 
