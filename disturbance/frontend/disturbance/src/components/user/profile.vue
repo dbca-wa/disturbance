@@ -523,15 +523,14 @@ export default {
                 }).then(async (response) => {
                     const res = await response.json();
                     if (!response.ok) {
-                        const errorText = res;
-                        throw new Error(errorText);
+                        throw new Error(`Profile Update Contact Failed: ${response.status}`);
                     }
                     console.log(res);
                     vm.updatingContact = false;
                     vm.profile = res;
                     if (vm.profile.residential_address == null){ vm.profile.residential_address = {}; }
                 }).catch((error) => {
-                    console.log(error.message);
+                    console.log(error);
                     vm.updatingContact = false;
                 });
             }
@@ -570,14 +569,13 @@ export default {
             }).then(async (response) => {
                 const res = await response.json();
                 if (!response.ok) {
-                    const errorText = res;
-                    throw new Error(errorText);
+                    throw new Error(`Profile Update Address Failed: ${response.status}`);
                 }
                 vm.updatingAddress = false;
                 vm.profile = res;
                 if (vm.profile.residential_address == null){ vm.profile.residential_address = {}; }
             }).catch((error) => {
-                console.log(error.message);
+                console.log(error);
                 vm.updatingAddress = false;
             });
           }
@@ -607,17 +605,18 @@ export default {
                 body: JSON.stringify(this.newOrg)
             }).then(async (response) => {
                 //console.log(response);
+                if (!response.ok) { return response.json().then(err => { throw err }); }
                 const data = await response.json();
                 this.newOrg.exists = data.exists;
                 this.newOrg.detailsChecked = true;
                 this.newOrg.id = data.id;
                 if (data.first_five){this.newOrg.first_five = data.first_five }
             }).catch((error) => {
-                console.log(error.message);
+                console.log(error);
                 swal.fire(
                     {
                         title: 'Check Organisation',
-                        text: error.message,
+                        text: error,
                         icon: 'error'
                     }
                 )
@@ -628,8 +627,9 @@ export default {
             let vm = this;
             fetch(helpers.add_endpoint_json(api_endpoints.organisation_requests,'get_pending_requests'))
             .then(async (response) => {
+                if (!response.ok) { return response.json().then(err => { throw err }); }
                 vm.orgRequest_list=await response.json();
-            }, (error) => {
+            }).catch((error) => {
                 console.log(error);
             });
         },
@@ -653,8 +653,7 @@ export default {
                 body: JSON.stringify(this.newOrg)
             }).then(async (response) => {
                 if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(errorText);
+                    throw new Error(`Validating pins failed: ${response.status}`);
                 }
                 const data = await response.json();
                 if (data.valid){
@@ -669,10 +668,11 @@ export default {
                     vm.resetNewOrg();
                     fetch(api_endpoints.profile)
                     .then(async (response) => {
+                        if (!response.ok) { return response.json().then(err => { throw err }); }
                         vm.profile = await response.json();
                         if (vm.profile.residential_address == null){ vm.profile.residential_address = {}; }
                         if ( vm.profile.disturbance_organisations && vm.profile.disturbance_organisations.length > 0 ) { vm.managesOrg = 'Yes' }
-                    },(error) => {
+                    }).catch((error) => {
                         console.log(error);
                     })
                 }else {
@@ -709,9 +709,8 @@ export default {
                     body: data
                 }).then(async (response) => {
                     const res = await response.json();
-                    if (!response.ok) {
-                        const errorText = res.message;
-                        throw new Error(errorText);
+                    if (!res.ok) {
+                        throw new Error(`Submit Organisation request failed: ${res.status}`);
                     }
                     vm.registeringOrg = false;
                     vm.uploadedFile = null;
@@ -783,9 +782,8 @@ export default {
                     body: data
                 }).then(async (response) => {
                     const res = await response.json();
-                    if (!response.ok) {
-                        const errorText = res.message;
-                        throw new Error(errorText);
+                    if (!res.ok) {
+                        throw new Error(`Submit Organisation request failed: ${res.status}`);
                     }
                     vm.registeringOrg = false;
                     vm.uploadedFile = null;
@@ -832,10 +830,11 @@ export default {
             vm.loading.push('fetching countries');
             fetch(api_endpoints.countries)
             .then(async (response)=>{
+                if (!response.ok) { return response.json().then(err => { throw err }); }
                 vm.countries = await response.json();
                 vm.loading.splice('fetching countries',1);
-            },()=>{
-                //console.log(response);
+            }).catch((error)=>{
+                console.log(error);
                 vm.loading.splice('fetching countries',1);
             });
         },
@@ -861,15 +860,15 @@ export default {
                         'mobile_number':vm.profile.mobile_number, 'phone_number':vm.profile.phone_number})
                     }).then(async (response) => {
                         if (!response.ok) {
-                            const errorText = await response.text();
-                            throw new Error(errorText);
+                            throw new Error(`Unlink User failed: ${response.status}`);
                         }
                         fetch(api_endpoints.profile)
                         .then(async (response) => {
+                            if (!response.ok) { return response.json().then(err => { throw err }); }
                             vm.profile = await response.json();
                             if (vm.profile.residential_address == null){ vm.profile.residential_address = {}; }
                             if ( vm.profile.disturbance_organisations && vm.profile.disturbance_organisations.length > 0 ) { vm.managesOrg = 'Yes' }
-                        },(error) => {
+                        }).catch((error) => {
                             console.log(error);
                         })
                         swal.fire({
@@ -893,12 +892,13 @@ export default {
           let vm=this;
           fetch(api_endpoints.profile)
           .then(async (response) => {
-                    vm.profile = await response.json();
-                    if (vm.profile.residential_address == null){ vm.profile.residential_address = {}; }
-                    if ( vm.profile.disturbance_organisations && vm.profile.disturbance_organisations.length > 0 ) { vm.managesOrg = 'Yes' }
-                    vm.phoneNumberReadonly = vm.profile.phone_number === '' || vm.profile.phone_number === null || vm.profile.phone_number === 0 ?  false : true;
-                    vm.mobileNumberReadonly = vm.profile.mobile_number === '' || vm.profile.mobile_number === null || vm.profile.mobile_number === 0 ?  false : true;
-        },(error) => {
+            if (!response.ok) { return response.json().then(err => { throw err }); }
+            vm.profile = await response.json();
+            if (vm.profile.residential_address == null){ vm.profile.residential_address = {}; }
+            if ( vm.profile.disturbance_organisations && vm.profile.disturbance_organisations.length > 0 ) { vm.managesOrg = 'Yes' }
+            vm.phoneNumberReadonly = vm.profile.phone_number === '' || vm.profile.phone_number === null || vm.profile.phone_number === 0 ?  false : true;
+            vm.mobileNumberReadonly = vm.profile.mobile_number === '' || vm.profile.mobile_number === null || vm.profile.mobile_number === 0 ?  false : true;
+        }).catch((error) => {
             console.log(error);
         })
 
@@ -907,6 +907,7 @@ export default {
     beforeRouteEnter: function(to,from,next){
         fetch(api_endpoints.profile)
         .then(async (response) => {
+            if (!response.ok) { return response.json().then(err => { throw err }); }
             const data = await response.json();
             if (data.address_details && data.personal_details && data.contact_details && to.name == 'first-time'){
                 window.location.href='/';
@@ -918,7 +919,7 @@ export default {
                     if ( vm.profile.disturbance_organisations && vm.profile.disturbance_organisations.length > 0 ) { vm.managesOrg = 'Yes' }
                 });
             }
-        },(error) => {
+        }).catch((error) => {
             console.log(error);
         })
     },
@@ -938,15 +939,16 @@ export default {
         // retrieve template group
         fetch('/template_group',{ emulateJSON:true })
         .then(async (res)=>{
-                //this.template_group = res.body.template_group;
-                const data = await res.json();
-                if (data.template_group === 'apiary') {
-                    this.apiaryTemplateGroup = true;
-                } else {
-                    this.dasTemplateGroup = true;
-                }
-        },err=>{
-        console.log(err);
+            if (!res.ok) { return res.json().then(err => { throw err }); }
+            //this.template_group = res.body.template_group;
+            const data = await res.json();
+            if (data.template_group === 'apiary') {
+                this.apiaryTemplateGroup = true;
+            } else {
+                this.dasTemplateGroup = true;
+            }
+        }).catch(err=>{
+            console.log(err);
         });
     },
 }
