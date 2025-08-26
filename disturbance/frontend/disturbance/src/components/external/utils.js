@@ -6,13 +6,14 @@ export default {
         return new Promise ((resolve,reject) => {
             fetch(api.profile).then(
                 async (response) => {
+                    if (!response.ok) {
+                        return await response.json().then(err => { throw err });
+                    }
                     const data = await response.json();
                     resolve(data);
-                },
-                (error) => {
+                }).catch(error => {
                     reject(error);
-                }
-            );
+                });
         });
 
     },
@@ -20,14 +21,15 @@ export default {
         return new Promise ((resolve,reject) => {
             fetch(helpers.add_endpoint_json(api.proposals,id)).then(
                 async (response) => {
+                    if (!response.ok) {
+                        return await response.json().then(err => { throw err });
+                    }
                     const data = await response.json();
                     resolve(data);
-                },
-                (error) => {
+                }).catch(error => {
                     reject(error);
-                }
-            );
-        });
+                });
+            });
     },
     fetchCountries: function (){
         return new Promise ((resolve,reject) => {
@@ -35,11 +37,9 @@ export default {
                 async (response) => {
                     const data = await response.json();
                     resolve(data);
-                },
-                (error) => {
+                }).catch(error => {
                     reject(error);
-                }
-            );
+                });
         });
 
     },

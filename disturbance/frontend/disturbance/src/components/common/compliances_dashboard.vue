@@ -556,11 +556,12 @@ export default {
 
             fetch(api_endpoints.filter_list_compliances).then(
                 async (response) => {
+                    if (!response.ok) { return response.json().then(err => { throw err }); }
                     let filter_lists_compliance = await response.json();
                     vm.proposal_regions = filter_lists_compliance.regions;
                     vm.proposal_activityTitles = filter_lists_compliance.activities;
                     vm.status = vm.level == 'external' ? vm.external_status: vm.internal_status;
-                },(error) => {
+                }).catch((error) => {
                     console.log(error);
                 }
             )
@@ -714,11 +715,11 @@ export default {
             let vm = this;
             fetch(api_endpoints.profile).then(
                 async (response) => {
+                    if (!response.ok) { return response.json().then(err => { throw err }); }
                     vm.profile = await response.json();
-                },(error) => {
+                }).catch((error) => {
                     console.log(error);
-                }
-            )
+                });
         },
         check_assessor: function(compliance){
             let vm = this;
@@ -744,6 +745,7 @@ export default {
             emulateJSON:true
         }).then(
             async res=>{
+                if (!res.ok) { return res.json().then(err => { throw err }); }
                 let template_group_res = {};
                 template_group_res = await res.json();
                 if (template_group_res.template_group === 'apiary') {
@@ -753,10 +755,9 @@ export default {
                 }
                 vm.templateGroupDetermined = true
                 vm.applySelect2()
-            },err=>{
-            console.log(err);
-            }
-        );
+            }).catch(err=>{
+                console.log(err);
+            });
     },
     mounted: function(){
         //console.log('in mounted')

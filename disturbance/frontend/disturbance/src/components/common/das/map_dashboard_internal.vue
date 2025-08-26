@@ -790,6 +790,9 @@
                 let vm = this
                 fetch('/api/das_map_layers/').then(
                     async response => {
+                        if (!response.ok) {
+                            return await response.json().then(err => { throw err });
+                        }
                         let layers = await response.json();
                         for (var i = 0; i < layers.length; i++ ){
                             let l = new TileWMS({
@@ -820,7 +823,7 @@
                             vm.optionalLayers.push(tileLayer)
                             vm.map.addLayer(tileLayer)
                         }
-                    },(error) => {
+                    }).catch((error) => {
                         console.log(error);
                     }
                 )
@@ -1621,6 +1624,9 @@
 
                 fetch(api_endpoints.filter_list_map).then(
                     async (response) => {
+                        if (!response.ok) {
+                            return await response.json().then(err => { throw err });
+                        }
                         let filter_lists = await response.json();
                         vm.regions = filter_lists.regions;
                         vm.activity_titles = filter_lists.activities;
@@ -1629,10 +1635,9 @@
                         vm.proposal_applicants = filter_lists.applicants;
                         //vm.proposal_status = response.body.processing_status_choices;
                         vm.proposal_status = vm.level == 'internal' ? vm.internal_status: vm.external_status;
-                    },(error) => {
+                    }).catch((error) => {
                         console.log(error);
-                    }
-                )
+                    });
                 //console.log(vm.regions);
             },
             fetchProposals: async function(){

@@ -330,6 +330,9 @@ export default {
 
 		fetch(api_endpoints.regions).then(
             async (response) => {
+                if (!response.ok) {
+                    return await response.json().then(err => { throw err });
+                }
 				vm.api_regions = await response.json();
 				//console.log('api_regions ' + response.body);
 
@@ -337,22 +340,22 @@ export default {
                     this.regions.push( {text: vm.api_regions[i].name, value: vm.api_regions[i].id, districts: vm.api_regions[i].districts} );
                 }
                 vm.setProposalData2(this.regions);
-            },(error) => {
+            }).catch((error) => {
                 console.log(error);
-            }
-        )
-        
-	},
+            });
+    },
     fetchGlobalSettings: function(){
         let vm = this;
         fetch('/api/global_settings.json').then(
             async (response) => {
+                if (!response.ok) {
+                    return await response.json().then(err => { throw err });
+                }
                 vm.global_settings = await response.json();
-            
-            },(error) => {
+
+            }).catch((error) => {
                 console.log(error);
-            }
-        );
+            });
     },
 
 	searchList: function(id, search_list){
@@ -396,6 +399,9 @@ export default {
 
 		fetch(api_endpoints.application_types).then(
             async (response) => {
+                if (!response.ok) {
+                    return await response.json().then(err => { throw err });
+                }
 				vm.api_app_types = await response.json();
 				//console.log('api_app_types ' + response.body);
 
@@ -407,10 +413,9 @@ export default {
                         //tenures: (vm.api_app_types[i].tenure_app_types.length > 0) ? vm.api_app_types[i].tenure_app_types : [],
                     } );
                 }
-            },(error) => {
+            }).catch((error) => {
                 console.log(error);
-            }
-        )
+            });
 	},
     chainedSelectAppType: function(application_id){
         /* reset */
@@ -444,6 +449,9 @@ export default {
 
 		fetch(api_endpoints.activity_matrix).then(
             async (response) => {
+                if (!response.ok) {
+                    return await response.json().then(err => { throw err });
+                }
                 let matrix_res = await response.json();
 				this.activity_matrix = matrix_res[0].schema[0];
 				this.keys_ordered = matrix_res[0].ordered;
@@ -454,10 +462,9 @@ export default {
                     this.activities.push( {text: keys[i], value: keys[i]} );
                 }
                 vm.fetchRegions();
-            },(error) => {
+            }).catch((error) => {
                 console.log(error);
-            }
-        )
+            });
 	},
     fetchAllActivityMatrices: function(){
 		let vm = this;
@@ -467,11 +474,14 @@ export default {
         vm.approval_level = '';
 		fetch(api_endpoints.activity_matrix).then(
             async (response) => {
+                if (!response.ok) {
+                    return await response.json().then(err => { throw err });
+                }
 				this.all_activity_matrices = await response.json();
                 vm.fetchRegions();
-		},(error) => {
-			console.log(error);
-		})
+            }).catch((error) => {
+                console.log(error);
+            });
 	},
     getSelectedAppActivityMatrix: function(selected_app){
 		let vm = this;

@@ -471,31 +471,31 @@ export default {
 
         fetch(api_endpoints.regions).then(
           async (response) => {
+            if (!response.ok) { return response.json().then(err => { throw err }); }
             vm.api_regions = await response.json();
             //console.log('api_regions ' + response.body);
             for (var i = 0; i < vm.api_regions.length; i++) {
                 this.regions.push( {text: vm.api_regions[i].name, value: vm.api_regions[i].id, districts: vm.api_regions[i].districts} );
             }
-          },(error) => {
+          }).catch((error) => {
             console.log(error);
-          }
-        )
-      },
+          });
+        },
       fetchSections: function(){
         let vm = this;
 
         fetch(api_endpoints.proposal_type_sections).then(
           async (response) => {
+            if (!response.ok) { return response.json().then(err => { throw err }); }
             vm.api_sections = await response.json();
             //console.log('api_regions ' + response.body);
             for (var i = 0; i < vm.api_sections.length; i++) {
               this.sections.push( {text: vm.api_sections[i].section_label, value: vm.api_sections[i].section_label, questions: vm.api_sections[i].section_questions} );
             }
-          },(error) => {
+          }).catch((error) => {
             console.log(error);
-          }
-        )
-      },
+          });
+        },
       chainedSelectAppType: function(application_name){
         /* reset */
         let vm = this;
@@ -607,6 +607,7 @@ export default {
 
         fetch(api_endpoints.activity_matrix).then(
           async (response) => {
+            if (!response.ok) { return response.json().then(err => { throw err }); }
             let data = await response.json();
             this.activity_matrix = data[0].schema[0];
             this.keys_ordered = data[0].ordered;
@@ -616,10 +617,9 @@ export default {
             for (var i = 0; i < keys.length; i++) {
                 this.activities.push( {text: keys[i], value: keys[i]} );
             }
-          },(error) => {
+          }).catch((error) => {
             console.log(error);
-          }
-        )
+          });
       },
       chainedSelectSubActivities1: function(activity_name){
         let vm = this;
@@ -669,6 +669,7 @@ export default {
 
         fetch(api_endpoints.searchable_application_types).then(
           async (response) => {
+            if (!response.ok) { return response.json().then(err => { throw err }); }
             vm.api_app_types = await response.json();
             //console.log('api_app_types ' + response.body);
 
@@ -681,10 +682,9 @@ export default {
                     //tenures: (vm.api_app_types[i].tenure_app_types.length > 0) ? vm.api_app_types[i].tenure_app_types : [],
                 } );
             }
-          },(error) => {
+          }).catch((error) => {
             console.log(error);
-          }
-        )
+          });
       },
       eventListeners:function () {
             let vm = this;

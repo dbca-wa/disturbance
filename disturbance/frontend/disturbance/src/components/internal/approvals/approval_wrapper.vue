@@ -35,16 +35,15 @@ export default {
     beforeRouteEnter: function(to, from, next) {
         fetch(`/api/approvals/${to.params.approval_id}/approval_wrapper.json`).then(
             async (res) => {
+                if (!res.ok) { return res.json().then(err => { throw err }); }
                 let data = await res.json();
                 next(vm => {
                   vm.approvalId = data.id;
                 //   vm.apiaryApproval = res.body.apiary_approval;
                 });
-            },
-            err => {
+            }).catch(err => {
               console.log(err);
-            }
-        );
+            });
     },
 }
 </script>

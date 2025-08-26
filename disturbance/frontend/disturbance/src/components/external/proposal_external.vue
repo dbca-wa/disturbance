@@ -732,6 +732,9 @@ export default {
         fetch(`/api/proposal/${ proposal_id }.json`).then(
             async (res) => {
                 vm.loading.push('fetching proposal')
+                if (!res.ok) {
+                    return await res.json().then(err => { throw err });
+                }
                 vm.proposal = await res.json();
                 console.log('vm.proposal')
                 console.log(vm.proposal)
@@ -740,20 +743,23 @@ export default {
 
                 fetch(helpers.add_endpoint_json(api_endpoints.proposals, proposal_id + '/amendment_request')).then(
                     async (res) => {
+                        if (!res.ok) {
+                            return await res.json().then(err => { throw err });
+                        }
                         let data = await res.json()
                         vm.setAmendmentData(data);
-                    },err => {
+                    }).catch(err => {
                         console.log(err);
-                    }
-                );
-            },
-            err => {
+                    });
+            }).catch(err => {
                 console.log(err);
-            }
-        );
+            });
         // retrieve template group
         fetch('/template_group',{ emulateJSON:true }).then(
             async res=>{
+                if (!res.ok) {
+                    return await res.json().then(err => { throw err });
+                }
                 //this.template_group = res.body.template_group;
                 let data = await res.json();
                 if (data.template_group === 'apiary') {
@@ -761,10 +767,9 @@ export default {
                 } else {
                     this.dasTemplateGroup = true;
                 }
-            },err=>{
-            console.log(err);
-            }
-        );
+            }).catch(err=>{
+                console.log(err);
+            });
     },
 
     beforeRouteEnter: function(to) {
