@@ -116,7 +116,9 @@
                 </div>
             </div>
             <div>
-              <datatable ref="contacts_datatable_user" id="organisation_contacts_datatable_ref" :dtOptions="contacts_options_ref" :dtHeaders="contacts_headers_ref" v-model="filterOrgContactStatus"/>
+                <div class="col-sm-12 row">
+                    <datatable ref="contacts_datatable_user" id="organisation_contacts_datatable_ref" :dtOptions="contacts_options_ref" :dtHeaders="contacts_headers_ref" v-model="filterOrgContactStatus"/>
+              </div>
             </div>
         </FormSection>
 
