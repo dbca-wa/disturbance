@@ -597,6 +597,7 @@ export default {
 
             // Get the required Proposal data
             const res = await fetch(url);
+            if (!res.ok) { return res.json().then(err => { throw err }); }
             const data = await res.json();
             // Set the model data to the version requested
             this.proposal = Object.assign({}, data);
@@ -652,24 +653,28 @@ export default {
             '?differences_only=True';
 
             const verion_response = await fetch(url);
+            if (!verion_response.ok) { return verion_response.json().then(err => { throw err }); }
             const data_diffs = await verion_response.json();
             this.applyRevisionNotes(data_diffs.data)
 
             // Compare the assessor_data field and apply revision notes
             const assessor_data_url = `/api/proposal/${this.proposal.id}/version_differences_assessor_data.json?newer_version=${this.versionCurrentlyShowing}&older_version=${compare_version}`
             const assessor_res = await fetch(assessor_data_url);
+            if (!assessor_res.ok) { return assessor_res.json().then(err => { throw err }); }
             const assessor_data_diffs = await assessor_res.json();
             this.applyRevisionNotes(assessor_data_diffs.data)
 
             // Compare the comment_data field and apply revision notes
             const comment_data_url = `/api/proposal/${this.proposal.id}/version_differences_comment_data.json?newer_version=${this.versionCurrentlyShowing}&older_version=${compare_version}`
             const comment_res = await fetch(comment_data_url);
+            if (!comment_res.ok) { return comment_res.json().then(err => { throw err }); }
             const comment_data_diffs = await comment_res.json()
             this.applyRevisionNotes(comment_data_diffs.data)
 
             // Compare the proposal documents and apply revision notes
             const document_data_url = `/api/proposal/${this.proposal.id}/version_differences_documents.json?newer_version=${this.versionCurrentlyShowing}&older_version=${compare_version}`
             const document_res = await fetch(document_data_url);
+            if (!document_res.ok) { return document_res.json().then(err => { throw err }); }
             const document_data_diffs = await document_res.json();
             this.applyFileRevisionNotes(document_data_diffs.data)            
         },
@@ -1143,18 +1148,19 @@ export default {
             let vm = this;
             fetch(helpers.add_endpoint_json(api_endpoints.proposals,(vm.proposal.id+'/assign_request_user')))
             .then(async (response) => {
+                if (!response.ok) { return response.json().then(err => { throw err }); }
                 const data = await response.json();
                 vm.proposal = data;
                 vm.original_proposal = helpers.copyObject(data);
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
                 vm.updateAssignedOfficerSelect();
-            }, (error) => {
+            }).catch((error) => {
                 vm.proposal = helpers.copyObject(vm.original_proposal)
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
                 vm.updateAssignedOfficerSelect();
                 swal.fire({
                     title: 'Proposal Error',
-                    text: helpers.apiVueResourceError(error),
+                    text: error,
                     icon: 'error'
                 })
             });
@@ -1225,18 +1231,19 @@ export default {
             else{
                 fetch(helpers.add_endpoint_json(api_endpoints.proposals,(vm.proposal.id+'/unassign')))
                 .then(async (response) => {
+                    if (!response.ok) { return response.json().then(err => { throw err }); }
                     const data = await response.json();
                     vm.proposal = data;
                     vm.original_proposal = helpers.copyObject(data);
                     vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
                     vm.updateAssignedOfficerSelect();
-                }, (error) => {
+                }).catch((error) => {
                     vm.proposal = helpers.copyObject(vm.original_proposal)
                     vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
                     vm.updateAssignedOfficerSelect();
                     swal.fire({
                         title: 'Proposal Error',
-                        text: helpers.apiVueResourceError(error),
+                        text: error,
                         icon: 'error'
                     })
                 });
@@ -1509,6 +1516,7 @@ export default {
 
             fetch(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/remind'))
             .then(async (response) => {
+                if (!response.ok) { return response.json().then(err => { throw err }); }
                 const data = await response.json();
                 vm.original_proposal = helpers.copyObject(data);
                 vm.proposal = data;
@@ -1518,11 +1526,10 @@ export default {
                     text: 'A reminder has been sent to '+r.referral,
                     icon: 'success'
                 })
-            },
-            error => {
+            }).catch(error => {
                 swal.fire({
                     title: 'Proposal Error',
-                    text: helpers.apiVueResourceError(error),
+                    text: error,
                     icon: 'error'
                 })
             });
@@ -1532,6 +1539,7 @@ export default {
 
             fetch(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/resend'))
             .then(async (response) => {
+                if (!response.ok) { return response.json().then(err => { throw err }); }
                 const data = await response.json();
                 vm.original_proposal = helpers.copyObject(data);
                 vm.proposal = data;
@@ -1541,11 +1549,10 @@ export default {
                     text: 'The referral has been resent to '+r.referral,
                     icon: 'success'
                 })
-            },
-            error => {
+            }).catch(error => {
                 swal.fire({
                     title: 'Proposal Error',
-                    text: helpers.apiVueResourceError(error),
+                    text: error,
                     icon: 'error'
                 })
             });
@@ -1564,6 +1571,7 @@ export default {
 
             fetch(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/recall'))
             .then(async (response) => {
+                if (!response.ok) { return response.json().then(err => { throw err }); }
                 swal.hideLoading();
                 swal.close();
                 const data = await response.json();
@@ -1575,11 +1583,10 @@ export default {
                     text: 'The referral has been recalled from '+r.referral,
                     icon: 'success'
                 })
-            },
-            error => {
+            }).catch(error => {
                 swal.fire({
                     title: 'Proposal Error',
-                    text: helpers.apiVueResourceError(error),
+                    text: error,
                     icon: 'error'
                 })
             });
@@ -1660,6 +1667,7 @@ export default {
     created: function() {
         fetch(`/api/proposal/${this.proposalId}/internal_proposal.json`)
         .then(async (res) => {
+            if (!res.ok) { return res.json().then(err => { throw err }); }
             const data = await res.json();
             this.proposal = data;
             this.original_proposal = helpers.copyObject(data);
@@ -1669,8 +1677,7 @@ export default {
             if(this.reversion_history_length>1){
                 this.showHistory = true;
             }
-        },
-        err => {
+        }).catch(err => {
           console.log(err);
         });
 
@@ -1694,14 +1701,14 @@ export default {
         console.log("beforeRouteUpdate")
           fetch(`/api/proposal/${to.params.proposal_id}.json`)
           .then(async (res) => {
+            if (!res.ok) { return res.json().then(err => { throw err }); }
             const data = await res.json();
               next(vm => {
                 vm.proposal = data;
                 vm.original_proposal = helpers.copyObject(data);
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
               });
-            },
-            err => {
+            }).catch(err => {
               console.log(err);
             });
     }

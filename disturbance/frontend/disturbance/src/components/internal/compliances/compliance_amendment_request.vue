@@ -36,7 +36,7 @@
 import modal from '@vue-utils/bootstrap-modal.vue'
 import alert from '@vue-utils/alert.vue'
 
-import { helpers } from "@/utils/hooks.js"
+// import { helpers } from "@/utils/hooks.js"
 export default {
     name:'compliance-amendment-request',
     components:{
@@ -98,8 +98,9 @@ export default {
             let vm = this;
             fetch('/api/compliance_amendment_reason_choices.json')
             .then(async (response) => {
+                if (!response.ok) { return response.json().then(err => { throw err }); }
                 vm.reason_choices = await response.json();
-            },(error) => {
+            }).catch((error) => {
                 console.log(error);
             });
         },
@@ -116,18 +117,17 @@ export default {
                 body: JSON.stringify(amendment)
             }).then(async (response)=>{
                 //vm.$parent.loading.splice('processing contact',1);
-                const res = await response.json();
                 if (!response.ok) {
-                    const errorText = res;
-                    throw new Error(errorText);
+                    throw new Error(`Compliance Amendment Request Failed: ${response.status}`);
                 }
+                const res = await response.json();
                 swal.fire(
                         'Sent',
                         'An email has been sent to the proponent with the request to amend this compliance',
                         'success'
                 );
                 vm.amendingcompliance = true;
-                console.log(response.message)
+                console.log(res)
                 vm.close();
                 //vm.$emit('refreshFromResponse',response);
 

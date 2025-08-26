@@ -465,9 +465,10 @@ export default {
             else{
                 fetch(helpers.add_endpoint_json(api_endpoints.organisation_requests,(vm.proposal.id+'/unassign')))
                 .then(async (response) => {
+                    if (!response.ok) { return response.json().then(err => { throw err }); }
                     console.log(response);
                     vm.proposal = await response.json();
-                }, (error) => {
+                }).catch((error) => {
                     console.log(error);
                 });
             }
@@ -477,9 +478,10 @@ export default {
             vm.loading.push('Loading Proposal Group Members');
             fetch(api_endpoints.organisation_access_group_members)
             .then(async (response) => {
+                if (!response.ok) { return response.json().then(err => { throw err }); }
                 vm.members = await response.json();
                 vm.loading.splice('Loading Proposal Group Members',1);
-            },(error) => {
+            }).catch((error) => {
                 console.log(error);
                 vm.loading.splice('Loading Proposal Group Members',1);
             })
@@ -653,7 +655,7 @@ export default {
             let vm = this;
             
             fetch(helpers.add_endpoint_json(api_endpoints.referrals,r.id+'/resend'))
-            .then(() => {
+            .then(async(response) => {
                 if (!response.ok) {
                     return response.json().then(err => { throw err });
                 }
@@ -703,9 +705,10 @@ export default {
 
             fetch(helpers.add_endpoint_json(api_endpoints.referrals,referral_id+'/referral_list'))
             .then(async (response) => {
-                vm.referral_sent_list = await response.json();     
-            },
-            err => {
+                if (!response.ok) { return response.json().then(err => { throw err }); }
+                vm.referral_sent_list = await response.json();
+            })
+            .catch(err => {
               console.log(err);
             });
         },
@@ -713,12 +716,12 @@ export default {
             let vm = this;
             fetch(helpers.add_endpoint_json(api_endpoints.referrals,vm.referral.id))
             .then(async (res) => {
+                if (!res.ok) { return res.json().then(err => { throw err }); }
                 vm.referral = await res.json();
                 vm.referral.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
                 //vm.fetchreferrallist(vm.referral.id);
               
-            },
-            err => {
+            }).catch(err => {
               console.log(err);
             });
         },
@@ -812,11 +815,11 @@ export default {
     created: function() {
         fetch(helpers.add_endpoint_json(api_endpoints.referrals,this.referralId))
         .then(async (res) => {
+            if (!res.ok) { return res.json().then(err => { throw err }); }
                 this.referral = await res.json();
                 this.referral.proposal.applicant.address = this.proposal.applicant.address != null ? this.proposal.applicant.address : {};
                 //vm.fetchreferrallist(vm.referral.id);
-            },
-            err => {
+            }).catch(err => {
               console.log(err);
             });
     },
@@ -838,13 +841,14 @@ export default {
     beforeRouteUpdate: function(to, from, next) {
           fetch(`/api/proposal/${to.params.proposal_id}/referall_proposal.json`)
           .then(async (res) => {
+            if (!res.ok) { return res.json().then(err => { throw err }); }
             const data = await res.json();
               next(vm => {
                 vm.referral = data;
                 vm.referral.proposal.applicant.address = vm.referral.proposal.applicant.address != null ? vm.referral.proposal.applicant.address : {};
               });
-            },
-            err => {
+            })
+            .catch(err => {
               console.log(err);
             });
     }

@@ -236,9 +236,10 @@ export default {
                     // });
 
                     fetch(helpers.add_endpoint_json(api_endpoints.proposal_requirements,_id+'/discard'))
-                    .then(() => {
+                    .then(async (response) => {
+                        if (!response.ok) { return response.json().then(err => { throw err }); }
                         vm.$refs.originating_requirements_datatable.vmDataTable.ajax.reload();
-                    }, (error) => {
+                    }).catch((error) => {
                         console.log(error);
                     });
                 }
@@ -251,20 +252,22 @@ export default {
             
             fetch(api_endpoints.proposal_standard_requirements)
             .then(async (response) => {
+                if (!response.ok) { return response.json().then(err => { throw err }); }
                 vm.requirements = await response.json();
-            },(error) => {
+            }).catch((error) => {
                 console.log(error);
             })
         },
         editRequirement(_id){
             fetch(helpers.add_endpoint_json(api_endpoints.proposal_requirements,_id))
             .then(async (response) => {
+                if (!response.ok) { return response.json().then(err => { throw err }); }
                 const data = await response.json();
                 this.$refs.originating_requirement_detail.requirement = data;
                 this.$refs.originating_requirement_detail.requirement.due_date =  data.due_date != null && data.due_date != undefined ? moment(data.due_date).format('DD/MM/YYYY'): '';
                 data.standard ? $(this.$refs.originating_requirement_detail.$refs.standard_req).val(data.standard_requirement).trigger('change'): '';
                 this.addRequirement();
-            },(error) => {
+            }).catch((error) => {
                 console.log(error);
             })
         },
@@ -286,8 +289,9 @@ export default {
         },
         sendDirection(req,direction){
             let movement = direction == 'down'? 'move_down': 'move_up';
-            fetch(helpers.add_endpoint_json(api_endpoints.proposal_requirements,req+'/'+movement)).then(() => {
-            },(error) => {
+            fetch(helpers.add_endpoint_json(api_endpoints.proposal_requirements,req+'/'+movement)).then(async (response) => {
+                if (!response.ok) { return response.json().then(err => { throw err }); }
+            }).catch((error) => {
                 console.log(error);
                 
             })

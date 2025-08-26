@@ -304,11 +304,12 @@ export default {
   watch: {},
   beforeRouteEnter: function(to, from, next){
     fetch(helpers.add_endpoint_json(api_endpoints.organisation_requests,to.params.access_id)).then(async (response) => {
+        if (!response.ok) { return response.json().then(err => { throw err }); }
         let data = await response.json();
         next(vm => {
             vm.access = data;
         })
-    },(error) => {
+    }).catch((error) => {
         console.log(error);
     })
   },
@@ -338,6 +339,7 @@ export default {
             url = api_endpoints.apiary_organisation_access_group_members;
         }
         const response = await fetch(url)
+        if (!response.ok) { return response.json().then(err => { throw err }); }
         this.members = await response.json();
         this.loading.splice('Loading Access Group Members',1);
     },
@@ -345,9 +347,10 @@ export default {
         let vm = this;
         fetch(helpers.add_endpoint_json(api_endpoints.organisation_requests,(vm.access.id+'/assign_request_user')))
         .then(async (response) => {
+            if (!response.ok) { return response.json().then(err => { throw err }); }
             console.log(response);
             vm.access = await response.json();;
-        }, (error) => {
+        }).catch((error) => {
             console.log(error);
         });
     },
@@ -364,22 +367,22 @@ export default {
             }).then(async (response) => {
                 const data = await response.json();            
                 if (!response.ok) {
-                    const errorText = data;
-                    throw new Error(errorText);
+                    throw new Error(`Assign To Failed: ${response.status}`);
                 }
                 console.log(response);
                 vm.access = data;
             }).catch((error) => {
-                console.log(error.message);
+                console.log(error);
             });
             console.log('there');
         }
         else{
             fetch(helpers.add_endpoint_json(api_endpoints.organisation_requests,(vm.access.id+'/unassign')))
             .then(async (response) => {
+                if (!response.ok) { return response.json().then(err => { throw err }); }
                 console.log(response);
                 vm.access = await response.json();
-            }, (error) => {
+            }).catch((error) => {
                 console.log(error);
             });
         }
@@ -396,9 +399,10 @@ export default {
             if(swalresult.isConfirmed) {
                 fetch(helpers.add_endpoint_json(api_endpoints.organisation_requests,(vm.access.id+'/accept')))
                 .then(async (response) => {
+                    if (!response.ok) { return response.json().then(err => { throw err }); }
                     console.log(response);
                     vm.access = await response.json();
-                }, (error) => {
+                }).catch((error) => {
                     console.log(error);
                 });
             }
@@ -420,9 +424,10 @@ export default {
             if(swalresult.isConfirmed) {
                 fetch(helpers.add_endpoint_json(api_endpoints.organisation_requests,(vm.access.id+'/decline')))
                 .then(async (response) => {
+                    if (!response.ok) { return response.json().then(err => { throw err }); }
                     console.log(response);
                     vm.access = await response.json();
-                }, (error) => {
+                }).catch((error) => {
                     console.log(error);
                 });
             }
@@ -433,6 +438,7 @@ export default {
 
     fetchProfile: async function(){
         const response = await fetch(api_endpoints.profile);
+        if (!response.ok) { return response.json().then(err => { throw err }); }
         this.profile = await response.json(); 
     },
 
@@ -463,6 +469,7 @@ export default {
         const res = await fetch('/template_group',{
             emulateJSON:true
             })
+        if (!res.ok) { return res.json().then(err => { throw err }); }
         const data = await res.json(); 
         if (data.template_group === 'apiary') {
             this.apiaryTemplateGroup = true;

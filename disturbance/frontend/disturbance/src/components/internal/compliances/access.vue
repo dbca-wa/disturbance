@@ -142,15 +142,15 @@ export default {
   beforeRouteEnter: function(to, from, next){
     fetch(helpers.add_endpoint_json(api_endpoints.compliances,to.params.compliance_id)).then(
         async (response) => {
+            if (!response.ok) { return response.json().then(err => { throw err }); }
             let data = await response.json();
             next(vm => {
                 vm.compliance = data;
                 vm.members = vm.compliance.allowed_assessors
             })
-        },(error) => {
+        }).catch((error) => {
             console.log(error);
-        }
-    )
+        });
   },
   components: {
     CommsLogs,
@@ -174,9 +174,10 @@ export default {
     assignMyself: function(){
         let vm = this;
         fetch(helpers.add_endpoint_json(api_endpoints.compliances,(vm.compliance.id+'/assign_request_user'))).then(
-            async (response) => {            
+            async (response) => { 
+                if (!response.ok) { return response.json().then(err => { throw err }); }           
                 vm.compliance = await response.json();
-            }, (error) => {
+            }).catch((error) => {
                 console.log(error);
             });
     },
@@ -193,21 +194,21 @@ export default {
             }).then(async (response) => {  
                 const res = await response.json();            
                 if (!response.ok) {
-                    const errorText = res;
-                    throw new Error(errorText);
+                    throw new Error(`HTTP error! Status: ${response.status}`);
                 }
                 vm.compliance = res;
             }).catch((error) => {
-                console.log(error.message);
+                console.log(error);
             });
             
         }
         else{
             fetch(helpers.add_endpoint_json(api_endpoints.compliances,(vm.compliance.id+'/unassign'))).then(
                 async (response) => {
+                    if (!response.ok) { return response.json().then(err => { throw err }); }
                     console.log(response);
                     vm.compliance = await response.json();
-                }, (error) => {
+                }).catch((error) => {
                     console.log(error);
                 }
             );
@@ -225,9 +226,10 @@ export default {
             if(swalresult.isConfirmed){
                 fetch(helpers.add_endpoint_json(api_endpoints.compliances,(vm.compliance.id+'/accept'))).then(
                     async (response) => {
+                        if (!response.ok) { return response.json().then(err => { throw err }); }
                         console.log(response);
                         vm.compliance = await response.json();
-                    }, (error) => {
+                    }).catch((error) => {
                         console.log(error);
                     }
                 );
@@ -244,8 +246,9 @@ export default {
     fetchProfile: function(){
         let vm = this;
         fetch(api_endpoints.profile).then(async (response) => {
+            if (!response.ok) { return response.json().then(err => { throw err }); }
             vm.profile = await response.json();
-        },(error) => {
+        }).catch((error) => {
             console.log(error);
                 
         })

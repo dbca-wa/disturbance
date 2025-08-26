@@ -219,9 +219,10 @@ export default {
             let vm = this;
             fetch(api_endpoints.contact(id))
             .then(async (response) => {
+                if (!response.ok) { return response.json().then(err => { throw err }); }
                 vm.contact = await response.json(); 
                 vm.isModalOpen = true;
-            },(error) => {
+            }).catch((error) => {
                 console.log(error);
             } );
         },
