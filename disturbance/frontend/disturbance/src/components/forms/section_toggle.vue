@@ -48,7 +48,8 @@ export default {
         return {
             title:"Section title",
             //subheading:"",
-            panel_chevron_class: null,
+            //panel_chevron_class: null,
+            panel_chevron_class: "glyphicon glyphicon-chevron-down pull-right ",
             custom_id: uuidv4(),
         }
     },
