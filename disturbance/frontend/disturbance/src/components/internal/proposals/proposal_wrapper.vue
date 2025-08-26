@@ -71,6 +71,7 @@ export default {
     beforeRouteEnter: function(to, from, next) {
         fetch(`/api/proposal/${to.params.proposal_id}/internal_proposal_wrapper.json`)
         .then(async res => {
+            if (!res.ok) { return res.json().then(err => { throw err }); }
             const data = await res.json();
             next(vm => {
                 vm.proposalId = data.id;
@@ -86,8 +87,7 @@ export default {
                 }
                 */
             });
-        },
-        err => {
+        }).catch(err => {
             console.log(err);
         });
     },

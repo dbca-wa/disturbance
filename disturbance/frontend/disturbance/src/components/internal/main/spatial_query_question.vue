@@ -1169,14 +1169,15 @@ export default {
 
             console.log(url);
             fetch(url).then(async (response) => {
+                if (!response.ok) { return response.json().then(err => { throw err }); }
                 console.log('Response: ' + JSON.stringify(response));
                 let data = await response.json();
                 return data;
-            },(error)=>{
+            }).catch((error)=>{
                 console.log('Error: ' + JSON.stringify(error))
                 swal.fire(
                     'Error',
-                    helpers.apiVueResourceError(error),
+                    error,
                     'error'
                 )
             });
@@ -1208,8 +1209,7 @@ export default {
                     }
                 }).then(async (response) => {
                     if (!response.ok) {
-                        const errorData = await response.json();
-                        throw errorData;
+                        throw new Error(`HTTP error! Status: ${response.status}`);
                     }
                     const response_data = await response.json();
                     self.$refs.spatial_query_question_table.vmDataTable.ajax.reload();
@@ -1239,16 +1239,15 @@ export default {
                     }
                 }).then(async (response) => {
                     if (!response.ok) {
-                        const errorData = await response.json();
-                        throw errorData;
+                        throw new Error(`HTTP error! Status: ${response.status}`);
                     }
                     self.$refs.spatial_query_question_table.vmDataTable.ajax.reload();
                     //self.close();
                 }).catch((error)=>{
-                    console.log('Error: ' + JSON.stringify(error.message))
+                    console.log('Error: ' + JSON.stringify(error))
                     swal.fire(
                         'Save Error',
-                        error.message,
+                        error,
                         'error'
                     )
                 });
@@ -1299,8 +1298,7 @@ export default {
                     body: JSON.stringify(data)
                 }).then(async (response) => {
                     if (!response.ok) {
-                        const errorData = await response.json();
-                        throw errorData;
+                        throw new Error(`HTTP error! Status: ${response.status}`);
                     }
                     //self.$refs.spatial_query_question_table.vmDataTable.ajax.reload();
                     const res_body = await response.json();
@@ -1311,11 +1309,11 @@ export default {
                     self.$refs.spatial_query_question_table.vmDataTable.ajax.reload();
                     //self.close();
                 }).catch(error => {
-                    console.log('Error: ' + JSON.stringify(error.message));
+                    console.log('Error: ' + JSON.stringify(error));
                     swal.fire(
                         'Save Error',
                         // helpers.apiVueResourceError(error),
-                        error.message,
+                        error,
                         'error',
                     )
                 });
@@ -1334,8 +1332,7 @@ export default {
                     body: JSON.stringify(data)
                 }).then(async (response)=>{
                     if (!response.ok) {
-                        const errorText = await response.text();
-                        throw new Error(errorText);
+                        throw new Error(`HTTP error! Status: ${response.status}`);
                     }
                     const res_body = await response.json();
                     console.log('JM8 ' + JSON.stringify(res_body));
@@ -1357,8 +1354,7 @@ export default {
                     console.log('Error: ' + JSON.stringify(error.message));
                     swal.fire(
                         'Save Error',
-                        // helpers.apiVueResourceError(error),
-                        error.message,
+                        error,
                         'error',
                     )
                 });
@@ -1400,8 +1396,7 @@ export default {
                 body: JSON.stringify(data)
             }).then(async (response)=>{
                 if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(errorText);
+                    throw new Error(`HTTP error! Status: ${response.status}`);
                 }
                 const res_body = await response.json();
                 console.log('Response: ' + JSON.stringify(res_body));
@@ -1429,11 +1424,11 @@ export default {
                 self.num_questions = res_body['layer_data'].length;
                 self.num_layers_utilised = uniq(res_body['layer_data'].map((item) => item.layer_name)).length // unique layers used
             }).catch(error => {
-                console.log('Error: ' + JSON.stringify(error.message))
+                console.log('Error: ' + JSON.stringify(error))
                 swal.fire(
                     'Error',
                     // helpers.apiVueResourceError(error),
-                    error.message,
+                    error,
                     'error'
                 )
             });
@@ -1485,6 +1480,7 @@ export default {
 
             console.log(url);
             fetch(url).then(async (response) => {
+                if (!response.ok) { return response.json().then(err => { throw err }); }
                 console.log('Response: ' + JSON.stringify(response));
                 const data = await response.json();
                 self.sqs_attrs_response = JSON.stringify(data, null, 4);
@@ -1495,7 +1491,7 @@ export default {
 
                 self.requesting = false;
                 self.show_spinner = false;
-            },(error)=>{
+            }).catch((error)=>{
                 console.log('Error: ' + JSON.stringify(error))
                 self.requesting = false;
                 self.show_spinner = false;
@@ -1556,7 +1552,7 @@ export default {
             const self = this;
             self.show_spinner = true;
             fetch(url).then(async (response) => {
-                //console.log(JSON.stringify(response))
+                if (!response.ok) { return response.json().then(err => { throw err }); }
                 let data = await response.json();
                 swal.fire(
                     'Layer Exists in SQS!',
@@ -1564,10 +1560,10 @@ export default {
                     'success'
                 )
                 self.show_spinner = false;
-            }, (error) => {
+            }).catch((error) => {
                 swal.fire(
                     'Layer Check Error',
-                    helpers.apiVueResourceError(error),
+                    error,
                     'error'
                 )
                 self.show_spinner = false;
@@ -1586,8 +1582,7 @@ export default {
                 body: JSON.stringify(data)
             }).then(async (response)=>{
                 if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(errorText);
+                    throw new Error(`HTTP error! Status: ${response.status}`);
                 }
                 let data = await response.json();
                 swal.fire(
@@ -1599,8 +1594,7 @@ export default {
             }).catch((error) => {
                 swal.fire(
                     'Create/Update Error',
-                    // helpers.apiVueResourceError(error),
-                    error.message,
+                    error,
                     'error'
                 )
                 self.show_spinner = false;
@@ -1614,6 +1608,7 @@ export default {
             //console.log(url)
             //await fetch(api_endpoints.spatial_query + '/' + spatialquery_id + '/check_cddp_question?proposal_id='+proposal_id)
             fetch(url).then(async (response) => {
+                if (!response.ok) { return response.json().then(err => { throw err }); }
                 let data = await response.json();
                 swal.fire(
                     'Question Found in Proposal Schema!',
@@ -1621,10 +1616,10 @@ export default {
                     'success'
                 )
                 self.show_spinner = false;
-            }, (error) => {
+            }).catch((error) => {
                 swal.fire(
                     'Check Question Error',
-                    helpers.apiVueResourceError(error),
+                    error,
                     'error'
                 )
                 self.show_spinner = false;
@@ -1645,10 +1640,7 @@ export default {
                     vm.show_spinner = true;
                     vm.export_layers_btn_disabled = true;
                     fetch('/api/proposal_sqs/layers_used/').then(async (response) => {
-                        if (!response.ok) {
-                            const errorText = await response.text();
-                            throw new Error(errorText);
-                        }
+                        if (!response.ok) { return response.json().then(err => { throw err }); }
                         let data = await response.blob();
                         var FileSaver = require('file-saver');
                         const blob = new Blob([data], {type: 'text/csv'});
@@ -1666,11 +1658,11 @@ export default {
                             "Export completed",
                             'success'
                         )
-                    }, (error) => {
+                    }).catch((error) => {
                         console.log(error);
                         swal.fire({
                             title: "Export Layers Used",
-                            text: error.body,
+                            text: error,
                             icon: "error",
                         })
                         vm.show_spinner = false;
@@ -1804,6 +1796,7 @@ export default {
                 //fetch('/api/spatial_query_paginated/spatial_query_layer_datatable_list/?format=datatables&length=all&sqq_id=257').then(res=>{
                 fetch('/api/spatial_query_paginated/spatial_query_layer_datatable_list/?format=datatables&length=all&sqq_id=225').then(
                     async (res)=>{
+                        if (!res.ok) { return res.json().then(err => { throw err }); }
                         //self.sq_questions = res.body['data'].map((item) => item.question);
 
                         const spatial_data = await res.json();
@@ -1861,10 +1854,10 @@ export default {
                         //self.isQuestionModalOpen = true;
                         self.showQuestionModal = true;
                         $(self.$refs.select_question).val(self.spatialquery.question).trigger('change');
-                    },err=>{
+                    }).catch(err=>{
                         swal.fire(
                         'Get Application Selects Error',
-                        helpers.apiVueResourceError(err),
+                        err,
                         'error'
                         )
                     }
@@ -1980,14 +1973,13 @@ export default {
                         })
                         .then(async (response) => {
                             if (!response.ok) {
-                                const errorText = await response.text();
-                                throw new Error(errorText);
+                                throw new Error(`HTTP error! Status: ${response.status}`);
                             }
                             self.$refs.spatial_query_question_table.vmDataTable.ajax.reload();
                         }).catch((error) => {
                             swal.fire(
                                 'Delete Error',
-                                error.message,
+                                error,
                                 'error'
                             )
                         });
@@ -2019,8 +2011,7 @@ export default {
                             }
                         }).then(async (response) => {
                             if (!response.ok) {
-                                const errorData = await response.json();
-                                throw errorData;
+                                throw new Error(`HTTP error! Status: ${response.status}`);
                             }
                             const res_body = await response.json();
                             //self.$refs.spatial_query_layer_table.vmDataTable.ajax.reload();
@@ -2034,8 +2025,7 @@ export default {
                         }).catch((error) => {
                             swal.fire(
                                 'Delete Error',
-                                // helpers.apiVueResourceError(error),
-                                error.message,
+                                error,
                                 'error'
                             )
                         });
@@ -2171,13 +2161,14 @@ export default {
             //console.log(helpers.add_endpoint_json(api_endpoints.spatial_query,'get_spatialquery_selects'))
             fetch(helpers.add_endpoint_json(api_endpoints.spatial_query,'get_spatialquery_selects')).then(
                 async (res)=>{
+                    if (!res.ok) { return res.json().then(err => { throw err }); }
                     this.spatialquery_selects = await res.json();
                     this.masterlist_questions = this.spatialquery_selects.all_masterlist
                     this.is_admin = this.spatialquery_selects.permissions.is_admin
                 },err=>{
                     swal.fire(
                         'Get Application Selects Error',
-                        helpers.apiVueResourceError(err),
+                        err,
                         'error'
                     )
                 }
@@ -2199,8 +2190,9 @@ export default {
         fetchProfile: function(){
             let vm = this;
             fetch(api_endpoints.profile).then(async (response) => {
+                if (!response.ok) { return response.json().then(err => { throw err }); }
                 vm.profile = await response.json();
-            },(error) => {
+            }).catch((error) => {
                 console.log(error);
             })
         },

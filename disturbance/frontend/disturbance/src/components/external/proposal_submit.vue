@@ -63,10 +63,10 @@ export default {
             JSON.parse(window.history.state.proposal)
         );
     },
-  beforeRouteEnter: function(to, from, next) {
-    next(vm => {
-    })
-  }
+//   beforeRouteEnter: function(to, from, next) {
+//     next(vm => {
+//     })
+//   }
 }
 </script>
 

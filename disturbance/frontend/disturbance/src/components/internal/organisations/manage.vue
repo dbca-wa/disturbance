@@ -368,12 +368,13 @@ export default {
         editContact: function(_id){
             fetch(helpers.add_endpoint_json(api_endpoints.organisation_contacts,_id))
             .then(async (response) => {
+                if (!response.ok) { return response.json().then(err => { throw err }); }
                 const data = await response.json();
                 this.$refs.add_contact.contact = data;
                 this.addContact();
             }).then(() => {
                 this.$refs.contacts_datatable.vmDataTable.ajax.reload();
-            },(error) => {
+            }).catch((error) => {
                 console.log(error);
             })
         },
@@ -429,8 +430,7 @@ export default {
                 body: JSON.stringify(vm.org)
             }).then(async (response) => {
                 if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(errorText);
+                    throw new Error(`Update Organisation Details Failed: ${response.status}`);
                 }
                 vm.updatingDetails = false;
                 vm.org = await response.json();
@@ -441,8 +441,8 @@ export default {
                     'success'
                 )
             }).catch((error) => {
-                console.log(error.message);
-                var text= error.message;
+                console.log(error);
+                var text= error;
                 // var text= helpers.apiVueResourceError(error);
                 if(typeof text == 'object'){
                     if (Object.prototype.hasOwnProperty.call(text, 'email')) {
@@ -476,8 +476,7 @@ export default {
                 }
             }).then(async (response) => {
                 if (!response.ok) {
-                    const errorData = await response.json();
-                    throw errorData;
+                    throw new Error(`Contact Deletetion Failed: ${response.status}`);
                 }
                 swal.fire(
                     'Contact Deleted', 
@@ -517,8 +516,7 @@ export default {
                 body: JSON.stringify(vm.org.address)
             }).then(async (response) => {
                 if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(errorText);
+                    throw new Error(`Update Organisation Address Failed: ${response.status}`);
                 }
                 vm.updatingAddress = false;
                 vm.org = await response.json();
@@ -529,7 +527,7 @@ export default {
                 )
                 if (vm.org.address == null){ vm.org.address = {}; }
             }).catch((error) => {
-                console.log(error.message);
+                console.log(error);
                 vm.updatingAddress = false;
             });
         },

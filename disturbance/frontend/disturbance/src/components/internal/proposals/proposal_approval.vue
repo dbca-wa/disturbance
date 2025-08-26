@@ -247,7 +247,7 @@ export default {
                 body: data // FormData handles headers automatically
                 })
                 .then(response => {
-                if (!response.ok) throw response;
+                    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
                     return response.json();
                 })
                 .then(res => {
@@ -259,12 +259,12 @@ export default {
                     console.log(err);
                     let errorText = 'An unexpected error occurred.';
                     try {
-                    const errData = await err.json();
-                    // errorText = helpers.apiVueResourceError(errData);
-                    errorText = errData;
-                } catch {}
-
-                swal.fire('Submit Error', errorText, 'error');
+                        const errData = await err.json();
+                        // errorText = helpers.apiVueResourceError(errData);
+                        errorText = errData;
+                    } catch { console.log('Error parsing error response'); }
+                    
+                    swal.fire('Submit Error', errorText, 'error');
             });
         },
         uploadedFileName: function() {

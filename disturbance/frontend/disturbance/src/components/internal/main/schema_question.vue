@@ -441,10 +441,11 @@ export default {
             fetch(url[ 0 ] + `/1/get_question_sections?proposal_type_id=${encodeURIComponent(proposal_type_id)}`,{
                 // params: { proposal_type_id: this.filterQuestionProposalType },
             }).then(async (res)=>{
+                if (!res.ok) { return res.json().then(err => { throw err }); }
                 let data = await res.json();
                 this.schemaGroups = data.question_groups; 
                 this.schemaSections = data.question_sections;
-            },err=>{
+            }).catch(err=>{
                 console.log(err);
             });
         },
@@ -457,10 +458,11 @@ export default {
             fetch(url[ 0 ] + `/1/get_question_parents?section_id=${encodeURIComponent(section_id)}`,{
                 // params: { section_id: this.filterQuestionSection },
             }).then(async (res)=>{
+                if (!res.ok) { return res.json().then(err => { throw err }); }
                 let data = await res.json();
                 this.sectionQuestion.section = this.filterQuestionSection;
                 this.parentList = data.question_parents;
-            },err=>{
+            }).catch(err=>{
                 console.log(err);
             });
         },
@@ -572,8 +574,7 @@ export default {
 
                 }).then(async (response) => {
                     if (!response.ok) {
-                        const errorText = await response.text();
-                        throw new Error(errorText);
+                        throw new Error(`Save Error: ${response.status}`);
                     }
                     self.$refs.schema_question_table.vmDataTable.ajax.reload();
                     self.close();
@@ -583,7 +584,7 @@ export default {
                     swal.fire(
                         'Save Error',
                         // helpers.apiVueResourceError(error),
-                        error.message,
+                        error,
                         'error'
                     )
                 });
@@ -599,8 +600,7 @@ export default {
 
                 }).then(async (response)=>{
                     if (!response.ok) {
-                        const errorText = await response.text();
-                        throw new Error(errorText);
+                        throw new Error(`Save Error: ${response.status}`);
                     }
                     self.$refs.schema_question_table.vmDataTable.ajax.reload();
                     self.close();
@@ -609,8 +609,7 @@ export default {
                     
                     swal.fire(
                         'Save Error',
-                        // helpers.apiVueResourceError(error),
-                        error.message,
+                        error,
                         'error'
                     )
                 });
@@ -704,13 +703,12 @@ export default {
                             }
                         }).then(async (response) => {
                             if (!response.ok) {
-                                const errorData = await response.json();
-                                throw errorData;
+                                throw new Error(`Delete Error: ${response.status}`);
                             }
                             self.$refs.schema_question_table.vmDataTable.ajax.reload();
 
                         }).catch((error) => {
-                            console.log(error.message);
+                            console.log(error);
                         });
     
                     }
@@ -795,16 +793,18 @@ export default {
 
             fetch(helpers.add_endpoint_json(api_endpoints.schema_question,'1/get_question_selects'))
             .then(async (res)=>{
-                    let data = await res.json();
-                    this.masterlist = data.all_masterlist;
-                    this.schemaProposalTypes = data.all_proposal_types;
-                    this.schemaSections = data.all_section;
-                    this.schemaGroups = data.all_group;
-                    this.initQuestionSelector();
-            },err=>{
+                if (!res.ok) { return res.json().then(err => { throw err }); }
+                let data = await res.json();
+                this.masterlist = data.all_masterlist;
+                this.schemaProposalTypes = data.all_proposal_types;
+                this.schemaSections = data.all_section;
+                this.schemaGroups = data.all_group
+                this.initQuestionSelector();
+            }).catch(err=>{
+
                 swal.fire(
                     'Get Application Selects Error',
-                    helpers.apiVueResourceError(err),
+                    err,
                     'error'
                 )
             });

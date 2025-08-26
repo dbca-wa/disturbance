@@ -631,8 +631,7 @@ export default {
                     vm.approval_status = vm.filter_lists_approval.approval_status_choices;
                 }).catch((error) => {
                     console.log(error);
-                }
-            )
+                });
             //console.log(vm.regions);
         },
 

@@ -438,16 +438,14 @@ export default {
                     body: JSON.stringify(data)
                 }).then(async (response) => {
                     if (!response.ok) {
-                        const errorText = await response.text();
-                        throw new Error(errorText);
+                        throw new Error(`HTTP error! Status: ${response.status}`);
                     }
                     self.$refs.schema_masterlist_table.vmDataTable.ajax.reload();
                     self.close();
                 }).catch((error) => {
                     swal.fire(
                         'Save Error',
-                        // helpers.apiVueResourceError(error),
-                        error.message,
+                        error,
                         'error'
                     )
                 });
@@ -462,16 +460,14 @@ export default {
                     body: JSON.stringify(data)
                 }).then(async (response) => {
                     if (!response.ok) {
-                        const errorText = await response.text();
-                        throw new Error(errorText);
+                        throw new Error(`HTTP error! Status: ${response.status}`);
                     }
                     self.$refs.schema_masterlist_table.vmDataTable.ajax.reload();
                     self.close();
                 }).catch((error) => {
                     swal.fire(
                         'Save Error',
-                        // helpers.apiVueResourceError(error),
-                        error.message,
+                        error,
                         'error'
                     )
                 });
@@ -541,14 +537,13 @@ export default {
                         })
                         .then(async (response) => {
                             if (!response.ok) {
-                                const errorText = await response.text();
-                                throw new Error(errorText);
+                                throw new Error(`HTTP error! Status: ${response.status}`);
                             }
                             self.$refs.schema_masterlist_table.vmDataTable.ajax.reload();
                         }, (error) => {
                             swal.fire(
                                 'Delete Error',
-                                error.message,
+                                error,
                                 'error'
                             )
                         });
@@ -596,13 +591,14 @@ export default {
 
             fetch(helpers.add_endpoint_json(api_endpoints.schema_masterlist,'1/get_masterlist_selects'))
             .then(async (res)=>{
+                if (!res.ok) { return res.json().then(err => { throw err }); }
                 let data = await res.json();
                 this.answerTypes = data.all_answer_types;
 
-            },err=>{
+            }).catch(err=>{
                 swal.fire(
                     'Get Application Selects Error',
-                    helpers.apiVueResourceError(err),
+                    err,
                     'error'
                 )
             });

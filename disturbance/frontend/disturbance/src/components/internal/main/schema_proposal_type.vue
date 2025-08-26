@@ -247,8 +247,7 @@ export default {
 
                 }).then(async (response) => {
                     if (!response.ok) {
-                        const errorText = await response.text();
-                        throw new Error(errorText);
+                        throw new Error(`Save Error: ${response.status}`);
                     }
 
                     self.$refs.schema_purpose_table.vmDataTable.ajax.reload();
@@ -258,8 +257,7 @@ export default {
                     
                     swal.fire(
                         'Save Error',
-                        // helpers.apiVueResourceError(error),
-                        error.message,
+                        error,
                         'error'
                     )
                 });
@@ -275,8 +273,7 @@ export default {
 
                 }).then(async (response) => {
                     if (!response.ok) {
-                        const errorText = await response.text();
-                        throw new Error(errorText);
+                        throw new Error(`Save Error: ${response.status}`);
                     }
 
                     self.$refs.schema_purpose_table.vmDataTable.ajax.reload();
@@ -286,8 +283,7 @@ export default {
                     
                     swal.fire(
                         'Save Error',
-                        // helpers.apiVueResourceError(error),
-                        error.message,
+                        error,
                         'error'
                     )
                 });
@@ -344,14 +340,13 @@ export default {
                             }
                         }).then(async (response) => {
                             if (!response.ok) {
-                                const errorData = await response.json();
-                                throw errorData;
+                                throw new Error(`Delete Error: ${response.status}`);
                             }
 
                             self.$refs.schema_purpose_table.vmDataTable.ajax.reload();
 
                         }).catch((error) => {
-                            console.log(error.message);
+                            console.log(error);
                         });
     
                     }
@@ -365,13 +360,14 @@ export default {
 
             fetch(helpers.add_endpoint_json(api_endpoints.schema_proposal_type,'1/get_proposal_type_selects'))
             .then(async (res)=>{
+                if (!res.ok) { return res.json().then(err => { throw err }); }
                 let data = await res.json();
                 this.schemaProposalTypes = data.all_proposal_type;
-            },err=>{
+            }).catch(err=>{
 
                 swal.fire(
                     'Get Application Selects Error',
-                    helpers.apiVueResourceError(err),
+                    err,
                     'error'
                 )
             });

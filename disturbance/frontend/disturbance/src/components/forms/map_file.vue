@@ -104,7 +104,6 @@ export default {
           return (this.proposal_id) ? `/api/proposal/${this.proposal_id}/process_map_document/` : '';
         },
         numDocuments: function() {
-            let vm = this;
             if (this.documents) {
                 return this.documents.length;
             }
@@ -307,7 +306,6 @@ export default {
         },
 
         num_documents: function() {
-            let vm = this;
             if (this.documents) {
                 return this.documents.length;
             }
