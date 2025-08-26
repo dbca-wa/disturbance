@@ -145,9 +145,10 @@
                             <div class="col-md-4">
                                 <!-- <select class="form-control" ref="select_group" name="select-group" v-model="spatialquery.group" :disabled="sqq_is_disabled()"> -->
                                 <select class="form-control" ref="select_group" name="select-group" v-model="spatialquery.group">
-                                    <template v-if="group.can_user_edit">
+                                    <!-- <template v-if="group.can_user_edit">
                                         <option v-for="group in spatialquery_selects.cddp_groups" :value="group" :key="group.id">{{group.name}}</option>
-                                    </template>
+                                    </template> -->
+                                    <option v-for="group in editableGroups" :value="group" :key="group.id">{{group.name}}</option>
                                 </select>     
                             </div>
                             <div class="col-md-1"></div>
@@ -1010,6 +1011,9 @@ export default {
             console.log('JM2')
             return helpers.add_endpoint_join(api_endpoints.spatial_query_paginated, 'spatial_query_layer_datatable_list/?format=datatables&sqq_id=') + this.spatialquery.id
         },
+        editableGroups() {
+            return this.spatialquery_selects?.cddp_groups?.filter(g => g.can_user_edit) || [];
+        },
     },
     methods: {
 
@@ -1213,13 +1217,13 @@ export default {
                     self.spatialquery.id = response_data.data.id // to allow adding layers immediately from same modal
                     //self.close();
                 }).catch((error) => {
-                    console.log('Error: ' + JSON.stringify(error.message))
-                    swal.fire(
-                        'Save Error',
+                    console.log('Error: ' + JSON.stringify(error))
+                    swal.fire({
+                        title: 'Save Error',
+                        html: error.errors,
                         // helpers.apiVueResourceError(error),
-                        error.message,
-                        'error'
-                    )
+                        icon: 'error'
+                })
                 });
 
             } else {
