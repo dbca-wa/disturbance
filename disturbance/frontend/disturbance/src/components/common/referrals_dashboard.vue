@@ -101,8 +101,8 @@
 <script>
 import { v4 as uuidv4 } from 'uuid';
 import datatable from '@/utils/vue/datatable.vue'
-require("select2/dist/css/select2.min.css");
-require("select2-bootstrap-theme/dist/select2-bootstrap.min.css");
+import "select2/dist/css/select2.min.css";
+import "select2-bootstrap-theme/dist/select2-bootstrap.min.css";
 import {
     api_endpoints,
     constants

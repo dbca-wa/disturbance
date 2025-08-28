@@ -28,8 +28,8 @@ def apiary_url(request):
     return {
         'DOMAIN_DETECTED': settings.DOMAIN_DETECTED,
         'DEBUG': settings.DEBUG,
-        'DEV_STATIC': settings.DEV_STATIC,
-        'DEV_STATIC_URL': settings.DEV_STATIC_URL,
+        # 'DEV_STATIC': settings.DEV_STATIC,
+        # 'DEV_STATIC_URL': settings.DEV_STATIC_URL,
         'TEMPLATE_GROUP': settings.DOMAIN_DETECTED,
         'SYSTEM_NAME': settings.SYSTEM_NAME,
         'PUBLIC_URL': PUBLIC_URL,
@@ -42,4 +42,5 @@ def apiary_url(request):
         'SQS_APIURL': settings.SQS_APIURL,
         'SHOW_DAS_MAP': settings.SHOW_DAS_MAP,
         'MAX_LAYERS_PER_SQQ': settings.MAX_LAYERS_PER_SQQ,
+        "vue3_entry_script": settings.VUE3_ENTRY_SCRIPT,
     }

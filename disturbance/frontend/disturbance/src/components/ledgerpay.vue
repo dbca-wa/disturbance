@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import SectionPayment from '@/components/common/section_payment'
+import SectionPayment from '@/components/common/section_payment.vue'
 
 export default {
     name: 'LedgerPay',

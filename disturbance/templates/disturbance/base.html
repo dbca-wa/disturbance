@@ -1,9 +1,12 @@
 {% load bootstrap3 %}
 
 {% load static %}
+{% load django_vite %}
 
 {% load users %}
 {% load utils %}
+
+
 {% is_internal as is_internal_login %}
 {% is_internal_path as is_internal_login_path %}
 {% is_disturbance_admin as is_disturbance_admin_user %}
@@ -23,14 +26,13 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
             {% bootstrap_css %}
                 <link type="text/css" href="{% static 'disturbance/css/base.css' %}" rel="stylesheet">
-            {% if not dev %}
-	    <link rel="stylesheet" href="{% static 'disturbance_vue/css/app.css' %}?v={{build_tag}}">
-        <link rel="stylesheet" href="{% static 'disturbance_vue/css/chunk-vendors.css' %}?v={{build_tag}}">
-            {% endif %}
+            {% comment %} {% if not dev %}
+                <link rel="stylesheet" href="{% static 'disturbance_vue/css/app.css' %}?v={{build_tag}}">
+                <link rel="stylesheet" href="{% static 'disturbance_vue/css/chunk-vendors.css' %}?v={{build_tag}}">
+            {% endif %} {% endcomment %}
             {% block extra_css %}
             {% endblock %}
-            {% block extra_js %}
-            {% endblock %}
+            {% vite_hmr_client %}
             <title>
                 {% block title %}
                 {{ DISPLAYED_SYSTEM_NAME }} - {{ department_name }}
@@ -50,7 +52,6 @@
         </script>
     </head>
     <body>
-        <!-- {% if DEBUG %}<div style="position: absolute; color: dodgerblue; font-size: 0.5em;">{{ DOMAIN_DETECTED }}</div>{% endif %} -->
         <header class="topmast">
             {% block header %}
                 {% include 'disturbance/header.html' %}
@@ -75,7 +76,6 @@
                                     {% endif %}
                                     {% if is_internal_login and is_internal_login_path %}
                                         <a class="navbar-brand" href="/external/" title="External Home View"><div style="inline"><img src="{% static 'disturbance/img/dpaw_small.png' %}">Home</div></a>
-                                        <!-- <a href="{% url 'ds_home' %}"><div style="inline"><img src="{% static 'disturbance/img/dpaw_small.png' %}">{% if TEMPLATE_GROUP == 'apiary' %}Applications{% else %}Proposals{% endif %}</div></a> -->
                                     {% endif %}
                                 {% endif %}
 
@@ -86,22 +86,13 @@
                                         {% if not empty_menu %}
                                             {% if request.user.is_authenticated %}
                                                 {% if is_internal_login and is_internal_login_path%}
-                                                    {% if TEMPLATE_GROUP == 'apiary' %}
-                                                        <li><a href="/internal">Applications</a></li>
-                                                        <li><a href="/internal/approvals">Licences</a></li>
-                                                    {% else %}
-                                                        <li><a href="/internal">Proposals</a></li>
-                                                        <li><a href="/internal/approvals">Approvals</a></li>
-                                                    {% endif %}
+                                                    <li><a href="/internal">Proposals</a></li>
+                                                    <li><a href="/internal/approvals">Approvals</a></li>
                                                     <li><a href="/internal/compliances">Compliance with Requirements</a></li>
                                                     <li><a href="/internal/organisations/access">Organisation Access</a></li>
                                                     <li><a href="/internal/search">Search</a></li>
                                                     {% if TEMPLATE_GROUP == 'apiary' %}
                                                         <li><a href="/internal/sites">Sites</a></li>
-                                                    {% endif %}
-                                                {% else %}
-                                                    {% if TEMPLATE_GROUP == 'apiary' %}
-                                                        <li><a href="/external/sites">Sites</a></li>
                                                     {% endif %}
                                                 {% endif %}
                                             {% endif %}
@@ -133,19 +124,11 @@
                                                 <ul class="dropdown-menu" style="z-index:99999">
                                                     {% if is_disturbance_admin_user or is_apiary_admin_user or request.user.is_superuser %}
                                                         <li><a href="{% url 'admin:index' %}">Admin</a></li>
-							                        {% if DOMAIN_DETECTED != 'apiary' %}
-                                                        <li><a href="/internal/schema">Manage Application Schema</a></li>
-							                            <!-- <li><a href="/filelist">View Export Files</a></li> -->
-                                                    {% endif %}
-							                        {% comment %}
-                                                        {% if is_apiary_admin_user and DOMAIN_DETECTED == 'apiary' %}
-                                                            <li><a href="{% url 'apiary_admin' %}">Apiary Update Panel</a></li>
+                                                        {% if DOMAIN_DETECTED != 'apiary' %}
+                                                            <li><a href="/internal/schema">Manage Application Schema</a></li>
+                                                            <!-- <li><a href="/filelist">View Export Files</a></li> -->
                                                         {% endif %}
-                                                        {% if is_disturbance_admin_user and DOMAIN_DETECTED != 'apiary' %}
-                                                            <li><a href="{% url 'apiary_admin' %}">Disturbance Update Panel</a></li>
-                                                        {% endif %}
-							                        {% endcomment %}
-                                                        <li role="separator" class="divider"></li>
+							                            <li role="separator" class="divider"></li>
                                                     {% endif %}
                                                     {% if request.user.is_superuser %}
                                                         <li><a href="{% url 'mgt-commands' %}">Management Commands</a></li>
@@ -154,10 +137,6 @@
                                                     {% for org in request.user.disturbance_organisations.all %}
                                                         {% if request.user.is_superuser or org.id|is_org_admin:request.user %}
                                                             <li><a href="/external/organisations/manage/{{org.id}}">Manage {{org.organisation.name}}</a></li>
-                                                    {% comment %} --> DAS does not have Org Consultants
-                                                        {% elif org.id|is_org_consultant:request.user %}
-                                                            <li><a href="/external/organisations/manage/{{org.id}}">Manage {{ org.organisation.name}}</a></li>
-                                                    {% endcomment %}
                                                         {% endif %}
                                                     {% endfor %}
 
@@ -180,7 +159,6 @@
                         </div>
                     </nav>
                 </div>
-
             </div>
         {% endblock %}
         {% block breadcrumbs %}
@@ -208,64 +186,62 @@
         {% endif %}
         
         {% if notices_obj.notices|length > 0 %}
-        <div class="container">
-        <div class="col-lg-12 ">
-            <div class="row flex-wrap">
-                {% for notice in notices_obj.notices %}
-		            {% if notice.notice_type == 0 and notice.active %}
-                            <div class="round-box col-12 px-3" style='background-color: #ffcbcb; border: 1px solid #fb9e9e;'>
-                                <div style='margin-bottom:-12px; margin-left: 10px'>
-                                    <span style='color:red;'>{{ notice.message|safe }}</span>
+            <div class="container">
+                <div class="col-lg-12 ">
+                    <div class="row flex-wrap">
+                        {% for notice in notices_obj.notices %}
+                            {% if notice.notice_type == 0 and notice.active %}
+                                    <div class="round-box col-12 px-3" style='background-color: #ffcbcb; border: 1px solid #fb9e9e;'>
+                                        <div style='margin-bottom:-12px; margin-left: 10px'>
+                                            <span style='color:red;'>{{ notice.message|safe }}</span>
+                                        </div>
+                                    </div>
+                            {% elif notice.notice_type == 1 and notice.active %}
+                                    <div class="round-box col-12 px-3 d-flex" style='background-color: #fff4e0; border: 1px solid #ff89358a;'>
+                                        <div style='margin-bottom:-12px; margin-left: 10px'>
+                                            <span style='color:#ffa500;'>{{ notice.message|safe }}</span>
+                                        </div>
+                                    </div>
+                            {% elif notice.notice_type == 2 and notice.active %}
+                                    <div class="round-box col-12 px-3" style='background-color: #cbe5ff; border: 1px solid #9eccfb;'>
+                                        <div style='margin-bottom:-12px; margin-left: 10px'>
+                                            <span style='color:#2a84e0;'>{{ notice.message|safe }}</span>
+                                        </div>
                                 </div>
-                            </div>
-                    {% elif notice.notice_type == 1 and notice.active %}
-                            <div class="round-box col-12 px-3 d-flex" style='background-color: #fff4e0; border: 1px solid #ff89358a;'>
-                                <div style='margin-bottom:-12px; margin-left: 10px'>
-                                    <span style='color:#ffa500;'>{{ notice.message|safe }}</span>
-                                </div>
-                            </div>
-                    {% elif notice.notice_type == 2 and notice.active %}
-                            <div class="round-box col-12 px-3" style='background-color: #cbe5ff; border: 1px solid #9eccfb;'>
-                                <div style='margin-bottom:-12px; margin-left: 10px'>
-                                    <span style='color:#2a84e0;'>{{ notice.message|safe }}</span>
-                                </div>
-                        </div>
-                    {% elif notice.notice_type == 3 and notice.active %}
-                            <div class="round-box col-12 px-3" style='background-color: #e9f9ea; border: 1px solid #21ab26;'>
-                                <div style='margin-bottom:-12px; margin-left: 10px'>
-                                    <span style='color:#1a851d;'>{{ notice.message|safe }}</span>
-                                </div>
-                            </div>
-                    {% endif %}
-			    {% endfor %}
+                            {% elif notice.notice_type == 3 and notice.active %}
+                                    <div class="round-box col-12 px-3" style='background-color: #e9f9ea; border: 1px solid #21ab26;'>
+                                        <div style='margin-bottom:-12px; margin-left: 10px'>
+                                            <span style='color:#1a851d;'>{{ notice.message|safe }}</span>
+                                        </div>
+                                    </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
-        </div>
-        </div>
         {% endif %}
 
         {% block content %}
         <!-- dash/index.html inserts <div id="app"></div> tag here, which is replaced by the Vue components >-->
         {% endblock %}
-
         {% block modals %}
         {% endblock %}
-        {% if not dev %}
+        {% vite_asset vue3_entry_script %}
+        {% comment %} {% if not dev %}
             <!--<script type="text/javascript" src="https://static.dpaw.wa.gov.au/static/cdnjs/ajax/libs/jquery/2.1.2/jquery.min.js"></script>
             <script type="text/javascript" src="https://static.dpaw.wa.gov.au/static/cdnjs/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
-	{% comment %} <script type="text/javascript" src="{% static 'disturbance_vue/static/js/manifest.js' %}?v={{build_tag}}"></script>
-	<script type="text/javascript" src="{% static 'disturbance_vue/static/js/vendor.js' %}?v={{build_tag}}"></script>
+	        {% comment %} <script type="text/javascript" src="{% static 'disturbance_vue/static/js/manifest.js' %}?v={{build_tag}}"></script>
+	        <script type="text/javascript" src="{% static 'disturbance_vue/static/js/vendor.js' %}?v={{build_tag}}"></script>
             {% if app_build_url %}
-	    <!-- script type="text/javascript" src="{% static 'disturbance_vue/static/js/app.js' %}?v={{build_tag}}"></script -->
-	<script type="text/javascript" src="{{ app_build_url }}?v={{build_tag}}"></script>
+	        <!-- script type="text/javascript" src="{% static 'disturbance_vue/static/js/app.js' %}?v={{build_tag}}"></script -->
+	        <script type="text/javascript" src="{{ app_build_url }}?v={{build_tag}}"></script>
             {% else %} {% endcomment %}
-    <script type="text/javascript" src="{% static 'disturbance_vue/js/chunk-vendors.js' %}?v={{build_tag}}"></script>
-	<script type="text/javascript" src="{% static 'disturbance_vue/js/app.js' %}?v={{build_tag}}"></script>
-
+            {% comment %} <script type="text/javascript" src="{% static 'disturbance_vue/js/chunk-vendors.js' %}?v={{build_tag}}"></script>
+            <script type="text/javascript" src="{% static 'disturbance_vue/js/app.js' %}?v={{build_tag}}"> {% endcomment %}
+            {% comment %} </script> {% endcomment %}
             {% comment %} {% endif %} {% endcomment %}
-        {% else %}
+            {% comment %} {% else %}
             <script type="text/javascript" src="{{ dev_url }}"></script>
-        {% endif %}
-        {% block custom_js %}
-        {% endblock %}
+        {% endif %} {% endcomment %}
     </body>
 </html>

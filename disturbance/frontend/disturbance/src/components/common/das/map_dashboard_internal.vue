@@ -1698,6 +1698,8 @@
 </script>
 
 <style lang="css" scoped>
+    @import '../apiary/map_address_search_scoped.css';
+
     .map-wrapper {
         position: relative;
         padding: 0;
@@ -1919,7 +1921,6 @@
         width: 100%;
         height: 500px;
     }
-    @import '../apiary/map_address_search_scoped.css'
 </style>
 
 <style>

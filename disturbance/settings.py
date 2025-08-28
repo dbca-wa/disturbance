@@ -1,5 +1,5 @@
 from django.core.exceptions import ImproperlyConfigured
-
+import sys
 import os, hashlib
 import confy
 import decouple
@@ -81,6 +81,7 @@ INSTALLED_APPS += [
     'crispy_forms',
     'appmonitor_client',
     'django_summernote',
+    "django_vite",
 ]
 
 ADD_REVERSION_ADMIN=True
@@ -160,10 +161,10 @@ REQUEST_TIMEOUT = env('REQUEST_TIMEOUT', 60*5) # 5mins
 STATIC_ROOT=os.path.join(BASE_DIR, 'staticfiles_ds')
 STATICFILES_DIRS.append(os.path.join(os.path.join(BASE_DIR, 'disturbance', 'static')))
 STATICFILES_DIRS.append(os.path.join(os.path.join(BASE_DIR, 'disturbance', 'static', 'disturbance_vue')))
-DEV_STATIC = env('DEV_STATIC',False)
-DEV_STATIC_URL = env('DEV_STATIC_URL')
-if DEV_STATIC and not DEV_STATIC_URL:
-    raise ImproperlyConfigured('If running in DEV_STATIC, DEV_STATIC_URL has to be set')
+# DEV_STATIC = env('DEV_STATIC',False)
+# DEV_STATIC_URL = env('DEV_STATIC_URL')
+# if DEV_STATIC and not DEV_STATIC_URL:
+#     raise ImproperlyConfigured('If running in DEV_STATIC, DEV_STATIC_URL has to be set')
 DATA_UPLOAD_MAX_NUMBER_FIELDS = None
 STATIC_URL = '/static/'
 
@@ -241,7 +242,7 @@ CKEDITOR_CONFIGS = {
 }
 
 BUILD_TAG = env('BUILD_TAG', hashlib.md5(os.urandom(32)).hexdigest())  # URL of the Dev app.js served by webpack & express
-DEV_APP_BUILD_URL = env('DEV_APP_BUILD_URL')  # URL of the Dev app.js served by webpack & express
+# DEV_APP_BUILD_URL = env('DEV_APP_BUILD_URL')  # URL of the Dev app.js served by webpack & express
 GEOCODING_ADDRESS_SEARCH_TOKEN = env('GEOCODING_ADDRESS_SEARCH_TOKEN', 'ACCESS_TOKEN_NOT_FOUND')
 RESTRICTED_RADIUS = 3000  # unit: [m]
 DBCA_ABN = '38 052 249 024'
@@ -316,7 +317,7 @@ LOGGING['loggers']['request_stats'] = {
 #print(json.dumps(LOGGING, indent=4))
 
 # KMI_SERVER_URL = env('KMI_SERVER_URL', 'https://kb.dbca.wa.gov.au')
-DEV_APP_BUILD_URL = env('DEV_APP_BUILD_URL')  # URL of the Dev app.js served by webpack & express
+# DEV_APP_BUILD_URL = env('DEV_APP_BUILD_URL')  # URL of the Dev app.js served by webpack & express
 ENABLE_DJANGO_LOGIN = env('ENABLE_DJANGO_LOGIN', False)
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
@@ -325,3 +326,28 @@ CSRF_TRUSTED_ORIGINS = json.loads(str(CSRF_TRUSTED_ORIGINS_STRING))
 FILE_UPLOAD_PERMISSIONS = None
 NUMBER_OF_QUEUE_JOBS = env('NUMBER_OF_QUEUE_JOBS', 3)
 MAX_NUM_ROWS_MODEL_EXPORT = env('MAX_NUM_ROWS_MODEL_EXPORT', 100000)
+
+RUNNING_DEVSERVER = len(sys.argv) > 1 and sys.argv[1] == "runserver"
+
+# Make sure this returns true when in local development
+# so you can use the vite dev server with hot module reloading
+DJANGO_VITE_DEV_MODE = RUNNING_DEVSERVER and EMAIL_INSTANCE == "DEV" and DEBUG is True
+
+STATIC_URL_PREFIX = "/static/disturbance_vue/" if DJANGO_VITE_DEV_MODE else "disturbance_vue/"
+
+DJANGO_VITE = {
+  "default": {
+    "dev_mode": DJANGO_VITE_DEV_MODE,
+    "manifest_path": os.path.join(
+        BASE_DIR, "disturbance", "static", "disturbance_vue", "manifest.json"
+    ),
+    "dev_server_host": "localhost", # Default host for vite (can change if needed)
+    "dev_server_port": 5173, # Default port for vite (can change if needed)
+    "static_url_prefix": STATIC_URL_PREFIX,
+  }
+}
+
+VUE3_ENTRY_SCRIPT = env(
+  "VUE3_ENTRY_SCRIPT",
+  default="src/main.js", # This path will be auto prefixed with the       static_url_prefix from DJANGO_VITE above
+) # Path of the vue3 entry point script served by vite
