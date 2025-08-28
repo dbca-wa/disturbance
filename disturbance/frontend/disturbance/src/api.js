@@ -1,6 +1,6 @@
 var site_url = location.origin
 
-module.exports = {
+export default {
     organisations: '/api/organisations.json',
     organisation_requests: '/api/organisation_requests.json',
     organisation_contacts: '/api/organisation_contacts.json',

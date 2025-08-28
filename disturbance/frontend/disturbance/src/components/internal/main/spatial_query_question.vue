@@ -601,6 +601,7 @@ import { v4 as uuidv4 } from 'uuid';
 import datatable from '@/utils/vue/datatable.vue'
 import modal from '@vue-utils/bootstrap-modal2.vue'
 import moment from 'moment'
+import FileSaver from 'file-saver';
 import {
   api_endpoints,
   helpers,
@@ -608,8 +609,8 @@ import {
 }
 from '@/utils/hooks'
 
-require("select2/dist/css/select2.min.css");
-require("select2-bootstrap-theme/dist/select2-bootstrap.min.css");
+import "select2/dist/css/select2.min.css";
+import "select2-bootstrap-theme/dist/select2-bootstrap.min.css";
 
 export default {
     name:'spatialQueryQuestionModal',
@@ -1642,7 +1643,7 @@ export default {
                     fetch('/api/proposal_sqs/layers_used/').then(async (response) => {
                         if (!response.ok) { return response.json().then(err => { throw err }); }
                         let data = await response.blob();
-                        var FileSaver = require('file-saver');
+                        // var FileSaver = require('file-saver');
                         const blob = new Blob([data], {type: 'text/csv'});
                         //const blob = new Blob([response.bodyText], {type: 'text/csv'});
                         //console.log(response.headers.map.filename)

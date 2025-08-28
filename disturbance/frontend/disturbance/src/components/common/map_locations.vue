@@ -152,7 +152,8 @@ export default {
 
     let vm = this;
     let baseDic = {
-      shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
+      // shadowUrl: import("leaflet/dist/images/marker-shadow.png"),
+      shadowUrl: new URL('leaflet/dist/images/marker-shadow.png', import.meta.url).href,
       shadowSize: [41, 41],
       shadowAnchor: [12, 41],
       iconSize: [32, 32],
@@ -160,7 +161,8 @@ export default {
       popupAnchor: [0, -20]
     };
     vm.icon_default = Leaf.icon({
-      iconUrl: require("../../assets/marker-gray-locked.svg"),
+      // iconUrl: require("../../assets/marker-gray-locked.svg"),
+      iconUrl: new URL("../../assets/marker-gray-locked.svg", import.meta.url).href,
       ...baseDic
     });
     vm.guid = guid();

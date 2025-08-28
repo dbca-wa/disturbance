@@ -76,3 +76,4 @@ django-phonenumber-field==7.3.0
 django-utils-six==2.0
 setuptools~=80.9.0
 django-summernote==0.8.20.0
+django-vite~=3.1.0

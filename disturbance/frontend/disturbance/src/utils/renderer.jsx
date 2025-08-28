@@ -21,6 +21,7 @@ import RefreshRadio from '../components/forms/refresh_radio.vue'
 import {api_endpoints} from "@/utils/hooks.js"
 
 export default{
+    name: 'DASRenderer',
     renderChildren(h,c,data=null,assessorData=null) {
         var is_readonly = this.status_data.readonly;
         var assessorStatus = this.status_data.assessorStatus;
