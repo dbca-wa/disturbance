@@ -14,9 +14,27 @@
                                     </div>
                                     <div class="col-sm-9">
                                         <div class="input-group date" ref="cancellation_date" style="width: 70%;">
-                                            <input type="text" class="form-control" name="cancellation_date" placeholder="DD/MM/YYYY" v-model="approval.cancellation_date">
+                                            <!-- <input type="text" class="form-control" name="cancellation_date" placeholder="DD/MM/YYYY" v-model="approval.cancellation_date">
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
+                                            </span> -->
+                                            <input
+                                                v-model="
+                                                    approval.cancellation_date
+                                                "
+                                                type="date"
+                                                class="form-control"
+                                                name="cancellation_date"
+                                                placeholder="DD/MM/YYYY"
+                                                required
+                                            />
+                                            <div class="invalid-feedback">
+                                                Please enter a valid date
+                                            </div>
+                                            <span class="input-group-addon">
+                                                <span
+                                                    class="glyphicon glyphicon-calendar"
+                                                ></span>
                                             </span>
                                         </div>
                                     </div>
@@ -112,7 +130,7 @@ export default {
             this.approval = {};
             this.errors = false;
             $('.has-error').removeClass('has-error');
-            $(this.$refs.cancellation_date).data('DateTimePicker').clear();
+            //$(this.$refs.cancellation_date).data('DateTimePicker').clear();
             this.validation_form.resetForm();
         },
         fetchContact: function(id){
@@ -187,18 +205,9 @@ export default {
             });
        },
        eventListeners:function () {
-            let vm = this;
             // Initialise Date Picker
 
-            $(vm.$refs.cancellation_date).datetimepicker(vm.datepickerOptions);
-            $(vm.$refs.cancellation_date).on('dp.change', function(e){
-                if ($(vm.$refs.cancellation_date).data('DateTimePicker').date()) {
-                    vm.approval.cancellation_date =  e.date.format('DD/MM/YYYY');
-                }
-                else if ($(vm.$refs.cancellation_date).data('date') === "") {
-                    vm.approval.cancellation_date = "";
-                }
-             });
+           
        }
    },
    mounted:function () {

@@ -14,9 +14,25 @@
                                     </div>
                                     <div class="col-sm-9">
                                         <div class="input-group date" ref="from_date" style="width: 70%;">
-                                            <input type="text" class="form-control" name="from_date" placeholder="DD/MM/YYYY" v-model="approval.from_date">
+                                            <!-- <input type="text" class="form-control" name="from_date" placeholder="DD/MM/YYYY" v-model="approval.from_date">
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
+                                            </span> -->
+                                            <input
+                                                v-model="approval.from_date"
+                                                type="date"
+                                                class="form-control"
+                                                name="from_date"
+                                                placeholder="DD/MM/YYYY"
+                                                required
+                                            />
+                                            <div class="invalid-feedback">
+                                                Please enter a valid date
+                                            </div>
+                                            <span class="input-group-addon">
+                                                <span
+                                                    class="glyphicon glyphicon-calendar"
+                                                ></span>
                                             </span>
                                         </div>
                                     </div>
@@ -31,9 +47,25 @@
                                     </div>
                                     <div class="col-sm-9">
                                         <div class="input-group date" ref="to_date" style="width: 70%;">
-                                            <input type="text" class="form-control" name="to_date" placeholder="DD/MM/YYYY" v-model="approval.to_date">
+                                            <!-- <input type="text" class="form-control" name="to_date" placeholder="DD/MM/YYYY" v-model="approval.to_date">
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
+                                            </span> -->
+                                            <input
+                                                v-model="approval.to_date"
+                                                type="date"
+                                                class="form-control"
+                                                name="to_date"
+                                                placeholder="DD/MM/YYYY"
+                                                required
+                                            />
+                                            <div class="invalid-feedback">
+                                                Please enter a valid date
+                                            </div>
+                                            <span class="input-group-addon">
+                                                <span
+                                                    class="glyphicon glyphicon-calendar"
+                                                ></span>
                                             </span>
                                         </div>
                                     </div>
@@ -131,8 +163,6 @@ export default {
             //this.approval.to_date = ""
             this.errors = false;
             $('.has-error').removeClass('has-error');
-            $(this.$refs.from_date).data('DateTimePicker').clear();
-            $(this.$refs.to_date).data('DateTimePicker').clear();
             this.validation_form.resetForm();
         },
         fetchContact: function(id){
@@ -212,28 +242,7 @@ export default {
             });
        },
        eventListeners:function () {
-            let vm = this;
-            // Initialise Date Picker
-
-            $(vm.$refs.from_date).datetimepicker(vm.datepickerOptions);
-            $(vm.$refs.from_date).on('dp.change', function(e){
-                if ($(vm.$refs.from_date).data('DateTimePicker').date()) {
-                    vm.approval.from_date =  e.date.format('DD/MM/YYYY');
-                }
-                else if ($(vm.$refs.from_date).data('date') === "") {
-                    vm.approval.from_date = "";
-                }
-             });
-
-            $(vm.$refs.to_date).datetimepicker(vm.datepickerOptions);
-            $(vm.$refs.to_date).on('dp.change', function(e){
-                if ($(vm.$refs.to_date).data('DateTimePicker').date()) {
-                    vm.approval.to_date =  e.date.format('DD/MM/YYYY');
-                }
-                else if ($(vm.$refs.to_date).data('date') === "") {
-                    vm.approval.to_date = "";
-                }
-             });
+           
        }
    },
    mounted:function () {

@@ -88,21 +88,26 @@
                     <div class="row">
                         <div class="col-md-3">
                             <label for="">Expiry From</label>
-                            <div class="input-group date" ref="proposalExpiryDateFromPicker">
-                                <input type="text" class="form-control" placeholder="DD/MM/YYYY" v-model="filterProposalExpiryFrom">
-                                <span class="input-group-addon">
-                                    <span class="glyphicon glyphicon-calendar"></span>
-                                </span>
-                            </div>
+                            <input
+                                id="proposal-expiry-from"
+                                type="date"
+                                class="form-control"
+                                v-model="proposal_expiry_from"
+                                placeholder="DD/MM/YYYY"
+                                :max="proposal_expiry_to"
+                            >
                         </div>
                         <div class="col-md-3">
                             <label for="">Expiry To</label>
-                            <div class="input-group date" ref="proposalExpiryDateToPicker">
-                                <input type="text" class="form-control" placeholder="DD/MM/YYYY" v-model="filterProposalExpiryTo">
-                                <span class="input-group-addon">
-                                    <span class="glyphicon glyphicon-calendar"></span>
-                                </span>
-                            </div>
+                            <input
+                                id="proposal-expiry-to"
+                                type="date"
+                                class="form-control"
+                                v-model="proposal_expiry_to"
+                                placeholder="DD/MM/YYYY"
+                                :min="proposal_expiry_from"
+                            >
+
                         </div>
                     </div>
                     <div class="row">
@@ -132,7 +137,8 @@ import ApprovalHistory from './approval_history_modal.vue';
 import {
     api_endpoints,
     helpers,
-    constants
+    constants,
+    Moment
 }from '@/utils/hooks'
 export default {
     name: 'ApprovalsTableDash',
@@ -169,8 +175,10 @@ export default {
             filterProposalStatus: 'All',
             filterProposalStartFrom: '',
             filterProposalStartTo: '',
-            filterProposalExpiryFrom: '',
-            filterProposalExpiryTo: '',
+            //filterProposalExpiryFrom: '',
+            //filterProposalExpiryTo: '',
+            proposal_expiry_from: '',
+            proposal_expiry_to: '',
             filterProposalSubmitter: 'All',
             dashboardTitle: '',
             dashboardDescription: '',
@@ -248,14 +256,38 @@ export default {
         filterProposalStartTo: function(){
             this.$refs.proposal_datatable.vmDataTable.draw();
         },
-        filterProposalExpiryFrom: function(){
+        // filterProposalExpiryFrom: function(){
+        //     this.$refs.proposal_datatable.vmDataTable.draw();
+        // },
+        // filterProposalExpiryTo: function(){
+        //     this.$refs.proposal_datatable.vmDataTable.draw();
+        // }
+        dateRangeIdentifierForReloadProposalTable: function(){
             this.$refs.proposal_datatable.vmDataTable.draw();
         },
-        filterProposalExpiryTo: function(){
-            this.$refs.proposal_datatable.vmDataTable.draw();
-        }
     },
     computed: {
+        filterProposalExpiryFrom: {
+            get() {
+                // If our internal date exists, convert it for submission, etc
+                if (this.proposal_expiry_from) {
+                    return Moment(this.proposal_expiry_from, 'YYYY-MM-DD').format('DD/MM/YYYY');
+                }
+                return ''; // Otherwise, return an empty string.
+            }
+        },
+        filterProposaExpiryTo : {
+            get() {
+                // If our internal date exists, convert it for submission, etc
+                if (this.proposal_expiry_to) {
+                    return Moment(this.proposal_expiry_to, 'YYYY-MM-DD').format('DD/MM/YYYY');
+                }
+                return ''; // Otherwise, return an empty string.
+            }
+        },
+        dateRangeIdentifierForReloadProposalTable() {
+            return `${this.proposal_expiry_from}|${this.proposal_expiry_to}`;
+        },
         status: function(){
             //return this.is_external ? this.external_status : this.internal_status;
             return [];
@@ -550,8 +582,10 @@ export default {
                         //d.regions = vm.filterProposalRegion.join(); // no need to add this since we can filter normally (filter is not multi-select in Approval table)
                         d.start_date_from = vm.filterProposalStartFrom != '' && vm.filterProposalStartFrom != null ? moment(vm.filterProposalStartFrom, 'DD/MM/YYYY').format('YYYY-MM-DD'): '';
                         d.start_date_to = vm.filterProposalStartTo != '' && vm.filterProposalStartTo != null ? moment(vm.filterProposalStartTo, 'DD/MM/YYYY').format('YYYY-MM-DD'): '';
-                        d.expiry_date_from = vm.filterProposalExpiryFrom != '' && vm.filterProposalExpiryFrom != null ? moment(vm.filterProposalExpiryFrom, 'DD/MM/YYYY').format('YYYY-MM-DD'): '';
-                        d.expiry_date_to = vm.filterProposalExpiryTo != '' && vm.filterProposalExpiryTo != null ? moment(vm.filterProposalExpiryTo, 'DD/MM/YYYY').format('YYYY-MM-DD'): '';
+                        // d.expiry_date_from = vm.filterProposalExpiryFrom != '' && vm.filterProposalExpiryFrom != null ? moment(vm.filterProposalExpiryFrom, 'DD/MM/YYYY').format('YYYY-MM-DD'): '';
+                        // d.expiry_date_to = vm.filterProposalExpiryTo != '' && vm.filterProposalExpiryTo != null ? moment(vm.filterProposalExpiryTo, 'DD/MM/YYYY').format('YYYY-MM-DD'): '';
+                        d.expiry_date_from = vm.proposal_expiry_from != '' && vm.proposal_expiry_from != null ? moment(vm.proposal_expiry_from, 'YYYY-MM-DD').format('YYYY-MM-DD'): '';
+                        d.expiry_date_to = vm.proposal_expiry_to != '' && vm.proposal_expiry_to != null ? moment(vm.proposal_expiry_to, 'YYYY-MM-DD').format('YYYY-MM-DD'): '';
                         d.region = vm.filterProposalRegion;
                         d.proposal_activity = vm.filterProposalActivity;
                         d.approval_status = vm.filterProposalStatus;
@@ -657,25 +691,7 @@ export default {
             //         vm.filterProposalStartFrom = "";
             //     }
             // });
-            $(vm.$refs.proposalExpiryDateToPicker).datetimepicker(vm.datepickerOptions);
-            $(vm.$refs.proposalExpiryDateToPicker).on('dp.change', function(e){
-                if ($(vm.$refs.proposalExpiryDateToPicker).data('DateTimePicker').date()) {
-                    vm.filterProposalExpiryTo =  e.date.format('DD/MM/YYYY');
-                }
-                else if ($(vm.$refs.proposalExpiryDateToPicker).data('date') === "") {
-                    vm.filterProposaExpiryTo = "";
-                }
-             });
-            $(vm.$refs.proposalExpiryDateFromPicker).datetimepicker(vm.datepickerOptions);
-            $(vm.$refs.proposalExpiryDateFromPicker).on('dp.change',function (e) {
-                if ($(vm.$refs.proposalExpiryDateFromPicker).data('DateTimePicker').date()) {
-                    vm.filterProposalExpiryFrom = e.date.format('DD/MM/YYYY');
-                    $(vm.$refs.proposalExpiryDateToPicker).data("DateTimePicker").minDate(e.date);
-                }
-                else if ($(vm.$refs.proposalExpiryDateFromPicker).data('date') === "") {
-                    vm.filterProposalExpiryFrom = "";
-                }
-            });
+            
 
             // End Proposal Date Filters
             // Internal Reissue listener
