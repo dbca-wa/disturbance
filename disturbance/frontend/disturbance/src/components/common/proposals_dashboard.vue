@@ -346,7 +346,7 @@ export default {
         filterProposalLodgedTo : {
             get() {
                 // If our internal date exists, convert it for submission, etc
-                if (this.proposal_lodged_from) {
+                if (this.proposal_lodged_to) {
                     return Moment(this.proposal_lodged_to, 'YYYY-MM-DD').format('DD/MM/YYYY');
                 }
                 return ''; // Otherwise, return an empty string.
