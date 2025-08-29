@@ -88,12 +88,6 @@
                     <div class="row">
                         <div class="col-md-3">
                             <label for="">Expiry From</label>
-                            <!-- <div class="input-group date" ref="proposalExpiryDateFromPicker">
-                                <input type="text" class="form-control" placeholder="DD/MM/YYYY" v-model="filterProposalExpiryFrom">
-                                <span class="input-group-addon">
-                                    <span class="glyphicon glyphicon-calendar"></span>
-                                </span>
-                            </div> -->
                             <input
                                 id="proposal-expiry-from"
                                 type="date"
@@ -105,12 +99,6 @@
                         </div>
                         <div class="col-md-3">
                             <label for="">Expiry To</label>
-                            <!-- <div class="input-group date" ref="proposalExpiryDateToPicker">
-                                <input type="text" class="form-control" placeholder="DD/MM/YYYY" v-model="filterProposalExpiryTo">
-                                <span class="input-group-addon">
-                                    <span class="glyphicon glyphicon-calendar"></span>
-                                </span>
-                            </div> -->
                             <input
                                 id="proposal-expiry-to"
                                 type="date"
