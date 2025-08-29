@@ -1,14 +1,14 @@
-import $ from 'jquery';
-window.$ = $;
-window.jQuery = $; // Ensure both are set before any plugin
+// import $ from 'jquery';
+// window.$ = $;
+// window.jQuery = $; // Ensure both are set before any plugin
+import './jquery-global.js';
 
 import 'bootstrap/dist/css/bootstrap.css'; // CSS first
-// import 'bootstrap'; // Bootstrap JS after jQuery
+import 'bootstrap'; // Bootstrap JS after jQuery
 
-// import 'eonasdan-bootstrap-datetimepicker'; // After Bootstrap JS
 
 import 'font-awesome/css/font-awesome.min.css';
-// import 'jquery.easing';
+import 'jquery.easing';
 
 import { createApp } from 'vue';
 import 'vite/modulepreload-polyfill';
@@ -21,6 +21,7 @@ window._ = _;
 import moment from 'moment';
 window.moment = moment;
 import { extendMoment } from 'moment-range';
+extendMoment(moment);
 import select2 from 'select2';
 import swal from 'sweetalert2';
 window.swal = swal;
@@ -28,6 +29,7 @@ select2();
 import jsZip from 'jszip';
 window.JSZip = jsZip;
 
+// import 'eonasdan-bootstrap-datetimepicker'; // After Bootstrap JS
 import 'datatables.net';
 import 'datatables.net-bs';
 import 'datatables.net-responsive-bs';
@@ -40,8 +42,6 @@ import 'sweetalert2/dist/sweetalert2.css';
 import 'jquery-validation';
 import 'select2/dist/css/select2.min.css';
 import 'select2-bootstrap-theme/dist/select2-bootstrap.min.css';
-
-extendMoment(moment);
 
 // import CKEditor from 'ckeditor4-vue';
 // app.use( CKEditor );
