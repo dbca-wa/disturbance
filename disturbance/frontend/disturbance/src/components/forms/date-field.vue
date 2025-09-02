@@ -29,7 +29,8 @@
             <!--<LayerInfo v-show="assessorMode" :layer_value="layer_val"  :assessorMode="assessorMode"/>-->
             <LayerInfo v-show="true" :layer_value="layer_val"  :assessorMode="true"/>
             <div class='input-group date'>
-                <input type="text" :readonly="readonly" :name="name" class="form-control" placeholder="DD/MM/YYYY" :value="value" :required="isRequired"/>
+                <!-- <input type="text" :readonly="readonly" :name="name" class="form-control" placeholder="DD/MM/YYYY" :value="value" :required="isRequired"/> -->
+                <input type="date" :readonly="readonly" :name="name" class="form-control" placeholder="DD/MM/YYYY" :value="value" :required="isRequired"/>
                 <span class="input-group-addon">
                     <span class="glyphicon glyphicon-calendar"></span>
                 </span>
@@ -83,9 +84,9 @@ export default {
         }
     },
     mounted: function() {
-        $('.date').datetimepicker({
-        format: 'DD/MM/YYYY'
-        });
+        // $('.date').datetimepicker({
+        // format: 'DD/MM/YYYY'
+        // });
     }
 }
 </script>

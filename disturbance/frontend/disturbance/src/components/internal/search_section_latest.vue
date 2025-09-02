@@ -112,7 +112,8 @@
                                 <label class="control-label"  for="Name">Answer</label>
                                 <div class="form-group">
                                     <div class="input-group date" ref="question_date" style="width: 70%;">
-                                        <input type="text" class="form-control" name="question_date" placeholder="DD/MM/YYYY" v-model="selected_option">
+                                        <!-- <input type="text" class="form-control" name="question_date" placeholder="DD/MM/YYYY" v-model="selected_option"> -->
+                                         <input type="date" class="form-control" name="question_date" placeholder="DD/MM/YYYY" v-model="selected_option">
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-calendar"></span>
                                         </span>
@@ -595,7 +596,7 @@ export default {
             var api_options = found_question.options;
             if(found_question.answer_type=='date'){
               vm.date_type =true;
-              $(vm.$refs.question_date).datetimepicker(vm.datepickerOptions);
+              //$(vm.$refs.question_date).datetimepicker(vm.datepickerOptions);
               //vm.eventListeners()
             }
             else if (api_options&&api_options.length > 0) {
@@ -744,18 +745,18 @@ export default {
         )
       },
       eventListeners:function () {
-            let vm = this;
+            //let vm = this;
             // Initialise Date Picker
             //console.log('here');
-            $(vm.$refs.question_date).datetimepicker(vm.datepickerOptions);
-            $(vm.$refs.question_date).on('dp.change', function(e){
-                if ($(vm.$refs.question_date).data('DateTimePicker').date()) {
-                    vm.selected_option =  e.date.format('DD/MM/YYYY');
-                }
-                else if ($(vm.$refs.question_date).data('date') === "") {
-                    vm.selected_option = "";
-                }
-             });
+            // $(vm.$refs.question_date).datetimepicker(vm.datepickerOptions);
+            // $(vm.$refs.question_date).on('dp.change', function(e){
+            //     if ($(vm.$refs.question_date).data('DateTimePicker').date()) {
+            //         vm.selected_option =  e.date.format('DD/MM/YYYY');
+            //     }
+            //     else if ($(vm.$refs.question_date).data('date') === "") {
+            //         vm.selected_option = "";
+            //     }
+            //  });
        },
        download_content: function (content, fileName, contentType) {
                 var a = document.createElement("a");
