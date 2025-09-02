@@ -36,7 +36,7 @@
                                     </div>
                                     <div class="col-sm-9">
                                         <div class="input-group date" ref="due_date" style="width: 70%;">
-                                            <input type="text" class="form-control" name="due_date" placeholder="DD/MM/YYYY" v-model="requirement.due_date">
+                                            <input type="date" class="form-control" name="due_date" placeholder="DD/MM/YYYY" v-model="requirement.due_date">
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
                                             </span>
@@ -376,15 +376,15 @@ export default {
        eventListeners:function () {
             let vm = this;
             // Initialise Date Picker
-            $(vm.$refs.due_date).datetimepicker(vm.datepickerOptions);
-            $(vm.$refs.due_date).on('dp.change', function(e){
-                if ($(vm.$refs.due_date).data('DateTimePicker').date()) {
-                    vm.requirement.due_date =  e.date.format('DD/MM/YYYY');
-                }
-                else if ($(vm.$refs.due_date).data('date') === "") {
-                    vm.requirement.due_date = "";
-                }
-             });
+            // $(vm.$refs.due_date).datetimepicker(vm.datepickerOptions);
+            // $(vm.$refs.due_date).on('dp.change', function(e){
+            //     if ($(vm.$refs.due_date).data('DateTimePicker').date()) {
+            //         vm.requirement.due_date =  e.date.format('DD/MM/YYYY');
+            //     }
+            //     else if ($(vm.$refs.due_date).data('date') === "") {
+            //         vm.requirement.due_date = "";
+            //     }
+            //  });
 
             // Intialise select2
             $(vm.$refs.standard_req).select2({

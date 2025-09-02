@@ -603,7 +603,7 @@ export default {
 
 
         addEventListeners: function(){
-            let vm = this;
+            //let vm = this;
             // Initialise select2 for region
             //vm.applySelect2()
         },
