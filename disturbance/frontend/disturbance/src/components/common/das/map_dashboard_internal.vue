@@ -132,22 +132,22 @@
                         <i class='fa fa-4x fa-spinner fa-spin'></i>
                     </div>
                     <div class="basemap-button">
-                        <img id="basemap_sat" src="../../../assets/satellite_icon.jpg" @click="setBaseLayer('sat')" />
-                        <img id="basemap_osm" src="../../../assets/map_icon.png" @click="setBaseLayer('osm')" />
+                        <img id="basemap_sat" :src="satelliteIcon" @click="setBaseLayer('sat')" />
+                        <img id="basemap_osm" :src="mapIcon" @click="setBaseLayer('osm')" />
                     </div>
                     <div class="optional-layers-wrapper">
                         <div class="optional-layers-button">
                             <template v-if="mode === 'layer'">
-                                <img src="../../../assets/info-bubble.svg" @click="set_mode('measure')" />
+                                <img src="@/assets/info-bubble.svg" @click="set_mode('measure')" />
                             </template>
                             <template v-else>
-                                <img src="../../../assets/ruler.svg" @click="set_mode('layer')" />
+                                <img src="@/assets/ruler.svg" @click="set_mode('layer')" />
                             </template>
                         </div>
                         <div style="position:relative">
                             <transition>
                                 <div v-if="optionalLayers.length" class="optional-layers-button" @mouseover="hover=true">
-                                    <img src="../../../assets/layers.svg" />
+                                    <img src="@/assets/layers.svg" />
                                 </div>
                             </transition>
                             <transition v-if="optionalLayers.length">
@@ -220,6 +220,8 @@
     import {get as getProjection} from 'ol/proj';
     import {getTopLeft, getWidth} from 'ol/extent'
     import { toRaw } from 'vue';
+    import satelliteIcon from '@/assets/satellite_icon.jpg'
+    import mapIcon from '@/assets/map_icon.png'
 
     export default {
         name: 'MapDashboard',
@@ -303,6 +305,8 @@
                     {value: 'declined', name: 'Declined'},
                     {value: 'discarded', name: 'Discarded'},
                 ],
+                satelliteIcon,
+                mapIcon,
             }
         },
         components: {

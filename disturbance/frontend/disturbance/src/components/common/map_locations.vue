@@ -6,8 +6,8 @@
             </div>
             <div :id="idMap" class="mapLeaf"></div>
             <div class="basemap-button">
-                <img :id="idBasemapSat" class="basemap-button-img" src="../../assets/satellite_icon.jpg" @click.stop="setBaseLayer('sat')" />
-                <img :id="idBasemapOsm" class="basemap-button-img" src="../../assets/map_icon.png" @click.stop="setBaseLayer('osm')" />
+                <img :id="idBasemapSat" class="basemap-button-img" :src="satelliteIcon" @click.stop="setBaseLayer('sat')" />
+                <img :id="idBasemapOsm" class="basemap-button-img" :src="mapIcon" @click.stop="setBaseLayer('osm')" />
             </div>
             <div class="cursor-location">
                 <div v-if="cursor_location">
@@ -46,6 +46,8 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-measure/dist/leaflet-measure.css";
 import "leaflet.locatecontrol/dist/L.Control.Locate.min.css";
 import { api_endpoints } from '@/utils/hooks'
+import satelliteIcon from '@/assets/satellite_icon.jpg'
+import mapIcon from '@/assets/map_icon.png'
 
 Leaf.TileLayer.WMTS = Leaf.TileLayer.extend({
     defaultWmtsParams: {
@@ -168,6 +170,8 @@ export default {
     vm.guid = guid();
 
     return {
+        satelliteIcon,
+        mapIcon,
        // marker_lng: vm.marker_longitude,
        // marker_lat: vm.marker_latitude,
             mapboxAccessToken: null,
