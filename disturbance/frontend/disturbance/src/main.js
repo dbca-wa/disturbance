@@ -1,6 +1,3 @@
-// import $ from 'jquery';
-// window.$ = $;
-// window.jQuery = $; // Ensure both are set before any plugin
 import './jquery-global.js';
 
 import 'bootstrap/dist/css/bootstrap.css'; // CSS first
