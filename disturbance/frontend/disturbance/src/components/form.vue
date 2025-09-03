@@ -108,7 +108,8 @@
                             {vm.proposal.schema.map(d =>{
                                 return Renderer.renderChildren(h,d,vm.values,vm.proposal.assessor_data,vm.proposal.layer_data,vm.proposal.readonly,vm.proposal.assessor_mode,vm.proposal.assessor)
                             })}
-                            { this.$slots.default }
+                            {/* { this.$slots.default } */}
+                            { typeof this.$slots.default === 'function' ? this.$slots.default() : null }
                         </div>
                     </div>
                 )
@@ -120,7 +121,8 @@
                             {vm.proposal.schema.map(d =>{
                                 return Renderer.renderChildren(h,d,vm.values,vm.proposal.assessor_data,vm.proposal.layer_data,vm.proposal.readonly,vm.proposal.assessor_mode,vm.proposal.assessor)
                             })}
-                            { this.$slots.default }
+                            {/* { this.$slots.default } */}
+                            { typeof this.$slots.default === 'function' ? this.$slots.default() : null }
                         </div>
                     )
                 }
@@ -130,7 +132,8 @@
                             {vm.proposal.schema.map(d =>{
                                 return Renderer.renderChildren(h,d,vm.values,vm.proposal.assessor_data,vm.proposal.layer_data,vm.proposal.readonly,vm.proposal.assessor_mode,vm.proposal.assessor)
                             })}
-                            { this.$slots.default }
+                            {/* { this.$slots.default } */}
+                            { typeof this.$slots.default === 'function' ? this.$slots.default() : null }
                         </div>
                     )
                 }
