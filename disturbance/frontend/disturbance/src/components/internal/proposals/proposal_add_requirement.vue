@@ -163,6 +163,7 @@ export default {
             return vm.errors;
         },
         due_date: {
+            
             cache: false,
             get(){
                 if (this.requirement.due_date == undefined  || this.requirement.due_date == '' || this.requirement.due_date ==  null){
@@ -176,7 +177,11 @@ export default {
     },
     watch: {
         due_date: function(){
-            this.validDate = moment(this.requirement.due_date,'DD/MM/YYYY').isValid();
+
+            this.validDate = moment(this.requirement.due_date,'YYYY-MM-DD').isValid();
+            // if(this.validDate ){
+            //     this.requirement.due_date = moment(this.requirement.due_date,'YYYY-MM-DD').format('DD/MM/YYYY');
+            // }
         },
     },
     methods:{
@@ -211,8 +216,8 @@ export default {
             };
             this.errors = false;
             $('.has-error').removeClass('has-error');
-            $(this.$refs.due_date).data('DateTimePicker').clear();
-            //$(this.$refs.due_date).clear();
+            //$(this.$refs.due_date).data('DateTimePicker').clear();
+            $(this.$refs.due_date).clear();
             this.validation_form.resetForm();
         },
         fetchContact: function(id){
@@ -242,6 +247,9 @@ export default {
                 requirement.recurrence = false;
                 delete requirement.recurrence_pattern;
                 requirement.recurrence_schedule ? delete requirement.recurrence_schedule : '';
+            }
+            else{
+                requirement.due_date = moment(requirement.due_date,'YYYY-MM-DD').format('DD/MM/YYYY');
             }
             if (vm.requirement.id){
                 vm.updatingRequirement = true;
@@ -304,8 +312,9 @@ export default {
                 })
                 .then(() => {
                     vm.addingRequirement = false;
-                    vm.close();
                     vm.$parent.updatedRequirements();
+                    vm.close();
+                    // vm.$parent.updatedRequirements();
                 })
                 .catch(async error => {
                     vm.errors = true;
