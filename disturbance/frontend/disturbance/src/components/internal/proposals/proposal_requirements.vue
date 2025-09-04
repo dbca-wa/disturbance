@@ -274,7 +274,8 @@ export default {
                 if (!response.ok) { return response.json().then(err => { throw err }); }
                 const data = await response.json();
                 this.$refs.requirement_detail.requirement = data;
-                this.$refs.requirement_detail.requirement.due_date =  data.due_date != null && data.due_date != undefined ? moment(data.due_date).format('DD/MM/YYYY'): '';
+                // this.$refs.requirement_detail.requirement.due_date =  data.due_date != null && data.due_date != undefined ? moment(data.due_date).format('DD/MM/YYYY'): '';
+                this.$refs.requirement_detail.requirement.due_date =  data.due_date != null && data.due_date != undefined ? data.due_date: '';
                 data.standard ? $(this.$refs.requirement_detail.$refs.standard_req).val(data.standard_requirement).trigger('change'): '';
                 this.addRequirement();
             }).catch((error) => {
