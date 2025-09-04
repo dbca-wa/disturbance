@@ -108,7 +108,6 @@ import {
     api_endpoints,
     helpers,
     constants,
-    Moment
 }from '@/utils/hooks'
 export default {
     name: 'CompliancesTableDash',
@@ -239,7 +238,7 @@ export default {
             get() {
                 // If our internal date exists, convert it for submission, etc
                 if (this.compliance_due_from) {
-                    return Moment(this.compliance_due_from, 'YYYY-MM-DD').format('DD/MM/YYYY');
+                    return moment(this.compliance_due_from, 'YYYY-MM-DD').format('DD/MM/YYYY');
                 }
                 return ''; // Otherwise, return an empty string.
             }
@@ -248,7 +247,7 @@ export default {
             get() {
                 // If our internal date exists, convert it for submission, etc
                 if (this.compliance_due_to) {
-                    return Moment(this.compliance_due_to, 'YYYY-MM-DD').format('DD/MM/YYYY');
+                    return moment(this.compliance_due_to, 'YYYY-MM-DD').format('DD/MM/YYYY');
                 }
                 return ''; // Otherwise, return an empty string.
             }

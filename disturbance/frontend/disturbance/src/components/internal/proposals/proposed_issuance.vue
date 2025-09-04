@@ -132,8 +132,6 @@
 import modal from '@vue-utils/bootstrap-modal.vue'
 import alert from '@vue-utils/alert.vue'
 import {helpers, api_endpoints} from "@/utils/hooks.js"
-import moment from 'moment'
-const today= moment().format('DD/MM/YYYY')
 export default {
     name:'Proposed-Approval',
     components:{

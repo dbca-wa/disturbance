@@ -42,7 +42,6 @@
 </template>
 
 <script>
-// import moment from 'moment'
 // import Comment from './comment.vue'
 import CommentBox from './comment_box_referral.vue'
 import HelpText from './help_text.vue'

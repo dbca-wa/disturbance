@@ -138,7 +138,6 @@ import {
     api_endpoints,
     helpers,
     constants,
-    Moment
 }from '@/utils/hooks'
 export default {
     name: 'ApprovalsTableDash',
@@ -271,7 +270,7 @@ export default {
             get() {
                 // If our internal date exists, convert it for submission, etc
                 if (this.proposal_expiry_from) {
-                    return Moment(this.proposal_expiry_from, 'YYYY-MM-DD').format('DD/MM/YYYY');
+                    return moment(this.proposal_expiry_from, 'YYYY-MM-DD').format('DD/MM/YYYY');
                 }
                 return ''; // Otherwise, return an empty string.
             }
@@ -280,7 +279,7 @@ export default {
             get() {
                 // If our internal date exists, convert it for submission, etc
                 if (this.proposal_expiry_to) {
-                    return Moment(this.proposal_expiry_to, 'YYYY-MM-DD').format('DD/MM/YYYY');
+                    return moment(this.proposal_expiry_to, 'YYYY-MM-DD').format('DD/MM/YYYY');
                 }
                 return ''; // Otherwise, return an empty string.
             }
