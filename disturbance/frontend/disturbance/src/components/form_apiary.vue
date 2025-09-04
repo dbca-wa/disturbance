@@ -349,7 +349,6 @@
             },
             assessorChecklistReadonly: function() {
                 let readonlyStatus = true;
-                //if (this.proposal.processing_status === 'With Assessor' && this.is_internal) {
                 if (this.is_internal && this.proposal && this.proposal.assessor_mode && this.proposal.assessor_mode.assessor_can_assess) {
                     readonlyStatus = false;
                 }
@@ -357,7 +356,6 @@
             },
             assessorChecklistVisibility: function() {
                 let visibility = false;
-                //if (this.proposal.processing_status === 'With Assessor' && this.is_internal) {
                 if (this.is_internal && this.proposal && this.proposal.assessor_mode && this.proposal.assessor_mode.has_assessor_mode) {
                     visibility = true;
                 }

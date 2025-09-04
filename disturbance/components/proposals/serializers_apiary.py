@@ -9,7 +9,7 @@ from ledger.settings_base import TIME_ZONE
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
 
 from disturbance.components.approvals.serializers_apiary import ApiarySiteOnApprovalGeometrySerializer
-
+from disturbance.helpers import is_internal
 
 @property
 def next_number(self):
@@ -1495,6 +1495,7 @@ class ProposalApiaryTypeSerializer(serializers.ModelSerializer):
     apiary_temporary_use = ProposalApiaryTemporaryUseSerializer(many=False, read_only=True)
     #apiary_site_transfer = ProposalApiarySiteTransferSerializer()
     apiary_group_application_type = serializers.SerializerMethodField()
+    is_internal_user = serializers.SerializerMethodField()
 
     class Meta:
         model = Proposal
@@ -1541,7 +1542,7 @@ class ProposalApiaryTypeSerializer(serializers.ModelSerializer):
                 'apiary_temporary_use',
                 #'apiary_site_transfer',
                 'apiary_group_application_type',
-
+                'is_internal_user',
                 )
         read_only_fields=('documents',)
 
@@ -1574,6 +1575,13 @@ class ProposalApiaryTypeSerializer(serializers.ModelSerializer):
 
     def get_apiary_group_application_type(self, obj):
         return obj.apiary_group_application_type
+    
+    def get_is_internal_user(self, obj):
+        try:
+            request = self.context.get('request')
+            return is_internal(request)
+        except:
+            return False
 
 
 class ApiaryReferralGroupSerializer(serializers.ModelSerializer):
