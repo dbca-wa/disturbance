@@ -132,8 +132,8 @@
                         <i class='fa fa-4x fa-spinner fa-spin'></i>
                     </div>
                     <div class="basemap-button">
-                        <img id="basemap_sat" :src="satelliteIcon" @click="setBaseLayer('sat')" />
-                        <img id="basemap_osm" :src="mapIcon" @click="setBaseLayer('osm')" />
+                        <img id="basemap_sat" :src="satelliteIconUrl" @click="setBaseLayer('sat')" />
+                        <img id="basemap_osm" :src="mapIconUrl" @click="setBaseLayer('osm')" />
                     </div>
                     <div class="optional-layers-wrapper">
                         <div class="optional-layers-button">
@@ -220,14 +220,17 @@
     import {get as getProjection} from 'ol/proj';
     import {getTopLeft, getWidth} from 'ol/extent'
     import { toRaw } from 'vue';
-    import satelliteIcon from '@/assets/satellite_icon.jpg'
-    import mapIcon from '@/assets/map_icon.png'
+    // import satelliteIcon from '../../../assets/satellite_icon.jpg'
+    // import mapIcon from '../../../assets/map_icon.png'
 
     export default {
         name: 'MapDashboard',
         data: function(){
 
             return {
+                // AT the moment (specify the path) this works but not ideal, need to find a way to load images from assets folder
+                satelliteIconUrl: '/static/disturbance_vue/src/satellite_icon.jpg',
+                mapIconUrl: '/static/disturbance_vue/src/map_icon.png',
                 newVectorLayer: null,
                 newVectorLayerCluster: null,
                 newQuerySource: null,
@@ -305,8 +308,8 @@
                     {value: 'declined', name: 'Declined'},
                     {value: 'discarded', name: 'Discarded'},
                 ],
-                satelliteIcon,
-                mapIcon,
+                // satelliteIcon,
+                // mapIcon,
             }
         },
         components: {

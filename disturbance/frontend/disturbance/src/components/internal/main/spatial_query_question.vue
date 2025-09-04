@@ -600,7 +600,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import datatable from '@/utils/vue/datatable.vue'
 import modal from '@vue-utils/bootstrap-modal2.vue'
-import moment from 'moment'
 import FileSaver from 'file-saver';
 import {
   api_endpoints,

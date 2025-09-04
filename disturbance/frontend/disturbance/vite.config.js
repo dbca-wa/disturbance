@@ -2,10 +2,11 @@ import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
 import eslint from 'vite-plugin-eslint2';
-// import { viteStaticCopy } from 'vite-plugin-static-copy';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 import svgLoader from 'vite-svg-loader';
 import { visualizer } from 'rollup-plugin-visualizer';
 import vueJsx from '@vitejs/plugin-vue-jsx';
+// import { normalizePath } from 'vite';
 
 
 const applicationNameShort = 'disturbance';
@@ -39,21 +40,21 @@ export default defineConfig(() => {
             svgLoader({
                 defaultImport: 'url',
             }),
-            // viteStaticCopy({
-            //     // Had to do this to get the relative paths to work
-            //     // Probably a better way but I couldn't figure it out
-            //     targets: [
-            //         // Copy the non-svgs to src but leave the svgs in assets
-            //         // { src: 'src/assets/*.gif', dest: 'src' },
-            //         { src: 'src/assets/*.jpg', dest: 'src' },
-            //         { src: 'src/assets/*.json', dest: 'src' },
-            //         { src: 'src/assets/*.png', dest: 'src' },
-            //         // {
-            //         //     src: 'node_modules/@fortawesome/fontawesome-free/webfonts',
-            //         //     dest: 'node_modules/@fortawesome/fontawesome-free/',
-            //         // },
-            //     ],
-            // }),
+            viteStaticCopy({
+                // Had to do this to get the relative paths to work
+                // Probably a better way but I couldn't figure it out
+                targets: [
+                    // Copy the non-svgs to src but leave the svgs in assets
+                    // { src: 'src/assets/*.gif', dest: 'src' },
+                    { src: 'src/assets/*.jpg', dest: 'src' },
+                    { src: 'src/assets/*.json', dest: 'src' },
+                    { src: 'src/assets/*.png', dest: 'src' },
+                    // {
+                    //     src: 'node_modules/@fortawesome/fontawesome-free/webfonts',
+                    //     dest: 'node_modules/@fortawesome/fontawesome-free/',
+                    // },
+                ],
+            }),
             analyze &&
                 visualizer({
                     filename: 'bundle-stats.html',
