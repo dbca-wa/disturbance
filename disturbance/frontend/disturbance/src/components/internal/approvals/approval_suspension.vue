@@ -14,10 +14,6 @@
                                     </div>
                                     <div class="col-sm-9">
                                         <div class="input-group date" ref="from_date" style="width: 70%;">
-                                            <!-- <input type="text" class="form-control" name="from_date" placeholder="DD/MM/YYYY" v-model="approval.from_date">
-                                            <span class="input-group-addon">
-                                                <span class="glyphicon glyphicon-calendar"></span>
-                                            </span> -->
                                             <input
                                                 v-model="approval.from_date"
                                                 type="date"
@@ -29,11 +25,6 @@
                                             <div class="invalid-feedback">
                                                 Please enter a valid date
                                             </div>
-                                            <span class="input-group-addon">
-                                                <span
-                                                    class="glyphicon glyphicon-calendar"
-                                                ></span>
-                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -47,10 +38,6 @@
                                     </div>
                                     <div class="col-sm-9">
                                         <div class="input-group date" ref="to_date" style="width: 70%;">
-                                            <!-- <input type="text" class="form-control" name="to_date" placeholder="DD/MM/YYYY" v-model="approval.to_date">
-                                            <span class="input-group-addon">
-                                                <span class="glyphicon glyphicon-calendar"></span>
-                                            </span> -->
                                             <input
                                                 v-model="approval.to_date"
                                                 type="date"
@@ -62,11 +49,6 @@
                                             <div class="invalid-feedback">
                                                 Please enter a valid date
                                             </div>
-                                            <span class="input-group-addon">
-                                                <span
-                                                    class="glyphicon glyphicon-calendar"
-                                                ></span>
-                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -188,7 +170,8 @@ export default {
                 body: JSON.stringify(approval),
             }).then(async (response)=>{
                 if (!response.ok) {
-                    throw new Error(`Approval Suspension Failed: ${response.status}`);
+                    //throw new Error(`Approval Suspension Failed: ${response.status}`);
+                    return response.json().then(err => { throw err });
                 }
                 const data = await response.json();
                 vm.issuingApproval = false;
