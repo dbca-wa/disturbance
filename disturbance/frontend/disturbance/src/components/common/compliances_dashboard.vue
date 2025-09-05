@@ -43,26 +43,6 @@
                             </div>
                         </div>
                     </div>
-                    <!--<div class="row">
-                        <div class="col-md-3">
-                            <label for="">Start date From</label>
-                            <div class="input-group date" ref="complianceStartDateFromPicker">
-                                <input type="text" class="form-control" placeholder="DD/MM/YYYY" v-model="filterComplianceStartFrom">
-                                <span class="input-group-addon">
-                                    <span class="glyphicon glyphicon-calendar"></span>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="">Start date To</label>
-                            <div class="input-group date" ref="complianceStartDateToPicker">
-                                <input type="text" class="form-control" placeholder="DD/MM/YYYY" v-model="filterComplianceStartTo">
-                                <span class="input-group-addon">
-                                    <span class="glyphicon glyphicon-calendar"></span>
-                                </span>
-                            </div>
-                        </div>
-                    </div>-->
                     <div class="row">
                         <div class="col-md-3">
                             <label for="">Due date From</label>
