@@ -39,6 +39,7 @@ import 'sweetalert2/dist/sweetalert2.css';
 import 'jquery-validation';
 import 'select2/dist/css/select2.min.css';
 import 'select2-bootstrap-theme/dist/select2-bootstrap.min.css';
+// import '@/../node_modules/font-awesome/css/font-awesome.min.css';
 
 // import CKEditor from 'ckeditor4-vue';
 // app.use( CKEditor );
