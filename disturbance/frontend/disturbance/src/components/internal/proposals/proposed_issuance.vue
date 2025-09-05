@@ -19,9 +19,9 @@
                                     <div class="col-sm-9">
                                         <div class="input-group date" ref="start_date" style="width: 70%;">
                                             <input type="date" class="form-control" name="start_date" placeholder="DD/MM/YYYY" v-model="approval.start_date" :min="today">
-                                            <span class="input-group-addon">
+                                            <!-- <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
-                                            </span>
+                                            </span> -->
                                         </div>
                                     </div>
                                 </div>
@@ -39,9 +39,9 @@
                                     <div class="col-sm-9">
                                         <div class="input-group date" ref="due_date" style="width: 70%;">
                                             <input type="date" class="form-control" name="due_date" placeholder="DD/MM/YYYY" v-model="approval.expiry_date" :readonly="is_amendment" :min="approval.start_date">
-                                            <span class="input-group-addon">
+                                            <!-- <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
-                                            </span>
+                                            </span> -->
                                         </div>
                                     </div>
                                 </div>
@@ -289,8 +289,6 @@ export default {
             this.toDateError = false;
             this.startDateError = false;
             $('.has-error').removeClass('has-error');
-            // $(this.$refs.due_date).data('DateTimePicker').clear();
-            // $(this.$refs.start_date).data('DateTimePicker').clear();
             this.validation_form.resetForm();
         },
         fetchContact: function(id){
@@ -429,53 +427,6 @@ export default {
             });
        },
        eventListeners:function () {
-            // let vm = this;
-            // let today= moment().format('DD/MM/YYYY')
-            // Initialise Date Picker
-            // $(vm.$refs.due_date).datetimepicker(vm.datepickerOptions);
-            // $(vm.$refs.due_date).on('dp.change', function(e){
-            //     if ($(vm.$refs.due_date).data('DateTimePicker').date()) {
-            //         if ($(vm.$refs.due_date).data('DateTimePicker').date() < $(vm.$refs.start_date).data('DateTimePicker').date()){
-            //             vm.toDateError = true;
-            //             vm.toDateErrorString = 'Please select Expiry date that is after Start date';
-            //             vm.approval.expiry_date = ""
-            //         }
-            //         else{
-            //             vm.toDateError = false;
-            //             vm.toDateErrorString = '';
-            //             vm.approval.expiry_date =  e.date.format('DD/MM/YYYY');
-            //         }
-            //         //vm.approval.expiry_date =  e.date.format('DD/MM/YYYY');
-            //     }
-            //     else if ($(vm.$refs.due_date).data('date') === "") {
-            //         vm.approval.expiry_date = "";
-            //     }
-            //  });
-            // $(vm.$refs.start_date).datetimepicker(vm.datepickerOptions);
-            // $(vm.$refs.start_date).on('dp.change', function(e){
-            //     if ($(vm.$refs.start_date).data('DateTimePicker').date()) {
-            //         if (($(vm.$refs.start_date).data('DateTimePicker').date().format('DD/MM/YYYY') < today)&&(!vm.is_amendment)){
-            //             vm.startDateError = true;
-            //             vm.startDateErrorString = 'Please select Start date from today';
-            //             vm.approval.start_date = ""
-            //         }
-            //         else if (($(vm.$refs.due_date).data('DateTimePicker').date()!= null)&& ($(vm.$refs.due_date).data('DateTimePicker').date() < $(vm.$refs.start_date).data('DateTimePicker').date())){
-            //             vm.startDateError = true;
-            //             vm.startDateErrorString = 'Please select Start date that is before Expiry date';
-            //             vm.approval.start_date = ""
-            //         }
-            //         else{
-            //             vm.startDateError = false;
-            //             vm.startDateErrorString = '';
-            //             vm.approval.start_date =  e.date.format('DD/MM/YYYY');
-            //         }
-
-            //         //vm.approval.start_date =  e.date.format('DD/MM/YYYY');
-            //     }
-            //     else if ($(vm.$refs.start_date).data('date') === "") {
-            //         vm.approval.start_date = "";
-            //     }
-            //  });
        }
    },
    mounted:function () {
