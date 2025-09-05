@@ -6,7 +6,6 @@ import { viteStaticCopy } from 'vite-plugin-static-copy';
 import svgLoader from 'vite-svg-loader';
 import { visualizer } from 'rollup-plugin-visualizer';
 import vueJsx from '@vitejs/plugin-vue-jsx';
-// import { normalizePath } from 'vite';
 
 
 const applicationNameShort = 'disturbance';
@@ -49,6 +48,10 @@ export default defineConfig(() => {
                     { src: 'src/assets/*.jpg', dest: 'src' },
                     { src: 'src/assets/*.json', dest: 'src' },
                     { src: 'src/assets/*.png', dest: 'src' },
+                    {
+                        src: 'node_modules/font-awesome/fonts',
+                        dest: 'node_modules/font-awesome',
+                    },
                     // {
                     //     src: 'node_modules/@fortawesome/fontawesome-free/webfonts',
                     //     dest: 'node_modules/@fortawesome/fontawesome-free/',
