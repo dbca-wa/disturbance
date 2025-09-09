@@ -1,0 +1,18 @@
+{% load users %}
+{% is_internal as is_internal_login %}
+{% is_disturbance_admin as is_disturbance_admin_user %}
+
+
+{% if is_disturbance_admin_user or request.user.is_superuser %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
+    </li>
+{% endif %}
+{% if is_internal_login %}
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'email-exports' %}">Email Reports</a></li>
+    </li>
+{% endif %}
+{% if is_disturbance_admin_user or request.user.is_superuser %}
+    <li role="separator" class="divider"></li>
+{% endif %}

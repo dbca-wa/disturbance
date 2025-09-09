@@ -10,6 +10,10 @@ register = Library()
 
 
 @register.simple_tag()
+def application_version():
+    return settings.APPLICATION_VERSION
+
+@register.simple_tag()
 def system_name():
     return settings.SYSTEM_NAME
 
