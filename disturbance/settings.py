@@ -4,6 +4,10 @@ import os, hashlib
 import confy
 import decouple
 import json
+import logging
+
+logger = logging.getLogger(__name__)
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 confy.read_environment_file(BASE_DIR+"/.env")
 os.environ.setdefault("BASE_DIR", BASE_DIR)
@@ -82,6 +86,7 @@ INSTALLED_APPS += [
     'appmonitor_client',
     'django_summernote',
     "django_vite",
+    'webtemplate_dbca',
 ]
 
 ADD_REVERSION_ADMIN=True
@@ -351,3 +356,16 @@ VUE3_ENTRY_SCRIPT = env(
   "VUE3_ENTRY_SCRIPT",
   default="src/main.js", # This path will be auto prefixed with the       static_url_prefix from DJANGO_VITE above
 ) # Path of the vue3 entry point script served by vite
+
+# Use git commit hash for purging cache in browser for deployment changes
+GIT_COMMIT_HASH = os.popen(
+    f"cd {BASE_DIR}; git log -1 --format=%H"
+).read()  # noqa: S605
+GIT_COMMIT_DATE = os.popen(
+    f"cd {BASE_DIR}; git log -1 --format=%cd"
+).read()  # noqa: S605
+if len(GIT_COMMIT_HASH) == 0:
+    GIT_COMMIT_HASH = os.popen("cat /app/git_hash").read()
+    if len(GIT_COMMIT_HASH) == 0:
+        logger.error("No git hash available to tag urls for pinned caching")
+APPLICATION_VERSION = env("APPLICATION_VERSION", "1.0.0") + "-" + GIT_COMMIT_HASH[:7]
