@@ -60,9 +60,9 @@ SHOW_DAS_MAP = env('SHOW_DAS_MAP', True)
 SHOW_ROOT_API = env('SHOW_ROOT_API', False)
 MAX_LAYERS_PER_SQQ = env('MAX_LAYERS_PER_SQQ', 15)
 
+
 INSTALLED_APPS += [
     'reversion_compare',
-    'bootstrap3',
     'disturbance',
     'disturbance.components.main',
     'disturbance.components.organisations',
@@ -123,6 +123,9 @@ REST_FRAMEWORK = {
 
 USE_DJANGO_JQUERY= True
 # JQUERY_URL = True
+TEMPLATE_TITLE = "Disturbance Assessment System"
+TEMPLATE_HEADER_LOGO = "/static/disturbance/img/logo-park-stay-trunc.gif"
+TEMPLATE_GROUP = "parkswildlife"
 
 #CRISPY_TEMPLATE_PACK = 'uni_form'
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
@@ -130,6 +133,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 MIDDLEWARE += [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'disturbance.middleware.DomainDetectMiddleware',
+
     # 'corsheaders.middleware.CorsMiddleware',
 ]
 # CORS_ORIGIN_ALLOW_ALL = True
@@ -369,3 +373,5 @@ if len(GIT_COMMIT_HASH) == 0:
     if len(GIT_COMMIT_HASH) == 0:
         logger.error("No git hash available to tag urls for pinned caching")
 APPLICATION_VERSION = env("APPLICATION_VERSION", "1.0.0") + "-" + GIT_COMMIT_HASH[:7]
+SESSION_ENGINE = 'django.contrib.sessions.backends.file'
+SESSION_FILE_PATH = decouple.config('SESSION_FILE_PATH', default='/app/session_store/')

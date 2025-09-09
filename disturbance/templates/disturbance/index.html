@@ -1,7 +1,5 @@
 {% extends 'disturbance/base.html' %}
 
-{% load bootstrap3 %}
-
 {% load static %}
 {% load utils %}
 {% system_base_url as base_url %}
@@ -17,33 +15,34 @@
 {% endblock %}
 
 {% block messages %}
-{% endblock %}
+{% endblock messages%}
 
 {% block content %}
     <div class="container">
         <div class="row">
             <div class="col-md-8">
                 <h2>
-                    Welcome to {{DISPLAYED_SYSTEM_NAME}} 
+                    Welcome to {{ DISPLAYED_SYSTEM_NAME }}
                 </h2>
             </div>
             <div class="col-md-4">
                 {% if not request.user.is_authenticated %}
-                    <div id="ps-login-container">
-                        <h3>
-                            Access to {{DISPLAYED_SYSTEM_NAME}}
-                        </h3>
-                        {% bootstrap_messages %}
-                        <a class="btn btn-primary" href="{{ base_url }}ssologin">Login</a>
-                        <hr>
-                        <h4>
-                            {{DISPLAYED_SYSTEM_NAME}} Password-less Logins
-                        </h4>
-                        <p>
-                            At the {{ department_name }}, we employ a password-less authentication system, meaning you never need to remember
-                            a password. When you need to login to a site, such as {{ DISPLAYED_SYSTEM_NAME }}, simply enter your email and an 
-                            authentication code will be sent to your registered email address. From there, enter the code on screen to complete the login process.
-                        </p>
+                    {% dept_name as department_name %}
+                    <div class="card">
+                        <div class="card-header">
+                            Access to {{ DISPLAYED_SYSTEM_NAME }}
+                        </div>
+                        <div class="card-body">
+                            <h4>
+                               {{ DISPLAYED_SYSTEM_NAME }} Password-less Logins
+                            </h4>
+                            <p class="card-text">
+                                At the {{ department_name }}, we employ a password-less authentication system, meaning you never need to remember
+                                a password. When you need to login to a site, such as {{ DISPLAYED_SYSTEM_NAME }}, simply enter your email and an
+                                authentication code will be sent to your registered email address. From there, enter the code on screen to complete the login process.
+                            </p>
+                            <a class="btn btn-primary" href="/ssologin">Login</a>
+                        </div>
                     </div>
                 {% endif %}
             </div>
