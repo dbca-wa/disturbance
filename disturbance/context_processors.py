@@ -1,5 +1,10 @@
 from confy import env
 from django.conf import settings
+from disturbance.settings import (
+    TEMPLATE_GROUP,
+    TEMPLATE_HEADER_LOGO,
+    TEMPLATE_TITLE,
+)
 #from ledger.payments.helpers import is_payment_admin
 from disturbance.settings import KB_SERVER_URL
 import logging
@@ -26,6 +31,9 @@ def apiary_url(request):
     is_payment_officer = False #is_payment_admin(request.user)
 
     return {
+        "template_group": TEMPLATE_GROUP,
+        "template_header_logo": TEMPLATE_HEADER_LOGO,
+        "template_title": TEMPLATE_TITLE,
         'DOMAIN_DETECTED': settings.DOMAIN_DETECTED,
         'DEBUG': settings.DEBUG,
         # 'DEV_STATIC': settings.DEV_STATIC,

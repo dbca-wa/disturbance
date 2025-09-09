@@ -18,8 +18,10 @@
 {% system_name_short as system_name_short %}
 {% support_email as support_email %}
 {% get_notices as notices_obj %}
+
 {% block header_top_menu %}
-{% endblock header_top_menu %}
+{% endblock %}
+
 {% block extra_css %}
   <link rel="icon" type="image/png" href="/static/favicon.ico" />
 
@@ -59,6 +61,7 @@
 {% endblock menu_items2_right %}
 
 {% block menu_spacer %}
+ <BR>
 {% endblock menu_spacer %}
 
 {% block footer %}

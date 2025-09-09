@@ -17,6 +17,7 @@ PROJECT_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 
 # Application definitions
 SECRET_KEY = env('SECRET_KEY')
+SESSION_EXPIRY_SSO = 3600
 DEBUG = env('DEBUG', False)
 CSRF_COOKIE_SECURE = env('CSRF_COOKIE_SECURE', False)
 SESSION_COOKIE_SECURE = env('SESSION_COOKIE_SECURE', False)
@@ -75,6 +76,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     #'dbca_utils.middleware.SSOLoginMiddleware',
     'dbca_utils.middleware.SSOLoginMiddleware',
+    'wagov_utils.components.middleware.auth2_session_middleware.SSOLoginSessionMiddleware',
     # 'dpaw_utils.middleware.AuditMiddleware',  # Sets model creator/modifier field values.
     # 'ledger.basket.middleware.BasketMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
@@ -352,3 +354,4 @@ LOGGING = {
         }
     }
 }
+SESSION_COOKIE_AGE = 3600
