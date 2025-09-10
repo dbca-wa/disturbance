@@ -1,4 +1,4 @@
-Django==1.11.29
+Django==4.2.24
 django-extensions==1.9.8
 #git+https://github.com/xzzy/django-proxy.git#egg=proxy
 git+https://github.com/dbca-wa/wagov_utils.git#egg=wagov_utils
@@ -54,7 +54,7 @@ django-treebeard==4.3.1
 git+https://github.com/digi604/django-smart-selects.git@js-unlinting-fixes
 django-multiselectfield==0.1.12
 psycopg2==2.8.6
-deepdiff==5.7.0
+deepdiff==8.6.1
 whitenoise==5.3.0
 git+https://github.com/dbca-wa/django-media-serv.git#egg=django_media_serv
 drf-writable-nested==0.7.0
