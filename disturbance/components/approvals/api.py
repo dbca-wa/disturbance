@@ -264,6 +264,55 @@ class ApprovalPaginatedViewSet(viewsets.ModelViewSet):
             'template_group': template_group
             }, many=True)
         return self.paginator.get_paginated_response(serializer.data)
+    
+    @list_route(methods=['GET',])
+    def approvals_internal(self, request, *args, **kwargs):
+        """
+        Paginated serializer for datatables - used by the internal and external dashboard (filtered by the get_queryset method)
+
+        To test:
+            http://localhost:8000/api/approval_paginated/approvals_external/?format=datatables&draw=1&length=2
+        """
+
+        #qs = self.queryset().order_by('lodgement_number', '-issue_date').distinct('lodgement_number')
+        #qs = ProposalFilterBackend().filter_queryset(self.request, qs, self)
+
+        #ids = self.get_queryset().distinct('lodgement_number').values_list('id', flat=True)
+        ids = self.get_queryset().order_by('lodgement_number', '-issue_date').distinct('lodgement_number').values_list('id', flat=True)
+        #qs = Approval.objects.filter(id__in=ids)
+        #web_url = request.META.get('HTTP_HOST', None)
+        template_group = get_template_group(request)
+        if template_group == 'apiary':
+            #qs = self.get_queryset().filter(application_type__apiary_group_application_type=True)
+            qs = self.get_queryset().filter(
+                    apiary_approval=True
+                    ).filter(id__in=ids)
+        else:
+            if is_das_apiary_admin(self.request):
+                qs = self.get_queryset()
+            else:
+                qs = self.get_queryset().exclude(
+                        apiary_approval=True
+                        ).filter(id__in=ids)
+
+        qs = self.filter_queryset(qs)
+
+        # on the internal organisations dashboard, filter the Proposal/Approval/Compliance datatables by applicant/organisation
+        applicant_id = request.GET.get('org_id')
+        if applicant_id:
+            # qs = qs.filter(org_applicant_id=applicant_id)
+            qs = qs.filter(applicant__id=applicant_id)
+        submitter_id = request.GET.get('submitter_id', None)
+        if submitter_id:
+            qs = qs.filter(submitter_id=submitter_id)
+
+        self.paginator.page_size = qs.count()
+        result_page = self.paginator.paginate_queryset(qs, request)
+        serializer = DTApprovalSerializer(result_page, context={
+            'request':request,
+            'template_group': template_group
+            }, many=True)
+        return self.paginator.get_paginated_response(serializer.data)
 
 
 class ApprovalViewSet(viewsets.ModelViewSet):

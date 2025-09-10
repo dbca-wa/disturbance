@@ -255,6 +255,44 @@ class CompliancePaginatedViewSet(viewsets.ModelViewSet):
         serializer = DTComplianceSerializer(result_page, context={'request':request}, many=True)
         return self.paginator.get_paginated_response(serializer.data)
 
+    @list_route(methods=['GET',])
+    def compliances_internal(self, request, *args, **kwargs):
+        """
+        Paginated serializer for datatables - used by the external dashboard
+
+        To test:
+            http://localhost:8000/api/compliance_paginated/compliances_external/?format=datatables&draw=1&length=2
+        """
+
+        web_url = request.META.get('HTTP_HOST', None)
+        template_group = None
+        if web_url in settings.APIARY_URL:
+           template_group = 'apiary'
+        else:
+           template_group = 'das'
+        if template_group == 'apiary':
+            qs = self.get_queryset().filter(
+                    apiary_compliance=True
+                    )
+        else:
+            qs = self.get_queryset().exclude(
+                    apiary_compliance=True
+                    )
+        qs = self.filter_queryset(qs)
+        #qs = qs.order_by('lodgement_number', '-issue_date').distinct('lodgement_number')
+
+        # on the internal organisations dashboard, filter the Proposal/Approval/Compliance datatables by applicant/organisation
+        applicant_id = request.GET.get('org_id')
+        if applicant_id:
+            if template_group == 'apiary':
+                qs = qs.filter(approval__applicant_id=applicant_id)
+            else:
+                qs = qs.filter(proposal__applicant_id=applicant_id)
+
+        self.paginator.page_size = qs.count()
+        result_page = self.paginator.paginate_queryset(qs, request)
+        serializer = DTComplianceSerializer(result_page, context={'request':request}, many=True)
+        return self.paginator.get_paginated_response(serializer.data)
 
 class ComplianceViewSet(viewsets.ModelViewSet):
     serializer_class = ComplianceSerializer
