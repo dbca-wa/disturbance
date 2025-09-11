@@ -2,37 +2,28 @@
 <div class="container" id="internalSearch">
     <div class="row">
         <div class="col-sm-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Search Organisations
-                        <a :href="'#'+oBody" data-toggle="collapse"  data-parent="#userInfo" expanded="true" :aria-controls="oBody">
-                            <span class="glyphicon glyphicon-chevron-up pull-right "></span>
-                        </a>
-                    </h3>
-                </div>
-                <div class="panel-body collapse in" :id="oBody">
-                    <div class="row">
-                        <form name="searchOrganisationForm">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="control-label" for="Organisation">Search Organisation</label>
-                                    <select v-if="organisations == null" class="form-control" name="organisation" v-model="selected_organisation">
-                                        <option value="">Loading...</option>
-                                    </select>
-                                    <select v-else ref="searchOrg" class="form-control" name="organisation">
-                                        <option value="">Select Organisation</option>
-                                        <option v-for="o in organisations" :value="o.id" :key="o.id">{{ o.name }}</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-12 text-center">
-                                <router-link v-if="selected_organisation !== ''" :to="{name:'internal-org-detail',params:{'org_id':parseInt(selected_organisation)}}" class="btn btn-primary">View Details</router-link>
-                                <span v-else class="btn btn-primary disabled" style="pointer-events: none; opacity: 0.6;">View Details</span>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+          <FormSection :form-collapse="false" label="Search Organisations" Index="search_organisation">
+            <div class="row">
+              <form name="searchOrganisationForm">
+                  <div class="col-md-4">
+                      <div class="form-group">
+                          <label class="control-label" for="Organisation">Search Organisation</label>
+                          <select v-if="organisations == null" class="form-control" name="organisation" v-model="selected_organisation">
+                              <option value="">Loading...</option>
+                          </select>
+                          <select v-else ref="searchOrg" class="form-control" name="organisation">
+                              <option value="">Select Organisation</option>
+                              <option v-for="o in organisations" :value="o.id" :key="o.id">{{ o.name }}</option>
+                          </select>
+                      </div>
+                  </div>
+                  <div class="col-md-12 text-center">
+                      <router-link v-if="selected_organisation !== ''" :to="{name:'internal-org-detail',params:{'org_id':parseInt(selected_organisation)}}" class="btn btn-primary">View Details</router-link>
+                      <span v-else class="btn btn-primary disabled" style="pointer-events: none; opacity: 0.6;">View Details</span>
+                  </div>
+              </form>
             </div>
+          </FormSection>
         </div>
     </div>
 
@@ -75,108 +66,88 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Search Keywords
-                        <a :href="'#'+kBody" data-toggle="collapse"  data-parent="#userInfo" expanded="true" :aria-controls="kBody">
-                            <span class="glyphicon glyphicon-chevron-up pull-right "></span>
-                        </a>
-                    </h3>
-                </div>
-                <div class="panel-body collapse in" :id="kBody">
-                    <div class="row">
-                      <div>
-                            <div class="form-group">
-                              <label for="" class="control-label col-lg-12">Filter</label>
-                              <div class="form-check form-check-inline col-md-3">
-                                  <input  class="form-check-input" ref="searchProposal" id="searchProposal" name="searchProposal" type="checkbox" v-model="searchProposal" /> 
-                                  <label class="form-check-label" for="searchProposal">Proposal</label>
-                                  
-                              </div> 
-                              <div class="form-check form-check-inline col-md-3">
-                                  <input  class="form-check-input" ref="searchApproval" id="searchApproval" name="searchApproval" type="checkbox" v-model="searchApproval" /> 
-                                  <label class="form-check-label" for="searchApproval">Approval</label>
-                              </div> 
-                              <div class="form-check form-check-inline col-md-3">
-                                  <input  class="form-check-input" ref="searchCompliance" id="searchCompliance" name="searchCompliance" type="checkbox" v-model="searchCompliance" /> 
-                                  <label class="form-check-label" for="searchCompliance">Compliance with requirements</label>
-                              </div> 
-                              <label for="" class="control-label col-lg-12">Keyword</label>                              
-                                <div class="col-md-8">
-                                  <input type="search"  class="form-control input-sm" name="details" placeholder="" v-model="keyWord"/>
-                                </div> 
-                                <div class="col-md-1">                                  
-                                </div>
-                                <div class="col-md-3">
-                                  <input type="button" @click.prevent="add" class="btn btn-primary" value="Add"/>
-                                </div>                                                                               
-                            </div>
-                                                     
-                      </div>
-                                   
-                    </div>
-
-                    <div class="row">
-                      <div class="col-lg-12">
-                          <ul class="list-inline" style="display: inline; width: auto;">                          
-                              <li class="list-inline-item" v-for="(item,i) in searchKeywords" :key="i">
-                                  <span class="glyphicon glyphicon-search"></span>
-                                  <span class="sr-only">Search Keyword</span>
-                                <button @click.prevent="" class="btn btn-light" style="margin-top:5px; margin-bottom: 5px">{{item}}</button><a href="" @click.prevent="removeKeyword(i)"><span class="glyphicon glyphicon-remove "></span></a>
-                              </li>
-                          </ul>
-                      </div>
-                    </div>
-
-                    <div class="row">
-                      <div class="col-lg-12">
-                        <div >
-                          <button  v-if="searching" type="button" class="btn btn-primary btn-margin" style="margin-bottom: 5px" value="Search" disabled>
-                            Search<i class="fa fa-circle-o-notch fa-spin fa-fw"></i></button>
-                          <input v-else type="button" @click.prevent="search" class="btn btn-primary btn-margin" style="margin-bottom: 5px" value="Search"/>
-                          <input type="reset" @click.prevent="reset" class="btn btn-primary" style="margin-bottom: 5px" value="Clear"/>
-
-                        </div>
+          <FormSection :form-collapse="false" label="Search Keywords" Index="search_keywords">
+            <div class="row">
+              <div>
+                  <div class="form-group">
+                    <label for="" class="control-label col-lg-12">Filter</label>
+                    <div class="form-check form-check-inline col-md-3">
+                        <input  class="form-check-input" ref="searchProposal" id="searchProposal" name="searchProposal" type="checkbox" v-model="searchProposal" /> 
+                        <label class="form-check-label" for="searchProposal">Proposal</label>
+                        
+                    </div> 
+                    <div class="form-check form-check-inline col-md-3">
+                        <input  class="form-check-input" ref="searchApproval" id="searchApproval" name="searchApproval" type="checkbox" v-model="searchApproval" /> 
+                        <label class="form-check-label" for="searchApproval">Approval</label>
+                    </div> 
+                    <div class="form-check form-check-inline col-md-3">
+                        <input  class="form-check-input" ref="searchCompliance" id="searchCompliance" name="searchCompliance" type="checkbox" v-model="searchCompliance" /> 
+                        <label class="form-check-label" for="searchCompliance">Compliance with requirements</label>
+                    </div> 
+                    <label for="" class="control-label col-lg-12">Keyword</label>                              
+                      <div class="col-md-8">
+                        <input type="search"  class="form-control input-sm" name="details" placeholder="" v-model="keyWord"/>
                       </div> 
-                    </div>
-                    <div id="loadingSpinner" style="display: none; text-align: center; padding: 20px;">
-                      <!-- You can replace this with your preferred loading spinner or element -->
-                      <i class='fa fa-4x fa-spinner fa-spin'></i>
-                      <p>Loading...</p>
+                      <div class="col-md-1">                                  
+                      </div>
+                      <div class="col-md-3">
+                        <input type="button" @click.prevent="add" class="btn btn-primary" value="Add"/>
+                      </div>                                                                               
                   </div>
-
-                    <div class="row">
-                    <div class="col-lg-12">
-                        <datatable ref="proposal_datatable" :id="datatable_id" :dtOptions="proposal_options"  :dtHeaders="proposal_headers"/>
-                    </div>
-                    </div>
-                </div>
+              </div>
             </div>
+
+            <div class="row">
+              <div class="col-lg-12">
+                  <ul class="list-inline" style="display: inline; width: auto;">                          
+                      <li class="list-inline-item" v-for="(item,i) in searchKeywords" :key="i">
+                          <span class="glyphicon glyphicon-search"></span>
+                          <span class="sr-only">Search Keyword</span>
+                        <button @click.prevent="" class="btn btn-light" style="margin-top:5px; margin-bottom: 5px">{{item}}</button><a href="" @click.prevent="removeKeyword(i)"><span class="glyphicon glyphicon-remove "></span></a>
+                      </li>
+                  </ul>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-12">
+                <div >
+                  <button  v-if="searching" type="button" class="btn btn-primary btn-margin" style="margin-bottom: 5px" value="Search" disabled>
+                    Search<i class="fa fa-circle-o-notch fa-spin fa-fw"></i></button>
+                  <input v-else type="button" @click.prevent="search" class="btn btn-primary btn-margin" style="margin-bottom: 5px" value="Search"/>
+                  <input type="reset" @click.prevent="reset" class="btn btn-primary" style="margin-bottom: 5px" value="Clear"/>
+
+                </div>
+              </div> 
+            </div>
+            <div id="loadingSpinner" style="display: none; text-align: center; padding: 20px;">
+              <!-- You can replace this with your preferred loading spinner or element -->
+              <i class='fa fa-4x fa-spinner fa-spin'></i>
+              <p>Loading...</p>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-12">
+                  <datatable ref="proposal_datatable" :id="datatable_id" :dtOptions="proposal_options"  :dtHeaders="proposal_headers"/>
+              </div>
+            </div>
+          </FormSection>
         </div>
     </div>
     <div class="row">
         <div class="col-sm-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Search Reference Number
-                        <a :href="'#'+rBody" data-toggle="collapse"  data-parent="#userInfo" expanded="true" :aria-controls="rBody">
-                            <span class="glyphicon glyphicon-chevron-up pull-right "></span>
-                        </a>
-                    </h3>
+          <FormSection :form-collapse="false" label="Search Reference Number" Index="search_reference_number">
+            <div class="row">
+                <label for="" class="control-label col-lg-12">Keyword</label>                              
+                  <div class="col-md-8">
+                      <input type="search"  class="form-control input-sm" name="referenceWord" placeholder="" v-model="referenceWord"/>
+                  </div>
+                  <div >
+                    <input type="button" @click.prevent="search_reference" class="btn btn-primary" style="margin-bottom: 5px" value="Search"/>
                 </div>
-                <div class="panel-body collapse in" :id="rBody">
-                    <div class="row">
-                       <label for="" class="control-label col-lg-12">Keyword</label>                              
-                          <div class="col-md-8">
-                              <input type="search"  class="form-control input-sm" name="referenceWord" placeholder="" v-model="referenceWord"/>
-                          </div>
-                          <div >
-                            <input type="button" @click.prevent="search_reference" class="btn btn-primary" style="margin-bottom: 5px" value="Search"/>
-                        </div>
-                        <alert v-if="showError" type="danger"><strong>{{errorString}}</strong></alert>
-                    </div>
-                </div>
+                <alert v-if="showError" type="danger"><strong>{{errorString}}</strong></alert>
             </div>
+          </FormSection>
         </div>
     </div>
     <div class="row">
@@ -186,7 +157,7 @@
 </template>
 <script>
 import { v4 as uuidv4 } from 'uuid';
-import $ from 'jquery'
+import FormSection from '@/components/forms/section_toggle.vue';
 import alert from '@vue-utils/alert.vue'
 import datatable from '@/utils/vue/datatable.vue'
 import {
@@ -312,6 +283,7 @@ export default {
         datatable,
         searchSection,
         alert,
+        FormSection,
     },
     beforeRouteEnter:function(to,from,next){
         utils.fetchOrganisations().then((response)=>{

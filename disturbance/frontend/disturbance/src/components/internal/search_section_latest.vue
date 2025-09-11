@@ -1,204 +1,188 @@
 <template>
-<div class="container" id="internalSearch">
-    
-
+  <div class="container" id="internalSearch">
     <div class="row">
-        <div class="col-sm-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Search Question
-                        <a :href="'#'+kBody" data-toggle="collapse"  data-parent="#userInfo" expanded="true" :aria-controls="kBody">
-                            <span class="glyphicon glyphicon-chevron-up pull-right "></span>
-                        </a>
-                    </h3>
+      <div class="col-sm-12">
+        <FormSection :form-collapse="false" label="Search Question" Index="search_question">
+            <div class="row">
+              <div class="col-sm-12">
+                <div>
+                  <label for="" class="control-label" >Proposal Type</label>
+                  <div>
+                      <div class="form-group">
+                          <select class="form-control" style="width:40%" v-model="selected_proposal_type_id" @change="chainedSelectAppType(selected_proposal_type_id)">
+                              <option value="" selected disabled>Proposal Type</option>
+                              <option v-for="proposal_type in proposal_types" :value="proposal_type.value" :key="proposal_type.value">
+                                    {{ proposal_type.text }}
+                              </option>
+                          </select>
+                      </div>
+                    </div>
                 </div>
-                <div class="panel-body collapse in" :id="kBody">
-                    <div class="row">
-                      <div class="col-sm-12">
-                          <div>
-                              <label for="" class="control-label" >Proposal Type</label>
-                              <div>
-                                  <div class="form-group">
-                                      <select class="form-control" style="width:40%" v-model="selected_proposal_type_id" @change="chainedSelectAppType(selected_proposal_type_id)">
-                                          <option value="" selected disabled>Proposal Type</option>
-                                          <option v-for="proposal_type in proposal_types" :value="proposal_type.value" :key="proposal_type.value">
-                                                {{ proposal_type.text }}
-                                          </option>
-                                      </select>
-                                  </div>
-                                </div>
-                            </div>
-                            <div v-if="display_region_selectbox">
-                                <label for="" class="control-label" >Region  </label>
-                                <div >
-                                    <div class="form-group">
-                                        <select v-model="selected_region" class="form-control" style="width:40%" @change="chainedSelectDistricts(selected_region)">
-                                            <!-- <option value="" selected disabled>Select region</option> -->
-                                            <option value="" selected>All</option>
-                                            <option v-for="region in regions" :value="region.value" :key="region.value">
-                                                {{ region.text }}
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div v-if="display_region_selectbox">
-                                <label for="" class="control-label">District </label>
-                                <div >
-                                    <div class="form-group">
-                                        <select  v-model="selected_district" class="form-control" style="width:40%">
-                                        <!-- <option value="" selected disabled>Select district</option> -->
-                                        <option value="" selected >All</option>
-                                            <option v-for="district in districts" :value="district.value" :key="district.value">
-                                                {{ district.text }}
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div v-if="display_activity_matrix_selectbox">
-                              <div v-if="activities.length > 0">
-                                <label for="" class="control-label" >Activity Type </label>
-                                <div >
-                                  <div class="form-group">
-                                    <select v-model="selected_activity" class="form-control" style="width:40%">
-                                      <!-- <option value="" selected disabled>Select activity</option> -->
-                                      <option value="" selected>All</option>
-                                      <option v-for="activity in activities" :value="activity.value" :key="activity.value">
-                                        {{ activity.text }}
-                                      </option>
-                                    </select>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div v-if="display_section_selectbox">
-                              <div v-if="sections.length > 0">
-                                <label for="" class="control-label" >Sections </label>
-                                <div >
-                                  <div class="form-group">
-                                    <select v-model="selected_section" class="form-control" style="width:40%" @change="chainedSelectSections(selected_section)">
-                                      <option value="" selected disabled>Select section</option>
-                                      <option v-for="section in sections" :value="section.value" :key="section.value">
-                                        {{ section.text }}
-                                      </option>
-                                    </select>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div>
-                              <div v-if="questions.length > 0">
-                                <label for="" class="control-label" >Questions </label>
-                                <div >
-                                  <div class="form-group">
-                                    <select v-model="selected_question" class="form-control" style="width:40%" @change="chainedSelectOptions(selected_question)">
-                                      <option value="" selected disabled>Select question</option>
-                                      <option v-for="question in questions" :value="question.value" :key="question.value">
-                                        {{ question.text }}
-                                      </option>
-                                    </select>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div v-if="selected_question">
-                              <div v-if="date_type">
-                                <label class="control-label"  for="Name">Answer</label>
-                                <div class="form-group">
-                                    <div class="input-group date" ref="question_date" style="width: 70%;">
-                                        <!-- <input type="text" class="form-control" name="question_date" placeholder="DD/MM/YYYY" v-model="selected_option"> -->
-                                         <input type="date" class="form-control" name="question_date" placeholder="DD/MM/YYYY" v-model="selected_option">
-                                        <span class="input-group-addon">
-                                            <span class="glyphicon glyphicon-calendar"></span>
-                                        </span>
-                                    </div>
-                                </div>
-                              </div>
-
-                              <div v-else-if="select_type && options.length > 0">
-                                <label for="" class="control-label" >Options </label>
-                                <div >
-                                  <div class="form-group">
-                                    <select v-model="selected_option" class="form-control" style="width:40%" >
-                                      <option value="" selected disabled>Select option</option>
-                                      <option v-for="option in options" :value="option.value" :key="option.value">
-                                        {{ option.text }}
-                                      </option>
-                                    </select>
-                                  </div>
-                                </div>
-                              </div>
-                              <div v-else>
-                                <label class="control-label"  for="Name">Answer</label>
-                                <div class="form-group">
-                                    <div class="input-group" style="width: 70%;">
-                                        <input type="text" class="form-control" name="question_date"  v-model="selected_option">
-                                    </div>
-                                </div>
-                              </div>
-
-                            </div>
-                                                     
-                      </div>
-                                   
-                    </div>
-
-                    <div class="row">
-                      <div class="col-lg-12">
-                          <ul class="list-inline" style="display: inline; width: auto;">                          
-                              <li class="list-inline-item" v-for="(item,i) in searchKeywords" :key="i">
-                                <button @click.prevent="" class="btn btn-light" style="margin-top:5px; margin-bottom: 5px">{{item}}</button><a href="" @click.prevent="removeKeyword(i)"><span class="glyphicon glyphicon-remove "></span></a>
-                              </li>
-                          </ul>
-                      </div>
-                    </div>
-
-                    <div class="row">
-                      <div class="col-lg-12">
-                        <div >
-                          <button type="button" class="btn btn-primary btn-margin" @click.prevent="search()" :disabled="search_btn_disabled">
-                              <i v-if="search_btn_disabled" class="fa fa-search fa-spinner fa-spin"></i>
-                              <i v-else class="fa fa-search"></i>
-                              Search
-                          </button>
-                          <button type="button" class="btn btn-primary btn-margin" @click.prevent="reset">
-                              <i class="fa fa-eraser"></i>
-                              Clear
-                          </button>
-                          <button type="button" class="btn btn-primary" @click.prevent="geoJsonButtonClicked" :disabled="get_spatialfile_btn_disabled">
-                              <i v-if="get_spatialfile_btn_disabled" class="fa fa-download fa-spinner fa-spin"></i>
-                              <i v-else class="fa fa-download"></i>
-                              Get Spatial File
-                          </button>
+                <div v-if="display_region_selectbox">
+                    <label for="" class="control-label" >Region  </label>
+                    <div >
+                        <div class="form-group">
+                            <select v-model="selected_region" class="form-control" style="width:40%" @change="chainedSelectDistricts(selected_region)">
+                                <!-- <option value="" selected disabled>Select region</option> -->
+                                <option value="" selected>All</option>
+                                <option v-for="region in regions" :value="region.value" :key="region.value">
+                                    {{ region.text }}
+                                </option>
+                            </select>
                         </div>
-                      </div> 
-                    </div>
-
-
-                    <div id="loadingSpinner2" style="display: none; text-align: center; padding: 20px;">
-                      <!-- You can replace this with your preferred loading spinner or element -->
-                      <i class='fa fa-4x fa-spinner fa-spin'></i>
-                      <p>Loading...</p>
-                  </div>
-                    <div class="col-lg-12">
-                        <datatable ref="proposal_datatable" :id="datatable_id" :dtOptions="proposal_options"  :dtHeaders="proposal_headers"/>
-                    </div>
                     </div>
                 </div>
+
+                <div v-if="display_region_selectbox">
+                    <label for="" class="control-label">District </label>
+                    <div >
+                        <div class="form-group">
+                            <select  v-model="selected_district" class="form-control" style="width:40%">
+                            <!-- <option value="" selected disabled>Select district</option> -->
+                            <option value="" selected >All</option>
+                                <option v-for="district in districts" :value="district.value" :key="district.value">
+                                    {{ district.text }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div v-if="display_activity_matrix_selectbox">
+                  <div v-if="activities.length > 0">
+                    <label for="" class="control-label" >Activity Type </label>
+                    <div >
+                      <div class="form-group">
+                        <select v-model="selected_activity" class="form-control" style="width:40%">
+                          <!-- <option value="" selected disabled>Select activity</option> -->
+                          <option value="" selected>All</option>
+                          <option v-for="activity in activities" :value="activity.value" :key="activity.value">
+                            {{ activity.text }}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div v-if="display_section_selectbox">
+                  <div v-if="sections.length > 0">
+                    <label for="" class="control-label" >Sections </label>
+                    <div >
+                      <div class="form-group">
+                        <select v-model="selected_section" class="form-control" style="width:40%" @change="chainedSelectSections(selected_section)">
+                          <option value="" selected disabled>Select section</option>
+                          <option v-for="section in sections" :value="section.value" :key="section.value">
+                            {{ section.text }}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <div v-if="questions.length > 0">
+                    <label for="" class="control-label" >Questions </label>
+                    <div >
+                      <div class="form-group">
+                        <select v-model="selected_question" class="form-control" style="width:40%" @change="chainedSelectOptions(selected_question)">
+                          <option value="" selected disabled>Select question</option>
+                          <option v-for="question in questions" :value="question.value" :key="question.value">
+                            {{ question.text }}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div v-if="selected_question">
+                  <div v-if="date_type">
+                    <label class="control-label"  for="Name">Answer</label>
+                    <div class="form-group">
+                        <div class="input-group date" ref="question_date" style="width: 70%;">
+                            <!-- <input type="text" class="form-control" name="question_date" placeholder="DD/MM/YYYY" v-model="selected_option"> -->
+                              <input type="date" class="form-control" name="question_date" placeholder="DD/MM/YYYY" v-model="selected_option">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                  </div>
+
+                  <div v-else-if="select_type && options.length > 0">
+                    <label for="" class="control-label" >Options </label>
+                    <div >
+                      <div class="form-group">
+                        <select v-model="selected_option" class="form-control" style="width:40%" >
+                          <option value="" selected disabled>Select option</option>
+                          <option v-for="option in options" :value="option.value" :key="option.value">
+                            {{ option.text }}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div v-else>
+                    <label class="control-label"  for="Name">Answer</label>
+                    <div class="form-group">
+                        <div class="input-group" style="width: 70%;">
+                            <input type="text" class="form-control" name="question_date"  v-model="selected_option">
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-        </div>
+            <div class="row">
+              <div class="col-lg-12">
+                  <ul class="list-inline" style="display: inline; width: auto;">                          
+                      <li class="list-inline-item" v-for="(item,i) in searchKeywords" :key="i">
+                        <button @click.prevent="" class="btn btn-light" style="margin-top:5px; margin-bottom: 5px">{{item}}</button><a href="" @click.prevent="removeKeyword(i)"><span class="glyphicon glyphicon-remove "></span></a>
+                      </li>
+                  </ul>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-12">
+                <div >
+                  <button type="button" class="btn btn-primary btn-margin" @click.prevent="search()" :disabled="search_btn_disabled">
+                      <i v-if="search_btn_disabled" class="fa fa-search fa-spinner fa-spin"></i>
+                      <i v-else class="fa fa-search"></i>
+                      Search
+                  </button>
+                  <button type="button" class="btn btn-primary btn-margin" @click.prevent="reset">
+                      <i class="fa fa-eraser"></i>
+                      Clear
+                  </button>
+                  <button type="button" class="btn btn-primary" @click.prevent="geoJsonButtonClicked" :disabled="get_spatialfile_btn_disabled">
+                      <i v-if="get_spatialfile_btn_disabled" class="fa fa-download fa-spinner fa-spin"></i>
+                      <i v-else class="fa fa-download"></i>
+                      Get Spatial File
+                  </button>
+                </div>
+              </div> 
+            </div>
+
+            <div id="loadingSpinner2" style="display: none; text-align: center; padding: 20px;">
+              <!-- You can replace this with your preferred loading spinner or element -->
+              <i class='fa fa-4x fa-spinner fa-spin'></i>
+              <p>Loading...</p>
+            </div>
+            <div class="col-lg-12">
+                <datatable ref="proposal_datatable" :id="datatable_id" :dtOptions="proposal_options"  :dtHeaders="proposal_headers"/>
+            </div>
+        </FormSection>
+      </div>
     </div>
+  </div>
 </template>
 <script>
 import { v4 as uuidv4 } from 'uuid';
-import $ from 'jquery'
 import datatable from '@/utils/vue/datatable.vue'
+import FormSection from '@/components/forms/section_toggle.vue';
 import {
   api_endpoints,
   // helpers,
@@ -330,6 +314,7 @@ export default {
     },
     components: {
         datatable,
+        FormSection,
     },
     // beforeRouteEnter:function(to,from,next){
         // utils.fetchOrganisations().then((response)=>{

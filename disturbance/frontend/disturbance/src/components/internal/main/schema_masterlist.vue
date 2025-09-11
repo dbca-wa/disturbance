@@ -1,36 +1,23 @@
 <template lang="html">
   <div id="schemaMasterlist">
-
     <div class="row">
         <div class="col-sm-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Schema Masterlist Questions
-                        <a :href="'#'+pMasterListBody" data-toggle="collapse"  data-parent="#userInfo" expanded="true" :aria-controls="pMasterListBody">
-                            <span class="glyphicon glyphicon-chevron-up pull-right "></span>
-                        </a>
-                    </h3>
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn btn-primary pull-right" @click.prevent="addTableEntry()" name="add-masterlist">New Question</button>
                 </div>
-                <div class="panel-body collapse in" :id="pMasterListBody">
+            </div>
+            <div class="row"><br/></div> 
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
 
-                    <div class="row">
-                        <div class="col-md-12">
-                            <button class="btn btn-primary pull-right" @click.prevent="addTableEntry()" name="add-masterlist">New Question</button>
-                        </div>
-                    </div>
-                    <div class="row"><br/></div> 
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
+                        <datatable ref="schema_masterlist_table"
+                            :id="schema_masterlist_id" 
+                            :dtOptions="dtOptionsSchemaMasterlist"
+                            :dtHeaders="dtHeadersSchemaMasterlist" 
+                        />
 
-                                <datatable ref="schema_masterlist_table"
-                                    :id="schema_masterlist_id" 
-                                    :dtOptions="dtOptionsSchemaMasterlist"
-                                    :dtHeaders="dtHeadersSchemaMasterlist" 
-                                />
-
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>

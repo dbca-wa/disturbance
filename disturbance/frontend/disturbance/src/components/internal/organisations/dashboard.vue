@@ -1,77 +1,59 @@
 <template>
-<div class="container" id="internalOrgAccessDash">
-<div class="row">
-        <div class="col-sm-12">
-            <div class="panel panel-default">
-
-                <div class="panel-heading">
-                    <h3 class="panel-title">Organisation Access Requests
-                        <a :href="'#'+pBody" data-toggle="collapse"  data-parent="#userInfo" expanded="true" :aria-controls="pBody">
-                            <span class="glyphicon glyphicon-chevron-up pull-right "></span>
-                        </a>
-                    </h3>
+    <div class="container" id="internalOrgAccessDash">
+        <FormSection :form-collapse="false" label="Organisation Access Requests" Index="organisation_access_requests">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="">Organisation</label>
+                        <select class="form-control" v-model="filterOrganisation">
+                            <option value="All">All</option>
+                            <option v-for="o in organisationChoices" :value="o" :key="o">{{o}}</option>
+                        </select>
+                    </div>
                 </div>
-
-
-<div class="panel-body collapse in" :id="pBody">
-    <div class="row">
-        <div class="col-md-3">
-            <div class="form-group">
-                <label for="">Organisation</label>
-                <select class="form-control" v-model="filterOrganisation">
-                    <option value="All">All</option>
-                    <option v-for="o in organisationChoices" :value="o" :key="o">{{o}}</option>
-                </select>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="">Applicant</label>
+                        <select class="form-control" v-model="filterApplicant">
+                            <option value="All">All</option>
+                            <option v-for="a  in applicantChoices" :value="a" :key="a">{{a}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="">Role</label>
+                        <select class="form-control" v-model="filterRole">
+                            <option value="All">All</option>
+                            <option v-for="r in roleChoices" :value="r" :key="r">{{r}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="">Status</label>
+                        <select class="form-control" v-model="filterStatus">
+                            <option value="All">All</option>
+                            <option v-for="s in statusChoices" :value="s" :key="s">{{s}}</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group">
-                <label for="">Applicant</label>
-                <select class="form-control" v-model="filterApplicant">
-                    <option value="All">All</option>
-                    <option v-for="a  in applicantChoices" :value="a" :key="a">{{a}}</option>
-                </select>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group">
-                <label for="">Role</label>
-                <select class="form-control" v-model="filterRole">
-                    <option value="All">All</option>
-                    <option v-for="r in roleChoices" :value="r" :key="r">{{r}}</option>
-                </select>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group">
-                <label for="">Status</label>
-                <select class="form-control" v-model="filterStatus">
-                    <option value="All">All</option>
-                    <option v-for="s in statusChoices" :value="s" :key="s">{{s}}</option>
-                </select>
-            </div>
-        </div>
+            <template v-if="table_id">
+                <datatable
+                    ref="org_access_table"
+                    id="org-access-table"
+                    :dtOptions="dtOptions"
+                    :dtHeaders="dtHeaders"
+                    :key="table_id">
+                </datatable>
+            </template>
+        </FormSection>
     </div>
-    <template v-if="table_id">
-        <datatable
-            ref="org_access_table"
-            id="org-access-table"
-            :dtOptions="dtOptions"
-            :dtHeaders="dtHeaders"
-            :key="table_id">
-        </datatable>
-    </template>
-</div>
-</div>
-</div>
-</div>
-
-
-</div>
 </template>
 <script>
-import $ from 'jquery'
 import datatable from '@vue-utils/datatable.vue'
+import FormSection from '@/components/forms/section_toggle.vue';
 import {
   api_endpoints,
   helpers,
@@ -234,7 +216,8 @@ export default {
         },
     },
     components: {
-        datatable
+        datatable,
+        FormSection,
     },
     computed: {
         isLoading: function () {

@@ -5,141 +5,131 @@
         </template>
         <div class="col-sm-12">
             <div class="panel panel-default">
-                
-                
-                    <!--
-                    <div class="row" v-if="is_external">
-                        <div class="col-md-3">                            
-                            <router-link  style="margin-top:25px;" class="btn btn-primary" :to="{ name: 'apply_proposal' }">{{newProposalText}}</router-link>
+                <div class="row">
+                    <div v-if="!apiaryTemplateGroup">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <div>
+                                    <div v-show="select2Applied">
+                                        <label for="">Region</label>
+                                        <select style="width:100%" class="form-control input-sm" ref="filterRegion" >
+                                            <template v-if="select2Applied">
+                                                <option v-for="r in proposal_regions" :value="r" :key="r">{{r}}</option>
+                                            </template>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    -->
-                    <div class="row">
-                        <div v-if="!apiaryTemplateGroup">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <div>
-                                        <div v-show="select2Applied">
-                                            <label for="">Region</label>
-                                            <select style="width:100%" class="form-control input-sm" ref="filterRegion" >
-                                                <template v-if="select2Applied">
-                                                    <option v-for="r in proposal_regions" :value="r" :key="r">{{r}}</option>
-                                                </template>
-                                            </select>
-                                        </div>
+                    <div v-if="!apiaryTemplateGroup">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <div>
+                                    <div v-show="select2bApplied">
+                                        <label for="">District</label>
+                                        <select style="width:100%" class="form-control input-sm" ref="filterDistrict" >
+                                            <template v-if="select2bApplied">
+                                                <option v-for="r in proposal_districts" :value="r" :key="r">{{r}}</option>
+                                            </template>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div v-if="!apiaryTemplateGroup">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <div>
-                                        <div v-show="select2bApplied">
-                                            <label for="">District</label>
-                                            <select style="width:100%" class="form-control input-sm" ref="filterDistrict" >
-                                                <template v-if="select2bApplied">
-                                                    <option v-for="r in proposal_districts" :value="r" :key="r">{{r}}</option>
-                                                </template>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    </div>
 
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="">{{ activityFilterLabel }}</label>
-                                <select class="form-control" v-model="filterProposalActivity">
-                                    <option value="All">All</option>
-                                    <option v-for="a in proposal_activityTitles" :value="a" :key="a">{{a}}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="">Status</label>
-                                <select class="form-control" v-model="filterProposalStatus">
-                                    <option value="All">All</option>
-                                    <option v-for="s in proposal_status" :value="s.value" :key="s.value">{{s.name}}</option>
-                                </select>
-                            </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="">{{ activityFilterLabel }}</label>
+                            <select class="form-control" v-model="filterProposalActivity">
+                                <option value="All">All</option>
+                                <option v-for="a in proposal_activityTitles" :value="a" :key="a">{{a}}</option>
+                            </select>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="">Proponent</label>
-                                <select class="form-control" v-model="filterProposalApplicant">
-                                        <option value="All">All</option>
-                                        <option v-for="s in proposal_applicants" :value="s.id" :key="s.id">{{s.search_term}}</option>
-                                </select>
-                             </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="">Status</label>
+                            <select class="form-control" v-model="filterProposalStatus">
+                                <option value="All">All</option>
+                                <option v-for="s in proposal_status" :value="s.value" :key="s.value">{{s.name}}</option>
+                            </select>
                         </div>
-                        <!-- <div v-if="is_external" class="col-md-3">
-                            <router-link  style="margin-top:25px;" class="btn btn-primary pull-right" :to="{ name: 'apply_proposal' }">{{newProposalText}}</router-link>
-                        </div> -->
-                        <div class="col-md-3">
-                            <label for="">Lodged From</label>
-                            <input
-                                id="proposal-lodged-from"
-                                type="date"
-                                class="form-control"
-                                v-model="proposal_lodged_from"
-                                placeholder="DD/MM/YYYY"
-                                :max="proposal_lodged_to"
-                            >
-                        </div>
-                        <div class="col-md-3">
-                            <label for="">Lodged To</label>
-                            <input
-                                id="proposal-lodged-to"
-                                type="date"
-                                class="form-control"
-                                v-model="proposal_lodged_to"
-                                placeholder="DD/MM/YYYY"
-                                :min="proposal_lodged_from"
-                            >
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="">Submitter</label>
-                                <select class="form-control" v-model="filterProposalSubmitter">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="">Proponent</label>
+                            <select class="form-control" v-model="filterProposalApplicant">
                                     <option value="All">All</option>
-                                    <option v-for="s in proposal_submitters" :value="s.email" :key="s.email">{{s.search_term}}</option>
-                                </select>
+                                    <option v-for="s in proposal_applicants" :value="s.id" :key="s.id">{{s.search_term}}</option>
+                            </select>
                             </div>
+                    </div>
+                    <!-- <div v-if="is_external" class="col-md-3">
+                        <router-link  style="margin-top:25px;" class="btn btn-primary pull-right" :to="{ name: 'apply_proposal' }">{{newProposalText}}</router-link>
+                    </div> -->
+                    <div class="col-md-3">
+                        <label for="">Lodged From</label>
+                        <input
+                            id="proposal-lodged-from"
+                            type="date"
+                            class="form-control"
+                            v-model="proposal_lodged_from"
+                            placeholder="DD/MM/YYYY"
+                            :max="proposal_lodged_to"
+                        >
+                    </div>
+                    <div class="col-md-3">
+                        <label for="">Lodged To</label>
+                        <input
+                            id="proposal-lodged-to"
+                            type="date"
+                            class="form-control"
+                            v-model="proposal_lodged_to"
+                            placeholder="DD/MM/YYYY"
+                            :min="proposal_lodged_from"
+                        >
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="">Submitter</label>
+                            <select class="form-control" v-model="filterProposalSubmitter">
+                                <option value="All">All</option>
+                                <option v-for="s in proposal_submitters" :value="s.email" :key="s.email">{{s.search_term}}</option>
+                            </select>
                         </div>
                     </div>
-                    <div class="row" v-if="!is_external">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="">Proposal Type</label>
-                                <select class="form-control" v-model="filterProposalApplicationType">
-                                    <option value="All">All</option>
-                                    <option v-for="a in proposal_applicationTypes" :value="a" :key="a">{{a}}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="">Sort By</label>
-                                <select class="form-control" v-model="sortBy">
-                                    <option value=""></option>
-                                    <option v-for="s in sort_by" :key="s.value" :value="s.value">{{s.name}}</option>
-                                </select>
-                            </div>
+                </div>
+                <div class="row" v-if="!is_external">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="">Proposal Type</label>
+                            <select class="form-control" v-model="filterProposalApplicationType">
+                                <option value="All">All</option>
+                                <option v-for="a in proposal_applicationTypes" :value="a" :key="a">{{a}}</option>
+                            </select>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div v-if="datatableReady">
-                                <datatable ref="proposal_datatable" :id="datatable_id" :dtOptions="dt_options" :dtHeaders="dt_headers"/>
-                            </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="">Sort By</label>
+                            <select class="form-control" v-model="sortBy">
+                                <option value=""></option>
+                                <option v-for="s in sort_by" :key="s.value" :value="s.value">{{s.name}}</option>
+                            </select>
                         </div>
                     </div>
-                
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div v-if="datatableReady">
+                            <datatable ref="proposal_datatable" :id="datatable_id" :dtOptions="dt_options" :dtHeaders="dt_headers"/>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
