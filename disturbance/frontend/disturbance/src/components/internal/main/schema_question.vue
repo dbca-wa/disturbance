@@ -1,68 +1,56 @@
 <template lang="html">
   <div id="schema-question">
-
     <div class="row">
         <div class="col-sm-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Schema Section Question
-                        <a :href="'#'+pQuestionBody" data-toggle="collapse"  data-parent="#userInfo" expanded="true" :aria-controls="pQuestionBody">
-                            <span class="glyphicon glyphicon-chevron-up pull-right "></span>
-                        </a>
-                    </h3>
+            <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="">Proposal Type</label>
+                            <select class="form-control" v-model="filterTableProposalType" >
+                                <option value="All">All</option>
+                                <option v-for="(p, pid) in schemaProposalTypes" :value="p.value" v-bind:key="`purpose_${pid}`">{{p.label}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-primary pull-right" @click.prevent="addTableEntry()" name="add_purpose">New Question</button>
+                    </div>
                 </div>
-                <div class="panel-body collapse in" :id="pQuestionBody">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="">Proposal Type</label>
-                                <select class="form-control" v-model="filterTableProposalType" >
-                                    <option value="All">All</option>
-                                    <option v-for="(p, pid) in schemaProposalTypes" :value="p.value" v-bind:key="`purpose_${pid}`">{{p.label}}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <button class="btn btn-primary pull-right" @click.prevent="addTableEntry()" name="add_purpose">New Question</button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="">Section</label>
-                                <select class="form-control" v-model="filterTableSection" >
-                                    <option value="All">All</option>
-                                    <option v-for="(s, sid) in schemaSections" :value="s.value" v-bind:key="`section_${sid}`">{{s.label}}</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="">Group</label>
-                                <select class="form-control" v-model="filterTableGroup" >
-                                    <option value="All">All</option>
-                                    <option v-for="(g, gid) in schemaGroups" :value="g.value" v-bind:key="`group_${gid}`">{{g.label}}</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div> -->
-                    <div class="row"><br/></div> 
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-
-                                <datatable ref="schema_question_table"
-                                    :id="schema_question_id" 
-                                    :dtOptions="dtOptionsSchemaQuestion"
-                                    :dtHeaders="dtHeadersSchemaQuestion" 
-                                />
-
-                            </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="">Section</label>
+                            <select class="form-control" v-model="filterTableSection" >
+                                <option value="All">All</option>
+                                <option v-for="(s, sid) in schemaSections" :value="s.value" v-bind:key="`section_${sid}`">{{s.label}}</option>
+                            </select>
                         </div>
                     </div>
                 </div>
+                <!-- <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="">Group</label>
+                            <select class="form-control" v-model="filterTableGroup" >
+                                <option value="All">All</option>
+                                <option v-for="(g, gid) in schemaGroups" :value="g.value" v-bind:key="`group_${gid}`">{{g.label}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div> -->
+                <div class="row"><br/></div> 
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+
+                            <datatable ref="schema_question_table"
+                                :id="schema_question_id" 
+                                :dtOptions="dtOptionsSchemaQuestion"
+                                :dtHeaders="dtHeadersSchemaQuestion" 
+                            />
+
+                        </div>
+                    </div>
             </div>
         </div>
     </div>

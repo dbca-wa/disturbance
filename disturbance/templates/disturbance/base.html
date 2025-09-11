@@ -1,5 +1,4 @@
 {% extends "webtemplate_dbca/base_b5_auth_session.html" %}
-{% comment %} {% load bootstrap3 %} {% endcomment %}
 {% load static %}
 {% load django_vite %}
 
@@ -63,6 +62,71 @@
 {% block menu_spacer %}
  <BR>
 {% endblock menu_spacer %}
+{% block messages %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                {% for message in messages %}
+                    <div class="alert 
+                        {% if message.tags == 'error' %}alert-danger
+                        {% elif message.tags == 'warning' %}alert-warning
+                        {% elif message.tags == 'success' %}alert-success
+                        {% else %}alert-info{% endif %}
+                        alert-dismissible fade show" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&#215;</button>
+                        {{ message|safe }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+  {% if notices_obj.notices|length > 0 %}
+      <div class="container">
+          <div class="col-lg-12 ">
+              <div class="row flex-wrap">
+                  {% for notice in notices_obj.notices %}
+                      {% if notice.notice_type == 0 and notice.active %}
+                        <div class="col-sm-12 col-md-6 d-flex">
+                            <div class="round-box col-12 px-3" style='background-color: #ffcbcb; border: 1px solid #fb9e9e;'>
+                                <div style='margin-bottom:-12px; margin-left: 10px'>
+                                    <span style='color:red;'>{{ notice.message|safe }}</span>
+                                </div>
+                            </div>
+                        </div>
+                      {% elif notice.notice_type == 1 and notice.active %}
+                        <div class="col-sm-12 col-md-6 d-flex">
+                            <div class="round-box col-12 px-3 d-flex" style='background-color: #fff4e0; border: 1px solid #ff89358a;'>
+                                <div style='margin-bottom:-12px; margin-left: 10px'>
+                                    <span style='color:#ffa500;'>{{ notice.message|safe }}</span>
+                                </div>
+                            </div>
+                        </div>
+                      {% elif notice.notice_type == 2 and notice.active %}
+                        <div class="col-sm-12 col-md-6 d-flex">
+                            <div class="round-box col-12 px-3" style='background-color: #cbe5ff; border: 1px solid #9eccfb;'>
+                                <div style='margin-bottom:-12px; margin-left: 10px'>
+                                    <span style='color:#2a84e0;'>{{ notice.message|safe }}</span>
+                                </div>
+                            </div>
+                        </div>
+                      {% elif notice.notice_type == 3 and notice.active %}
+                        <div class="col-sm-12 col-md-6 d-flex">
+                            <div class="round-box col-12 px-3" style='background-color: #e9f9ea; border: 1px solid #21ab26;'>
+                                <div style='margin-bottom:-12px; margin-left: 10px'>
+                                    <span style='color:#1a851d;'>{{ notice.message|safe }}</span>
+                                </div>
+                            </div>
+                        </div>
+                      {% endif %}
+                  {% endfor %}
+              </div>
+          </div>
+      </div>
+  {% endif %}
+{% endblock content %}
 
 {% block footer %}
   {% application_version as application_version %}

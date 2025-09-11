@@ -1,195 +1,190 @@
 <template>
     <div class="">
-        <FormSection :formCollapse="false" label="Proposals Map" Index="available_sites">
-            <div class="map-wrapper">
-                <div v-show="!fullscreen" id="filter_search_row_wrapper">
-                    <div class="filter_search_wrapper" style="margin-bottom: 5px;" id="filter_search_row">
-                        <div>
-                           <div v-show="select2Applied">
-                            <div class="row">
-                                    <div >
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <div>
-                                                    <div v-show="select2Applied">
-                                                        <label for="">Region</label>
-                                                        <select style="width:100%" class="form-control input-sm" ref="filterRegion" v-model="filterProposalRegion">
-                                                            <option value="All">All</option>
-                                                            <option v-for="r in regions" :value="r.id" :key="r.id">{{r.search_term}}</option>
-                                                        </select>
-                                                    </div>
+        <div class="map-wrapper">
+            <div v-show="!fullscreen" id="filter_search_row_wrapper">
+                <div class="filter_search_wrapper" style="margin-bottom: 5px;" id="filter_search_row">
+                    <div>
+                        <div v-show="select2Applied">
+                        <div class="row">
+                                <div >
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <div>
+                                                <div v-show="select2Applied">
+                                                    <label for="">Region</label>
+                                                    <select style="width:100%" class="form-control input-sm" ref="filterRegion" v-model="filterProposalRegion">
+                                                        <option value="All">All</option>
+                                                        <option v-for="r in regions" :value="r.id" :key="r.id">{{r.search_term}}</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="">Activity</label>
-                                            <select class="form-control" v-model="filterProposalActivity">
-                                                <option value="All">All</option>
-                                                <option v-for="a in activity_titles" :value="a" :key="a">{{a}}</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="">Status</label>
-                                            <select class="form-control" v-model="filterProposalStatus">
-                                                <option value="All">All</option>
-                                                <option v-for="s in proposal_status" :value="s.value" :key="s.value">{{s.name}}</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="">Proponent</label>
-                                            <select class="form-control" v-model="filterProposalApplicant">
-                                                <option value="All">All</option>
-                                                <option v-for="s in proposal_applicants" :value="s.id" :key="s.id">{{s.search_term}}</option>
-                                            </select>
-                                        </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="">Activity</label>
+                                        <select class="form-control" v-model="filterProposalActivity">
+                                            <option value="All">All</option>
+                                            <option v-for="a in activity_titles" :value="a" :key="a">{{a}}</option>
+                                        </select>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <label for="">Lodged From</label>
-                                        <div class="input-group date" ref="proposalDateFromPicker">
-                                            <input type="date" class="form-control" v-model="filterProposalLodgedFrom">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <label for="">Lodged To</label>
-                                        <div class="input-group date" ref="proposalDateToPicker">
-                                            <input type="date" class="form-control" v-model="filterProposalLodgedTo">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="">Submitter</label>
-                                            <select class="form-control" v-model="filterProposalSubmitter">
-                                                <option value="All">All</option>
-                                                <option v-for="s in proposal_submitters" :value="s.email" :key="s.email">{{s.search_term}}</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="">Proposal Type</label>
-                                            <select class="form-control" v-model="filterProposalApplicationType">
-                                                <option value="All">All</option>
-                                                <option v-for="a in application_types" :value="a" :key="a">{{a}}</option>
-                                            </select>
-                                        </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="">Status</label>
+                                        <select class="form-control" v-model="filterProposalStatus">
+                                            <option value="All">All</option>
+                                            <option v-for="s in proposal_status" :value="s.value" :key="s.value">{{s.name}}</option>
+                                        </select>
                                     </div>
                                 </div>
-                                
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <!--
-                                        <button type="button" class="btn btn-primary" @click="geoJsonButtonClicked"><i class="fa fa-download"></i>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="">Proponent</label>
+                                        <select class="form-control" v-model="filterProposalApplicant">
+                                            <option value="All">All</option>
+                                            <option v-for="s in proposal_applicants" :value="s.id" :key="s.id">{{s.search_term}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="">Lodged From</label>
+                                    <div class="input-group date" ref="proposalDateFromPicker">
+                                        <input type="date" class="form-control" v-model="filterProposalLodgedFrom">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="">Lodged To</label>
+                                    <div class="input-group date" ref="proposalDateToPicker">
+                                        <input type="date" class="form-control" v-model="filterProposalLodgedTo">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="">Submitter</label>
+                                        <select class="form-control" v-model="filterProposalSubmitter">
+                                            <option value="All">All</option>
+                                            <option v-for="s in proposal_submitters" :value="s.email" :key="s.email">{{s.search_term}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="">Proposal Type</label>
+                                        <select class="form-control" v-model="filterProposalApplicationType">
+                                            <option value="All">All</option>
+                                            <option v-for="a in application_types" :value="a" :key="a">{{a}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <!--
+                                    <button type="button" class="btn btn-primary" @click="geoJsonButtonClicked"><i class="fa fa-download"></i>
+                                    Get GeoJSON File</button>
+                                    -->
+                                    <!--
+                                    <button type="button" class="btn btn-primary" @click="shapefileButtonClicked(true)"><i class="fa fa-download"></i>
                                         Get GeoJSON File</button>
-                                        -->
-                                        <!--
-                                        <button type="button" class="btn btn-primary" @click="shapefileButtonClicked(true)"><i class="fa fa-download"></i>
-                                            Get GeoJSON File</button>
-                                        -->
-                                        <button type="button" class="btn btn-primary btn-margin" @click="shapefileButtonClicked(false)" :disabled="download_shapefile_btn_disabled">
-                                            <i v-if="download_shapefile_btn_disabled" class="fa fa-download fa-spinner fa-spin"></i>
-                                            <i v-else class="fa fa-download"></i>
-                                            Download Shapefile
-                                        </button>
-                                        <a class="btn btn-primary" href="/filelist" target="_blank">View Download Files</a>
-                                    </div>
-                                    <!-- <div class="col-md-3">
-                                        <button type="button" class="btn btn-primary" id="export-png" @click="exportPNG"><i class="fa fa-download"></i>
-                                            Download Image</button>
-                                        <a id="image-download" download="map.png"></a>
-                                    </div> -->
-                                    
+                                    -->
+                                    <button type="button" class="btn btn-primary btn-margin" @click="shapefileButtonClicked(false)" :disabled="download_shapefile_btn_disabled">
+                                        <i v-if="download_shapefile_btn_disabled" class="fa fa-download fa-spinner fa-spin"></i>
+                                        <i v-else class="fa fa-download"></i>
+                                        Download Shapefile
+                                    </button>
+                                    <a class="btn btn-primary" href="/filelist" target="_blank">View Download Files</a>
                                 </div>
+                                <!-- <div class="col-md-3">
+                                    <button type="button" class="btn btn-primary" id="export-png" @click="exportPNG"><i class="fa fa-download"></i>
+                                        Download Image</button>
+                                    <a id="image-download" download="map.png"></a>
+                                </div> -->
+                                
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+            
+
+            <!-- <div class="d-flex justify-content-end align-items-center mb-2">
+                <button type="button" class="btn btn-primary" @click="geoJsonButtonClicked"><i class="fa fa-download"></i>
+                    Get GeoJSON</button>
+            </div>
+            <div class="d-flex justify-content-end align-items-center mb-2">
+                <button type="button" class="btn btn-primary" id="export-png" @click="exportPNG"><i class="fa fa-download"></i>
+                    Download PNG</button>
+                <a id="image-download" download="map.png"></a>
+            </div> -->
+            <div :id="elem_id" class="map" style="position: relative;">
                 
-
-                <!-- <div class="d-flex justify-content-end align-items-center mb-2">
-                    <button type="button" class="btn btn-primary" @click="geoJsonButtonClicked"><i class="fa fa-download"></i>
-                        Get GeoJSON</button>
+                <div v-show="fullscreen" id="filter_search_on_map">
+                    <!-- filters on map here -->
+                    <!-- end filter here -->
+                </div>     
+                <div v-if="loading_proposals" class="spinner_on_map">
+                    <i class='fa fa-4x fa-spinner fa-spin'></i>
                 </div>
-                <div class="d-flex justify-content-end align-items-center mb-2">
-                    <button type="button" class="btn btn-primary" id="export-png" @click="exportPNG"><i class="fa fa-download"></i>
-                        Download PNG</button>
-                    <a id="image-download" download="map.png"></a>
-                </div> -->
-                <div :id="elem_id" class="map" style="position: relative;">
-                    
-                    <div v-show="fullscreen" id="filter_search_on_map">
-                        <!-- filters on map here -->
-                        <!-- end filter here -->
-                    </div>     
-                    <div v-if="loading_proposals" class="spinner_on_map">
-                        <i class='fa fa-4x fa-spinner fa-spin'></i>
+                <div class="basemap-button">
+                    <img id="basemap_sat" :src="satelliteIconUrl" @click="setBaseLayer('sat')" />
+                    <img id="basemap_osm" :src="mapIconUrl" @click="setBaseLayer('osm')" />
+                </div>
+                <div class="optional-layers-wrapper">
+                    <div class="optional-layers-button">
+                        <template v-if="mode === 'layer'">
+                            <img src="@/assets/info-bubble.svg" @click="set_mode('measure')" />
+                        </template>
+                        <template v-else>
+                            <img src="@/assets/ruler.svg" @click="set_mode('layer')" />
+                        </template>
                     </div>
-                    <div class="basemap-button">
-                        <img id="basemap_sat" :src="satelliteIconUrl" @click="setBaseLayer('sat')" />
-                        <img id="basemap_osm" :src="mapIconUrl" @click="setBaseLayer('osm')" />
-                    </div>
-                    <div class="optional-layers-wrapper">
-                        <div class="optional-layers-button">
-                            <template v-if="mode === 'layer'">
-                                <img src="@/assets/info-bubble.svg" @click="set_mode('measure')" />
-                            </template>
-                            <template v-else>
-                                <img src="@/assets/ruler.svg" @click="set_mode('layer')" />
-                            </template>
-                        </div>
-                        <div style="position:relative">
-                            <transition>
-                                <div v-if="optionalLayers.length" class="optional-layers-button" @mouseover="hover=true">
-                                    <img src="@/assets/layers.svg" />
+                    <div style="position:relative">
+                        <transition>
+                            <div v-if="optionalLayers.length" class="optional-layers-button" @mouseover="hover=true">
+                                <img src="@/assets/layers.svg" />
+                            </div>
+                        </transition>
+                        <transition v-if="optionalLayers.length">
+                            <div class="layer_options" v-show="hover" @mouseover="showOptions"  @mouseleave="hideOptions">
+                                <div v-for="layer in optionalLayers" :key="layer.ol_uid">
+                                    <input
+                                        type="checkbox"
+                                        :id="layer.ol_uid"
+                                        :checked="layer.values_.visible"
+                                        @change="changeLayerVisibility(layer)"
+                                        class="layer_option"
+                                    />
+                                    <label :for="layer.ol_uid" class="layer_option">{{ layer.get('title') }}</label>
                                 </div>
-                            </transition>
-                            <transition v-if="optionalLayers.length">
-                                <div class="layer_options" v-show="hover" @mouseover="showOptions"  @mouseleave="hideOptions">
-                                    <div v-for="layer in optionalLayers" :key="layer.ol_uid">
-                                        <input
-                                            type="checkbox"
-                                            :id="layer.ol_uid"
-                                            :checked="layer.values_.visible"
-                                            @change="changeLayerVisibility(layer)"
-                                            class="layer_option"
-                                        />
-                                        <label :for="layer.ol_uid" class="layer_option">{{ layer.get('title') }}</label>
-                                    </div>
-                                </div>
-                            </transition>
-                        </div>
+                            </div>
+                        </transition>
                     </div>
                 </div>
-                <!--- <div class="button_row">
-                    <span class="view_all_button" @click="displayAllFeatures">View All On Map</span>
-                </div> -->
             </div>
-            <div :id="popup_id" class="ol-popup">
-                <a href="#" :id="popup_closer_id" class="ol-popup-closer">
-                    <svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='20' width='20' class="close-icon">
-                        <g transform='scale(3)'>
-                            <path d     ="M 5.2916667,2.6458333 A 2.6458333,2.6458333 0 0 1 2.6458335,5.2916667 2.6458333,2.6458333 0 0 1 0,2.6458333 2.6458333,2.6458333 0 0 1 2.6458335,0 2.6458333,2.6458333 0 0 1 5.2916667,2.6458333 Z" style="fill:#ffffff;fill-opacity:1;stroke-width:0.182031" id="path846" />
-                            <path d     ="M 1.5581546,0.94474048 2.6457566,2.0324189 3.7334348,0.94474048 4.3469265,1.5581547 3.2592475,2.6458334 4.3469265,3.7334353 3.7334348,4.3469261 2.6457566,3.2593243 1.5581546,4.3469261 0.9447402,3.7334353 2.0323422,2.6458334 0.9447402,1.5581547 Z" style="fill:#f46464;fill-opacity:1;stroke:none;stroke-width:0.0512157" id="path2740-3" />
-                        </g>
-                    </svg>
-                </a>
-                <div :id="popup_content_id"></div>
-            </div>
-        </FormSection>
-
-        
+            <!--- <div class="button_row">
+                <span class="view_all_button" @click="displayAllFeatures">View All On Map</span>
+            </div> -->
+        </div>
+        <div :id="popup_id" class="ol-popup">
+            <a href="#" :id="popup_closer_id" class="ol-popup-closer">
+                <svg xmlns='http://www.w3.org/2000/svg' version='1.1' height='20' width='20' class="close-icon">
+                    <g transform='scale(3)'>
+                        <path d     ="M 5.2916667,2.6458333 A 2.6458333,2.6458333 0 0 1 2.6458335,5.2916667 2.6458333,2.6458333 0 0 1 0,2.6458333 2.6458333,2.6458333 0 0 1 2.6458335,0 2.6458333,2.6458333 0 0 1 5.2916667,2.6458333 Z" style="fill:#ffffff;fill-opacity:1;stroke-width:0.182031" id="path846" />
+                        <path d     ="M 1.5581546,0.94474048 2.6457566,2.0324189 3.7334348,0.94474048 4.3469265,1.5581547 3.2592475,2.6458334 4.3469265,3.7334353 3.7334348,4.3469261 2.6457566,3.2593243 1.5581546,4.3469261 0.9447402,3.7334353 2.0323422,2.6458334 0.9447402,1.5581547 Z" style="fill:#f46464;fill-opacity:1;stroke:none;stroke-width:0.0512157" id="path2740-3" />
+                    </g>
+                </svg>
+            </a>
+            <div :id="popup_content_id"></div>
+        </div>
     </div>
 </template>
 
 <script>
-    import FormSection from "@/components/forms/section_toggle.vue"
     import {v4 as uuidv4 } from 'uuid';
     import 'ol/ol.css';
     import 'ol-layerswitcher/dist/ol-layerswitcher.css'
@@ -313,7 +308,6 @@
             }
         },
         components: {
-            FormSection,
         },
         props: {
             is_external:{

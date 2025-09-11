@@ -1,99 +1,85 @@
 <template lang="html">
-  <div id="schema-purpose">
-
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Schema ProposalType Section
-                        <a :href="'#'+pProposalTypeBody" data-toggle="collapse"  data-parent="#userInfo" expanded="true" :aria-controls="pProposalTypeBody">
-                            <span class="glyphicon glyphicon-chevron-up pull-right "></span>
-                        </a>
-                    </h3>
-                </div>
-                <div class="panel-body collapse in" :id="pProposalTypeBody">
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="">Proposal Type</label>
-                                <select class="form-control" v-model="filterTableProposalType" >
-                                    <option value="All">All</option>
-                                    <option v-for="(p, pid) in schemaProposalTypes" :value="p.value" v-bind:key="`purpose_${pid}`">{{p.label}}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <button class="btn btn-primary pull-right" @click.prevent="addTableEntry()" name="add_purpose">New Section</button>
-                        </div>
-                    </div>
-                    <div class="row"><br/></div> 
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-
-                                <datatable ref="schema_purpose_table"
-                                    :id="schema_purpose_id" 
-                                    :dtOptions="dtOptionsSchemaProposalType"
-                                    :dtHeaders="dtHeadersSchemaProposalType" 
-                                />
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <modal transition="modal fade" @ok="ok()" title="Schema ProposalType Section" large>
-        <div class="container-fluid">
-            <div id="error" v-if="missing_fields.length > 0" style="margin: 10px; padding: 5px; color: red; border:1px solid red;">
-                <b>Please answer the following mandatory question(s):</b>
-                <ul>
-                    <li v-for="error in missing_fields" :key="error.label">
-                        {{ error.label }}
-                    </li>
-                </ul>
-            </div>
-            <div>
-                <form class="form-horizontal" name="schema_purpose">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label class="control-label pull-left" >Proposal Type</label>
-                        </div>
-                        <div class="col-md-6">
-                            <select class="form-control" ref="select_purpose" name="select-purpose" v-model="sectionProposalType.proposal_type" >
-                                <option value="All">Select...</option>
+    <div id="schema-purpose">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="">Proposal Type</label>
+                            <select class="form-control" v-model="filterTableProposalType" >
+                                <option value="All">All</option>
                                 <option v-for="(p, pid) in schemaProposalTypes" :value="p.value" v-bind:key="`purpose_${pid}`">{{p.label}}</option>
-                            </select>                            
+                            </select>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label class="control-label pull-left" >Section Label</label>
-                        </div>
-                        <div class="col-md-6">
-                            <input type='text' class="form-control" v-model='sectionProposalType.section_label' >
+                    <div class="col-md-6">
+                        <button class="btn btn-primary pull-right" @click.prevent="addTableEntry()" name="add_purpose">New Section</button>
+                    </div>
+                </div>
+                <div class="row"><br/></div> 
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+
+                            <datatable ref="schema_purpose_table"
+                                :id="schema_purpose_id" 
+                                :dtOptions="dtOptionsSchemaProposalType"
+                                :dtHeaders="dtHeadersSchemaProposalType" 
+                            />
+
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label class="control-label pull-left" >Section Index</label>
-                        </div>
-                        <div class="col-md-3">
-                            <input type='text' class="form-control" v-model='sectionProposalType.index' >
-                        </div>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
-        <template #footer>
-            <button type="button" class="btn btn-primary" @click="saveProposalType()">Save</button>
-        </template>
-    </modal>
 
-  </div>
+        <modal transition="modal fade" @ok="ok()" title="Schema ProposalType Section" large>
+            <div class="container-fluid">
+                <div id="error" v-if="missing_fields.length > 0" style="margin: 10px; padding: 5px; color: red; border:1px solid red;">
+                    <b>Please answer the following mandatory question(s):</b>
+                    <ul>
+                        <li v-for="error in missing_fields" :key="error.label">
+                            {{ error.label }}
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <form class="form-horizontal" name="schema_purpose">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label class="control-label pull-left" >Proposal Type</label>
+                            </div>
+                            <div class="col-md-6">
+                                <select class="form-control" ref="select_purpose" name="select-purpose" v-model="sectionProposalType.proposal_type" >
+                                    <option value="All">Select...</option>
+                                    <option v-for="(p, pid) in schemaProposalTypes" :value="p.value" v-bind:key="`purpose_${pid}`">{{p.label}}</option>
+                                </select>                            
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label class="control-label pull-left" >Section Label</label>
+                            </div>
+                            <div class="col-md-6">
+                                <input type='text' class="form-control" v-model='sectionProposalType.section_label' >
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label class="control-label pull-left" >Section Index</label>
+                            </div>
+                            <div class="col-md-3">
+                                <input type='text' class="form-control" v-model='sectionProposalType.index' >
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <template #footer>
+                <button type="button" class="btn btn-primary" @click="saveProposalType()">Save</button>
+            </template>
+        </modal>
+    </div>
 </template>
 
 <script>

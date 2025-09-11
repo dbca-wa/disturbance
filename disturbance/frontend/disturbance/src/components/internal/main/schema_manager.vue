@@ -4,10 +4,26 @@
 
     <SchemaTabs :tabs="tabs" :initialTab="initialTab">
 
-        <template #tab-panel-question><SchemaQuestion /></template>
-        <template #tab-panel-masterlist><SchemaMasterlist /></template>
-        <template #tab-panel-proposal-type><SchemaProposalType /></template>
-        <template v-if="show_das_map" #tab-panel-spatial-query-question><SpatialQueryQuestion /></template>
+        <template #tab-panel-masterlist>
+            <FormSection :form-collapse="false" label="Schema Masterlist Questions" Index="schema-masterlist">
+                <SchemaMasterlist />
+            </FormSection>
+        </template>
+        <template #tab-panel-proposal-type>
+            <FormSection :form-collapse="false" label="Schema ProposalType Section" Index="schema-proposal-type">
+                <SchemaProposalType />
+            </FormSection>
+        </template>
+        <template #tab-panel-question>
+            <FormSection :form-collapse="false" label="Schema Section Question" Index="schema-section-question">
+                <SchemaQuestion />
+            </FormSection>
+        </template>
+        <template v-if="show_das_map" #tab-panel-spatial-query-question>
+            <FormSection :form-collapse="false" label="Spatial Query Questions" Index="spatial-query-questions">
+                <SpatialQueryQuestion />
+            </FormSection>
+        </template>
         <!--<template v-if="show_das_map" slot="tab-panel-spatial-query-metrics"><SpatialQueryMetrics /></template>-->
         <!-- <template slot="tab-panel-group"><SchemaGroup /></template> -->
 
@@ -17,6 +33,7 @@
 </div>
 </template>
 <script>
+import FormSection from '@/components/forms/section_toggle.vue';
 import SchemaTabs from '@/components/forms/tab.vue'
 import SchemaQuestion from '@/components/internal/main/schema_question.vue'
 import SchemaMasterlist from '@/components/internal/main/schema_masterlist.vue'
@@ -34,6 +51,7 @@ export default {
         SpatialQueryQuestion,
         //SpatialQueryMetrics,
         // SchemaGroup,
+        FormSection,
     },
     computed: {
         show_das_map : function(){

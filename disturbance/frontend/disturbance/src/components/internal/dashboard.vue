@@ -1,8 +1,22 @@
 <template>
 <div class="container" id="internalDash">
-    <MapDashboard v-if="show_das_map  && !apiaryTemplateGroup" level="internal" :is_internal="true" />
-    <ProposalDashTable level="internal" :url="proposals_url"/>
-    <ReferralDashTable :url="referrals_url"/>
+    <FormSection :formCollapse="false" label="Proposals Map" Index="available_sites">
+        <MapDashboard v-if="show_das_map  && !apiaryTemplateGroup" level="internal" :is_internal="true" />
+    </FormSection>
+    <FormSection
+        :form-collapse="false"
+        label="Proposals"
+        Index="proposals"
+    >
+        <ProposalDashTable level='internal' :url='proposals_url'/>
+    </FormSection>
+    <FormSection
+        :form-collapse="false"
+        label="Proposals referred to me"
+        Index="referrals"
+    >
+        <ReferralDashTable :url="referrals_url"/>
+    </FormSection>
     <!-- <MapDashboard v-if="show_das_map" level="internal" :is_internal="true" /> -->
 </div>
 </template>
@@ -14,6 +28,7 @@ import {
   api_endpoints,
 }
 from '@/utils/hooks'
+import FormSection from '@/components/forms/section_toggle.vue';
 export default {
     name: 'ExternalDashboard',
     data() {
@@ -36,6 +51,7 @@ export default {
         ProposalDashTable,
         ReferralDashTable,
         MapDashboard,
+        FormSection,
     },
     computed: {
         show_das_map : function(){
