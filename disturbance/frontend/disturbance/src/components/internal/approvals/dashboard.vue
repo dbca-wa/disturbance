@@ -1,9 +1,12 @@
 <template>
 <div class="container" id="internalDash">
-    <ApprovalDashTable level="internal" :url="approvals_url"/>
+    <FormSection :form-collapse="false" label="Approvals" index="approvals">
+            <ApprovalDashTable level="internal" :url="approvals_url" />
+    </FormSection>
 </div>
 </template>
 <script>
+import FormSection from '@/components/forms/section_toggle.vue';
 import ApprovalDashTable from '@common-utils/approvals_dashboard.vue'
 import {
   api_endpoints,
@@ -21,6 +24,7 @@ export default {
     },
     watch: {},
     components: {
+        FormSection,
         ApprovalDashTable,
     },
     computed: {
