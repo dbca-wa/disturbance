@@ -1,16 +1,17 @@
 <template>
 <div class="container" id="externalDash">
     <div class="row">
-        <div class="col-sm-12">
-            <div class="well well-sm">
-                <div class="col-md-9">
-                    <span v-html="welcomeMessage"></span>
+        <div class="col-sm-12 mb-2">
+            <div class="card">
+                <div class="well well-sm card-body">
+                    <span class="card-text" v-html="welcomeMessage"></span>
+                    <router-link  style="margin-top:25px;" class="btn btn-primary" :to="{ name: 'apply_proposal' }">New Proposal</router-link>
                 </div>
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col-md-3 text-right">
                         <router-link  style="margin-top:25px;" class="btn btn-primary" :to="{ name: 'apply_proposal' }">New Proposal</router-link>
                     </div>
-                </div>
+                </div> -->
                 <!--p>
                     Welcome to the {{system_name}} online system dashboard.<br/><br/> Here you can access your existing approvals/licences, view any proposals/applications in progress, lodge new<br/> proposals/applications or submit information required to comply with requirements listed on your approval/license
                 </p-->
@@ -18,14 +19,36 @@
         </div>
     </div>
     <MapDashboard  v-if="show_das_map && !apiaryTemplateGroup" level="external" :is_external="true"/>
-    <ProposalDashTable level='external' :url='proposals_url'/>
-    <ApprovalDashTable level='external' :url='approvals_url'/>
-    <ComplianceDashTable level='external' :url='compliances_url'/>
+    <FormSection
+            :form-collapse="false"
+            label="Proposals"
+            Index="proposals"
+            subtitle="View existing proposals and lodge new ones"
+        >
+        <ProposalDashTable level='external' :url='proposals_url'/>
+    </FormSection>
+    <FormSection
+            :form-collapse="false"
+            label="Approvals"
+            Index="approvals"
+            subtitle="View existing approvals and amend or renew them"
+        >
+        <ApprovalDashTable level='external' :url='approvals_url'/>
+    </FormSection>
+    <FormSection
+            :form-collapse="false"
+            label="Compliances with requirements"
+            Index="compliances"
+            subtitle="View submitted compliances and submit new ones"
+        >
+        <ComplianceDashTable level='external' :url='compliances_url'/>
+    </FormSection>
     <!-- <MapDashboard  v-if="show_das_map" level="external" :is_external="true"/> -->
 </div>
 </template>
 <script>
 
+import FormSection from '@/components/forms/section_toggle.vue';
 import ProposalDashTable from '@common-utils/proposals_dashboard.vue'
 import ApprovalDashTable from '@common-utils/approvals_dashboard.vue'
 import ComplianceDashTable from '@common-utils/compliances_dashboard.vue'
@@ -60,7 +83,8 @@ export default {
         ProposalDashTable,
         ApprovalDashTable,
         ComplianceDashTable,
-        MapDashboard
+        MapDashboard,
+        FormSection,
     },
     watch: {},
     computed: {
