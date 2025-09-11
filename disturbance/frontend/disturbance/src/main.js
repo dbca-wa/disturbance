@@ -1,3 +1,4 @@
+import 'vite/modulepreload-polyfill';
 import './jquery-global.js';
 
 import 'bootstrap/dist/css/bootstrap.css'; // CSS first
@@ -8,7 +9,6 @@ import 'font-awesome/css/font-awesome.min.css';
 import 'jquery.easing';
 
 import { createApp } from 'vue';
-import 'vite/modulepreload-polyfill';
 import App from './App.vue';
 import router from './router';
 import helpers from '@/utils/helpers';
@@ -16,7 +16,7 @@ import helpers from '@/utils/helpers';
 import _ from 'lodash';
 window._ = _;
 import moment from 'moment';
-window.moment = moment;
+// window.moment = moment;
 import { extendMoment } from 'moment-range';
 extendMoment(moment);
 import select2 from 'select2';
@@ -26,6 +26,7 @@ select2();
 import jsZip from 'jszip';
 window.JSZip = jsZip;
 
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 // import 'eonasdan-bootstrap-datetimepicker'; // After Bootstrap JS
 import 'datatables.net';
 import 'datatables.net-bs';
