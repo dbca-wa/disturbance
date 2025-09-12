@@ -10,78 +10,84 @@
             <div class="col-md-1">
             </div>
             <div class="col-md-8">
-                <ul class="nav nav-tabs">
-                    <li class="active"><a data-toggle="tab" :href="'#'+dTab">Details</a></li>
-                    <li><a data-toggle="tab" :href="'#'+oTab">Other</a></li>
+                <ul class="nav nav-pills mb-3" role="tablist">
+                    <li class="nav-item"><a
+                            id="pills-details-tab"
+                            data-toggle="tab"
+                            class="nav-link active"
+                            data-bs-toggle="pill"
+                            :href="'#' + dTab"
+                            role="tab"
+                            :aria-controls="dTab"
+                            aria-selected="true"
+                            >Details</a
+                        >
+                    </li>
+                    <li class="nav-item">
+                        <a
+                            id="pills-other-tab"
+                            data-toggle="tab"
+                            class="nav-link"
+                            data-bs-toggle="pill"
+                            :href="'#' + oTab"
+                            role="tab"
+                            :aria-controls="oTab"
+                            aria-selected="false"
+                            >Other</a
+                        >
+                    </li>
                 </ul>
                 <div class="tab-content">
-                    <div :id="dTab" class="tab-pane fade in active">
+                    <div :id="dTab" class="tab-pane fade active show" role="tabpanel" aria-labelledby="pills-details-tab">
                         <div class="row">
                             <div class="col-sm-12">
-                                <div class="panel panel-default">
-                                  <div class="panel-heading">
-                                    <h3 class="panel-title">Organisation Details
-                                        <a class="panelClicker" :href="'#'+pdBody" data-toggle="collapse"  data-parent="#userInfo" expanded="true" :aria-controls="pdBody">
-                                            <span class="glyphicon glyphicon-chevron-up pull-right "></span>
-                                        </a>
-                                    </h3>
-                                  </div>
-                                  <div class="panel-body collapse in" :id="pdBody">
-                                      <form class="form-horizontal" name="personal_form" method="post">
-                                          <div class="form-group">
+                                <FormSection :formCollapse="false" label="Organisation Details" Index="organisation_details">
+                                    <form class="form-horizontal" name="personal_form" method="post">
+                                        <div class="form-group">
                                             <label for="" class="col-sm-3 control-label">Name</label>
                                             <div class="col-sm-6">
                                                 <input type="text" class="form-control" name="first_name" placeholder="" v-model="org.name">
                                             </div>
-                                          </div>
-                                          <div class="form-group">
+                                        </div>
+                                        <div class="form-group">
                                             <label for="" class="col-sm-3 control-label" >ABN</label>
                                             <div class="col-sm-6">
                                                 <input type="text" disabled class="form-control" name="last_name" placeholder="" v-model="org.abn">
                                             </div>
-                                          </div>
-                                          <div class="form-group">
+                                        </div>
+                                        <div class="form-group">
                                             <label for="" class="col-sm-3 control-label" >Email</label>
                                             <div class="col-sm-6">
                                                 <input type="text" class="form-control" name="last_name" placeholder="" v-model="org.email">
                                             </div>
-                                          </div>
-                                          <div class="form-group">
+                                        </div>
+                                        <div class="form-group">
                                             <div class="col-sm-12">
                                                 <button v-if="!updatingDetails" class="pull-right btn btn-primary" @click.prevent="updateDetails()">Update</button>
                                                 <button v-else disabled class="pull-right btn btn-primary"><i class="fa fa-spin fa-spinner"></i>&nbsp;Updating</button>
                                             </div>
-                                          </div>
-                                       </form>
-                                  </div>
-                                </div>
+                                        </div>
+                                    </form>
+                                </FormSection>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
-                                <div class="panel panel-default">
-                                  <div class="panel-heading">
-                                    <h3 class="panel-title">Address Details
-                                        <a class="panelClicker" :href="'#'+adBody" data-toggle="collapse" expanded="false"  data-parent="#userInfo" :aria-controls="adBody">
-                                            <span class="glyphicon glyphicon-chevron-down pull-right "></span>
-                                        </a>
-                                    </h3>
-                                  </div>
-                                  <div v-if="loading.length == 0" class="panel-body collapse" :id="adBody">
-                                      <form class="form-horizontal" action="index.html" method="post">
-                                          <div class="form-group">
+                                <FormSection :formCollapse="false" label="Address Details" Index="address_details">
+                                    <form class="form-horizontal" action="index.html" method="post">
+                                        <div class="form-group">
                                             <label for="" class="col-sm-3 control-label">Street</label>
                                             <div class="col-sm-6">
                                                 <input type="text" class="form-control" name="street" placeholder="" v-model="org.address.line1">
                                             </div>
-                                          </div>
-                                          <div class="form-group">
+                                        </div>
+                                        <div class="form-group">
                                             <label for="" class="col-sm-3 control-label" >Town/Suburb</label>
                                             <div class="col-sm-6">
                                                 <input type="text" class="form-control" name="surburb" placeholder="" v-model="org.address.locality">
                                             </div>
-                                          </div>
-                                          <div class="form-group">
+                                        </div>
+                                        <div class="form-group">
                                             <label for="" class="col-sm-3 control-label">State</label>
                                             <div class="col-sm-2">
                                                 <input type="text" class="form-control" name="country" placeholder="" v-model="org.address.state">
@@ -90,60 +96,42 @@
                                             <div class="col-sm-2">
                                                 <input type="text" class="form-control" name="postcode" placeholder="" v-model="org.address.postcode">
                                             </div>
-                                          </div>
-                                          <div class="form-group">
+                                        </div>
+                                        <div class="form-group">
                                             <label for="" class="col-sm-3 control-label" >Country</label>
                                             <div class="col-sm-4">
                                                 <select class="form-control" name="country" v-model="org.address.country">
                                                     <option v-for="c in countries" :value="c.code" :key="c.code">{{ c.name }}</option>
                                                 </select>
                                             </div>
-                                          </div>
-                                          <div class="form-group">
+                                        </div>
+                                        <div class="form-group">
                                             <div class="col-sm-12">
                                                 <button v-if="!updatingAddress" class="pull-right btn btn-primary" @click.prevent="updateAddress()">Update</button>
                                                 <button v-else disabled class="pull-right btn btn-primary"><i class="fa fa-spin fa-spinner"></i>&nbsp;Updating</button>
                                             </div>
-                                          </div>
-                                       </form>
-                                  </div>
-                                </div>
+                                        </div>
+                                    </form>
+                                </FormSection>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
-                                <div class="panel panel-default">
-                                  <div class="panel-heading">
-                                    <h3 class="panel-title">Contact Details
-                                        <a class="panelClicker" :href="'#'+cdBody" data-toggle="collapse"  data-parent="#userInfo" expanded="false" :aria-controls="cdBody">
-                                            <span class="glyphicon glyphicon-chevron-down pull-right "></span>
-                                        </a>
-                                    </h3>
-                                  </div>
-                                  <div class="panel-body collapse" :id="cdBody">
-                                        <form class="form-horizontal" action="index.html" method="post">
-                                            <div class="col-sm-12">
-                                                <button @click.prevent="addContact()" style="margin-bottom:10px;" class="btn btn-primary pull-right">Add Contact</button>
-                                            </div>
-                                            <div class="col-sm-12 row top-buffer-s">
-                                                <datatable ref="contacts_datatable" id="organisation_contacts_datatable" :dtOptions="contacts_options" :dtHeaders="contacts_headers"/>
-                                            </div>
-                                        </form>
-                                  </div>
-                                </div>
+                                <FormSection :formCollapse="false" label="Contact Details" Index="contact_details">
+                                    <form class="form-horizontal" action="index.html" method="post">
+                                        <div class="col-sm-12">
+                                            <button @click.prevent="addContact()" style="margin-bottom:10px;" class="btn btn-primary pull-right">Add Contact</button>
+                                        </div>
+                                        <div class="col-sm-12 row top-buffer-s">
+                                            <datatable ref="contacts_datatable" id="organisation_contacts_datatable" :dtOptions="contacts_options" :dtHeaders="contacts_headers"/>
+                                        </div>
+                                    </form>
+                                </FormSection>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
-                                <div class="panel panel-default">
-                                  <div class="panel-heading">
-                                    <h3 class="panel-title">Linked Persons<small> - Manage the user accounts linked to the organisation</small>
-                                        <a class="panelClicker" :href="'#'+oBody" data-toggle="collapse"  data-parent="#userInfo" expanded="true" :aria-controls="oBody">
-                                            <span class="glyphicon glyphicon-chevron-down pull-right "></span>
-                                        </a>
-                                    </h3>
-                                  </div>
-                                  <div class="panel-body collapse" :id="oBody">
+                                <FormSection :formCollapse="false" label="Linked Persons" Index="linked_persons" subtitle="Manage the user accounts linked to the organisation">
                                     <div class="row">
                                         <div class="col-sm-8">
                                             <div class="row">
@@ -210,16 +198,20 @@
                                             </div>
                                         </div>
                                     </form>
-                                    
-                                  </div>
-                                </div>
+                                </FormSection>
                             </div>
                         </div>
                     </div> 
-                    <div :id="oTab" class="tab-pane fade">
-                        <ProposalDashTable ref="proposals_table" level='internal' :url='proposals_url'/>
-                        <ApprovalDashTable ref="approvals_table" level='internal' :url='approvals_url'/>
-                        <ComplianceDashTable ref="compliances_table" level='internal' :url='compliances_url'/>
+                    <div :id="oTab" class="tab-pane fade" role="tabpanel" aria-labelledby="pills-other-tab">
+                        <FormSection :form-collapse="false" label="Proposals" Index="proposals">
+                            <ProposalDashTable ref="proposals_table" level='internal' :url='proposals_url'/>
+                        </FormSection>
+                        <FormSection :form-collapse="false" label="Approvals" Index="approvals">
+                            <ApprovalDashTable ref="approvals_table" level='internal' :url='approvals_url'/>
+                        </FormSection>
+                        <FormSection :form-collapse="false" label="Compliances with requirements" Index="compliances">
+                            <ComplianceDashTable ref="compliances_table" level='internal' :url='compliances_url'/>
+                        </FormSection>
                     </div>
                 </div>
             </div>
@@ -239,19 +231,13 @@ import ProposalDashTable from '@common-utils/proposals_dashboard.vue'
 import ApprovalDashTable from '@common-utils/approvals_dashboard.vue'
 import ComplianceDashTable from '@common-utils/compliances_dashboard.vue'
 import CommsLogs from '@common-utils/comms_logs.vue'
+import FormSection from '@/components/forms/section_toggle.vue';
 import utils from '../utils'
 export default {
     name: 'OrganisationComponent',
     data () {
         let vm = this;
         return {
-            adBody: 'adBody'+uuidv4(),
-            aBody: 'aBody'+uuidv4(),
-            pdBody: 'pdBody'+uuidv4(),
-            pBody: 'pBody'+uuidv4(),
-            cdBody: 'cdBody'+uuidv4(),
-            cBody: 'cBody'+uuidv4(),
-            oBody: 'oBody'+uuidv4(),
             dTab: 'dTab'+uuidv4(),
             oTab: 'oTab'+uuidv4(),
             org: {
@@ -328,7 +314,8 @@ export default {
         ApprovalDashTable,
         ComplianceDashTable,
         AddContact,
-        CommsLogs
+        CommsLogs,
+        FormSection,
     },
     computed: {
         isLoading: function () {
