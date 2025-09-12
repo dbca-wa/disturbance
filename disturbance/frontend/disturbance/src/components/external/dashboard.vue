@@ -3,8 +3,8 @@
     <div class="row">
         <div class="col-sm-12 mb-2">
             <div class="card">
-                <div class="well well-sm card-body">
-                    <span class="card-text" v-html="welcomeMessage"></span>
+                <div class="round-box px-3 mt-4 card-body">
+                    <p class="card-text" v-html="welcomeMessage"></p>
                     <router-link  style="margin-top:25px;" class="btn btn-primary" :to="{ name: 'apply_proposal' }">New Proposal</router-link>
                 </div>
                 <!-- <div class="row">
@@ -18,7 +18,13 @@
             </div>
         </div>
     </div>
-    <MapDashboard  v-if="show_das_map && !apiaryTemplateGroup" level="external" :is_external="true"/>
+    <FormSection
+            :form-collapse="false"
+            label="Proposals Map"
+            Index="proposals_map"
+        >
+        <MapDashboard  v-if="show_das_map && !apiaryTemplateGroup" level="external" :is_external="true"/>
+    </FormSection>      
     <FormSection
             :form-collapse="false"
             label="Proposals"
