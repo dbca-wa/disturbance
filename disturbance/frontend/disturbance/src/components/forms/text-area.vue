@@ -79,33 +79,16 @@ export default {
         },
         
         adjustTextareaHeight() {
-            // var textareas = document.querySelectorAll('textarea');
-            // textareas.forEach(function(textarea) {
-            //     textarea.dataset.originalHeight = textarea.style.height;
-            //     textarea.dataset.originalOverflow = textarea.style.overflow;
-            //     textarea.style.height = 'auto';
-            //     textarea.style.height = textarea.scrollHeight + 'px';
-            //     textarea.style.overflow = 'hidden';
-
-            // });
-            // let textarea = $('#' + 'textarea_' + this.id);
-            // textarea.css('height','auto') 
-            // textarea.css('height',textarea.height()) 
-            // textarea.css('overflow','hidden') 
             let textarea = document.getElementById('textarea_' + this.id);
                 textarea.dataset.originalHeight = textarea.style.height;
                 textarea.dataset.originalOverflow = textarea.style.overflow;
                 textarea.style.height = 'auto';
-                textarea.style.height = textarea.scrollHeight + 'px';
+                // textarea.style.height = textarea.scrollHeight + 'px';
+                // textarea.style.overflow = 'hidden';
                 textarea.style.overflow = 'hidden';
+                textarea.style.height = (textarea.scrollHeight + 15) + 'px';                
         },
         revertTextareaStyleAfterPrinting() {
-            // var textareas = document.querySelectorAll('textarea');
-            // textareas.forEach(function(textarea) {
-            //     // Revert to original height and overflow style
-            //     textarea.style.height = textarea.dataset.originalHeight;
-            //     textarea.style.overflow = textarea.dataset.originalOverflow;
-            // });
             let textarea = document.getElementById('textarea_' + this.id);
                 textarea.style.height = textarea.dataset.originalHeight;
                 textarea.style.overflow = textarea.dataset.originalOverflow;
