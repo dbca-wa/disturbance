@@ -3,6 +3,12 @@
         <template v-if="is_local">
             proposal_external.vue
         </template>
+        <template v-if="isLoading">
+            <div class="loading-container">
+                <div class="spinner"></div>
+                <p class="loading-text">Loading...</p>
+            </div>
+        </template>
         <form :action="proposal_form_url" method="post" name="new_proposal" enctype="multipart/form-data">
             <div v-if="!proposal_readonly">
                 <div v-if="!proposal.apiary_group_application_type && !proposal.shapefile_json" class="row">
@@ -1168,13 +1174,14 @@ export default {
         let proposal_id = this.$route.params.proposal_id
 
         let vm = this;
+        vm.loading.push('Loading Proposal')
         Vue.http.get(`/api/proposal/${ proposal_id }.json`).then(
             res => {
-                vm.loading.push('fetching proposal')
+                // vm.loading.push('fetching proposal')
                 vm.proposal = res.body;
                 console.log('vm.proposal')
                 console.log(vm.proposal)
-                vm.loading.splice('fetching proposal', 1);
+                vm.loading.splice('Loading Proposal', 1);
                 vm.setdata(vm.proposal.readonly);
 
                 Vue.http.get(helpers.add_endpoint_json(api_endpoints.proposals, proposal_id + '/amendment_request')).then((res) => {
@@ -1186,6 +1193,7 @@ export default {
             },
             err => {
                 console.log(err);
+                vm.loading.splice('Loading Proposal', 1);
             }
         );
         // retrieve template group
@@ -1243,6 +1251,35 @@ export default {
 
 .swal2-container {
   z-index: 9999 !important;
+}
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px; /* Optional: adjust based on layout */
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #ccc;
+  border-top-color: #42b983;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 10px;
+}
+
+.loading-text {
+  font-size: 16px;
+  color: #555;
+  font-weight: 500;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 </style>

@@ -1,3 +1,9 @@
+<template v-if="isLoading">
+    <div class="loading-container">
+        <div class="spinner"></div>
+            <p class="loading-text">Loading...</p>
+        </div>
+</template>
 <template>
     <div class="row">
         <div class="col-md-3">
@@ -62,12 +68,16 @@
                 applicationTypeName: '',
                 isSubmitting: false,
                 proposal: null,
+                "loading": [],
             }
         },
         components:{
             SectionsProposalTemporaryUse,
         },
         computed: {
+            isLoading: function() {
+                return this.loading.length > 0
+            },
             csrf_token: function() {
               return helpers.getCookie('csrftoken')
             },
@@ -88,6 +98,7 @@
         methods: {
             loadProposal: async function(proposal_id) {
                 let vm = this
+                vm.loading.push('Loading Proposal')
                 Vue.http.get(`/api/proposal/${proposal_id}.json`).then(re => {
                     console.log('in loadProposal');
                     console.log(re.body)
@@ -111,7 +122,9 @@
                     vm.period_and_sites_key = uuid();
                     // Update TemporaryOccupier component
                     vm.temporary_occupier_key = uuid();
+                    vm.loading.splice('Loading Proposal', 1);
                 });
+                vm.loading.splice('Loading Proposal', 1);
             },
             save: function(){
                 this.proposal_update();
@@ -216,5 +229,26 @@
 <style>
 .sections-proposal-temporary-use {
     margin: 0 0 4em 0;
+}
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #ccc;
+  border-top-color: #42b983;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 10px;
+}
+
+.loading-text {
+  font-size: 16px;
+  color: #555;
+  font-weight: 500;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>
