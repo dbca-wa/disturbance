@@ -52,6 +52,10 @@ export default defineConfig(() => {
                         src: 'node_modules/font-awesome/fonts',
                         dest: 'node_modules/font-awesome',
                     },
+                    {
+                        src: 'node_modules/summernote/dist/font',
+                        dest: 'node_modules/summernote/dist',
+                    },
                     // {
                     //     src: 'node_modules/@fortawesome/fontawesome-free/webfonts',
                     //     dest: 'node_modules/@fortawesome/fontawesome-free/',
