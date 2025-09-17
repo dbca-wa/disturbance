@@ -1,15 +1,17 @@
 <template lang="html">
+<div>
+    <template v-if="isLoading">
+            <div class="loading-container">
+                <div class="spinner"></div>
+                <p class="loading-text">Loading...</p>
+            </div>
+    </template>
     <div v-if="proposal" class="container" id="internalProposal">
 
         <template v-if="is_local">
             proposal.vue
         </template>
-        <template v-if="isLoading">
-            <div class="loading-container">
-                <div class="spinner"></div>
-                <p class="loading-text">Loading...</p>
-            </div>
-        </template>
+        
       <div class="row">
         <h3 v-if="proposal.migrated">Proposal: {{ proposal.lodgement_number }} (Migrated)</h3>
         <h3 v-else>Proposal: {{ proposal.lodgement_number }}</h3>
@@ -395,8 +397,8 @@
         <ProposedApproval ref="proposed_approval" :processing_status="proposal.processing_status" :proposal_id="proposal.id" :proposal_type='proposal.proposal_type' :isApprovalLevelDocument="isApprovalLevelDocument" :submitter_email="proposal.submitter_email" :applicant_email="applicant_email" :relevant_applicant_address="proposal.applicant.address" :relevant_applicant_name="proposal.applicant.name" :reissued="proposal.reissued" @refreshFromResponse="refreshFromResponse"/>
     
 
-    
     </div>
+</div>
     
 </template>
 <script>

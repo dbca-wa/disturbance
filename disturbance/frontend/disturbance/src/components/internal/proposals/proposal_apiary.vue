@@ -1,4 +1,11 @@
 <template lang="html">
+    <div>
+        <template v-if="isLoading">
+            <div class="loading-container">
+                <div class="spinner"></div>
+                <p class="loading-text">Loading...</p>
+            </div>
+    </template>
     <div v-if="proposal" class="container" id="internalProposal">
         <template v-if="is_local">
         </template>
@@ -500,6 +507,7 @@
             @refreshFromResponse="refreshFromResponse"
         />
     </div>
+</div>
 </template>
 <script>
 import ProposalDisturbance from '../../form.vue'
@@ -1324,6 +1332,7 @@ export default {
     },
     created: async function() {
         try {
+            this.loading.push('Loading Proposal')
             const res = await Vue.http.get(`/api/proposal/${this.proposalId}/internal_proposal.json/?with_apiary_sites=true`);
             this.proposal = Object.assign({}, res.body);
             //this.original_proposal = helpers.copyObject(res.body);
@@ -1336,8 +1345,10 @@ export default {
                     await this.initialiseOrgContactTable();
                 }
             });
+            this.loading.splice('Loading Proposal', 1);
         } catch(err) {
             console.log(err);
+            this.loading.splice('Loading Proposal', 1);
         }
     },
 }
