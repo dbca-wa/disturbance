@@ -1,9 +1,9 @@
-import 'vite/modulepreload-polyfill';
 import './jquery-global.js';
 
 import 'bootstrap/dist/css/bootstrap.css'; // CSS first
 import 'bootstrap'; // Bootstrap JS after jQuery
 
+import 'vite/modulepreload-polyfill';
 
 import 'font-awesome/css/font-awesome.min.css';
 import 'jquery.easing';
@@ -28,18 +28,18 @@ window.JSZip = jsZip;
 
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 // import 'eonasdan-bootstrap-datetimepicker'; // After Bootstrap JS
-import 'datatables.net';
-import 'datatables.net-bs';
-import 'datatables.net-responsive-bs';
+import 'datatables.net-bs5';
+import 'datatables.net-buttons-bs5';
+import 'datatables.net-responsive-bs5';
 import 'datatables.net-buttons/js/dataTables.buttons.js';
 import 'datatables.net-buttons/js/buttons.html5.js';
 
-import 'datatables.net-bs/css/dataTables.bootstrap.css';
-import 'datatables.net-responsive-bs/css/responsive.bootstrap.css';
 import 'sweetalert2/dist/sweetalert2.css';
 import 'jquery-validation';
 import 'select2/dist/css/select2.min.css';
 import 'select2-bootstrap-theme/dist/select2-bootstrap.min.css';
+import '@/../node_modules/datatables.net-bs5/css/dataTables.bootstrap5.min.css';
+import '@/../node_modules/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css';
 // import '@/../node_modules/font-awesome/css/font-awesome.min.css';
 
 // import CKEditor from 'ckeditor4-vue';
