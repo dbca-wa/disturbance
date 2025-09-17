@@ -31,7 +31,7 @@
             </template>
             <!--<LayerInfo v-show="assessorMode" :layer_value="layer_val"  :assessorMode="assessorMode"/>-->
             <LayerInfo v-show="true" :layer_value="layer_val"  :assessorMode="true"/>
-            <div v-if="isPrinting"><br>{{ value }}</div>
+            <div v-if="isPrinting" class="col-md-9"><br>{{ value }}</div>
             <div v-else>
                 <textarea :readonly="readonly" class="form-control" rows="5" :name="name" :required="isRequired" :id="textarea_id">{{ value }} </textarea>
             </div>
