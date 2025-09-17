@@ -1,11 +1,13 @@
-<template v-if="isLoading">
-    <div class="loading-container">
-        <div class="spinner"></div>
-            <p class="loading-text">Loading...</p>
-        </div>
-</template>
+
 <template>
+    
     <div class="row">
+        <template v-if="isLoading" >
+            <div class="loading-container">
+                <div class="spinner"></div>
+                    <p class="loading-text">Loading...</p>
+            </div>
+        </template>
         <div class="col-md-3">
             <h3 v-if="proposal">Application: {{ proposal.lodgement_number }}</h3>
             <h4>Temporary Use</h4>
@@ -122,7 +124,7 @@
                     vm.period_and_sites_key = uuid();
                     // Update TemporaryOccupier component
                     vm.temporary_occupier_key = uuid();
-                    vm.loading.splice('Loading Proposal', 1);
+                    //vm.loading.splice('Loading Proposal', 1);
                 });
                 vm.loading.splice('Loading Proposal', 1);
             },
