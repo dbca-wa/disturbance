@@ -86,7 +86,9 @@
                     <div class="row">
                         <div class="col-lg-12" style="margin-top:25px;">
                             <div v-if="datatableReady">
-                                <datatable ref="proposal_datatable" :id="datatable_id" :dtOptions="proposal_options" :dtHeaders="proposal_headers"/>
+                                <div class="row">
+                                    <datatable ref="proposal_datatable" :id="datatable_id" :dtOptions="proposal_options" :dtHeaders="proposal_headers"/>
+                                </div>
                             </div>
                         </div>
                     </div> 
@@ -322,13 +324,13 @@ export default {
                                 if(full.set_to_surrender){
                                     message = 'This Approval is marked for surrendering to future date';
                                 }
-                                popTemplate = _.template('<a href="#" ' +
+                                popTemplate = _.template('<a href="javascript://" ' +
                                         'role="button" ' +
-                                        'data-toggle="popover" ' +
-                                        'data-trigger="hover" ' +
-                                        'data-placement="top auto"' +
-                                        'data-html="true" ' +
-                                        'data-content="<%= text %>" ' +
+                                        'data-bs-toggle="popover" ' +
+                                        'data-bs-trigger="hover" ' +
+                                        'data-bs-placement="top"' +
+                                        'data-bs-html="true" ' +
+                                        'data-bs-content="<%= text %>" ' +
                                         '><%= tick %></a>');
                                 result += popTemplate({
                                     text: message,
@@ -347,7 +349,6 @@ export default {
                         }
                     }
                     },
-                    'createdCell': helpers.dtPopoverCellFn,
                     name: "id, lodgement_number",
                     searchable: true,
                     defaultContent: '',
@@ -358,7 +359,6 @@ export default {
                     'render': function (value) {
                         return helpers.dtPopover(value);
                     },
-                    'createdCell': helpers.dtPopoverCellFn,
                     name: 'current_proposal__region__name',
                     //visible: false,
                     searchable: true,
@@ -376,7 +376,6 @@ export default {
                     'render': function (value) {
                         return helpers.dtPopover(value);
                     },
-                    'createdCell': helpers.dtPopoverCellFn,
                     name: "current_proposal__title",
                     //visible: false,
                     searchable: true,
@@ -562,10 +561,13 @@ export default {
                         d.approval_status = vm.filterProposalStatus;
                     }
                 },
-                dom: 'lBfrtip',
+                dom:  "<'d-flex align-items-center'<'me-auto'l>fB>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'d-flex align-items-center'<'me-auto'i>p>",
                 buttons:[
                     {
                         extend: 'excel',
+                        className: 'btn btn-primary me-2 rounded',
                         exportOptions: {
                             //columns: ':not(:last-child)'
                             columns: ':not(.noexport)'
@@ -573,6 +575,7 @@ export default {
                     },
                     {
                         extend: 'csv',
+                        className: 'btn btn-primary me-2 rounded',
                         exportOptions: {
                             //columns: ':not(:last-child)'
                             columns: ':not(.noexport)'
@@ -581,8 +584,11 @@ export default {
                 ],
                 columns: vm.tableColumns,
                 processing: true,
-                initComplete: function() {
-                    //vm.showHideColumns()
+                drawCallback: function () {
+                    helpers.enablePopovers();
+                },
+                initComplete: function () {
+                    helpers.enablePopovers();
                 },
             };
             this.datatableReady = true;
@@ -905,7 +911,10 @@ export default {
                                 text: 'Your approval has been reinstated',
                                 icon: 'success'
                             })
-                            vm.$refs.proposal_datatable.vmDataTable.ajax.reload();
+                            vm.$refs.proposal_datatable.vmDataTable.ajax.reload(
+                                helpers.enablePopovers,
+                                false
+                            );
 
                         }).catch((error) => {
                             console.log(error);
@@ -1025,7 +1034,10 @@ export default {
         },
 
         refreshFromResponse: function(){
-            this.$refs.proposal_datatable.vmDataTable.ajax.reload();
+            this.$refs.proposal_datatable.vmDataTable.ajax.reload(
+                helpers.enablePopovers,
+                false
+            );
         },
 
         viewApprovalPDF: function(id,media_link){

@@ -105,13 +105,13 @@ export default {
                                     separator: ' '
                                 }),
                                 result = '<span>' + truncated + '</span>',
-                                popTemplate = _.template('<a href="#" ' +
+                                popTemplate = _.template('<a href="javascript://" ' +
                                     'role="button" ' +
-                                    'data-toggle="popover" ' +
-                                    'data-trigger="click" ' +
-                                    'data-placement="top auto"' +
-                                    'data-html="true" ' +
-                                    'data-content="<%= text %>" ' +
+                                    'data-bs-toggle="popover" ' +
+                                    'data-bs-trigger="hover" ' +
+                                    'data-bs-placement="top"' +
+                                    'data-bs-html="true" ' +
+                                    'data-bs-content="<%= text %>" ' +
                                     '>more</a>');
                             if (_.endsWith(truncated, ellipsis)) {
                                 result += popTemplate({
@@ -121,10 +121,15 @@ export default {
 
                             return result;
                         },
-                        'createdCell': helpers.dtPopoverCellFn,
                         defaultContent: '',
                     }
-                ]
+                ],
+                drawCallback: function () {
+                    helpers.enablePopovers();
+                },
+                initComplete: function () {
+                    helpers.enablePopovers();
+                },
             },
         }
     },

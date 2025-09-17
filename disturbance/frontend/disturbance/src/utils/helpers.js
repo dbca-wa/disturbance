@@ -1,4 +1,41 @@
 export default{
+    truncate(text, { length = 30, omission = '...', separator } = {}) {
+        if (text == null) return '';
+        const str = String(text);
+        if (str.length <= length) return str;
+        const end = length - omission.length;
+        if (end < 1) return omission;
+        let slice = str.slice(0, end);
+        if (separator) {
+            const sepIdx = slice.lastIndexOf(separator);
+            if (sepIdx > -1) {
+                slice = slice.slice(0, sepIdx);
+            }
+        }
+        return slice + omission;
+    },
+    escapeAttr(value) {
+        // Normalize first so objects/arrays become readable JSON not [object Object]
+        let str;
+        if (value == null) {
+            str = '';
+        } else if (typeof value === 'string') {
+            str = value;
+        } else if (typeof value === 'number' || typeof value === 'boolean') {
+            str = String(value);
+        } else {
+            try {
+                str = JSON.stringify(value);
+            } catch {
+                str = String(value);
+            }
+        }
+        return str
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+    },
     is_local: function(){
         if(location.host === 'localhost:8071'){
             return true
@@ -116,37 +153,36 @@ export default{
     var res = string.split( ".json" )
     return res[ 0 ] + '/' + addition + '.json';
   },
-    dtPopover: function(value,truncate_length=30,trigger='hover'){
-        var ellipsis = '...',
-        truncated = _.truncate(value, {
+  dtPopover(value, truncate_length = 30, trigger = 'hover') {
+        const ellipsis = '...';
+        const raw = value == null ? '' : String(value);
+        const truncated = this.truncate(raw, {
             length: truncate_length,
             omission: ellipsis,
-            separator: ' '
-        }),
-        result = '<span>' + truncated + '</span>',
-        popTemplate = _.template('<a href="#" ' +
-            'role="button" ' +
-            'data-toggle="popover" ' +
-            'data-trigger="'+trigger+'" ' +
-            'data-placement="top auto"' +
-            'data-html="true" ' +
-            'data-content="<%= text %>" ' +
-            '>more</a>');
-        if (_.endsWith(truncated, ellipsis)) {
-            result += popTemplate({
-                text: value
-            });
+            separator: ' ',
+        });
+        let result = '<span>' + truncated + '</span>';
+        if (raw.length > truncated.length) {
+            result += `<a class="mx-0 ps-1 pe-0" href="javascript://"
+                role="button"
+                data-bs-toggle="popover"
+                data-bs-trigger="${this.escapeAttr(trigger)}"
+                data-bs-placement="top"
+                data-bs-html="true"
+                data-bs-content="${this.escapeAttr(raw)}"
+            ><small>More</small></a>`;
         }
         return result;
     },
-    dtPopoverCellFn: function(cell){
-        $(cell).find('[data-toggle="popover"]')
-            .popover()
-            .on('click', function (e) {
-                e.preventDefault();
-                return true;
-            });
-    }, 
+    enablePopovers: function () {
+        let popoverTriggerList = [].slice.call(
+            document.querySelectorAll('[data-bs-toggle="popover"]')
+        );
+        // eslint-disable-next-line no-unused-vars
+        let popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+            return new bootstrap.Popover(popoverTriggerEl);
+        });
+    },
     guid: function(){
       function s4(){
         return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);

@@ -80,30 +80,9 @@ export default {
                         //title: originatingLicence,
                         //orderable: false,
                         'render': function (value) {
-                            var ellipsis = '...',
-                                truncated = _.truncate(value, {
-                                    length: 25,
-                                    omission: ellipsis,
-                                    separator: ' '
-                                }),
-                                result = '<span>' + truncated + '</span>',
-                                popTemplate = _.template('<a href="#" ' +
-                                    'role="button" ' +
-                                    'data-toggle="popover" ' +
-                                    'data-trigger="click" ' +
-                                    'data-placement="top auto"' +
-                                    'data-html="true" ' +
-                                    'data-content="<%= text %>" ' +
-                                    '>more</a>');
-                            if (_.endsWith(truncated, ellipsis)) {
-                                result += popTemplate({
-                                    text: value
-                                });
-                            }
-
+                            var result= helpers.dtPopover(value);
                             return result;
                         },
-                        'createdCell': helpers.dtPopoverCellFn,
                         defaultContent: '',
 
                         /*'createdCell': function (cell) {
@@ -186,7 +165,11 @@ export default {
                     $('.dtMoveUp').click(vm.moveUp);
                     $('.dtMoveDown').click(vm.moveDown);
                     //$(this).show();
-                }
+                    helpers.enablePopovers();
+                },
+                initComplete: function () {
+                    helpers.enablePopovers();
+                },
             }
         }
     },
@@ -257,7 +240,10 @@ export default {
                     fetch(helpers.add_endpoint_json(api_endpoints.proposal_requirements,_id+'/discard'))
                     .then(async (response) => {
                         if (!response.ok) { return response.json().then(err => { throw err }); }
-                        vm.$refs.target_requirements_datatable.vmDataTable.ajax.reload();
+                        vm.$refs.target_requirements_datatable.vmDataTable.ajax.reload(
+                            helpers.enablePopovers,
+                            false
+                        );
                     }).catch((error) => {
                         console.log(error);
                     });
@@ -295,7 +281,10 @@ export default {
             })
         },
         updatedRequirements(){
-            this.$refs.target_requirements_datatable.vmDataTable.ajax.reload();
+            this.$refs.target_requirements_datatable.vmDataTable.ajax.reload(
+                helpers.enablePopovers,
+                false
+            );
         },
         eventListeners(){
             let vm = this;

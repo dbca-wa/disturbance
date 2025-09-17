@@ -230,14 +230,14 @@ export default {
                                     separator: ' '
                                 }),
                                 result = '<span>' + truncated + '</span>',
-                                popTemplate = _.template('<a href="#" ' +
+                                popTemplate = _.template('<a href="javascript://" ' +
                                     'role="button" ' +
-                                    'data-toggle="popover" ' +
-                                    'data-trigger="click" ' +
-                                    'data-placement="top auto"' +
-                                    'data-html="true" ' +
-                                    'data-content="<%= text %>" ' +
-                                    '>more</a>');
+                                    'data-bs-toggle="popover" ' +
+                                    'data-bs-trigger="hover" ' +
+                                    'data-bs-placement="top"' +
+                                    'data-bs-html="true" ' +
+                                    'data-bs-content="<%= text %>" ' +
+                                    '>More</a>');
                             if (_.endsWith(truncated, ellipsis)) {
                                 result += popTemplate({
                                     text: value
@@ -247,9 +247,6 @@ export default {
                             //return result;
                             return type=='export' ? value : result;
                         },
-                        'createdCell': helpers.dtPopoverCellFn,
-
-
               },
               {
                 data: "id",
@@ -269,8 +266,12 @@ export default {
               }
           ],
           processing: true,
+          drawCallback: function () {
+              helpers.enablePopovers();
+          },
           initComplete: function() {
-                    $('#loadingSpinner').hide();
+              $('#loadingSpinner').hide();
+              helpers.enablePopovers();
           },
       }
     }
