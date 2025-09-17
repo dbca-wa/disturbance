@@ -51,9 +51,11 @@
                             <label class="control-label pull-left" >Answer Type</label>
                         </div>
                         <div class="col-md-6">
-                            <select class="form-control" ref="select_answer_type" name="select-answer-type" v-model="masterlist.answer_type">
-                                <option v-for="a in answerTypes" :value="a.value" :key="a.value">{{a.label}}</option>
-                            </select>     
+                            <div id="select-answer-type-wrapper">
+                                <select class="form-control" ref="select_answer_type" name="select-answer-type" v-model="masterlist.answer_type">
+                                    <option v-for="a in answerTypes" :value="a.value" :key="a.value">{{a.label}}</option>
+                                </select> 
+                            </div>    
                         </div>
                     </div>
                     <div class="row"><div class="col-md-12" >&nbsp;</div></div>
@@ -87,8 +89,7 @@
                             <label class="control-label pull-left" >Rich Help Text</label>
                         </div>
                         <div class="col-md-9">
-                            <!-- <textarea class="form-control" name="question" v-model="masterlist.help_text"></textarea> -->
-                            <ckeditor :config="editorConfig" name="question" v-model="masterlist.help_text"></ckeditor>
+                             <summernote v-model="masterlist.help_text" ></summernote>
                         </div>
                     </div>
 
@@ -102,9 +103,7 @@
                             <label class="control-label pull-left" >Help Text assessor</label>
                         </div>
                         <div class="col-md-9">
-                            <!-- <textarea class="form-control" name="question" v-model="masterlist.help_text_assessor"></textarea> -->
-                        <!-- <ckeditor :config="editorConfigAssessor" @namespaceloaded="onNamespaceLoaded" name="question" v-model="masterlist.help_text_assessor"></ckeditor> -->
-                            <ckeditor :config="editorConfigAssessor" name="question" v-model="masterlist.help_text_assessor"></ckeditor>
+                             <summernote v-model="masterlist.help_text_assessor" ></summernote>
                         </div>
                     </div>
 
@@ -124,6 +123,7 @@ import { v4 as uuidv4 } from 'uuid';
 import datatable from '@/utils/vue/datatable.vue'
 import modal from '@vue-utils/bootstrap-modal.vue'
 import SchemaOption from './schema_add_option.vue'
+import summernote from '@/components/forms/summernote_editor.vue'
 import {
   api_endpoints,
   helpers,
@@ -136,6 +136,7 @@ export default {
         modal,
         datatable,
         SchemaOption,
+        summernote,
         // SchemaHeader,
         // SchemaExpander,
     },
@@ -165,44 +166,6 @@ export default {
             filterOptions: '',
             isModalOpen:false,
             missing_fields: [],
-            editorConfig: {
-                // The configuration of the editor.
-                //toolbar: toolbar_options,
-                format_tags: 'p;h1;h2;h3;h4;h5;h6;div',
-                //add extra plugins for Print, formatting etc.
-                extraPlugins: 'find, colorbutton, copyformatting, font, preview, print, selectall',
-                externalPlugins: {
-                    'find': '/static/disturbance/js/ckeditor-plugins/find.js',
-                    'colorbutton': '/static/disturbance/js/ckeditor-plugins/colorbutton/plugin.js',
-                    'copyformatting': '/static/disturbance/js/ckeditor-plugins/copyformatting/plugin.js',
-                    'font': '/static/disturbance/js/ckeditor-plugins/font/plugin.js',
-                    'preview': '/static/disturbance/js/ckeditor-plugins/preview/plugin.js',
-                    'print': '/static/disturbance/js/ckeditor-plugins/print/plugin.js',
-                    'selectall': '/static/disturbance/js/ckeditor-plugins/selectall/plugin.js',
-                },
-                // remove bottom bar
-                removePlugins: 'elementspath',
-                resize_enabled: false, 
-            },
-            editorConfigAssessor: {
-                // The configuration of the editor.
-                //toolbar: toolbar_options,
-                format_tags: 'p;h1;h2;h3;h4;h5;h6;div',
-                //add extra plugins for Print, formatting etc.
-                extraPlugins: 'find, colorbutton, copyformatting, font, preview, print, selectall',
-                externalPlugins: {
-                    'find': '/static/disturbance/js/ckeditor-plugins/find.js',
-                    'colorbutton': '/static/disturbance/js/ckeditor-plugins/colorbutton/plugin.js',
-                    'copyformatting': '/static/disturbance/js/ckeditor-plugins/copyformatting/plugin.js',
-                    'font': '/static/disturbance/js/ckeditor-plugins/font/plugin.js',
-                    'preview': '/static/disturbance/js/ckeditor-plugins/preview/plugin.js',
-                    'print': '/static/disturbance/js/ckeditor-plugins/print/plugin.js',
-                    'selectall': '/static/disturbance/js/ckeditor-plugins/selectall/plugin.js',
-                },
-                // remove bottom bar
-                removePlugins: 'elementspath',
-                resize_enabled: false, 
-            },
             // masterlist table
             dtHeadersSchemaMasterlist: ["ID", "QuestionOP", "QuestionHD", "QuestionEX", "Question", "Answer Type", "Action"],
             dtOptionsSchemaMasterlist:{
@@ -544,6 +507,7 @@ export default {
         initAnswerTypeSelector: function () {
             const self = this;
             $(self.$refs.select_answer_type).select2({
+                dropdownParent: $('#select-answer-type-wrapper'),
                 "theme": "bootstrap",
                 placeholder:"Select Answer Type..."
             }).
