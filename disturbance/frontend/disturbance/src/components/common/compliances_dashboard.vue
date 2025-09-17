@@ -322,30 +322,10 @@ export default {
                         name: "requirement__free_requirement, requirement__standard_requirement__text",
                         //visible: false,
                         'render': function (value, type) {
-                            var ellipsis = '...',
-                                truncated = _.truncate(value, {
-                                    length: 25,
-                                    omission: ellipsis,
-                                    separator: ' '
-                                }),
-                                result = '<span>' + truncated + '</span>',
-                                popTemplate = _.template('<a href="#" ' +
-                                    'role="button" ' +
-                                    'data-toggle="popover" ' +
-                                    'data-trigger="click" ' +
-                                    'data-placement="top auto"' +
-                                    'data-html="true" ' +
-                                    'data-content="<%= text %>" ' +
-                                    '>more</a>');
-                            if (_.endsWith(truncated, ellipsis)) {
-                                result += popTemplate({
-                                    text: value
-                                });
-                            }
+                            var result= helpers.dtPopover(value);
                             //return result;
                             return type=='export' ? value : result;
                         },
-                        'createdCell': helpers.dtPopoverCellFn,
                         defaultContent: '',
                     });
             };
@@ -528,8 +508,11 @@ export default {
                 ],
                 columns: vm.tableColumns,
                 processing: true,
-                initComplete: function() {
-                    //vm.showHideColumns()
+                drawCallback: function () {
+                    helpers.enablePopovers();
+                },
+                initComplete: function () {
+                    helpers.enablePopovers();
                 },
             }
             this.datatableReady = true;

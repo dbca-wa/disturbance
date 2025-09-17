@@ -203,30 +203,9 @@ export default {
                         data: "question",
                         width: "80%",
                         mRender:function (data) {
-                            var ellipsis = '...',
-                                truncated = _.truncate(data, {
-                                    length: 100,
-                                    omission: ellipsis,
-                                    separator: ' '
-                                }),
-                                result = '<span>' + truncated + '</span>',
-                                popTemplate = _.template('<a href="#" ' +
-                                    'role="button" ' +
-                                    'data-toggle="popover" ' +
-                                    'data-trigger="click" ' +
-                                    'data-placement="top auto"' +
-                                    'data-html="true" ' +
-                                    'data-content="<%= text %>" ' +
-                                    '>more</a>');
-                            if (_.endsWith(truncated, ellipsis)) {
-                                result += popTemplate({
-                                    text: data
-                                });
-                            }
-
+                           var result= helpers.dtPopover(data);
                             return result
                         },
-                        'createdCell': helpers.dtPopoverCellFn,
                         defaultContent: '',
                     },
                     { 
@@ -248,6 +227,9 @@ export default {
                 rowId: function(_data) {
                     return _data.id
                 },
+                drawCallback: function () {
+                    helpers.enablePopovers();
+                },
                 initComplete: function () {
                     var $searchInput = $('div.dataTables_filter input');
                     $searchInput.unbind('keyup search input');
@@ -256,6 +238,7 @@ export default {
                             vm.$refs.schema_masterlist_table.vmDataTable.search( this.value ).draw();
                         }
                     }, 0)));
+                    helpers.enablePopovers();
                 }
             },
             masterlist: {
@@ -390,7 +373,10 @@ export default {
                     if (!response.ok) {
                         throw new Error(`HTTP error! Status: ${response.status}`);
                     }
-                    self.$refs.schema_masterlist_table.vmDataTable.ajax.reload();
+                    self.$refs.schema_masterlist_table.vmDataTable.ajax.reload(
+                        helpers.enablePopovers,
+                        false
+                    );
                     self.close();
                 }).catch((error) => {
                     swal.fire(
@@ -412,7 +398,10 @@ export default {
                     if (!response.ok) {
                         throw new Error(`HTTP error! Status: ${response.status}`);
                     }
-                    self.$refs.schema_masterlist_table.vmDataTable.ajax.reload();
+                    self.$refs.schema_masterlist_table.vmDataTable.ajax.reload(
+                        helpers.enablePopovers,
+                        false
+                    );
                     self.close();
                 }).catch((error) => {
                     swal.fire(
@@ -489,7 +478,10 @@ export default {
                             if (!response.ok) {
                                 throw new Error(`HTTP error! Status: ${response.status}`);
                             }
-                            self.$refs.schema_masterlist_table.vmDataTable.ajax.reload();
+                            self.$refs.schema_masterlist_table.vmDataTable.ajax.reload(
+                                helpers.enablePopovers,
+                                false
+                            );
                         }, (error) => {
                             swal.fire(
                                 'Delete Error',

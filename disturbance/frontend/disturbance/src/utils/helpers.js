@@ -174,22 +174,6 @@ export default{
         }
         return result;
     },
-    dtPopoverCellFn: function(){
-        // $(cell).find('[data-bs-toggle="popover"]')
-        //     .popover()
-        //     .on('click', function (e) {
-        //         e.preventDefault();
-        //         return true;
-        //     });
-        
-        let popoverTriggerList = [].slice.call(
-            document.querySelectorAll('[data-bs-toggle="popover"]')
-        );
-        // eslint-disable-next-line no-unused-vars
-        let popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-            return new bootstrap.Popover(popoverTriggerEl);
-        });
-    },
     enablePopovers: function () {
         let popoverTriggerList = [].slice.call(
             document.querySelectorAll('[data-bs-toggle="popover"]')

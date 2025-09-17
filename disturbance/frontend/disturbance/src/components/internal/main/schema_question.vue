@@ -315,30 +315,9 @@ export default {
                         width: "80%",
                         searchable: false,
                         mRender:function (data) {
-                            var ellipsis = '...',
-                                truncated = _.truncate(data, {
-                                    length: 40,
-                                    omission: ellipsis,
-                                    separator: ' '
-                                }),
-                                result = '<span>' + truncated + '</span>',
-                                popTemplate = _.template('<a href="#" ' +
-                                    'role="button" ' +
-                                    'data-toggle="popover" ' +
-                                    'data-trigger="click" ' +
-                                    'data-placement="top auto"' +
-                                    'data-html="true" ' +
-                                    'data-content="<%= text %>" ' +
-                                    '>more</a>');
-                            if (_.endsWith(truncated, ellipsis)) {
-                                result += popTemplate({
-                                    text: data
-                                });
-                            }
-
+                            var result= helpers.dtPopover(data);
                             return result
                         },
-                        'createdCell': helpers.dtPopoverCellFn,
                     },
                     { 
                         data: "order",
@@ -357,6 +336,9 @@ export default {
                 rowId: function(_data) {
                     return _data.id
                 },
+                drawCallback: function () {
+                    helpers.enablePopovers();
+                },
                 initComplete: function () {
                     var $searchInput = $('div.dataTables_filter input');
                     $searchInput.unbind('keyup search input');
@@ -365,6 +347,7 @@ export default {
                             vm.$refs.schema_question_table.vmDataTable.search( this.value ).draw();
                         }
                     }, 0)));
+                    helpers.enablePopovers();
                 }
             },
             sectionQuestion: {
@@ -564,7 +547,10 @@ export default {
                     if (!response.ok) {
                         throw new Error(`Save Error: ${response.status}`);
                     }
-                    self.$refs.schema_question_table.vmDataTable.ajax.reload();
+                    self.$refs.schema_question_table.vmDataTable.ajax.reload(
+                        helpers.enablePopovers,
+                        false
+                    );
                     self.close();
 
                 }).catch(error => {
@@ -590,7 +576,10 @@ export default {
                     if (!response.ok) {
                         throw new Error(`Save Error: ${response.status}`);
                     }
-                    self.$refs.schema_question_table.vmDataTable.ajax.reload();
+                    self.$refs.schema_question_table.vmDataTable.ajax.reload(
+                        helpers.enablePopovers,
+                        false
+                    );
                     self.close();
 
                 }).catch(error => {
@@ -693,7 +682,10 @@ export default {
                             if (!response.ok) {
                                 throw new Error(`Delete Error: ${response.status}`);
                             }
-                            self.$refs.schema_question_table.vmDataTable.ajax.reload();
+                            self.$refs.schema_question_table.vmDataTable.ajax.reload(
+                                helpers.enablePopovers,
+                                false
+                            );
 
                         }).catch((error) => {
                             console.log(error);

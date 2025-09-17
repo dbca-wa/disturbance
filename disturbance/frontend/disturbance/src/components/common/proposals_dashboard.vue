@@ -404,7 +404,6 @@ export default {
                         return helpers.dtPopover(value);
                     },
                     defaultContent: '',
-                    'createdCell': helpers.dtPopoverCellFn,
                     //visible: false,
                     name: 'region__name',
                     searchable: true,
@@ -437,7 +436,6 @@ export default {
                         return type=='export' ? value : result;
                     },
                     defaultContent: '',
-                    'createdCell': helpers.dtPopoverCellFn,
                     //visible: false,
                     name: 'title',
                     searchable: true,
@@ -663,9 +661,11 @@ export default {
                 ],
                 columns: vm.tableColumns,
                 processing: true,
-                initComplete: function() {
-                    console.log('in initComplete')
-                    //vm.showHideColumns()
+                drawCallback: function () {
+                    helpers.enablePopovers();
+                },
+                initComplete: function () {
+                    helpers.enablePopovers();
                 },
             };
             //});
@@ -758,7 +758,10 @@ export default {
                             text: 'Your proposal has been discarded',
                             icon: 'success'
                         })
-                        vm.$refs.proposal_datatable.vmDataTable.ajax.reload();
+                        vm.$refs.proposal_datatable.vmDataTable.ajax.reload(
+                            helpers.enablePopovers,
+                            false
+                        );
                     }).catch((error) => {
                         console.log(error);
                     });

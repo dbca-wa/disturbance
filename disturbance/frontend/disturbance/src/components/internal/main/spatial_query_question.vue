@@ -703,11 +703,10 @@ export default {
                     { 
                         data: "masterlist_question.question",
                         width: "40%",
-			'render': function (value, type) {
-	  		    //return helpers.dtPopover(value, 50);
-                            return type=='export' ? value : helpers.dtPopover(value, 50);
-			},
-                        'createdCell': helpers.dtPopoverCellFn,
+                        'render': function (value, type) {
+                            //return helpers.dtPopover(value, 50);
+                                        return type=='export' ? value : helpers.dtPopover(value, 50);
+                        },
                         
 //                        createdCell: function(td, cellData, rowData, row, col){
 //                            if (vm.is_question_expired(rowData.expiry)) {
@@ -718,7 +717,6 @@ export default {
 //                                // keep list for all non-expired questions, all layer names on the dashboard
 //                                vm.current_layers.push(rowData.id) 
 //                            }
-//                            helpers.dtPopoverCellFn;
 //                        }
                     },
                     { 
@@ -732,15 +730,14 @@ export default {
                     { 
                         data: "layers",
                         width: "10%",
-			mRender: function (value, type) {
+                        mRender: function (value, type) {
                             var arr = [];
                             value.forEach(function(d){
                                 arr.push(d.layer.layer_name);
-    		            });
-	  		    //return helpers.dtPopover(arr.toString(), 60);
+                            });
+                            //return helpers.dtPopover(arr.toString(), 60);
                             return type=='export' ? arr : helpers.dtPopover(arr.toString(), 60);
-			},
-                        'createdCell': helpers.dtPopoverCellFn,
+                        },
                     },
                     { 
                         data: "id",
@@ -766,6 +763,9 @@ export default {
                 rowId: function(_data) {
                     return _data.id
                 },
+                drawCallback: function () {
+                    helpers.enablePopovers();
+                },
                 initComplete: function () {
                     var $searchInput = $('div.dataTables_filter input');
                     $searchInput.unbind('keyup search input');
@@ -774,6 +774,7 @@ export default {
                             vm.$refs.spatial_query_question_table.vmDataTable.search( this.value ).draw();
                         }
                     }, 0)));
+                    helpers.enablePopovers();
                 }
             },
 
@@ -809,52 +810,51 @@ export default {
                                 $(td).css('color', 'BlueViolet');
                                 $(td).css('text-decoration', 'line-through');
                                 $(td).attr('title', 'This question will no longer use this layer: Expiry ' + rowData.expiry + '\n' + msg);
-				//$(td).append(" (Expired)");
+				            //$(td).append(" (Expired)");
                             } else {
                                 // keep list for all non-expired questions, all layer names on the dashboard
                                 vm.current_layers.push(rowData.id) 
                                 $(td).attr('title', msg);
                             }
-                            helpers.dtPopoverCellFn;
                         }
 
-		    },
+		            },
                     { 
                         data: "expiry",
                         visible: false,
-		    },
+		            },
                     { 
                         data: "visible_to_proponent",
                         visible: false,
-		    },
+		            },
                     { 
                         data: "buffer",
                         visible: false,
-		    },
+		            },
                     { 
                         data: "how",
                         visible: true,
-		    },
+		            },
                     { 
                         data: "column_name",
                         visible: true,
-		    },
+		            },
                     { 
                         data: "operator",
                         visible: true,
-		    },
+		            },
                     { 
                         data: "value",
                         visible: true,
-		    },
+		            },
                     { 
                         data: "proponent_items",
                         visible: false,
-		    },
+		            },
                     { 
                         data: "assessor_items",
                         visible: false,
-		    },
+		            },
                     { 
                         data: "id",
                         className: "noexport",
@@ -872,6 +872,12 @@ export default {
                 ],
                 rowId: function(_data) {
                     return _data.id
+                },
+                drawCallback: function () {
+                    helpers.enablePopovers();
+                },
+                initComplete: function () {
+                    helpers.enablePopovers();
                 },
 //                initComplete: function () {
 //                    var $searchInput = $('div.dataTables_filter input');

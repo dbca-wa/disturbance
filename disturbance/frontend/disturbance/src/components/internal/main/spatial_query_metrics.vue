@@ -305,77 +305,75 @@ export default {
                     {
                         data: "question",
                         searchable: true,
-			'render': function (value) {
-	  		    return helpers.dtPopover(value, 35);
-			},
-                        'createdCell': helpers.dtPopoverCellFn,
+                        'render': function (value) {
+                            return helpers.dtPopover(value, 35);
+                        },
                     },
                     {
                         data: "answer_mlq",
                         searchable: true,
-			'render': function (value) {
-	  		    return helpers.dtPopover(value, 35);
-			},
-                        'createdCell': helpers.dtPopoverCellFn,
+                        'render': function (value) {
+                            return helpers.dtPopover(value, 35);
+                        },
                     },
                     {
                         data: "layer_name",
                         searchable: true,
                     },
-		    {
-			data: "condition",
-			searchable: false,
-		    },
-		    {
-			data: "result",
-			'render': function (value) {
-	  		    return helpers.dtPopover(value, 20);
-			},
-                        'createdCell': helpers.dtPopoverCellFn,
-		    },
-		    {
-			data: "assessor_answer",
-			'render': function (value) {
-	  		    return helpers.dtPopover(value, 20);
-			},
-                        'createdCell': helpers.dtPopoverCellFn,
-		    },
-		    {
-			data: "time",
-			searchable: false,
-		    },
-//                    {
-//	 	        data: "layer_cached",
-//			'render': function (value) {
-//	  		    return value=='true' ? 'Yes' : 'No';
-//			},
-//		    },
+                    {
+                        data: "condition",
+                        searchable: false,
+                    },
+                    {
+                        data: "result",
+                        'render': function (value) {
+                            return helpers.dtPopover(value, 20);
+                        },
+                    },
+                    {
+                        data: "assessor_answer",
+                        'render': function (value) {
+                            return helpers.dtPopover(value, 20);
+                        },
+                    },
+                    {
+                        data: "time",
+                        searchable: false,
+                    },
+//                  {
+//                      data: "layer_cached",
+//                      'render': function (value) {
+//                          return value=='true' ? 'Yes' : 'No';
+//                      },
+//                  },
 
-		    {
-			data: "error",
-			'render': function (value) {
-                            if (value=='None') {
-                                return '';
-                            }
-	  		    //return helpers.dtPopover(value, 20);
-			},
-                        //'createdCell': helpers.dtPopoverCellFn,
-		    },
-		    {
-			data: "time_retrieve_layer",
-			searchable: false,
+                    {
+                        data: "error",
+                        'render': function (value) {
+                                    if (value=='None') {
+                                        return '';
+                                    }
+                            //return helpers.dtPopover(value, 20);
+                        },
+                    },
+                    {
+                        data: "time_retrieve_layer",
+                        searchable: false,
                         visible: false,
-		    },
-		    {
-			data: "operator_response",
-//			'render': function (value) {
-//	  		    return helpers.dtPopover(value, 20);
-//			},
-//                        'createdCell': helpers.dtPopoverCellFn,
-		    },
-
-
+                    },
+                    {
+                        data: "operator_response",
+            //			'render': function (value) {
+            //	  		    return helpers.dtPopover(value, 20);
+            //			},
+                    },
                 ],
+                drawCallback: function () {
+                    helpers.enablePopovers();
+                },
+                initComplete: function () {
+                    helpers.enablePopovers();
+                }
             },
         }
 
