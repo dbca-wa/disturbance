@@ -106,7 +106,8 @@
                         <div class="col-md-3">
                             <label class="control-label pull-left" >Question</label>
                         </div>
-                        <div class="col-md-9" v-if="isNewEntry">
+                        <div class="col-md-9" v-if="isNewEntry" id="select_question_wrapper">
+
                             <select class="form-control" ref="select_question" name="select-question" v-model="sectionQuestion.question" >
                                 <option v-for="(m, mid) in masterlist" :value="m.id" v-bind:key="`question_${mid}`">{{m.question}}</option>
                             </select>                         
@@ -163,7 +164,7 @@
                         <div class="col-md-3">
                             <label class="control-label pull-left" >Parent Question</label>
                         </div>
-                        <div class="col-md-9">
+                        <div class="col-md-9" id="select_parent_wrapper">
                             <select class="form-control" ref="select_parent" name="select-parent" v-if="filterQuestionParent(sectionQuestion.parent_question)" v-model="sectionQuestion.parent_question" >
                                 <option value=""></option>
                                 <option v-for="(qp, qpid) in parentList" :value="qp.value" v-bind:key="`qparent_${qpid}`" >{{qp.label}}</option>
@@ -710,6 +711,7 @@ export default {
         initQuestionSelector: function () {
                 const self = this;
                 $(self.$refs.select_question).select2({
+                    dropdownParent: $('#select_question_wrapper'),
                     "theme": "bootstrap",
                     allowClear: true,
                     minimumInputLength: 2,
@@ -728,6 +730,7 @@ export default {
         initParentSelector: function () {
                 const self = this;
                 $(self.$refs.select_parent).select2({
+                    dropdownParent: $('#select_parent_wrapper'),
                     "theme": "bootstrap",
                     allowClear: true,
                     minimumInputLength: 2,
