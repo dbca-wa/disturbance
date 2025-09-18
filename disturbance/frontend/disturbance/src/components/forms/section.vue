@@ -1,94 +1,132 @@
 <template lang="html">
-    <!-- <div class="panel panel-default"> -->
-    <div :class="['panel', 'panel-default', { 'expand-for-print': expandForPrint }]" >
-      <div class="panel-heading">
-        <h3 class="panel-title">{{label}}
-            <a :href="'#'+section_id" class="panelClicker" data-toggle="collapse" expanded="true" :aria-controls="section_id">
-                <span class="glyphicon glyphicon-chevron-down pull-right "></span>
-            </a>
-        </h3>
-      </div>
-      <div class="panel-body collapse in" :id="section_id" :class="{ 'in': expandForPrint }">
-    <!-- <div class="panel-body collapse" :id="section_id" > -->
-          <slot></slot>
+  <div :class="['card section-wrapper', { 'expand-for-print': expandForPrint }]">
+    <div class="card-header h4 fw-bold p-4">
+        <div
+                :id="'show_hide_switch_' + section_id"
+                class="row show_hide_switch"
+                aria-expanded="true"
+                :aria-controls="section_id"
+                @click="toggle_show_hide"
+            >
+            <!-- <h3 class="card-title mb-0">{{ label }}</h3>
+            <a
+                :href="'#' + section_id"
+                class="panelClicker"
+                data-bs-toggle="collapse"
+                :aria-controls="section_id"
+                aria-expanded="true"
+            >
+                <i class="bi bi-chevron-down"></i>
+            </a> -->
+            <div class="col-11" :style="'color:' + customColor">
+                    {{ label }}
+            </div>
+            <div class="col-1 text-end">
+                    <i
+                        :id="chevron_elem_id"
+                        class="bi fw-bold chevron-toggle"
+                        :data-bs-target="'#' + section_id"
+                    >
+                    </i>
+            </div>
       </div>
     </div>
+    <div
+      :id="section_id"
+      class="collapse show card-body"
+      :class="{ show: expandForPrint }"
+    >
+      <slot></slot>
+    </div>
+  </div>
 </template>
-
 <script>
+import { v4 as uuid } from 'uuid';
 export default {
-    name:"sectionComp",
-    props:["label","secKey"],
-    data:function () {
-        return {
-            title:"Section title",
-            eventInitialised: false,
-            expandForPrint: true,
-        }
+  name: "sectionComp",
+  props: ["label", "secKey"],
+  data() {
+    return {
+      eventInitialised: false,
+      expandForPrint: true,
+      chevron_elem_id: 'chevron_elem_' + uuid(),
+    };
+  },
+  computed: {
+    section_id() {
+      return "section_" + this.secKey;
     },
-    computed:{
-        section_id:function () {
-            return "section_"+this.secKey
-        }
-    },
-    methods: {
-        
-    },
-    mounted() {
-        
-        if (window.matchMedia) {
-            let mediaQueryList = window.matchMedia('print');
-            mediaQueryList.addListener(this.handleMediaQueryChange);
-            this.expandForPrint = mediaQueryList.matches;
-        }
-    },
-    updated:function () {
-        let vm = this;
-        vm.$nextTick(()=>{
-            if (!vm.eventInitialised){
-                $('.panelClicker[data-toggle="collapse"]').on('click',function () {
-
-                    console.log('clicked');
-
-                    var chev = $(this).children()[0];
-                    window.setTimeout(function () {
-                        $(chev).toggleClass("glyphicon-chevron-down glyphicon-chevron-up");
-                    },100);
-                });
-                this.eventInitialised = true;
-            }
+  },
+  methods:{
+    toggle_show_hide: function () {
+            // Bootstrap add a 'collapsed' class name to the element
+            let elem_expanded_when_clicked = $(
+                '#show_hide_switch_' + this.section_id
+            ).hasClass('collapsed');
+            this.elem_expanded = !elem_expanded_when_clicked;
+            this.$emit('toggle-collapse');
+        },
+  },
+  mounted() {
+    if (window.matchMedia) {
+      let mediaQueryList = window.matchMedia("print");
+      mediaQueryList.addListener(this.handleMediaQueryChange);
+      this.expandForPrint = mediaQueryList.matches;
+    }
+    //chevron_toggle.init();
+  },
+  updated() {
+    this.$nextTick(() => {
+      if (!this.eventInitialised) {
+        document.querySelectorAll(".panelClicker[data-bs-toggle='collapse']").forEach(el => {
+          el.addEventListener("click", function () {
+            const icon = el.querySelector("i");
+            setTimeout(() => {
+              icon.classList.toggle("bi-chevron-down");
+              icon.classList.toggle("bi-chevron-up");
+            }, 100);
+          });
         });
-        
-    },
-}
+        this.eventInitialised = true;
+      }
+    });
+  },
+};
 </script>
-
 <style lang="css">
-    h3.panel-title{
-        font-weight: bold;
-        font-size: 25px;
-        padding:20px;
-    }
-    .expand-for-print .panel-body {
-        display: block !important;
-        visibility: visible !important;
-        height: auto !important;
-    }
+.card-title {
+  font-weight: bold;
+  font-size: 25px;
+  padding: 20px;
+}
 
-    .expand-for-print .panel-body.collapse {
-        display: block !important;
-    }
+.expand-for-print .card-body {
+  display: block !important;
+  visibility: visible !important;
+  height: auto !important;
+}
 
-    .expand-for-print .panel-body.in {
-        display: block !important;
-    }
+@media print {
+  .card-body {
+    display: block !important;
+    visibility: visible !important;
+    height: auto !important;
+  }
+}
+.section-wrapper {
+    margin-bottom: 20px;
+    padding: 0;
+}
 
-        /* You can adjust the styles for printing as needed */
-    @media print {
-    .panel-body {
-        display: block !important;
-        visibility: visible !important;
-        height: auto !important;
-    }
-    }
+.show_hide_switch {
+    cursor: pointer;
+}
+
+.rotate_icon {
+    transition: 0.5s;
+}
+
+.chev_rotated {
+    transform: rotate(90deg);
+}
 </style>
