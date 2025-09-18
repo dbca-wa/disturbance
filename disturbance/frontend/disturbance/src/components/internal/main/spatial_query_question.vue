@@ -668,10 +668,13 @@ export default {
                       //delete data.search.regex;
                     }
                 },
-                dom: 'lBfrtip',
+                dom:  "<'d-flex align-items-center'<'me-auto'l>fB>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'d-flex align-items-center'<'me-auto'i>p>",
                 buttons:[
                     {
                         extend: 'excel',
+                        className: 'btn btn-primary me-2 rounded',
                         exportOptions: {
                             columns: ':not(.noexport)',
                             orthogonal:'export'
@@ -679,6 +682,7 @@ export default {
                     },
                     {
                         extend: 'csv',
+                        className: 'btn btn-primary me-2 rounded',
                         exportOptions: {
                             columns: ':not(.noexport)',
                             orthogonal:'export'

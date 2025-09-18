@@ -1,6 +1,6 @@
 <template lang="html">
-   <div id="DataTable" >
-      <table class="hover table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%" :id="id">
+   <div id="DataTable" class="table-responsive">
+      <table class="hover table border table-striped table-bordered dt-responsive nowrap w-100" cellspacing="0" width="100%" :id="id">
             <thead>
                 <tr>
                     <!--
@@ -102,6 +102,10 @@ export default{
         text-decoration: none;
         background: transparent;
         color: #03a9f4;
+    }
+    table.dataTable {
+        margin-top: 10px;
+        margin-bottom: 8px !important;
     }
     table.table-bordered.dataTable tbody th, table.table-bordered.dataTable tbody td {
         border-bottom-width: 0;
