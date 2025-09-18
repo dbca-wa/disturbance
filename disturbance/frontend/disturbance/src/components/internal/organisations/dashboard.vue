@@ -1,5 +1,5 @@
-<template>
-    <div class="container" id="internalOrgAccessDash">
+<template id="internalOrgAccessDash">
+    <div class="container">
         <FormSection :form-collapse="false" label="Organisation Access Requests" Index="organisation_access_requests">
             <div class="row">
                 <div class="col-md-3">
@@ -39,20 +39,24 @@
                     </div>
                 </div>
             </div>
-            <template v-if="table_id">
-                <datatable
-                    ref="org_access_table"
-                    id="org-access-table"
-                    :dtOptions="dtOptions"
-                    :dtHeaders="dtHeaders"
-                    :key="table_id">
-                </datatable>
-            </template>
+            <div class="row">
+                <div class="col-lg-12" style="margin-top:25px;">
+                    <div v-if="table_id">
+                        <datatable
+                            ref="org_access_table"
+                            id="org-access-table"
+                            :dtOptions="dtOptions"
+                            :dtHeaders="dtHeaders"
+                            :key="table_id">
+                        </datatable>
+                    </div>
+                </div>
+            </div>
         </FormSection>
     </div>
 </template>
 <script>
-import datatable from '@vue-utils/datatable.vue'
+import datatable from '@/utils/vue/datatable.vue'
 import FormSection from '@/components/forms/section_toggle.vue';
 import {
   api_endpoints,
