@@ -79,7 +79,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-1"></div>
-                                <div class="col-md-10">
+                                <div class="col-md-10" id="select_masterlist_wrapper">
                                     <select class="form-control" ref="select_question" name="select-question" v-model="filterMasterlistQuestion" :disabled="sqq_is_disabled()">
                                         <option v-for="(m, mid) in masterlist_questions" :value="m.question" v-bind:key="`question_${mid}`">{{m.question}}</option>
                                     </select>                         
@@ -108,22 +108,16 @@
                             </div>
                         </div>
 
-    <!--
-                        1. {{ masterlistQuestionOptions }}<br>
-                        2. a. {{ filterMasterlistQuestion }} b. {{ spatialquery.question }}<br>
-                        3. {{ spatialquery.answer_mlq }}<br>
-                        4. {{ filterMasterlistOption }}<br>
-    -->
                         <div class="row"><div class="col-md-12" >&nbsp;</div></div>
                         <div>
                             <div class="row">
                                 <div class="col-md-1"></div>
-                                <div class="row">
+                                
                                     <div class="col-md-3">
                                         <label class="control-label pull-left" >Departmental custodian
                                         </label><label class="superscript">*</label>
                                     </div>
-                                </div>
+                                
                             </div>
 
                             <div class="row">
@@ -2129,6 +2123,7 @@ export default {
         initQuestionSelector: function () {
                 const self = this;
                 $(self.$refs.select_question).select2({
+                    dropdownParent: $('#select_masterlist_wrapper'),
                     "theme": "bootstrap",
                     allowClear: true,
                     minimumInputLength: 2,
