@@ -124,9 +124,9 @@
                     vm.period_and_sites_key = uuid();
                     // Update TemporaryOccupier component
                     vm.temporary_occupier_key = uuid();
-                    //vm.loading.splice('Loading Proposal', 1);
+                    vm.loading.splice('Loading Proposal', 1);
                 });
-                vm.loading.splice('Loading Proposal', 1);
+                //vm.loading.splice('Loading Proposal', 1);
             },
             save: function(){
                 this.proposal_update();
