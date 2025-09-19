@@ -59,7 +59,7 @@
                                         id="department_users"  
                                         name="department_users"  
                                         ref="department_users" 
-                                        class="form-control" 
+                                        class="form-select" 
                                     />
 
                                     <template v-if='!sendingReferral'>

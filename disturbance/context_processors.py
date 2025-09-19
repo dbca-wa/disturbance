@@ -50,4 +50,5 @@ def apiary_url(request):
         'SHOW_DAS_MAP': settings.SHOW_DAS_MAP,
         'MAX_LAYERS_PER_SQQ': settings.MAX_LAYERS_PER_SQQ,
         "vue3_entry_script": settings.VUE3_ENTRY_SCRIPT,
+        "GIT_COMMIT_HASH": settings.GIT_COMMIT_HASH,
     }

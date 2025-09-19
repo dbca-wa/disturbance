@@ -52,7 +52,7 @@
                         </div>
                         <div class="col-md-6">
                             <div id="select-answer-type-wrapper">
-                                <select class="form-control" ref="select_answer_type" name="select-answer-type" v-model="masterlist.answer_type">
+                                <select class="form-select" ref="select_answer_type" name="select-answer-type" v-model="masterlist.answer_type">
                                     <option v-for="a in answerTypes" :value="a.value" :key="a.value">{{a.label}}</option>
                                 </select> 
                             </div>    

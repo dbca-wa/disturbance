@@ -26,7 +26,7 @@
                 <div class="row form-group">
                     <label class="col-sm-3 control-label">Format</label>
                     <div class="col-sm-6">
-                        <select id="format_select" name="format" class="form-control">
+                        <select id="format_select" name="format" class="form-select">
                             <option value="csv">CSV</option>
                             <option value="excel">Excel</option>
                         </select>
@@ -41,7 +41,7 @@
                 <div class="row form-group">
                     <label class="col-sm-3 control-label">Report Type</label>
                     <div class="col-sm-6">
-                        <select id="report_select" onchange="selectReport()" class="form-control">
+                        <select id="report_select" onchange="selectReport()" class="form-select">
                             <option value="proposal_report">Proposals</option>
                             <option value="approval_report">Approvals</option>
                             <option value="compliance_report">Compliance</option>
@@ -60,7 +60,7 @@
                     <div class="row">
                         <label class="col-sm-3 control-label">Proposal Type</label>
                         <div class="col-sm-6">
-                        <select class="proposal_field form-control" id="proposal_type_select" name="type">
+                        <select class="proposal_field form-select" id="proposal_type_select" name="type">
                             <option value="all">All</option>
                             {% for i in proposal_type_options %}
                                 <option value="{{i.code}}">{{i.description}}</option>
@@ -82,7 +82,7 @@
                     <div class="row">
                         <label class="col-sm-3 control-label">Proposal Status</label>
                         <div class="col-sm-6">
-                        <select class="proposal_field form-control" id="proposal_status_options" name="status">
+                        <select class="proposal_field form-select" id="proposal_status_options" name="status">
                             <option value="all">All</option>
                             {% for i in proposal_status_options %}
                                 <option value="{{i.code}}">{{i.description}}</option>
@@ -137,7 +137,7 @@
                     <div class="row">
                         <label class="col-sm-3 control-label">Approval Status</label>
                         <div class="col-sm-6">
-                            <select class="approval_field form-control" id="approval_status_select" name="status">
+                            <select class="approval_field form-select" id="approval_status_select" name="status">
                                 <option value="all">All</option>
                                 {% for i in approval_status_options %}
                                     <option value="{{i.code}}">{{i.description}}</option>
@@ -179,7 +179,7 @@
                     <div class="row">
                         <label class="col-sm-3 control-label">Compliance Status</label>
                         <div class="col-sm-6">
-                        <select class="compliance_field form-control" id="compliance_status_select" name="status">
+                        <select class="compliance_field form-select" id="compliance_status_select" name="status">
                             <option value="all">All</option>
                             {% for i in compliance_status_options %}
                                 <option value="{{i.code}}">{{i.description}}</option>

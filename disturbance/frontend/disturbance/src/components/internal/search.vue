@@ -8,10 +8,10 @@
                   <div class="col-md-4">
                       <div class="form-group">
                           <label class="control-label" for="Organisation">Search Organisation</label>
-                          <select v-if="organisations == null" class="form-control" name="organisation" v-model="selected_organisation">
+                          <select v-if="organisations == null" class="form-select" name="organisation" v-model="selected_organisation">
                               <option value="">Loading...</option>
                           </select>
-                          <select v-else ref="searchOrg" class="form-control" name="organisation">
+                          <select v-else ref="searchOrg" class="form-select" name="organisation">
                               <option value="">Select Organisation</option>
                               <option v-for="o in organisations" :value="o.id" :key="o.id">{{ o.name }}</option>
                           </select>

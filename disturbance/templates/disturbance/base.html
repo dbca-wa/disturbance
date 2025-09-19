@@ -24,7 +24,7 @@
 {% block extra_css %}
   <link rel="icon" type="image/png" href="/static/favicon.ico" />
 
-  <link rel="stylesheet" href="{% static 'disturbance/css/base.css' %} />
+  <link rel="stylesheet" href="{% static 'disturbance/css/base.css' %}?v={{ GIT_COMMIT_HASH }}" />
 {% endblock extra_css %}
 
 {% block extra_js %}

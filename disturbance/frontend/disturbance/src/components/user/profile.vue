@@ -106,7 +106,7 @@
                             <div class="row">
                                 <label for="" class="col-sm-3 control-label" >Country</label>
                                 <div class="col-sm-4">
-                                    <select class="form-control" id="country" name="Country" v-model="profile.residential_address.country">
+                                    <select class="form-select" id="country" name="Country" v-model="profile.residential_address.country">
                                         <option v-for="c in countries" :key="c.code" :value="c.code">{{ c.name }}</option>
                                     </select>
                                 </div>

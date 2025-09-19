@@ -19,7 +19,7 @@
                                     </div>
                                     <div class="col-sm-9" v-if="requirement.standard">
                                         <div style="width:70% !important">
-                                            <select class="form-control" ref="standard_req" name="standard_requirement" v-model="requirement.standard_requirement">
+                                            <select class="form-select" ref="standard_req" name="standard_requirement" v-model="requirement.standard_requirement">
                                                 <option v-for="r in requirements" :value="r.id" :key="r.id">{{r.code}} {{r.text}}</option>
                                             </select>
                                         </div>

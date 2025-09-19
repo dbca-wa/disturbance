@@ -3,108 +3,102 @@
     <div class="row">
         <h3>Compliance with Requirements {{ compliance.reference }}</h3>
         <div class="col-md-3">
-        <CommsLogs :comms_url="comms_url" :logs_url="logs_url" :comms_add_url="comms_add_url" :disable_add_entry="false"/>
-            <div class="row">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+            <CommsLogs :comms_url="comms_url" :logs_url="logs_url" :comms_add_url="comms_add_url" :disable_add_entry="false"/>
+            <div class="mb-3">
+                <div class="card card-default">
+                    <div class="card-header">
                        Submission 
                     </div>
-                    <div class="panel-body panel-collapse">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <strong>Submitted by</strong><br/>
-                                {{ compliance.submitter}}
-                            </div>
-                            <div class="col-sm-12 top-buffer-s">
-                                <strong>Lodged on</strong><br/>
-                                {{ formatDate(compliance.lodgement_date) }}
-                            </div>
-                            <div class="col-sm-12 top-buffer-s">
-                                <table class="table small-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Lodgement</th>
-                                            <th>Date</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                            </div>
-                        </div>
+                    <div class="card-body py-2">
+                        <strong>Submitted by</strong><br/>
+                        {{ compliance.submitter}}
+                    </div>
+                    <div class="card-body border-top py-2">
+                        <strong>Lodged on</strong><br/>
+                        {{ formatDate(compliance.lodgement_date) }}
+                    </div>
+                    <div class="card-body border-top py-2">
+                        <table class="table small-table">
+                            <thead>
+                                <tr>
+                                    <th>Lodgement</th>
+                                    <th>Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                        </table>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+            <div class="mb-3">
+                <div class="card card-default sticky-top">
+                    <div class="card-header">
                         Workflow 
                     </div>
-                    <div class="panel-body panel-collapse">
+                    <div class="card-body py-2">
+                        <strong>Status</strong><br/>
+                        {{ compliance.processing_status }}
+                    </div>
+                    <div class="card-body border-top">
                         <div class="row">
                             <div class="col-sm-12">
-                                <strong>Status</strong><br/>
-                                {{ compliance.processing_status }}
-                            </div>
-                            <div class="col-sm-12 top-buffer-s">
                                 <strong>Currently assigned to</strong><br/>
                                 <div class="form-group">
-                                    <select v-show="isLoading" class="form-control">
+                                    <select v-show="isLoading" class="form-select">
                                         <option value="">Loading...</option>
                                     </select>
-                                    <select @change="assignTo" :disabled="canViewonly || !check_assessor()" v-if="!isLoading" class="form-control" v-model="compliance.assigned_to">
+                                    <select @change="assignTo" :disabled="canViewonly || !check_assessor()" v-if="!isLoading" class="form-select" v-model="compliance.assigned_to">
                                         <option value="null">Unassigned</option>
                                         <option v-for="member in compliance.allowed_assessors" :value="member.id" :key="member.id">{{member.first_name}} {{member.last_name}}</option>
                                     </select>
-                                    <a v-if="!canViewonly && check_assessor()" @click.prevent="assignMyself()" class="actionBtn pull-right">Assign to me</a>
+                                    <a v-if="!canViewonly && check_assessor()" @click.prevent="assignMyself()" class="actionBtn float-end">Assign to me</a>
                                 </div>
-                            </div>
-                            <div class="col-sm-12 top-buffer-s" v-if="!canViewonly && check_assessor()">
-                                <strong>Action</strong><br/>
-                                <button class="btn btn-primary btn-margin" @click.prevent="acceptCompliance()">Accept</button><br/>
-                                <button class="btn btn-primary top-buffer-s" @click.prevent="amendmentRequest()">Request Amendment</button>
-                            </div>
+                            </div>  
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-1"></div>
-        <div class="col-md-8">
-            <div class="row">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3>Compliance with Requirements</h3> 
-                    </div>
-                    <div class="panel-body panel-collapse">
+                    <div class="card-body border-top" v-if="!canViewonly && check_assessor()">
                         <div class="row">
                             <div class="col-sm-12">
-                                <form class="form-horizontal" name="compliance_form">
-                                    <div class="form-group">
-                                        <label for="" class="col-sm-3 control-label">Requirement</label>
-                                        <div class="col-sm-6">
-                                            {{compliance.requirement}}
-                                        </div>
-                                    </div>   
-                                    <div class="form-group">
-                                        <label for="" class="col-sm-3 control-label">Details</label>
-                                        <div class="col-sm-6">
-                                            <textarea disabled class="form-control" name="details" placeholder="" v-model="compliance.text"></textarea>
-                                        </div>
-                                    </div>   
-                                    <div class="form-group">
-                                        <label for="" class="col-sm-3 control-label">Documents</label>
-                                        <div class="col-sm-6">
-                                            <div class="row" v-for="d in compliance.documents" :key="d">
-                                                    <a :href="d[1]" target="_blank" class="control-label pull-left">{{d[0]}}</a>
-                                            </div>
-                                        </div>
-                                    </div>                               
-                                </form>
+                                <div class="row mb-2">
+                                    <strong>Action</strong><br/>
+                                </div>
+                                <div class="col-sm-12">
+                                    <button style="width: 90%" class="btn btn-primary" @click.prevent="acceptCompliance()">Accept</button><br/>
+                                </div>
+                                <div class="col-sm-12">
+                                    <button style="width: 90%" class="btn btn-primary top-buffer-s" @click.prevent="amendmentRequest()">Request Amendment</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> 
+        </div>
+        <div class="col-md-8">
+            <FormSection :formCollapse="false" label="Compliance with Requirements" Index="compliance_with_req">
+                <form class="form-horizontal" name="compliance_form">
+                    <div class="row mb-3">
+                        <label for="" class="col-sm-3 col-form-label">Requirement</label>
+                        <div class="col-sm-6">
+                            {{compliance.requirement}}
+                        </div>
+                    </div>   
+                    <div class="row mb-3">
+                        <label for="" class="col-sm-3 col-form-label">Details</label>
+                        <div class="col-sm-6">
+                            <textarea disabled class="form-control" name="details" placeholder="" v-model="compliance.text"></textarea>
+                        </div>
+                    </div>   
+                    <div class="row mb-3">
+                        <label for="" class="col-sm-3 col-form-label">Documents</label>
+                        <div class="col-sm-6">
+                            <div class="row" v-for="d in compliance.documents" :key="d">
+                                    <a :href="d[1]" target="_blank" class="control-label float-start">{{d[0]}}</a>
+                            </div>
+                        </div>
+                    </div>                               
+                </form>
+            </FormSection>
         </div>
     </div>
     <ComplianceAmendmentRequest ref="amendment_request" :compliance_id="compliance.id"></ComplianceAmendmentRequest>
@@ -114,6 +108,7 @@
 // import datatable from '@vue-utils/datatable.vue'
 import CommsLogs from '@common-utils/comms_logs.vue'
 import ComplianceAmendmentRequest from './compliance_amendment_request.vue'
+import FormSection from "@/components/forms/section_toggle.vue";
 import {
   api_endpoints,
   helpers
@@ -155,6 +150,7 @@ export default {
   components: {
     CommsLogs,
     ComplianceAmendmentRequest,
+    FormSection,
   },
   computed: {
     isLoading: function () {

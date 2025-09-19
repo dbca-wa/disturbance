@@ -6,7 +6,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="">Proposal Type</label>
-                            <select class="form-control" v-model="filterTableProposalType" >
+                            <select class="form-select" v-model="filterTableProposalType" >
                                 <option value="All">All</option>
                                 <option v-for="(p, pid) in schemaProposalTypes" :value="p.value" v-bind:key="`purpose_${pid}`">{{p.label}}</option>
                             </select>
@@ -20,7 +20,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="">Section</label>
-                            <select class="form-control" v-model="filterTableSection" >
+                            <select class="form-select" v-model="filterTableSection" >
                                 <option value="All">All</option>
                                 <option v-for="(s, sid) in schemaSections" :value="s.value" v-bind:key="`section_${sid}`">{{s.label}}</option>
                             </select>
@@ -73,13 +73,13 @@
                             <label class="control-label pull-left" >Licence Proposal Type</label>
                         </div>
                         <div class="col-md-6" v-if="isNewEntry">
-                            <select class="form-control" ref="select_purpose" name="select-purpose" v-model="filterQuestionProposalType" >
+                            <select class="form-select" ref="select_purpose" name="select-purpose" v-model="filterQuestionProposalType" >
                                 <option value="All">All</option>
                                 <option v-for="(p, pid) in schemaProposalTypes" :value="p.value" v-bind:key="`purpose_${pid}`">{{p.label}}</option>
                             </select>                               
                         </div>
                         <div class="col-md-6" v-else >
-                            <select disabled class="form-control" ref="select_purpose" name="select-purpose" v-model="filterQuestionProposalType" >
+                            <select disabled class="form-select" ref="select_purpose" name="select-purpose" v-model="filterQuestionProposalType" >
                                 <option v-for="(p, pid) in schemaProposalTypes" :value="p.value" v-bind:key="`purpose_${pid}`">{{p.label}}</option>
                             </select>                         
                         </div>
@@ -90,13 +90,13 @@
                             <label class="control-label pull-left" >Section</label>
                         </div>
                         <div class="col-md-6" v-if="isNewEntry">
-                            <select class="form-control" ref="select_section" name="select-section" v-model="filterQuestionSection" >
+                            <select class="form-select" ref="select_section" name="select-section" v-model="filterQuestionSection" >
                                 <option value="All">All</option>
                                 <option v-for="(s, sid) in schemaSections" :value="s.value" v-bind:key="`section_${sid}`">{{s.label}}</option>
                             </select>                          
                         </div>
                         <div class="col-md-6" v-else >
-                            <select disabled class="form-control" ref="select_section" name="select-section" v-model="filterQuestionSection" >
+                            <select disabled class="form-select" ref="select_section" name="select-section" v-model="filterQuestionSection" >
                                 <option v-for="(s, sid) in schemaSections" :value="s.value" v-bind:key="`section_${sid}`">{{s.label}}</option>
                             </select>                      
                         </div>
@@ -108,12 +108,12 @@
                         </div>
                         <div class="col-md-9" v-if="isNewEntry" id="select_question_wrapper">
 
-                            <select class="form-control" ref="select_question" name="select-question" v-model="sectionQuestion.question" >
+                            <select class="form-select" ref="select_question" name="select-question" v-model="sectionQuestion.question" >
                                 <option v-for="(m, mid) in masterlist" :value="m.id" v-bind:key="`question_${mid}`">{{m.question}}</option>
                             </select>                         
                         </div>
                         <div class="col-md-9" v-else >
-                            <select disabled class="form-control" ref="select_question" name="select-question" v-model="sectionQuestion.question" >
+                            <select disabled class="form-select" ref="select_question" name="select-question" v-model="sectionQuestion.question" >
                                 <option v-for="(m, mid) in masterlist" :value="m.id" v-bind:key="`question_${mid}`">{{m.question}}</option>
                             </select>                          
                         </div>
@@ -165,7 +165,7 @@
                             <label class="control-label pull-left" >Parent Question</label>
                         </div>
                         <div class="col-md-9" id="select_parent_wrapper">
-                            <select class="form-control" ref="select_parent" name="select-parent" v-if="filterQuestionParent(sectionQuestion.parent_question)" v-model="sectionQuestion.parent_question" >
+                            <select class="form-select" ref="select_parent" name="select-parent" v-if="filterQuestionParent(sectionQuestion.parent_question)" v-model="sectionQuestion.parent_question" >
                                 <option value=""></option>
                                 <option v-for="(qp, qpid) in parentList" :value="qp.value" v-bind:key="`qparent_${qpid}`" >{{qp.label}}</option>
                             </select>                            
@@ -177,7 +177,7 @@
                             <label class="control-label pull-left" >Parent Answer</label>
                         </div>
                         <div class="col-md-3">
-                            <select class="form-control" ref="select_answer" name="select-answer" v-model="sectionQuestion.parent_answer" >
+                            <select class="form-select" ref="select_answer" name="select-answer" v-model="sectionQuestion.parent_answer" >
                                 <option value=""></option>
                                 <option v-for="(an,anid) in answerList" :value="an.value" v-bind:key="`an_${anid}`">{{an.label}}</option>
                             </select>                            
