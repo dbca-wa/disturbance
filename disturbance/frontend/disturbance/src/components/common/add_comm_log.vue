@@ -32,7 +32,7 @@
                                         <label class="control-label pull-left"  for="Name">Type</label>
                                     </div>
                                     <div class="col-sm-4">
-                                        <select class="form-control" name="type" v-model="comms.type">
+                                        <select class="form-select" name="type" v-model="comms.type">
                                             <option value="">Select Type</option>
                                             <option value="email">Email</option>
                                             <option value="mail">Mail</option>

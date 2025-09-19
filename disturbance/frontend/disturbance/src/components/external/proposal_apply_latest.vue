@@ -92,7 +92,7 @@
                                 <label for="" class="control-label" >{{ objectTypeLabel }}<a v-if="dasTemplateGroup" :href="proposal_type_help_url" target="_blank"><i class="fa fa-question-circle" style="color:blue">&nbsp;</i></a></label>
                                 <div class="col-sm-12">
                                     <div class="form-group">
-                                        <select class="form-control" style="width:40%" v-model="selected_application_id" @change="chainedSelectAppType(selected_application_id)">
+                                        <select class="form-select" style="width:40%" v-model="selected_application_id" @change="chainedSelectAppType(selected_application_id)">
                                             <option value="" selected disabled>{{ objectTypeListLabel }}</option>
                                             <option v-for="application_type in applicationTypesList" :value="application_type.value" :key="application_type.value">
                                                 <!-- {{ application_type.text }} -->
@@ -107,7 +107,7 @@
                                 <label for="" class="control-label" >Region * <a :href="region_help_url" target="_blank"><i class="fa fa-question-circle" style="color:blue">&nbsp;</i></a> </label>
                                 <div class="col-sm-12">
                                     <div class="form-group">
-                                        <select v-model="selected_region" class="form-control" style="width:40%" @change="chainedSelectDistricts(selected_region)">
+                                        <select v-model="selected_region" class="form-select" style="width:40%" @change="chainedSelectDistricts(selected_region)">
 											<option value="" selected disabled>Select region</option>
                                             <option v-for="region in regions" :value="region.value" :key="region.value">
                                                 {{ region.text }}
@@ -121,7 +121,7 @@
                                 <label for="" class="control-label" style="font-weight: normal;">District <a :href="district_help_url" target="_blank"><i class="fa fa-question-circle" style="color:blue">&nbsp;</i></a></label>
                                 <div class="col-sm-12">
                                     <div class="form-group">
-                                        <select  v-model="selected_district" class="form-control" style="width:40%">
+                                        <select  v-model="selected_district" class="form-select" style="width:40%">
 											<option value="" selected disabled>Select district</option>
                                             <option v-for="district in districts" :value="district.value" :key="district.value">
                                                 {{ district.text }}
@@ -136,7 +136,7 @@
 									<label for="" class="control-label" >Activity Type * <a :href="activity_type_help_url" target="_blank"><i class="fa fa-question-circle" style="color:blue">&nbsp;</i></a></label>
 									<div class="col-sm-12">
 										<div class="form-group">
-											<select v-model="selected_activity" @change="chainedSelectSubActivities1(selected_activity)" class="form-control" style="width:40%">
+											<select v-model="selected_activity" @change="chainedSelectSubActivities1(selected_activity)" class="form-select" style="width:40%">
 												<option value="" selected disabled>Select activity</option>
 												<option v-for="activity in activities" :value="activity.value" :key="activity.value">
 													{{ activity.text }}
@@ -150,7 +150,7 @@
 									<label for="" class="control-label" >Sub Activity 1 * <a :href="sub_activity_1_help_url" target="_blank"><i class="fa fa-question-circle" style="color:blue">&nbsp;</i></a></label>
 									<div class="col-sm-12">
 										<div class="form-group">
-											<select v-model="selected_sub_activity1" @change="chainedSelectSubActivities2(selected_sub_activity1)" class="form-control" style="width:40%">
+											<select v-model="selected_sub_activity1" @change="chainedSelectSubActivities2(selected_sub_activity1)" class="form-select" style="width:40%">
 												<option value="" selected disabled>Select sub_activity 1</option>
 												<option v-for="sub_activity1 in sub_activities1" :value="sub_activity1.value" :key="sub_activity1.value">
 													{{ sub_activity1.text }}
@@ -164,7 +164,7 @@
 									<label for="" class="control-label" >Sub Activity 2 * <a :href="sub_activity_2_help_url" target="_blank"><i class="fa fa-question-circle" style="color:blue">&nbsp;</i></a></label>
 									<div class="col-sm-12">
 										<div class="form-group">
-											<select v-model="selected_sub_activity2" @change="chainedSelectCategories(selected_sub_activity2)" class="form-control" style="width:40%">
+											<select v-model="selected_sub_activity2" @change="chainedSelectCategories(selected_sub_activity2)" class="form-select" style="width:40%">
 												<option value="" selected disabled>Select sub_activity 2</option>
 												<option v-for="sub_activity2 in sub_activities2" :value="sub_activity2.value" :key="sub_activity2.value">
 													{{ sub_activity2.text }}

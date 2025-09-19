@@ -9,7 +9,7 @@
                   <label for="" class="control-label" >Proposal Type</label>
                   <div>
                       <div class="form-group">
-                          <select class="form-control" style="width:40%" v-model="selected_proposal_type_id" @change="chainedSelectAppType(selected_proposal_type_id)">
+                          <select class="form-select" style="width:40%" v-model="selected_proposal_type_id" @change="chainedSelectAppType(selected_proposal_type_id)">
                               <option value="" selected disabled>Proposal Type</option>
                               <option v-for="proposal_type in proposal_types" :value="proposal_type.value" :key="proposal_type.value">
                                     {{ proposal_type.text }}
@@ -22,7 +22,7 @@
                     <label for="" class="control-label" >Region  </label>
                     <div >
                         <div class="form-group">
-                            <select v-model="selected_region" class="form-control" style="width:40%" @change="chainedSelectDistricts(selected_region)">
+                            <select v-model="selected_region" class="form-select" style="width:40%" @change="chainedSelectDistricts(selected_region)">
                                 <!-- <option value="" selected disabled>Select region</option> -->
                                 <option value="" selected>All</option>
                                 <option v-for="region in regions" :value="region.value" :key="region.value">
@@ -37,7 +37,7 @@
                     <label for="" class="control-label">District </label>
                     <div >
                         <div class="form-group">
-                            <select  v-model="selected_district" class="form-control" style="width:40%">
+                            <select  v-model="selected_district" class="form-select" style="width:40%">
                             <!-- <option value="" selected disabled>Select district</option> -->
                             <option value="" selected >All</option>
                                 <option v-for="district in districts" :value="district.value" :key="district.value">
@@ -53,7 +53,7 @@
                     <label for="" class="control-label" >Activity Type </label>
                     <div >
                       <div class="form-group">
-                        <select v-model="selected_activity" class="form-control" style="width:40%">
+                        <select v-model="selected_activity" class="form-select" style="width:40%">
                           <!-- <option value="" selected disabled>Select activity</option> -->
                           <option value="" selected>All</option>
                           <option v-for="activity in activities" :value="activity.value" :key="activity.value">
@@ -70,7 +70,7 @@
                     <label for="" class="control-label" >Sections </label>
                     <div >
                       <div class="form-group">
-                        <select v-model="selected_section" class="form-control" style="width:40%" @change="chainedSelectSections(selected_section)">
+                        <select v-model="selected_section" class="form-select" style="width:40%" @change="chainedSelectSections(selected_section)">
                           <option value="" selected disabled>Select section</option>
                           <option v-for="section in sections" :value="section.value" :key="section.value">
                             {{ section.text }}
@@ -86,7 +86,7 @@
                     <label for="" class="control-label" >Questions </label>
                     <div >
                       <div class="form-group">
-                        <select v-model="selected_question" class="form-control" style="width:40%" @change="chainedSelectOptions(selected_question)">
+                        <select v-model="selected_question" class="form-select" style="width:40%" @change="chainedSelectOptions(selected_question)">
                           <option value="" selected disabled>Select question</option>
                           <option v-for="question in questions" :value="question.value" :key="question.value">
                             {{ question.text }}
@@ -115,7 +115,7 @@
                     <label for="" class="control-label" >Options </label>
                     <div >
                       <div class="form-group">
-                        <select v-model="selected_option" class="form-control" style="width:40%" >
+                        <select v-model="selected_option" class="form-select" style="width:40%" >
                           <option value="" selected disabled>Select option</option>
                           <option v-for="option in options" :value="option.value" :key="option.value">
                             {{ option.text }}

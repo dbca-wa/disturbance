@@ -32,11 +32,11 @@
             <LayerInfo v-show="true" :layer_value="layer_val"  :assessorMode="true"/>
      
             <template v-if="readonly">
-                <select v-if="!isMultiple" disabled ref="selectB" :id="selectid" :name="name" class="form-control" :data-conditions="cons" style="width:100%">
+                <select v-if="!isMultiple" disabled ref="selectB" :id="selectid" :name="name" class="form-select" :data-conditions="cons" style="width:100%">
                     <option value="">Select...</option>
                     <option v-for="op in options"  :value="op.value" :key="op.label" @change="handleChange" :selected="op.value == value">{{ op.label }}</option>
                 </select>
-                <select v-else disabled ref="selectB" :id="selectid" :name="name" class="form-control" multiple style="width:100%">
+                <select v-else disabled ref="selectB" :id="selectid" :name="name" class="form-select" multiple style="width:100%">
                     <option value="">Select...</option>
                     <option v-for="op in options"  :value="op.value" :key="op.label" :selected="multipleSelection(op.value)">{{ op.label }}</option>
                 </select>
@@ -48,11 +48,11 @@
                 </template>
             </template>
             <template v-else>
-                <select v-if="!isMultiple" ref="selectB" :id="selectid" :name="name" class="form-control" :data-conditions="cons" style="width:100%" :required="isRequired">
+                <select v-if="!isMultiple" ref="selectB" :id="selectid" :name="name" class="form-select" :data-conditions="cons" style="width:100%" :required="isRequired">
                     <option value="">Select...</option>
                     <option v-for="op in options"  :key="op.label" :value="op.value" @change="handleChange" :selected="op.value == value">{{ op.label }}</option>
                 </select>
-                <select v-else ref="selectB" :id="selectid" :name="name" class="form-control" multiple style="width:100%" :required="isRequired">
+                <select v-else ref="selectB" :id="selectid" :name="name" class="form-select" multiple style="width:100%" :required="isRequired">
                     <option value="">Select...</option>
                     <option v-for="op in options"  :key="op.label" :value="op.value" :selected="multipleSelection(op.value)">{{ op.label }}</option>
                 </select>

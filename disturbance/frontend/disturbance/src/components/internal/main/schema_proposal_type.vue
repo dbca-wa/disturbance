@@ -6,7 +6,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="">Proposal Type</label>
-                            <select class="form-control" v-model="filterTableProposalType" >
+                            <select class="form-select" v-model="filterTableProposalType" >
                                 <option value="All">All</option>
                                 <option v-for="(p, pid) in schemaProposalTypes" :value="p.value" v-bind:key="`purpose_${pid}`">{{p.label}}</option>
                             </select>
@@ -50,7 +50,7 @@
                                 <label class="control-label pull-left" >Proposal Type</label>
                             </div>
                             <div class="col-md-6">
-                                <select class="form-control" ref="select_purpose" name="select-purpose" v-model="sectionProposalType.proposal_type" >
+                                <select class="form-select" ref="select_purpose" name="select-purpose" v-model="sectionProposalType.proposal_type" >
                                     <option value="All">Select...</option>
                                     <option v-for="(p, pid) in schemaProposalTypes" :value="p.value" v-bind:key="`purpose_${pid}`">{{p.label}}</option>
                                 </select>                            

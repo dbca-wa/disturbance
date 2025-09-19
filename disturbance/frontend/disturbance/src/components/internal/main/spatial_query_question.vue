@@ -80,7 +80,7 @@
                             <div class="row">
                                 <div class="col-md-1"></div>
                                 <div class="col-md-10" id="select_masterlist_wrapper">
-                                    <select class="form-control" ref="select_question" name="select-question" v-model="filterMasterlistQuestion" :disabled="sqq_is_disabled()">
+                                    <select class="form-select" ref="select_question" name="select-question" v-model="filterMasterlistQuestion" :disabled="sqq_is_disabled()">
                                         <option v-for="(m, mid) in masterlist_questions" :value="m.question" v-bind:key="`question_${mid}`">{{m.question}}</option>
                                     </select>                         
                                     <i>{{spatialquery.answer_type}} - sqq_id: {{spatialquery.question_id}}</i>
@@ -101,7 +101,7 @@
                                 <div class="col-md-1"></div>
                                 <div class="col-md-10">
                                     <!--<select class="form-control" ref="select_answer" name="select-answer" v-model="filterMasterlistOption" :disabled="sqq_is_disabled()">-->
-                                    <select class="form-control" ref="select_answer" name="select-answer" v-model="filterMasterlistOption">
+                                    <select class="form-select" ref="select_answer" name="select-answer" v-model="filterMasterlistOption">
                                         <option v-for="(o, oid) in masterlistQuestionOptions" :value="o.label" v-bind:key="`answer_${oid}`">{{o.label}}</option>
                                     </select>                         
                                 </div>
@@ -124,7 +124,7 @@
                                 <div class="col-md-1"></div>
                                 <div class="col-md-4">
                                     <!-- <select class="form-control" ref="select_group" name="select-group" v-model="spatialquery.group" :disabled="sqq_is_disabled()"> -->
-                                    <select class="form-control" ref="select_group" name="select-group" v-model="spatialquery.group">
+                                    <select class="form-select" ref="select_group" name="select-group" v-model="spatialquery.group">
                                         <!-- <template v-if="group.can_user_edit">
                                             <option v-for="group in spatialquery_selects.cddp_groups" :value="group" :key="group.id">{{group.name}}</option>
                                         </template> -->
@@ -273,7 +273,7 @@
                         <div class="row">
                             <div class="col-md-1"></div>
                             <div class="col-md-10">
-                            <select class="form-control" ref="select_layer" name="select-layer" v-model="spatialquerylayer.layer">
+                            <select class="form-select" ref="select_layer" name="select-layer" v-model="spatialquerylayer.layer">
                                 <option v-for="layer in spatialquery_selects.das_map_layers" :value="layer" :key="layer.id">{{layer.display_name}}</option>
                             </select>     
                             </div>
@@ -358,7 +358,7 @@
                                 <input type="text" class="form-control" name="column_name" v-model="spatialquerylayer.column_name" style="width:100%;"/>
                             </div>
                             <div class="col-md-3">
-                            <select class="form-control" ref="select_operator" name="select-operator" v-model="filterCddpOperator">
+                            <select class="form-select" ref="select_operator" name="select-operator" v-model="filterCddpOperator">
                                 <option v-for="operator in spatialquery_selects.operators" :value="operator.value" :key="operator.id">{{operator.label}}</option>
                             </select>     
                             </div>
@@ -384,7 +384,7 @@
                         <div class="row">
                             <div class="col-md-1"></div>
                             <div class="col-md-3">
-                            <select class="form-control" ref="select_how" name="select-how" v-model="spatialquerylayer.how">
+                            <select class="form-select" ref="select_how" name="select-how" v-model="spatialquerylayer.how">
                                 <option v-for="operator in spatialquery_selects.how" :value="operator.value" :key="operator.id">{{operator.label}}</option>
                             </select>     
                             </div>
