@@ -62,7 +62,7 @@
                     <input type='hidden' name="schema" :value="JSON.stringify(proposal)" />
                     <input type='hidden' name="proposal_id" :value="1" />
 
-                    <div class="row" style="margin-bottom: 50px">
+                    <!-- <div class="row" style="margin-bottom: 50px">
                       <div class="navbar navbar-fixed-bottom" style="background-color: #f5f5f5 ">
                       <div class="navbar-inner">
                         <div v-if="proposal && !proposal.readonly" class="container">
@@ -87,7 +87,6 @@
                         </div>
                         <div v-else class="container">
                           <p class="pull-right" style="margin-top:5px;">
-                            <!--button id="sectionHide" @click.prevent="sectionHide" class="btn btn-primary">Show/Hide sections</button-->
                             <input
                             id="sectionHide"
                             v-if="proposal && !proposal.apiary_group_application_type"
@@ -101,7 +100,87 @@
                         </div>
                       </div>
                       </div>
-                    </div>
+                    </div> -->
+                    <div class="row mb-5">
+                        <nav class="navbar fixed-bottom bg-light">
+                            <div class="container d-flex">
+                            <div v-if="proposal && !proposal.readonly" class="ms-auto">
+                                <template v-if="proposal && proposal.apiary_group_application_type">
+                                <!-- Content for apiary_group_application_type -->
+                                </template>
+                                <template v-else>
+                                <div class="d-flex justify-content-end mt-1">
+                                    <button
+                                    id="sectionHide"
+                                    @click.prevent="sectionHide"
+                                    class="btn btn-primary me-2"
+                                    >
+                                    Show/Hide sections
+                                    </button>
+
+                                    <span v-if="!isSubmitting">
+                                    <input
+                                        type="button"
+                                        @click.prevent="save_exit"
+                                        class="btn btn-primary me-2"
+                                        value="Save and Exit"
+                                    />
+                                    <input
+                                        type="button"
+                                        @click.prevent="save(true)"
+                                        class="btn btn-primary me-2"
+                                        value="Save and Continue"
+                                    />
+                                    <span v-if="!isSaving">
+                                        <input
+                                        type="button"
+                                        @click.prevent="submit"
+                                        class="btn btn-primary"
+                                        value="Submit"
+                                        />
+                                    </span>
+                                    </span>
+
+                                    <span v-else-if="isSubmitting">
+                                    <button disabled class="btn btn-primary">
+                                        <i class="fa fa-spinner fa-spin"></i>&nbsp;Submitting
+                                    </button>
+                                    </span>
+
+                                    <input
+                                    id="save_and_continue_btn"
+                                    type="hidden"
+                                    @click.prevent="save_wo_confirm"
+                                    class="btn btn-primary"
+                                    value="Save Without Confirmation"
+                                    />
+                                </div>
+                                </template>
+                            </div>
+
+                            <div v-else class="ms-auto">
+                                <div class="d-flex justify-content-end mt-1">
+                                <input
+                                    id="sectionHide"
+                                    v-if="proposal && !proposal.apiary_group_application_type"
+                                    type="button"
+                                    @click.prevent="sectionHide"
+                                    class="btn btn-primary me-2"
+                                    value="Show/Hide Sections"
+                                />
+
+                                <router-link
+                                    class="btn btn-primary"
+                                    :to="{ name: 'external-proposals-dash' }"
+                                >
+                                    Back to Dashboard
+                                </router-link>
+                                </div>
+                            </div>
+                            </div>
+                        </nav>
+                        </div>
+
                 </div>
                 </ProposalDisturbance>
             <!-- </template> -->
