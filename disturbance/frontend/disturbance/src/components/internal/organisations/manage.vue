@@ -1,223 +1,216 @@
 <template>
-    <div class="container-fluid" id="internalOrgInfo">
+    <div class="container" id="internalOrgInfo">
     <div class="row">
-    <div class="col-md-10 col-md-offset-1">
-        <div class="row">
-            <h3>{{ org.name }} - {{org.abn}}</h3>
-            <div class="col-md-3">
-                <CommsLogs :comms_url="comms_url" :logs_url="logs_url" :comms_add_url="comms_add_url" :disable_add_entry="false"/>
-            </div>
-            <div class="col-md-1">
-            </div>
-            <div class="col-md-8">
-                <ul class="nav nav-pills mb-3" role="tablist">
-                    <li class="nav-item"><a
-                            id="pills-details-tab"
-                            data-toggle="tab"
-                            class="nav-link active"
-                            data-bs-toggle="pill"
-                            :href="'#' + dTab"
-                            role="tab"
-                            :aria-controls="dTab"
-                            aria-selected="true"
-                            >Details</a
-                        >
-                    </li>
-                    <li class="nav-item">
-                        <a
-                            id="pills-other-tab"
-                            data-toggle="tab"
-                            class="nav-link"
-                            data-bs-toggle="pill"
-                            :href="'#' + oTab"
-                            role="tab"
-                            :aria-controls="oTab"
-                            aria-selected="false"
-                            >Other</a
-                        >
-                    </li>
-                </ul>
-                <div class="tab-content">
-                    <div :id="dTab" class="tab-pane fade active show" role="tabpanel" aria-labelledby="pills-details-tab">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <FormSection :formCollapse="false" label="Organisation Details" Index="organisation_details">
-                                    <form class="form-horizontal" name="personal_form" method="post">
-                                        <div class="form-group">
-                                            <label for="" class="col-sm-3 control-label">Name</label>
-                                            <div class="col-sm-6">
-                                                <input type="text" class="form-control" name="first_name" placeholder="" v-model="org.name">
-                                            </div>
+        <h3>{{ org.name }} - {{org.abn}}</h3>
+        <div class="col-md-3">
+            <CommsLogs :comms_url="comms_url" :logs_url="logs_url" :comms_add_url="comms_add_url" :disable_add_entry="false"/>
+        </div>
+        <!-- <div class="col-md-1">
+        </div> -->
+        <div class="col-md-8">
+            <ul class="nav nav-pills" role="tablist">
+                <li class="nav-item">
+                    <a
+                        id="pills-details-tab"
+                        class="nav-link active"
+                        data-bs-toggle="pill"
+                        :href="'#' + dTab"
+                        role="tab"
+                        :aria-controls="dTab"
+                        aria-selected="true"
+                        >Details</a
+                    >
+                </li>
+                <li class="nav-item">
+                    <a
+                        id="pills-other-tab"
+                        class="nav-link"
+                        data-bs-toggle="pill"
+                        :href="'#' + oTab"
+                        role="tab"
+                        :aria-controls="oTab"
+                        aria-selected="false"
+                        >Other</a
+                    >
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div :id="dTab" class="tab-pane fade active show" role="tabpanel" aria-labelledby="pills-details-tab">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <FormSection :formCollapse="false" label="Organisation Details" Index="organisation_details">
+                                <form class="form-horizontal" name="personal_form" method="post">
+                                    <div class="row mb-3">
+                                        <label for="" class="col-sm-3 col-form-label">Name</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" name="first_name" placeholder="" v-model="org.name">
                                         </div>
-                                        <div class="form-group">
-                                            <label for="" class="col-sm-3 control-label" >ABN</label>
-                                            <div class="col-sm-6">
-                                                <input type="text" disabled class="form-control" name="last_name" placeholder="" v-model="org.abn">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="" class="col-sm-3 control-label" >Email</label>
-                                            <div class="col-sm-6">
-                                                <input type="text" class="form-control" name="last_name" placeholder="" v-model="org.email">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <button v-if="!updatingDetails" class="pull-right btn btn-primary" @click.prevent="updateDetails()">Update</button>
-                                                <button v-else disabled class="pull-right btn btn-primary"><i class="fa fa-spin fa-spinner"></i>&nbsp;Updating</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </FormSection>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <FormSection :formCollapse="false" label="Address Details" Index="address_details">
-                                    <form class="form-horizontal" action="index.html" method="post">
-                                        <div class="form-group">
-                                            <label for="" class="col-sm-3 control-label">Street</label>
-                                            <div class="col-sm-6">
-                                                <input type="text" class="form-control" name="street" placeholder="" v-model="org.address.line1">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="" class="col-sm-3 control-label" >Town/Suburb</label>
-                                            <div class="col-sm-6">
-                                                <input type="text" class="form-control" name="surburb" placeholder="" v-model="org.address.locality">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="" class="col-sm-3 control-label">State</label>
-                                            <div class="col-sm-2">
-                                                <input type="text" class="form-control" name="country" placeholder="" v-model="org.address.state">
-                                            </div>
-                                            <label for="" class="col-sm-2 control-label">Postcode</label>
-                                            <div class="col-sm-2">
-                                                <input type="text" class="form-control" name="postcode" placeholder="" v-model="org.address.postcode">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="" class="col-sm-3 control-label" >Country</label>
-                                            <div class="col-sm-4">
-                                                <select class="form-control" name="country" v-model="org.address.country">
-                                                    <option v-for="c in countries" :value="c.code" :key="c.code">{{ c.name }}</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <button v-if="!updatingAddress" class="pull-right btn btn-primary" @click.prevent="updateAddress()">Update</button>
-                                                <button v-else disabled class="pull-right btn btn-primary"><i class="fa fa-spin fa-spinner"></i>&nbsp;Updating</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </FormSection>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <FormSection :formCollapse="false" label="Contact Details" Index="contact_details">
-                                    <form class="form-horizontal" action="index.html" method="post">
-                                        <div class="col-sm-12">
-                                            <button @click.prevent="addContact()" style="margin-bottom:10px;" class="btn btn-primary pull-right">Add Contact</button>
-                                        </div>
-                                        <div class="col-sm-12 row top-buffer-s">
-                                            <datatable ref="contacts_datatable" id="organisation_contacts_datatable" :dtOptions="contacts_options" :dtHeaders="contacts_headers"/>
-                                        </div>
-                                    </form>
-                                </FormSection>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <FormSection :formCollapse="false" label="Linked Persons" Index="linked_persons" subtitle="Manage the user accounts linked to the organisation">
-                                    <div class="row">
-                                        <div class="col-sm-8">
-                                            <div class="row">
-                                                <div class="col-sm-12">
-                                                    <h4>Persons linked to this organisation:</h4>
-                                                </div>
-                                                <div v-for="d in org.delegates" :key="d.id">
-                                                    <div v-if="d.is_admin" class="col-sm-6">
-                                                        <h4>{{d.name}} (Admin)</h4>
-                                                    </div>
-                                                    <div v-else class="col-sm-6">
-                                                        <h4>{{d.name}}</h4>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-12 top-buffer-s">
-                                                    <strong>Persons linked to the organisation are controlled by the organisation. The Department cannot manage this list of people.</strong>
-                                                </div>
-                                            </div> 
-                                        </div>
-                                        <!-- <div class="col-sm-4" v-if="org.pins">
-                                          <form class="form-horizontal" action="index.html" method="post">
-                                              <div class="form-group">
-                                                <label for="" class="col-sm-3 control-label">Pin 1</label>
-                                                <div class="col-sm-6">
-                                                    <label class="control-label">{{org.pins.one}}</label>
-                                                </div>
-                                              </div>
-                                              <div class="form-group">
-                                                <label for="" class="col-sm-3 control-label" >Pin 2</label>
-                                                <div class="col-sm-6">
-                                                    <label class="control-label">{{org.pins.two}}</label>
-                                                </div>
-                                              </div>
-                                            </form>
-                                        </div> -->
                                     </div>
-                                    <form class="form-horizontal" action="index.html" method="post" v-if="org.pins">
-                                         <div class="col-sm-6 row">
-                                            <div class="form-group">
-                                                <label for="" class="col-sm-6 control-label"> Organisation User Pin Code 1:</label>
+                                    <div class="row mb-3">
+                                        <label for="" class="col-sm-3 col-form-label" >ABN</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" disabled class="form-control" name="last_name" placeholder="" v-model="org.abn">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="" class="col-sm-3 col-form-label" >Email</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" name="last_name" placeholder="" v-model="org.email">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-sm-12">
+                                            <button v-if="!updatingDetails" class="pull-right btn btn-primary" @click.prevent="updateDetails()">Update</button>
+                                            <button v-else disabled class="pull-right btn btn-primary"><i class="fa fa-spin fa-spinner"></i>&nbsp;Updating</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </FormSection>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <FormSection :formCollapse="false" label="Address Details" Index="address_details">
+                                <form class="form-horizontal" action="index.html" method="post">
+                                    <div class="row mb-3">
+                                        <label for="" class="col-sm-3 col-form-label">Street</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" name="street" placeholder="" v-model="org.address.line1">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="" class="col-sm-3 col-form-label" >Town/Suburb</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" name="surburb" placeholder="" v-model="org.address.locality">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="" class="col-sm-3 col-form-label">State</label>
+                                        <div class="col-sm-2">
+                                            <input type="text" class="form-control" name="country" placeholder="" v-model="org.address.state">
+                                        </div>
+                                        <label for="" class="col-sm-2 col-form-label">Postcode</label>
+                                        <div class="col-sm-2">
+                                            <input type="text" class="form-control" name="postcode" placeholder="" v-model="org.address.postcode">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="" class="col-sm-3 col-form-label" >Country</label>
+                                        <div class="col-sm-4">
+                                            <select class="form-select" name="country" v-model="org.address.country">
+                                                <option v-for="c in countries" :value="c.code" :key="c.code">{{ c.name }}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-sm-12">
+                                            <button v-if="!updatingAddress" class="pull-right btn btn-primary" @click.prevent="updateAddress()">Update</button>
+                                            <button v-else disabled class="pull-right btn btn-primary"><i class="fa fa-spin fa-spinner"></i>&nbsp;Updating</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </FormSection>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <FormSection :formCollapse="false" label="Contact Details" Index="contact_details">
+                                <form class="form-horizontal" action="index.html" method="post">
+                                    <div class="col-sm-12">
+                                        <button @click.prevent="addContact()" style="margin-bottom:10px;" class="btn btn-primary pull-right">Add Contact</button>
+                                    </div>
+                                    <div class="col-sm-12 row top-buffer-s">
+                                        <datatable ref="contacts_datatable" id="organisation_contacts_datatable" :dtOptions="contacts_options" :dtHeaders="contacts_headers"/>
+                                    </div>
+                                </form>
+                            </FormSection>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <FormSection :formCollapse="false" label="Linked Persons" Index="linked_persons" subtitle="-Manage the user accounts linked to the organisation">
+                                <div class="col-sm-8">
+                                        <div class="col-sm-12">
+                                            <h5>Persons linked to this organisation:</h5>
+                                        </div>
+                                        <div v-for="d in org.delegates" :key="d.id">
+                                            <div v-if="d.is_admin" class="col-sm-6">
+                                                <h5>{{d.name}} (Admin)</h5>
+                                            </div>
+                                            <div v-else class="col-sm-6">
+                                                <h5>{{d.name}}</h5>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h6>Persons linked to the organisation are controlled by the organisation. The Department cannot manage this list of people.</h6>
+                                        </div>
+                                </div>
+                                <!-- <div class="col-sm-4" v-if="org.pins">
+                                    <form class="form-horizontal" action="index.html" method="post">
+                                        <div class="form-group">
+                                        <label for="" class="col-sm-3 control-label">Pin 1</label>
+                                        <div class="col-sm-6">
+                                            <label class="control-label">{{org.pins.one}}</label>
+                                        </div>
+                                        </div>
+                                        <div class="form-group">
+                                        <label for="" class="col-sm-3 control-label" >Pin 2</label>
+                                        <div class="col-sm-6">
+                                            <label class="control-label">{{org.pins.two}}</label>
+                                        </div>
+                                        </div>
+                                    </form>
+                                </div> -->
+                                <form class="form-horizontal" action="index.html" method="post" v-if="org.pins">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="row mb-3">
+                                                <label for="" class="col-sm-6 col-form-label"> Organisation User Pin Code 1:</label>
                                                 <div class="col-sm-6">
                                                     <label class="control-label">{{org.pins.three}}</label>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label for="" class="col-sm-6 control-label" >Organisation User Pin Code 2:</label>
+                                            <div class="row mb-3">
+                                                <label for="" class="col-sm-6 col-form-label" >Organisation User Pin Code 2:</label>
                                                 <div class="col-sm-6">
                                                     <label class="control-label">{{org.pins.four}}</label>
                                                 </div>
                                             </div>
                                         </div>
-                                         <div class="col-sm-6 row">
-                                            <div class="form-group">
-                                                <label for="" class="col-sm-6 control-label"> Organisation Administrator Pin Code 1:</label>
+                                        <div class="col-sm-6">
+                                            <div class="row mb-3">
+                                                <label for="" class="col-sm-6 col-form-label"> Organisation Administrator Pin Code 1:</label>
                                                 <div class="col-sm-6">
                                                     <label class="control-label">{{org.pins.one}}</label>
                                                 </div>
                                             </div>
-                                            <div class="form-group" >
-                                                <label for="" class="col-sm-6 control-label" >Organisation Administrator Pin Code 2:</label>
+                                            <div class="row mb-3" >
+                                                <label for="" class="col-sm-6 col-form-label" >Organisation Administrator Pin Code 2:</label>
                                                 <div class="col-sm-6">
                                                     <label class="control-label">{{org.pins.two}}</label>
                                                 </div>
                                             </div>
                                         </div>
-                                    </form>
-                                </FormSection>
-                            </div>
+                                    </div>
+                                </form>
+                            </FormSection>
                         </div>
-                    </div> 
-                    <div :id="oTab" class="tab-pane fade" role="tabpanel" aria-labelledby="pills-other-tab">
-                        <FormSection :form-collapse="false" label="Proposals" Index="proposals">
-                            <ProposalDashTable ref="proposals_table" level='internal' :url='proposals_url'/>
-                        </FormSection>
-                        <FormSection :form-collapse="false" label="Approvals" Index="approvals">
-                            <ApprovalDashTable ref="approvals_table" level='internal' :url='approvals_url'/>
-                        </FormSection>
-                        <FormSection :form-collapse="false" label="Compliances with requirements" Index="compliances">
-                            <ComplianceDashTable ref="compliances_table" level='internal' :url='compliances_url'/>
-                        </FormSection>
                     </div>
+                </div> 
+                <div :id="oTab" class="tab-pane fade" role="tabpanel" aria-labelledby="pills-other-tab">
+                    <FormSection :form-collapse="false" label="Proposals" Index="proposals">
+                        <ProposalDashTable ref="proposals_table" level='internal' :url='proposals_url'/>
+                    </FormSection>
+                    <FormSection :form-collapse="false" label="Approvals" Index="approvals">
+                        <ApprovalDashTable ref="approvals_table" level='internal' :url='approvals_url'/>
+                    </FormSection>
+                    <FormSection :form-collapse="false" label="Compliances with requirements" Index="compliances">
+                        <ComplianceDashTable ref="compliances_table" level='internal' :url='compliances_url'/>
+                    </FormSection>
                 </div>
             </div>
         </div>
-        </div>
-        </div>
+    </div>
         <AddContact ref="add_contact" :org_id="org.id" />
     </div>
 </template>
@@ -538,4 +531,5 @@ export default {
 .hidePopover {
     display: none;
 }
+
 </style>

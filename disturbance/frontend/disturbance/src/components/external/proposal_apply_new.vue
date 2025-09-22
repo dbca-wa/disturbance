@@ -23,7 +23,7 @@
                                 </div>
                                 <div v-else class="col-sm-12">
                                     <div class="form-group">
-                                        <select v-model="proposal.region" class="form-control" style="width:40%" @change="chainedSelectDistricts(proposal.region)" :disabled="proposal.readonly">
+                                        <select v-model="proposal.region" class="form-select" style="width:40%" @change="chainedSelectDistricts(proposal.region)" :disabled="proposal.readonly">
 											<option value="" selected disabled>Select region</option>
                                             <option v-for="region in regions" :value="region.value" :key="region.value">
                                                 {{ region.text }}
@@ -42,7 +42,7 @@
                                 </div>
                                 <div v-else class="col-sm-12">
                                     <div class="form-group">
-                                        <select  v-model="proposal.district" class="form-control" style="width:40%" :disabled="proposal.readonly">
+                                        <select  v-model="proposal.district" class="form-select" style="width:40%" :disabled="proposal.readonly">
 											<option value="" selected disabled>Select district</option>
                                             <option v-for="district in districts" :value="district.value" :key="district.value">
                                                 {{ district.text }}
@@ -62,7 +62,7 @@
                                     </div>
                                     <div v-else class="col-sm-12">
 										<div class="form-group">
-											<select v-model="proposal.activity" @change="chainedSelectSubActivities1(proposal.activity)" class="form-control" style="width:40%" :disabled="proposal.readonly">
+											<select v-model="proposal.activity" @change="chainedSelectSubActivities1(proposal.activity)" class="form-select" style="width:40%" :disabled="proposal.readonly">
 												<option value="" selected disabled>Select activity</option>
 												<option v-for="activity in activities" :value="activity.value" :key="activity.value">
 													{{ activity.text }}
@@ -81,7 +81,7 @@
                                     </div>
                                     <div v-else class="col-sm-12">
 										<div class="form-group">
-											<select v-model="proposal.sub_activity_level1" @change="chainedSelectSubActivities2(proposal.sub_activity_level1)" class="form-control" style="width:40%" :disabled="proposal.readonly">
+											<select v-model="proposal.sub_activity_level1" @change="chainedSelectSubActivities2(proposal.sub_activity_level1)" class="form-select" style="width:40%" :disabled="proposal.readonly">
 												<option value="" selected disabled>Select sub_activity 1</option>
 												<option v-for="sub_activity1 in sub_activities1" :value="sub_activity1.value" :key="sub_activity1.value">
 													{{ sub_activity1.text }}
@@ -100,7 +100,7 @@
                                     </div>
                                     <div v-else class="col-sm-12">
 										<div class="form-group">
-											<select v-model="proposal.sub_activity_level2" @change="chainedSelectCategories(proposal.sub_activity_level2)" class="form-control" style="width:40%" :disabled="proposal.readonly">
+											<select v-model="proposal.sub_activity_level2" @change="chainedSelectCategories(proposal.sub_activity_level2)" class="form-select" style="width:40%" :disabled="proposal.readonly">
 												<option value="" selected disabled>Select sub_activity 2</option>
 												<option v-for="sub_activity2 in sub_activities2" :value="sub_activity2.value" :key="sub_activity2.value">
 													{{ sub_activity2.text }}
@@ -119,7 +119,7 @@
                                     </div>
                                     <div v-else class="col-sm-12">
 										<div class="form-group">
-											<select v-model="proposal.management_area" @change="get_approval_level(proposal.management_area)" class="form-control" style="width:40%" :disabled="proposal.readonly">
+											<select v-model="proposal.management_area" @change="get_approval_level(proposal.management_area)" class="form-select" style="width:40%" :disabled="proposal.readonly">
 												<option value="" selected disabled>Select category</option>
 												<option v-for="category in categories" :value="category.value" :key="category.value" :name="category.approval">
 													{{ category.text }}

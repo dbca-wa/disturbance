@@ -92,3 +92,22 @@
 .round-box h5 {
     font-weight: bold;
 }
+
+.nav-pills .nav-link {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    border-top-left-radius: 0.5em !important;
+    border-top-right-radius: 0.5em !important;
+    margin-right: 0.25em !important;
+    background: lightgray !important;
+}
+
+.nav-pills .nav-link.active {
+    background: gray !important;
+    color: white !important;
+}
+
+.nav-link {
+    color: #226fbb !important;
+}
+

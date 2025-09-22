@@ -7,7 +7,7 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Region</label>
-                                    <select class="form-control" v-model="filterProposalRegion">
+                                    <select class="form-select" v-model="filterProposalRegion">
                                         <option value="All">All</option>
                                         <option v-for="r in proposal_regions" :value="r" :key="r">{{r}}</option>
                                     </select>
@@ -21,7 +21,7 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Activity</label>
-                                    <select class="form-control" v-model="filterProposalActivity">
+                                    <select class="form-select" v-model="filterProposalActivity">
                                         <option value="All">All</option>
                                         <option v-for="a in proposal_activityTitles" :value="a" :key="a">{{a}}</option>
                                     </select>
@@ -50,7 +50,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="">Status</label>
-                                <select class="form-control" v-model="filterProposalStatus">
+                                <select class="form-select" v-model="filterProposalStatus">
                                     <option value="All">All</option>
                                     <option v-for="s in approval_status" :value="s" :key="s">{{s}}</option>
                                 </select>
