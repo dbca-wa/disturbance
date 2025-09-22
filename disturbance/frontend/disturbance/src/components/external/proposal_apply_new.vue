@@ -4,16 +4,8 @@
             <!-- <div class="col-sm-3"></div> -->
             <div class="">
                 <form class="form-horizontal" name="personal_form" method="post">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Region, District, Activity Type, Sub Activity, ...
-                                <a class="panelClicker" :href="'#'+pBody2" data-toggle="collapse"  data-parent="#userInfo2" expanded="true" :aria-controls="pBody2">
-                                    <span class="glyphicon glyphicon-chevron-down pull-right "></span>
-                                </a>
-                            </h3>
-                        </div>
-                        
-                        <div class="panel-body panel-collapse collapse in" :id="pBody2">
+                    <FormSection :formCollapse="false" label="Region, District, Activity Type, Sub Activity, ..." Index="3">   
+                        <div>
                             <div v-if="proposal">
                                 <label for="" class="control-label" >Region * <a :href="region_help_url" target="_blank"><i class="fa fa-question-circle" style="color:blue">&nbsp;</i></a> </label>
                                 <div v-if="proposal.readonly" class="col-sm-12">
@@ -130,7 +122,7 @@
 								</div>
                             </div>
                         </div>
-                    </div>
+                    </FormSection>
 
                     <!-- <div class="col-sm-12">
                         <button v-if="!creatingProposal" @click.prevent="submit()" class="btn btn-primary pull-right">Continue</button>
@@ -143,6 +135,7 @@
     </div>
 </template>
 <script>
+import FormSection from "@/components/forms/section_toggle.vue"
 import {
   api_endpoints,
 //   helpers
@@ -199,6 +192,7 @@ export default {
     }
   },
   components: {
+    FormSection
   },
   computed: {
     isLoading: function() {

@@ -104,7 +104,7 @@
                                   </ul>
                               </div>
                             </div> */}
-                            <div class="card fixed" style={{ position: 'sticky', top: '56px', zIndex: 1030 }}>
+                            <div class="card fixed" style={{ position: 'sticky' }}>
                                 <div class="card-header">
                                 <h5 class="mb-0">Sections</h5>
                                 </div>

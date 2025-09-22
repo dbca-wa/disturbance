@@ -4,15 +4,8 @@
             <div class="col-sm-12">
                 <form class="form-horizontal" name="personal_form" method="post">
 
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Apply on behalf of
-                                <a :href="'#'+pBody" data-toggle="collapse"  data-parent="#userInfo" expanded="true" :aria-controls="pBody">
-                                    <span class="glyphicon glyphicon-chevron-up pull-right "></span>
-                                </a>
-                            </h3>
-                        </div>
-                        <div class="panel-body collapse in" :id="pBody">
+                    <FormSection :formCollapse="false" label="Apply on behalf of" Index="3">
+                        <div>
 
                             <div class="col-sm-12">
                                 <div class="form-group" v-if="!isLoading">
@@ -44,50 +37,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <!--
-                            <div v-if="behalf_of == 'other'" class="col-sm-12">
-                                <div class="row">
-                                    <div class="form-group col-sm-5">
-                                        <label for="" class="control-label">Organisation</label>
-                                        <input type="text" class="form-control" name="first_name" placeholder="" v-model="agent.organisation">
-                                    </div>
-                                    <div class="form-group col-sm-1"></div>
-                                    <div class="form-group col-sm-5">
-                                        <label for="" class="control-label" >ABN / ACN</label>
-                                        <input type="text" class="form-control" name="last_name" placeholder="" v-model="agent.abn">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-sm-5">
-                                        <label for="" class="control-label" >Organisation contact given name(s)</label>
-                                        <input type="text" class="form-control" name="last_name" placeholder="" v-model="agent.given_names">
-                                    </div>
-                                    <div class="form-group col-sm-1"></div>
-                                    <div class="form-group col-sm-5">
-                                        <label for="" class="control-label" >Orgnisation contact surname</label>
-                                        <input type="text" class="form-control" name="last_name" placeholder="" v-model="agent.surname">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-sm-5">
-                                        <label for="" class="control-label" >Organisation contact email address</label>
-                                        <input type="text" class="form-control" name="last_name" placeholder="" v-model="agent.email">
-                                    </div>
-                                </div>
-                            </div>
-                            -->
                         </div>
-                    </div>
+                    </FormSection>
 
-                    <div v-if="behalf_of != ''" class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Apply for
-                                <a :href="'#'+pBody2" data-toggle="collapse"  data-parent="#userInfo2" expanded="true" :aria-controls="pBody2">
-                                    <span class="glyphicon glyphicon-chevron-up pull-right "></span>
-                                </a>
-                            </h3>
-                        </div>
-                        <div class="panel-body collapse in" :id="pBody2">
+                    <FormSection v-if="behalf_of != ''" :formCollapse="false" label="Apply for" Index="3">
+                    
+                        
+                        <div>
                             <div>
                                 <label for="" class="control-label" >{{ objectTypeLabel }}<a v-if="dasTemplateGroup" :href="proposal_type_help_url" target="_blank"><i class="fa fa-question-circle" style="color:blue">&nbsp;</i></a></label>
                                 <div class="col-sm-12">
@@ -196,12 +152,12 @@
 
 
                         </div>
-                    </div>
+                    </FormSection>                     
+                        <div class="col-sm-12">
+                            <button v-if="!creatingProposal" :disabled="isDisabled()" @click.prevent="submit()" class="btn btn-primary pull-right">Continue</button>
+                            <button v-else disabled class="pull-right btn btn-primary"><i class="fa fa-spin fa-spinner"></i>&nbsp;Creating</button>
+                        </div>
 
-                    <div class="col-sm-12">
-                        <button v-if="!creatingProposal" :disabled="isDisabled()" @click.prevent="submit()" class="btn btn-primary pull-right">Continue</button>
-                        <button v-else disabled class="pull-right btn btn-primary"><i class="fa fa-spin fa-spinner"></i>&nbsp;Creating</button>
-                    </div>
                 </form>
             </div>
         </div>
@@ -214,6 +170,7 @@ import {
 }
 from '@/utils/hooks'
 import utils from './utils'
+import FormSection from "@/components/forms/section_toggle.vue"
 export default {
   data: function() {
     // let vm = this;
@@ -257,6 +214,7 @@ export default {
     }
   },
   components: {
+    FormSection
   },
   computed: {
       objectTypeLabel: function() {
