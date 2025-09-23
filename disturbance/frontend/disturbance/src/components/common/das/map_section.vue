@@ -1,5 +1,5 @@
 <template lang="html">
-    <div class="">
+    <div class="row">
         <div class="col-md-3">
         </div>
         <div :class="das_sections_classname">
