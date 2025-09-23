@@ -951,22 +951,50 @@
                 let clusterSource = new Cluster({
                     distance: 50,
                     source: vm.proposalQuerySource,
-                    geometryFunction: (feature) => {
-                        let resolution = this.map.getView().getResolution();
-                        
-                            let type = feature.getGeometry().getType();
-                            if (type === 'Polygon') {
-                                return feature.getGeometry().getInteriorPoint();
+                    // geometryFunction: (feature) => {
+                    //     let resolution = this.map.getView().getResolution();
+                    //         //console.log('feature', feature)
+                    //         let type = feature.getGeometry().getType();
+                    //         if (type === 'Polygon') {
+                    //             return feature.getGeometry().getInteriorPoint();
 
-                            } else if (type === 'LineString') {
-                                return feature.getGeometry().getCoordinateAt(0.5);
+                    //         } else if (type === 'LineString') {
+                    //             return feature.getGeometry().getCoordinateAt(0.5);
 
-                            } else if (type === 'Point') {
-                                return feature.getGeometry();
-                            } else if (type === 'MultiPolygon') {
-                                return new Point(getCenter(feature.getGeometry().getExtent()), 'XY');
-                            }
+                    //         } else if (type === 'Point') {
+                    //             return feature.getGeometry();
+                    //         } else if (type === 'MultiPolygon') {
+                    //             return new Point(getCenter(feature.getGeometry().getExtent()), 'XY');
+                    //         }
                        
+                    // },
+                    geometryFunction: (feature) => {
+                        try {
+                            const geometry = feature.getGeometry();
+                            const proposal = feature.getProperties().proposal.id;
+                            if (!geometry) {
+                                console.warn('Feature with null geometry for Proposal:', proposal);
+                                return null;
+                            }
+
+                            const type = geometry.getType();
+                            switch (type) {
+                                case 'Polygon':
+                                    return geometry.getInteriorPoint();
+                                case 'LineString':
+                                    return new Point(geometry.getCoordinateAt(0.5));
+                                case 'Point':
+                                    return geometry;
+                                case 'MultiPolygon':
+                                    return new Point(getCenter(feature.getGeometry().getExtent()), 'XY');
+                                default:
+                                    console.warn('Unsupported geometry type:', type, feature);
+                                    return null;
+                            }
+                        } catch (err) {
+                            console.log('Error processing feature For Proposal:', proposal, err);
+                            return null;
+                        }
                     },
                 })
 
