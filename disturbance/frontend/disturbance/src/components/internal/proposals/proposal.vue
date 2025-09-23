@@ -209,13 +209,13 @@
             </div>
             <!-- <div class="col-md-1"></div> -->
             <div class="col-md-8">
-                <div v-if="proposal_compare_version!=0" class="panel panel-default sticky-footer">
+                <div v-if="proposal_compare_version!=0" class="card-body border-top sticky-footer">
                     Comparing
-                    <span class="label label-default">
+                    <span class="badge bg-secondary">
                         {{proposal.lodgement_number}}-{{reversion_history_length}}: {{formatDate(proposal.lodgement_date)}}   
                     </span>&nbsp;
                     with
-                    <span class="label label-danger">
+                    <span class="badge bg-danger">
                         {{proposal.lodgement_number}}-{{reversion_history_length - proposal_compare_version}}:
                         {{formatDate(compare_version_lodgement_date)}} ({{proposal_compare_version}} Older than current)
                     </span>

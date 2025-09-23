@@ -110,3 +110,15 @@
 .table-referrals {
     font-size: 1em;
 }
+
+.btn-primary {
+  color: #fff !important;
+  background-color: #226fbb !important;
+  border-color: #226fbb !important;
+}
+
+.btn-primary:hover {
+  color: #fff !important;
+  background-color: #5393d2 !important;
+  border-color: #5393d2 !important;
+}
