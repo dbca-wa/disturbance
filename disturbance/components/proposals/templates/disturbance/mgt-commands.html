@@ -11,43 +11,43 @@
         <form action="" method="POST">
             {% csrf_token %}
             <div class="row">
-                <button type="submit" name="script" value="approval_renewal_notices" {% if approval_renewal_notices == 'true' %}style="color:green" {% endif %} title="Send Approval renewal notice when approval is due to expire in 30 days">Run Script 'approval_renewal_notices'</button>
+                <button type="submit" class="w-auto"name="script" value="approval_renewal_notices" {% if approval_renewal_notices == 'true' %}style="color:green" {% endif %} title="Send Approval renewal notice when approval is due to expire in 30 days">Run Script 'approval_renewal_notices'</button>
             </div>
             <div class="row">
-                <button type="submit" name="script" value="expire_approvals" {% if expire_approvals == 'true' %}style="color:green" {% endif %} title="Change the status of Approvals to Expired when past expiry date">Run Script 'expire_approvals'</button>
+                <button type="submit" class="w-auto" name="script" value="expire_approvals" {% if expire_approvals == 'true' %}style="color:green" {% endif %} title="Change the status of Approvals to Expired when past expiry date">Run Script 'expire_approvals'</button>
             </div>
             <div class="row">
-                <button type="submit" name="script" value="send_compliance_reminder" {% if send_compliance_reminder == 'true' %}style="color:green" {% endif %} title="Send notification emails for compliances which has past due dates, and also reminder notification emails for those that are within the daterange prior to due_date (eg. within 14 days of due date)">Run Script 'send_compliance_reminder'</button>
+                <button type="submit" class="w-auto" name="script" value="send_compliance_reminder" {% if send_compliance_reminder == 'true' %}style="color:green" {% endif %} title="Send notification emails for compliances which has past due dates, and also reminder notification emails for those that are within the daterange prior to due_date (eg. within 14 days of due date)">Run Script 'send_compliance_reminder'</button>
             </div>
             <div class="row">
-                <button type="submit" name="script" value="update_approval_status" {% if update_approval_status == 'true' %}style="color:green" {% endif %} title="Change the status of Approvals to Surrender/Cancelled/Suspended">Run Script 'update_approval_status'</button>
+                <button type="submit" class="w-auto" name="script" value="update_approval_status" {% if update_approval_status == 'true' %}style="color:green" {% endif %} title="Change the status of Approvals to Surrender/Cancelled/Suspended">Run Script 'update_approval_status'</button>
             </div>
             <div class="row">
-                <button type="submit" name="script" value="update_compliance_status" {% if update_compliance_status == 'true' %}style="color:green" {% endif %} title="Change the status of Compliances from future to due when they are close to due date (eg. within 14 days)">Run Script 'update_compliance_status'</button>
+                <button type="submit" class="w-auto" name="script" value="update_compliance_status" {% if update_compliance_status == 'true' %}style="color:green" {% endif %} title="Change the status of Compliances from future to due when they are close to due date (eg. within 14 days)">Run Script 'update_compliance_status'</button>
             </div>
             <div class="row">
-                <button type="submit" name="script" value="weekly_assessment_reminder" {% if weekly_assessment_reminder == 'true' %}style="color:green" {% endif %} title="Send weekly reminder notice for Proposals which are pending for assessment.">Run Script 'weekly_assessment_reminder'</button>
+                <button type="submit" class="w-auto" name="script" value="weekly_assessment_reminder" {% if weekly_assessment_reminder == 'true' %}style="color:green" {% endif %} title="Send weekly reminder notice for Proposals which are pending for assessment.">Run Script 'weekly_assessment_reminder'</button>
             </div>
             <div class="row">
-                <button type="submit" name="script" value="send_annual_rental_fee_invoice" {% if send_annual_rental_fee_invoice == 'true' %}style="color:green" {% endif %} title="Send annual site fee invoices.">Run Script 'send_annual_rental_fee_invoice'</button>
+                <button type="submit" class="w-auto" name="script" value="send_annual_rental_fee_invoice" {% if send_annual_rental_fee_invoice == 'true' %}style="color:green" {% endif %} title="Send annual site fee invoices.">Run Script 'send_annual_rental_fee_invoice'</button>
             </div>
             <div class="row">
-                <button type="submit" name="script" value="save_apiary_sites" {% if save_apiary_sites == 'true' %}style="color:green" {% endif %} title="Save apiary sites.">Run Script 'save_apiary_sites'</button>
+                <button type="submit" class="w-auto" name="script" value="save_apiary_sites" {% if save_apiary_sites == 'true' %}style="color:green" {% endif %} title="Save apiary sites.">Run Script 'save_apiary_sites'</button>
             </div>
             <div class="row">
-                <button type="submit" name="script" value="apiary_migration_script" {% if apiary_migration_script == 'true' %}style="color:green" {% endif %} title="Run migration script.">Run Script 'apiary_migration_script'</button>
+                <button type="submit" class="w-auto" name="script" value="apiary_migration_script" {% if apiary_migration_script == 'true' %}style="color:green" {% endif %} title="Run migration script.">Run Script 'apiary_migration_script'</button>
             </div>
 
 	    <hr>
             <H4>Adhoc Commands.</H4>
             <div class="row">
-                <button type="submit" name="script" value="layers_used" {% if layers_used == 'true' %}style="color:green" {% endif %} title="Run Layers Used CSV Export script.">Run Script 'layers_used'</button>
+                <button type="submit" class="w-auto" name="script" value="layers_used" {% if layers_used == 'true' %}style="color:green" {% endif %} title="Run Layers Used CSV Export script.">Run Script 'layers_used'</button>
             </div>
             <div class="row">
-                <button type="submit" name="script" value="poll_sqs_tasks" {% if poll_sqs_tasks == 'true' %}style="color:green" {% endif %} title="Run Poll SQS Tasks script.">Run Script 'poll_sqs_tasks'</button>
+                <button type="submit" class="w-auto" name="script" value="poll_sqs_tasks" {% if poll_sqs_tasks == 'true' %}style="color:green" {% endif %} title="Run Poll SQS Tasks script.">Run Script 'poll_sqs_tasks'</button>
             </div>
             <div class="row">
-                <button type="submit" name="script" value="run_queue_job" {% if run_queue_job == 'true' %}style="color:green" {% endif %} title="Run Queue Job (Email Reports)">Run Script 'run_queue_job' (Generate and Email Reports)</button>
+                <button type="submit" class="w-auto" name="script" value="run_queue_job" {% if run_queue_job == 'true' %}style="color:green" {% endif %} title="Run Queue Job (Email Reports)">Run Script 'run_queue_job' (Generate and Email Reports)</button>
             </div>
 
         </form>
