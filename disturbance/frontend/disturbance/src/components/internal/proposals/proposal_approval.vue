@@ -26,116 +26,75 @@
         <template v-if="proposal.proposal_apiary">
         </template>
         <template v-else>
-            <div class="col-md-12">
-                <div class="row">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Level of Approval
-                                <a class="panelClicker" :href="'#'+proposedLevel" data-toggle="collapse"  data-parent="#userInfo" expanded="false" :aria-controls="proposedLevel">
-                                    <span class="glyphicon glyphicon-chevron-down pull-right "></span>
-                                </a>
-                            </h3>
-                        </div>
-                        <div class="panel-body panel-collapse collapse in" :id="proposedLevel">
+            <FormSection :formCollapse="false" label="Level of Approval" Index="level_of_approval">
+                <div v-if="!isFinalised">
+                    <p><strong>Level of approval: {{proposal.approval_level}}</strong></p>
 
-                            <div class="row">
-                                <div class="col-sm-12">
-                                        <template v-if="!isFinalised">
-                                            <p><strong>Level of approval: {{proposal.approval_level}}</strong></p>
-
-                                        <div v-if="isApprovalLevel">
-                                            <p v-if="proposal.approval_level_document"><strong>Attach documents:</strong> <a :href="proposal.approval_level_document[1]" target="_blank">{{proposal.approval_level_document[0]}}</a>
-                                            <span>
-                                            <a @click="removeFile()" class="fa fa-trash-o" title="Remove file" style="cursor: pointer; color:red;"></a>
-                                            </span></p>
-                                            <div v-else>
-                                                <p><strong>Attach documents:</strong></p>
-                                                <div class="col-sm-12">
-                                                <span class="btn btn-info btn-file pull-left">
-                                                Attach File <input type="file" ref="uploadedFile" @change="readFile()"/>
-                                                </span>
-                                                <!--<span class="pull-left" style="margin-left:10px;margin-top:10px;">{{uploadedFileName()}}</span>-->
-
-                                                </div>
-                                                <div class="row"><p></p></div>
-                                                <div class="row"><p></p></div>
-                                                <div class="row"><p></p></div>
-
-                                                <p>
-                                                <strong>Comments (if no approval attached)</strong>
-                                                </p>
-                                                <p>
-                                                <textarea name="approval_level_comments"  v-model="proposal.approval_level_comment" class="form-control" style="width:70%;"></textarea>
-                                                </p>
-                                            </div>
-
-                                        </div>
-                                        </template>
-
-                                        <template v-if="isFinalised">
-                                            <p><strong>Level of approval: {{proposal.approval_level}}</strong></p>
-
-                                            <div v-if="isApprovalLevel">
-                                                <p v-if="proposal.approval_level_document"><strong>Attach documents: </strong><a :href="proposal.approval_level_document[1]" target="_blank">{{proposal.approval_level_document[0]}}</a>
-                                                </p>
-                                                <p v-if="proposal.approval_level_comment"><strong>Comments: {{proposal.approval_level_comment}}</strong>
-                                                </p>
-                                            </div>
-                                        </template>
-                                </div>
+                    <div v-if="isApprovalLevel">
+                        <p v-if="proposal.approval_level_document"><strong>Attached documents:</strong> <a :href="proposal.approval_level_document[1]" target="_blank">{{proposal.approval_level_document[0]}}</a>
+                        <span>
+                            <a @click="removeFile()" class="fa fa-trash-o" title="Remove file" style="cursor: pointer; color:red;"></a>
+                        </span></p>
+                        <div v-else>
+                            <p><strong>Attach documents:</strong></p>
+                            <div class="col-sm-12">
+                                <span class="btn btn-info btn-file pull-left">
+                                    Attach File <input type="file" ref="uploadedFile" @change="readFile()"/>
+                                </span>
+                                <!--<span class="pull-left" style="margin-left:10px;margin-top:10px;">{{uploadedFileName()}}</span>-->
                             </div>
+                            <div class="row"><p></p></div>
+                            <div class="row"><p></p></div>
+                            <div class="row"><p></p></div>
+
+                            <p>
+                                <strong>Comments (if no approval attached)</strong>
+                            </p>
+                            <p>
+                                <textarea name="approval_level_comments"  v-model="proposal.approval_level_comment" class="form-control" style="width:70%;"></textarea>
+                            </p>
                         </div>
                     </div>
                 </div>
-            </div>
+
+                <div v-if="isFinalised">
+                    <p><strong>Level of approval: {{proposal.approval_level}}</strong></p>
+
+                    <div v-if="isApprovalLevel">
+                        <p v-if="proposal.approval_level_document"><strong>Attached documents: </strong><a :href="proposal.approval_level_document[1]" target="_blank">{{proposal.approval_level_document[0]}}</a>
+                        </p>
+                        <p v-if="proposal.approval_level_comment"><strong>Comments: {{proposal.approval_level_comment}}</strong>
+                        </p>
+                    </div>
+                </div>
+            </FormSection>
         </template>
 
-        <div class="col-md-12">
-            <div class="row">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 v-if="!isFinalised" class="panel-title">Proposed Decision
-                            <a class="panelClicker" :href="'#'+proposedDecision" data-toggle="collapse"  data-parent="#userInfo" expanded="false" :aria-controls="proposedDecision">
-                                <span class="glyphicon glyphicon-chevron-down pull-right "></span>
-                            </a>
-                        </h3>
-                        <h3 v-else class="panel-title">Decision
-                            <a class="panelClicker" :href="'#'+proposedDecision" data-toggle="collapse"  data-parent="#userInfo" expanded="false" :aria-controls="proposedDecision">
-                                <span class="glyphicon glyphicon-chevron-down pull-right "></span>
-                            </a>
-                        </h3>
-                    </div>
-                    <div class="panel-body panel-collapse collapse in" :id="proposedDecision">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <template v-if="!proposal.proposed_decline_status">
-                                    <template v-if="isFinalised">
-                                        <p><strong>Decision: Issue</strong></p>
-                                        <p><strong>Start date: {{proposal.proposed_issuance_approval.start_date}}</strong></p>
-                                        <p><strong>Expiry date: {{proposal.proposed_issuance_approval.expiry_date}}</strong></p>
-                                        <p><strong>CC emails: {{proposal.proposed_issuance_approval.cc_email}}</strong></p>
-                                    </template>
-                                    <template v-else>
-                                        <p><strong>Proposed decision: Issue</strong></p>
-                                        <p><strong>Proposed start date: {{proposal.proposed_issuance_approval.start_date}}</strong></p>
-                                        <p><strong>Proposed expiry date: {{proposal.proposed_issuance_approval.expiry_date}}</strong></p>
-                                        <p><strong>Proposed cc emails: {{proposal.proposed_issuance_approval.cc_email}}</strong></p>
-                                    </template>
-                                </template>
-                                <template v-else>
-                                    <strong v-if="!isFinalised">Proposed decision: Decline</strong>
-                                    <strong v-else>Decision: Decline</strong>
-                                </template>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <FormSection :formCollapse="false" :label="decision_label" Index="decision">
+            <template v-if="!proposal.proposed_decline_status">
+                <template v-if="isFinalised">
+                    <p><strong>Decision: Issue</strong></p>
+                    <p><strong>Start date: {{proposal.proposed_issuance_approval.start_date}}</strong></p>
+                    <p><strong>Expiry date: {{proposal.proposed_issuance_approval.expiry_date}}</strong></p>
+                    <p><strong>CC emails: {{proposal.proposed_issuance_approval.cc_email}}</strong></p>
+                </template>
+                <template v-else>
+                    <p><strong>Proposed decision: Issue</strong></p>
+                    <p><strong>Proposed start date: {{proposal.proposed_issuance_approval.start_date}}</strong></p>
+                    <p><strong>Proposed expiry date: {{proposal.proposed_issuance_approval.expiry_date}}</strong></p>
+                    <p><strong>Proposed cc emails: {{proposal.proposed_issuance_approval.cc_email}}</strong></p>
+                </template>
+            </template>
+            <template v-else>
+                <strong v-if="!isFinalised">Proposed decision: Decline</strong>
+                <strong v-else>Decision: Decline</strong>
+            </template>
+        </FormSection>
     </div>
 </template>
 <script>
 import { v4 as uuidv4 } from 'uuid';
+import FormSection from "@/components/forms/section_toggle.vue"
 import {
     api_endpoints,
     helpers
@@ -158,6 +117,7 @@ export default {
     watch:{
     },
     components:{
+        FormSection,
     },
     computed:{
         /*
@@ -212,6 +172,9 @@ export default {
             }
             return checked;
         },
+        decision_label: function(){
+            return this.isFinalised == true ? 'Decision' : 'Proposed Decision';
+        }
 
     },
     methods:{
