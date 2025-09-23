@@ -4,7 +4,7 @@
             <div class="col-sm-12">
                 <form class="form-horizontal" name="personal_form" method="post">
 
-                    <FormSection :formCollapse="false" label="Apply on behalf of" Index="3">
+                    <FormSection :formCollapse="false" label="Apply on behalf of" Index="1">
                         <div>
 
                             <div class="col-sm-12">
@@ -40,7 +40,7 @@
                         </div>
                     </FormSection>
 
-                    <FormSection v-if="behalf_of != ''" :formCollapse="false" label="Apply for" Index="3">
+                    <FormSection v-if="behalf_of != ''" :formCollapse="false" label="Apply for" Index="2">
                     
                         
                         <div>

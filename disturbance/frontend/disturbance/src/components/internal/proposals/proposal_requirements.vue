@@ -1,32 +1,18 @@
 <template id="proposal_requirements">
-    <div class="col-md-12">
-        <div class="row">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Requirements
-                        <a class="panelClicker" :href="'#'+panelBody" data-toggle="collapse"  data-parent="#userInfo" expanded="false" :aria-controls="panelBody">
-                            <span class="glyphicon glyphicon-chevron-down pull-right "></span>
-                        </a>
-                    </h3>
-                </div>
-                <div class="panel-body panel-collapse collapse in" :id="panelBody">
-                    
-                    <form class="form-horizontal" action="index.html" method="post">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <button v-if="hasAssessorMode" @click.prevent="addRequirement()" style="margin-bottom:10px;" class="btn btn-primary pull-right">Add Requirement</button>
-                            </div>
-                        </div>
-                        <!-- <div class="col-sm-12">
-                            <button v-if="hasAssessorMode" @click.prevent="addRequirement()" style="margin-bottom:10px;" class="btn btn-primary pull-right">Add Requirement</button>
-                        </div> -->
-                        <datatable ref="requirements_datatable" :id="'requirements-datatable-'+_uid" :dtOptions="requirement_options" :dtHeaders="requirement_headers"/>
-                    </form>
+    <FormSection :formCollapse="false" label="Requirements" Index="requirements">
+        <form class="form-horizontal" action="index.html" method="post">
+            <div class="row">
+                <div class="col-sm-12">
+                    <button v-if="hasAssessorMode" @click.prevent="addRequirement()" style="margin-bottom:10px;" class="btn btn-primary pull-right">Add Requirement</button>
                 </div>
             </div>
-        </div>
+            <!-- <div class="col-sm-12">
+                <button v-if="hasAssessorMode" @click.prevent="addRequirement()" style="margin-bottom:10px;" class="btn btn-primary pull-right">Add Requirement</button>
+            </div> -->
+            <datatable ref="requirements_datatable" :id="'requirements-datatable-'+_uid" :dtOptions="requirement_options" :dtHeaders="requirement_headers"/>
+        </form>
+    </FormSection>
         <RequirementDetail ref="requirement_detail" :proposal_id="proposal.id" :requirements="requirements"/>
-    </div>
 </template>
 <script>
 import { v4 as uuidv4 } from 'uuid';
@@ -38,6 +24,7 @@ import {
 from '@/utils/hooks'
 import datatable from '@vue-utils/datatable.vue'
 import RequirementDetail from './proposal_add_requirement.vue'
+import FormSection from "@/components/forms/section_toggle.vue";
 export default {
     name: 'InternalProposalRequirements',
     props: {
@@ -60,12 +47,15 @@ export default {
                     "dataSrc": ''
                 },
                 order: [],
-                dom: 'lBfrtip',
+                dom: "<'d-flex align-items-center'<'me-auto'l>fB>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'d-flex align-items-center'<'me-auto'i>p>",
                 // buttons:[
                 // 'excel', 'csv', ], //'copy'
                 buttons:[
                     {
                         extend: 'excel',
+                        className: 'btn btn-primary me-2 rounded',
                         exportOptions: {
                             columns: ':not(.noexport)',
                             orthogonal:'export'
@@ -73,6 +63,7 @@ export default {
                     },
                     {
                         extend: 'csv',
+                        className: 'btn btn-primary me-2 rounded',
                         exportOptions: {
                             columns: ':not(.noexport)',
                             orthogonal:'export'
@@ -195,7 +186,8 @@ export default {
     },
     components:{
         datatable,
-        RequirementDetail
+        RequirementDetail,
+        FormSection
     },
     computed:{
         hasAssessorMode(){

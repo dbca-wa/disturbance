@@ -221,73 +221,109 @@ export default {
                 }
             );
         },
-        initialiseTable: function(){
+        initialiseTable: function () {
+            // To allow table elements (ref: https://getbootstrap.com/docs/5.1/getting-started/javascript/#sanitizer)
+            var myDefaultAllowList = bootstrap.Tooltip.Default.allowList;
+            myDefaultAllowList.table = [];
+
             let vm = this;
-            let table_id = 'more-referrals-table'+uuidv4();
-            let popover_name = 'popover-'+ uuidv4();
-            $(vm.$refs.showRef).popover({
-                content: function() {
-                    return ` 
-                    <table id="${table_id}" class="hover table table-striped table-bordered dt-responsive " cellspacing="0" width="100%">
-                    </table>`
-                },
-                template: `<div class="popover ${popover_name}" role="tooltip"><div class="arrow" style="top:110px;"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>`,
-                sanitize:false,
+            let table_id = 'more-referrals-table' + vm.uuid;
+            let popover_name = 'popover-' + vm.uuid + '-referrals';
+            let popover_elem = $(vm.$refs.showRef)[0];
+            if (!popover_elem) {
+                console.info('More referral popover element not found');
+                return;
+            }
+            let my_content =
+                '<table id="' +
+                table_id +
+                '" class="hover table table-striped table-bordered dt-responsive" cellspacing="0" width="100%"></table>';
+            let my_template =
+                '<div class="popover ' +
+                popover_name +
+                '" role="tooltip"><div class="popover-arrow" style="top:110px;"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>';
+            new bootstrap.Popover(popover_elem, {
+                sanitize: false,
                 html: true,
+                content: my_content,
+                template: my_template,
                 title: 'Referrals',
                 container: 'body',
-                placement: 'right',
-                trigger: "click focus",
-                //offset: '0 10',
-            }).on('inserted.bs.popover', function () {
-                vm.table = $('#'+table_id).DataTable(vm.datatable_options);
-
-                // activate popover when table is drawn.
-                vm.table.on('draw.dt', function () {
-                    var $tablePopover = $(this).find('[data-toggle="popover"]');
-                    if ($tablePopover.length > 0) {
-                        $tablePopover.popover();
-                        // the next line prevents from scrolling up to the top after clicking on the popover.
-                        $($tablePopover).on('click', function (e) {
-                            e.preventDefault();
-                            return true;
-                        });
-                    }
-                }).on('click','.resendRef',function(e){
-                    e.preventDefault();
-                    var _id = $(this).data('id');
-                    var user = $(this).data('user');
-                    vm.resendReferral(_id,user);
-                }).on('click','.recallRef',function(e){
-                    e.preventDefault();
-                    var _id = $(this).data('id');
-                    var user = $(this).data('user');
-                    vm.recallReferral(_id,user);
-                }).on('click','.remindRef',function(e){
-                    e.preventDefault();
-                    var _id = $(this).data('id');
-                    var user = $(this).data('user');
-                    vm.remindReferral(_id,user);
-                });
-            }).on('shown.bs.popover', function () {
-                var el = vm.$refs.showRef;
-                // var popoverheight = parseInt($('.'+popover_name).height());
-
-                var popover_bounding_top = parseInt($('.'+popover_name)[0].getBoundingClientRect().top);
-                // var popover_bounding_bottom = parseInt($('.'+popover_name)[0].getBoundingClientRect().bottom);
-
-                var el_bounding_top = parseInt($(el)[0].getBoundingClientRect().top);
-                // var el_bounding_bottom = parseInt($(el)[0].getBoundingClientRect().top);
-                
-                var diff = el_bounding_top - popover_bounding_top;
-
-                // var position = parseInt($('.'+popover_name).position().top);
-                // var pos2 = parseInt($(el).position().top) - 5;
-
-                var x = diff + 5;
-                $('.'+popover_name).children('.arrow').css('top', x + 'px');
+                placement: 'auto',
+                trigger: 'click',
             });
 
+            popover_elem.addEventListener('inserted.bs.popover', function () {
+                vm.table = $('#' + table_id).DataTable(vm.datatable_options);
+
+                // activate popover when table is drawn.
+                vm.table
+                    .on('draw', function () {
+                        var popoverTriggerList = [].slice.call(
+                            document.querySelectorAll(
+                                '#' + table_id + ' [data-bs-toggle="popover"]'
+                            )
+                        );
+                        // eslint-disable-next-line no-unused-vars
+                        var popoverList = popoverTriggerList.map(
+                            function (popoverTriggerEl) {
+                                return new bootstrap.Popover(popoverTriggerEl);
+                            }
+                        );
+                    })
+                    .on('click', '.resendRef', function (e) {
+                        e.preventDefault();
+                        var _id = $(this).data('id');
+                        var user = $(this).data('user');
+                        vm.resendReferral(_id, user);
+                    })
+                    .on('click', '.recallRef', function (e) {
+                        e.preventDefault();
+                        var _id = $(this).data('id');
+                        var user = $(this).data('user');
+                        vm.recallReferral(_id, user);
+                    })
+                    .on('click', '.remindRef', function (e) {
+                        e.preventDefault();
+                        var _id = $(this).data('id');
+                        var user = $(this).data('user');
+                        vm.remindReferral(_id, user);
+                    });
+            });
+            // .on('shown.bs.popover', function () {
+            popover_elem.addEventListener('shown.bs.popover', function () {
+                var el = vm.$refs.showRef;
+                // eslint-disable-next-line no-unused-vars
+                var popoverheight = parseInt($('.' + popover_name).height());
+
+                var popover_bounding_top = parseInt(
+                    $('.' + popover_name)[0].getBoundingClientRect().top
+                );
+                // eslint-disable-next-line no-unused-vars
+                var popover_bounding_bottom = parseInt(
+                    $('.' + popover_name)[0].getBoundingClientRect().bottom
+                );
+
+                var el_bounding_top = parseInt(
+                    $(el)[0].getBoundingClientRect().top
+                );
+                // eslint-disable-next-line no-unused-vars
+                var el_bounding_bottom = parseInt(
+                    $(el)[0].getBoundingClientRect().top
+                );
+
+                var diff = el_bounding_top - popover_bounding_top;
+
+                // eslint-disable-next-line no-unused-vars
+                var position = parseInt($('.' + popover_name).position().top);
+                // eslint-disable-next-line no-unused-vars
+                var pos2 = parseInt($(el).position().top) - 5;
+
+                var x = diff + 5;
+                $('.' + popover_name)
+                    .children('.arrow')
+                    .css('top', x + 'px');
+            });
         },
     },
     mounted(){
