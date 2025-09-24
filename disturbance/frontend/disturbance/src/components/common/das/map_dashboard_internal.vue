@@ -5,7 +5,7 @@
                 <div class="filter_search_wrapper" style="margin-bottom: 5px;" id="filter_search_row">
                     <div>
                         <div v-show="select2Applied">
-                        <div class="row">
+                        <div class="row mb-1">
                                 <div class="col-md-3">
                                     <div class="form-group">
                                             <div v-show="select2Applied">
@@ -45,7 +45,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row mb-1">
                                 <div class="col-md-3">
                                     <label for="">Lodged From</label>
                                     <div class="input-group date" ref="proposalDateFromPicker">
@@ -77,8 +77,9 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row mb-1"></div>
                             
-                            <div class="row">
+                            <div class="row mb-1">
                                 <div class="col-md-6">
                                     <!--
                                     <button type="button" class="btn btn-primary" @click="geoJsonButtonClicked"><i class="fa fa-download"></i>
@@ -102,6 +103,7 @@
                                 </div> -->
                                 
                             </div>
+                            <div class="row mb-1"></div>
                         </div>
                     </div>
                 </div>

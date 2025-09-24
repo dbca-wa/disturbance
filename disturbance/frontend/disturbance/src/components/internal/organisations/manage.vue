@@ -268,6 +268,10 @@ export default {
                     "url": helpers.add_endpoint_json(api_endpoints.organisations,vm.$route.params.org_id+'/contacts'),
                     "dataSrc": ''
                 },
+                columnDefs: [
+                                { responsivePriority: 1, targets: 0 }, // First visible column has top priority (e.g. proposal_number
+                                { responsivePriority: 2, targets: 4 }, // If the actions is the last entry in columns then this will make it 2nd top priority soo as long as the screen is a decent size it will always be shown
+                            ],
                 columns: [
                     {
                         mRender:function (data,type,full) {
