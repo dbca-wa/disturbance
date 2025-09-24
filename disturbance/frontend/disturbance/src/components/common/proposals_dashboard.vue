@@ -5,8 +5,7 @@
         </template>
         <div class="col-sm-12">
             <div class="panel panel-default">
-                <div class="row">
-                    <div v-if="!apiaryTemplateGroup">
+                <div class="row mb-1">                    
                         <div class="col-md-3">
                             <div class="form-group">
                                 <div>
@@ -20,9 +19,8 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div v-if="!apiaryTemplateGroup">
+                        </div>                  
+                    
                         <div class="col-md-3">
                             <div class="form-group">
                                 <div>
@@ -37,8 +35,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="">{{ activityFilterLabel }}</label>
@@ -58,7 +54,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mb-1">
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="">Proponent</label>
@@ -103,7 +99,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row" v-if="!is_external">
+                <div class="row mb-1" v-if="!is_external">
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="">Proposal Type</label>
@@ -634,7 +630,7 @@ export default {
                     "<'d-flex align-items-center'<'me-auto'i>p>",
                 buttons:[
                     {
-                        extend: 'excel',
+                        extend: 'excelHtml5',
                         className: 'btn btn-primary me-2 rounded',
                         exportOptions: {
                             columns: ':not(.noexport)',
@@ -648,7 +644,7 @@ export default {
                         */
                     },
                     {
-                        extend: 'csv',
+                        extend: 'csvHtml5',
                         className: 'btn btn-primary me-2 rounded',
                         exportOptions: {
                             columns: ':not(.noexport)',
