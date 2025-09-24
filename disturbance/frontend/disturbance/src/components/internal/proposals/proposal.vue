@@ -298,22 +298,22 @@
                                 </div>
 
 
-                                <div>
+                                <div >
                                     <input type="hidden" name="csrfmiddlewaretoken" :value="csrf_token"/>
                                     <input type='hidden' name="schema" :value="JSON.stringify(proposal)" />
                                     <input type='hidden' name="proposal_id" :value="1" />
-                                    <div class="row" style="margin-bottom: 50px">
-                                    <div class="navbar navbar-fixed-bottom" v-if="hasAssessorMode" style="background-color: #f5f5f5;">
-                                        <div class="navbar-inner">
-                                            <div v-if="hasAssessorMode" class="container">
-                                            <p class="pull-right">
-                                                <button class="btn btn-primary btn-margin" style="margin-top:5px;" @click.prevent="save()">Save and Continue</button>
-                                                
-                                                <button class="btn btn-primary" style="margin-top:5px;" @click.prevent="save_exit()">Save and Exit</button>
-                                            </p>
+                                    <div class="row mb-5" style="margin-bottom: 50px">
+                                        <div class="fixed-bottom bg-light" v-if="hasAssessorMode" style="background-color: #f5f5f5;">
+                                            <div class="container d-flex">
+                                                <div v-if="hasAssessorMode" class="ms-auto">
+                                                <p class="d-flex justify-content-end mt-1">
+                                                    <button class="btn btn-primary btn-margin" style="margin-top:5px;" @click.prevent="save()">Save and Continue</button>
+                                                    
+                                                    <button class="btn btn-primary" style="margin-top:5px;" @click.prevent="save_exit()">Save and Exit</button>
+                                                </p>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
                                     </div>
                                 </div>
                             </form>
