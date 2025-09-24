@@ -16,6 +16,18 @@
     color: #fcb13f;
 }
 
+/* for header site logo  */
+
+.parks_bg_banner .col-lg-9 {
+    display: flex !important;
+    align-items: center !important;
+    padding-left: 2em;
+}
+
+.parks_bg_banner .col-lg-9 h1 {
+    font-size: 2.7em;
+}
+
 .top-buffer {
     margin-top: 20px;
 }
@@ -107,6 +119,10 @@
     color: white !important;
 }
 
+.nav-pills .nav-link {
+    background: lightgray;
+}
+
 .table-referrals {
     font-size: 1em;
 }
@@ -121,4 +137,78 @@
   color: #fff !important;
   background-color: #5393d2 !important;
   border-color: #5393d2 !important;
+}
+
+/* Bring app content inline with header logo and navbar */
+div#app .container {
+    padding: 0 40px 0 40px;
+    margin-bottom: 45px;
+}
+
+div#app .container h3 {
+    margin-bottom: 0.7em;
+}
+
+/* DataTables buttons spacing */
+
+.dt-buttons {
+    margin-left: 8px;
+}
+
+/* Pagination links */
+.page-item>.page-link {
+    color: #226fbb;
+}
+
+.page-item.active>.page-link {
+    color: #fff;
+    background-color: #226fbb !important;
+    border-color: #226fbb !important;
+}
+
+.nav-link {
+    color: #226fbb;
+}
+
+/* To avoid the change in the arrow display b'coz of the global font-family: var(--bs-font-sans-serif); */
+.dtr-control:before {
+    font-family: None;
+}
+
+/* Datatables styles */
+
+
+table.dataTable a {
+    color: #226fbb;
+}
+
+table.dataTable a:hover {
+    color: #5393d2;
+}
+
+
+.collapse-icon {
+    cursor: pointer;
+}
+
+.expand-icon {
+    cursor: pointer;
+}
+
+.swal2-confirm:focus {
+    box-shadow: 0 0 0 3px rgba(48, 133, 214, 0.7) !important;
+}
+
+/* Make sure sweet alert 2 shows on top of all other elements including modals and popovers */
+
+.swal2-container {
+    z-index: 21000 !important;
+}
+
+.swal2-popup {
+    z-index: 21001 !important;
+}
+
+.bg-primary {
+    background-color: #226fbb !important;
 }

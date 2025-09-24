@@ -5,53 +5,29 @@
 
 {% load static %}
 
-{% if TEMPLATE_GROUP == 'apiary' %}
     <div class="container">
         <div class="masthead">
             <div class="row">
-                <div class="agency-freespace">
-                    <h1 id="site-title" class="site-logo" style="color: white;">
-                        <div class="col-sm-5">
-                            <a href="{%url 'home'%}">
-                                <img src="/static/disturbance/img/logo-park-stay-trunc.gif" alt="Department of Biodiversity, Conservation and Attractions" class="img-responsive"/>
-                            </a>
-                        </div>
-                        <div class="col-sm-7">
-                            <!--div class="pull-right"-->
-                            <div>
-                                Apiary System
-                                {{ this_is_apiary }}
+                <div class="col-lg-8">
+                    <div class="agency-freespace">
+                        <h1 id="site-title" class="site-logo" style="color: white;">
+                            <div class="col-sm-5">
+                                <a href="{%url 'home'%}" class="logo-link">
+                                    <img src="/static/disturbance/img/logo-park-stay-trunc.gif" alt="Department of Biodiversity, Conservation and Attractions" class="img-responsive"/>
+                                </a>
+                                <div class="logo-print">
+                                    <img src="/static/disturbance/img/logo-park-stay-trunc.gif" alt="Department of Biodiversity, Conservation and Attractions" class="img-responsive"/>
+                                </div>
                             </div>
-                        </div>
-                    </h1>
+                            <div class="col-sm-7">
+                                <!--div class="pull-right"-->
+                                <div id="sysname">
+                                    {{ system_name }} <a href="{%url 'home'%}">
+                                </div>
+                            </div>
+                        </h1>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-{% else %}
-    <div class="container">
-        <div class="masthead">
-            <div class="row">
-                <div class="agency-freespace">
-                    <h1 id="site-title" class="site-logo" style="color: white;">
-                        <div class="col-sm-5">
-                            <a href="{%url 'home'%}" class="logo-link">
-                                <img src="/static/disturbance/img/logo-park-stay-trunc.gif" alt="Department of Biodiversity, Conservation and Attractions" class="img-responsive"/>
-                            </a>
-                            <div class="logo-print">
-                                <img src="/static/disturbance/img/logo-park-stay-trunc.gif" alt="Department of Biodiversity, Conservation and Attractions" class="img-responsive"/>
-                            </div>
-                        </div>
-                        <div class="col-sm-7">
-                            <!--div class="pull-right"-->
-                            <div class="" id="sysname">
-                                {{ system_name }} <a href="{%url 'home'%}">
-                            </div>
-                        </div>
-                    </h1>
-                </div>
-            </div>
-        </div>
-    </div>
-{% endif %}
