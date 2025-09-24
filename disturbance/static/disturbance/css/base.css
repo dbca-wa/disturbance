@@ -16,6 +16,16 @@
     color: #fcb13f;
 }
 
+.parks_bg_banner .col-lg-9 {
+    display: flex !important;
+    align-items: center !important;
+    padding-left: 2em;
+}
+
+.parks_bg_banner .col-lg-9 h1 {
+    font-size: 2.7em;
+}
+
 .top-buffer {
     margin-top: 20px;
 }
@@ -121,4 +131,14 @@
   color: #fff !important;
   background-color: #5393d2 !important;
   border-color: #5393d2 !important;
+}
+
+/* Bring app content inline with header logo and navbar */
+div#app .container {
+    padding: 0 40px 0 40px;
+    margin-bottom: 45px;
+}
+
+div#app .container h3 {
+    margin-bottom: 0.7em;
 }
