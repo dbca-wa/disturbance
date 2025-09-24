@@ -82,7 +82,7 @@
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <label>
-                                            <input  name="confirmation" type="checkbox" class="control-label pull-left"  v-model="approval.confirmation" /> &nbsp;
+                                            <input  name="confirmation" type="checkbox" class="control-label pull-left form-check-input"  v-model="approval.confirmation" /> &nbsp;
                                             As the Assessor I confirm the following.
                                             <ul>
                                                 <li>

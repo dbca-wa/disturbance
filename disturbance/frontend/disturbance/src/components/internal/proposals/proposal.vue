@@ -653,11 +653,11 @@ export default {
                         if('-'==revision_text){
                             //console.log('revision_text = ' + revision_text)
                             //console.log('previously_blank_text = ' + previously_blank_text)
-                            replacement_html += '<input type="checkbox" disabled="disabled"> '
+                            replacement_html += '<input type="checkbox" class="form-check-input" disabled="disabled"> '
                         } else {
                             //console.log('revision_text = ' + revision_text)
                             //console.log('previously_blank_text = ' + previously_blank_text)
-                            replacement_html += '<input type="checkbox" checked="checked" disabled="disabled""> '
+                            replacement_html += '<input type="checkbox" class="form-check-input" checked="checked" disabled="disabled""> '
                         }              
                         replacement_html += replacement.parent().text().trim()
                         replacement_html += '</div>'

@@ -1,12 +1,10 @@
 <template>
-  <div class="container" id="internalSearch">
-    <div class="row">
-      <div class="col-sm-12">
-        <FormSection :form-collapse="false" label="Search Question" Index="search_question">
+  <div id="internalSearch">
+      <FormSection :form-collapse="false" label="Search Question" Index="search_question">
             <div class="row">
               <div class="col-sm-12">
                 <div>
-                  <label for="" class="control-label" >Proposal Type</label>
+                  <label for="" class="col-form-label" >Proposal Type</label>
                   <div>
                       <div class="form-group">
                           <select class="form-select" style="width:40%" v-model="selected_proposal_type_id" @change="chainedSelectAppType(selected_proposal_type_id)">
@@ -19,7 +17,7 @@
                     </div>
                 </div>
                 <div v-if="display_region_selectbox">
-                    <label for="" class="control-label" >Region  </label>
+                    <label for="" class="col-form-label" >Region  </label>
                     <div >
                         <div class="form-group">
                             <select v-model="selected_region" class="form-select" style="width:40%" @change="chainedSelectDistricts(selected_region)">
@@ -34,7 +32,7 @@
                 </div>
 
                 <div v-if="display_region_selectbox">
-                    <label for="" class="control-label">District </label>
+                    <label for="" class="col-form-label">District </label>
                     <div >
                         <div class="form-group">
                             <select  v-model="selected_district" class="form-select" style="width:40%">
@@ -50,7 +48,7 @@
 
                 <div v-if="display_activity_matrix_selectbox">
                   <div v-if="activities.length > 0">
-                    <label for="" class="control-label" >Activity Type </label>
+                    <label for="" class="col-form-label" >Activity Type </label>
                     <div >
                       <div class="form-group">
                         <select v-model="selected_activity" class="form-select" style="width:40%">
@@ -67,7 +65,7 @@
 
                 <div v-if="display_section_selectbox">
                   <div v-if="sections.length > 0">
-                    <label for="" class="control-label" >Sections </label>
+                    <label for="" class="col-form-label" >Sections </label>
                     <div >
                       <div class="form-group">
                         <select v-model="selected_section" class="form-select" style="width:40%" @change="chainedSelectSections(selected_section)">
@@ -83,7 +81,7 @@
 
                 <div>
                   <div v-if="questions.length > 0">
-                    <label for="" class="control-label" >Questions </label>
+                    <label for="" class="col-form-label" >Questions </label>
                     <div >
                       <div class="form-group">
                         <select v-model="selected_question" class="form-select" style="width:40%" @change="chainedSelectOptions(selected_question)">
@@ -99,7 +97,7 @@
 
                 <div v-if="selected_question">
                   <div v-if="date_type">
-                    <label class="control-label"  for="Name">Answer</label>
+                    <label class="col-form-label"  for="Name">Answer</label>
                     <div class="form-group">
                         <div class="input-group date" ref="question_date" style="width: 70%;">
                             <!-- <input type="text" class="form-control" name="question_date" placeholder="DD/MM/YYYY" v-model="selected_option"> -->
@@ -112,7 +110,7 @@
                   </div>
 
                   <div v-else-if="select_type && options.length > 0">
-                    <label for="" class="control-label" >Options </label>
+                    <label for="" class="col-form-label" >Options </label>
                     <div >
                       <div class="form-group">
                         <select v-model="selected_option" class="form-select" style="width:40%" >
@@ -125,7 +123,7 @@
                     </div>
                   </div>
                   <div v-else>
-                    <label class="control-label"  for="Name">Answer</label>
+                    <label class="col-form-label"  for="Name">Answer</label>
                     <div class="form-group">
                         <div class="input-group" style="width: 70%;">
                             <input type="text" class="form-control" name="question_date"  v-model="selected_option">
@@ -135,7 +133,7 @@
                 </div>
               </div>
             </div>
-            <div class="row">
+            <div class="row mb-3">
               <div class="col-lg-12">
                   <ul class="list-inline" style="display: inline; width: auto;">                          
                       <li class="list-inline-item" v-for="(item,i) in searchKeywords" :key="i">
@@ -145,7 +143,7 @@
               </div>
             </div>
 
-            <div class="row">
+            <div class="row mb-3">
               <div class="col-lg-12">
                 <div >
                   <button type="button" class="btn btn-primary btn-margin" @click.prevent="search()" :disabled="search_btn_disabled">
@@ -171,13 +169,13 @@
               <i class='fa fa-4x fa-spinner fa-spin'></i>
               <p>Loading...</p>
             </div>
-            <div class="col-lg-12">
-                <datatable ref="proposal_datatable" :id="datatable_id" :dtOptions="proposal_options"  :dtHeaders="proposal_headers"/>
+            <div class="row">
+              <div class="col-lg-12">
+                  <datatable ref="proposal_datatable" :id="datatable_id" :dtOptions="proposal_options"  :dtHeaders="proposal_headers"/>
+              </div>
             </div>
         </FormSection>
-      </div>
     </div>
-  </div>
 </template>
 <script>
 import { v4 as uuidv4 } from 'uuid';
@@ -263,9 +261,19 @@ export default {
               "url": 'api/empty_list',
               "dataSrc": ''
           },*/
-          dom: 'Bfrtip',
+          dom: "<'d-flex align-items-center'<'me-auto'l>fB>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'d-flex align-items-center'<'me-auto'i>p>",
           buttons:[
-                'excel', 'csv', ],
+                    {
+                        extend: 'excelHtml5',
+                        className: 'btn btn-primary me-2 rounded',
+                    },
+                    {
+                        extend: 'csvHtml5',
+                        className: 'btn btn-primary me-2 rounded',
+                    },
+                ],
           
           data: vm.results,
           columns: [

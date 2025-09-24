@@ -7,8 +7,8 @@
                         <alert v-if="showError" type="danger"><strong>{{errorString}}</strong></alert>
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <label class="radio-inline control-label"><input type="radio" name="requirementType" :value="true" v-model="requirement.standard">Standard Requirement</label>
-                                <label class="radio-inline"><input type="radio" name="requirementType" :value="false" v-model="requirement.standard">Free Text Requirement</label>
+                                <label class="radio-inline control-label"><input type="radio" class="form-check-input" name="requirementType" :value="true" v-model="requirement.standard">Standard Requirement</label>
+                                <label class="radio-inline"><input type="radio" class="form-check-input" name="requirementType" :value="false" v-model="requirement.standard">Free Text Requirement</label>
                             </div>
                         </div>
                         <div class="col-sm-12">
@@ -51,7 +51,7 @@
                                             <label class="control-label pull-left"  for="Name">Recurrence</label>
                                         </div>
                                         <div class="col-sm-9">
-                                            <label class="checkbox-inline"><input type="checkbox" v-model="requirement.recurrence"></label>
+                                            <label class="checkbox-inline"><input type="checkbox" class="form-check-input" v-model="requirement.recurrence"></label>
                                         </div>
                                     </div>
                                 </div>
@@ -62,9 +62,9 @@
                                                 <label class="control-label pull-left"  for="Name">Recurrence pattern</label>
                                             </div>
                                             <div class="col-sm-9">
-                                                <label class="radio-inline control-label"><input type="radio" name="recurrenceSchedule" value="1" v-model="requirement.recurrence_pattern">Weekly</label>
-                                                <label class="radio-inline control-label"><input type="radio" name="recurrenceSchedule" value="2" v-model="requirement.recurrence_pattern">Monthly</label>
-                                                <label class="radio-inline control-label"><input type="radio" name="recurrenceSchedule" value="3" v-model="requirement.recurrence_pattern">Yearly</label>
+                                                <label class="radio-inline control-label"><input type="radio" class="form-check-input" name="recurrenceSchedule" value="1" v-model="requirement.recurrence_pattern">Weekly</label>
+                                                <label class="radio-inline control-label"><input type="radio" class="form-check-input" name="recurrenceSchedule" value="2" v-model="requirement.recurrence_pattern">Monthly</label>
+                                                <label class="radio-inline control-label"><input type="radio" class="form-check-input" name="recurrenceSchedule" value="3" v-model="requirement.recurrence_pattern">Yearly</label>
                                             </div>
                                         </div>
                                     </div>

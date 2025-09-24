@@ -73,7 +73,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <label><input type="checkbox" :value="true" v-model="masterlist.help_text_url"/>&nbsp;&nbsp;&nbsp;Help Text url?</label>
+                            <label><input type="checkbox" class="form-check-input" :value="true" v-model="masterlist.help_text_url"/>&nbsp;&nbsp;&nbsp;Help Text url?</label>
                         </div>
                     </div>
                     <!-- <div class="row" v-if="isHelptextUrl">
@@ -95,7 +95,7 @@
 
                     <div class="row">
                         <div class="col-md-6">
-                            <label><input type="checkbox" :value="true" v-model="masterlist.help_text_assessor_url" />&nbsp;&nbsp;&nbsp;Help Text Assessor url?</label>
+                            <label><input type="checkbox" class="form-check-input" :value="true" v-model="masterlist.help_text_assessor_url" />&nbsp;&nbsp;&nbsp;Help Text Assessor url?</label>
                         </div>
                     </div>
                     <div class="row" v-if="isHelptextAssessorUrl">

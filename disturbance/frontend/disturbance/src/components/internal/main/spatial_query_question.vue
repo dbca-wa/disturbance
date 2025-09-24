@@ -135,7 +135,7 @@
                                 <!--<div v-if="is_text_component()" class="col-md-5">-->
                                 <div class="col-md-5">
                                     <!-- <input type="checkbox" :value="false" v-model="spatialquery.other_data.show_add_info_section_prop" :disabled="sqq_is_disabled()">&nbsp;&nbsp;&nbsp; -->
-                                    <input type="checkbox" :value="false" v-model="spatialquery.other_data.show_add_info_section_prop"/>&nbsp;&nbsp;&nbsp;
+                                    <input type="checkbox" class="form-check-input" :value="false" v-model="spatialquery.other_data.show_add_info_section_prop"/>&nbsp;&nbsp;&nbsp;
                                     <label>Show additional info section?</label>
                                 </div>
 
@@ -253,7 +253,7 @@
                                     <input type="text" class="form-control" name="select-answer" v-model="spatialquery.group.name" style="width:100%;" disabled/>
                                 </div>
                                 <div class="col-md-5">
-                                    <input type="checkbox" name="select-addinfo" :value="false" v-model="spatialquery.other_data.show_add_info_section_prop" disabled/>&nbsp;&nbsp;&nbsp;
+                                    <input type="checkbox" class="form-check-input" name="select-addinfo" :value="false" v-model="spatialquery.other_data.show_add_info_section_prop" disabled/>&nbsp;&nbsp;&nbsp;
                                     <label style="font-weight:normal !important;">Show proponent 'additional info' section?</label>
                                 </div>
                             </div>
@@ -389,9 +389,9 @@
                             </select>     
                             </div>
                             <div class="col-md-3" v-if="spatialquery.question && is_text_widget(spatialquery.question && is_text_widget())">
-                            <input type="radio" id="visible_to_proponent_yes" name="visible_to_proponent" value="true" v-model="spatialquerylayer.visible_to_proponent">
+                            <input type="radio" class="form-check-input" id="visible_to_proponent_yes" name="visible_to_proponent" value="true" v-model="spatialquerylayer.visible_to_proponent">
                             <label for="visible_to_proponent_yes">Yes</label>&nbsp;&nbsp;&nbsp;
-                            <input type="radio" id="visible_to_proponent_no" name="visible_to_proponent" value="false" v-model="spatialquerylayer.visible_to_proponent">
+                            <input type="radio" class="form-check-input" id="visible_to_proponent_no" name="visible_to_proponent" value="false" v-model="spatialquerylayer.visible_to_proponent">
                             <label for="visible_to_proponent_no">No</label>
                             </div>
                         </div>
@@ -524,7 +524,7 @@
                     <!--<label class="control-label pull-right">All MLQ's</label>-->
                     </div>
                     <div class="col-md-1">
-                    <input class="med" type="checkbox" id="group_mlqs" name="group_mlqs" title="Request non-expired Grouped MasterList Questions (grouped by Radiobutton, Checkbox, Select, Multiselect)" v-model="proposal.group_mlqs"><br>
+                    <input class="med form-check-input" type="checkbox" id="group_mlqs" name="group_mlqs" title="Request non-expired Grouped MasterList Questions (grouped by Radiobutton, Checkbox, Select, Multiselect)" v-model="proposal.group_mlqs"><br>
                     <!--<input class="med" type="checkbox" id="all_mlqs" name="all_mlqs" title="Request with all non-expired MasterList Questions" v-model="proposal.all_mlqs">-->
                     </div>
                             </div>

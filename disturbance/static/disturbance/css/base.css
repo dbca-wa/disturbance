@@ -212,3 +212,7 @@ table.dataTable a:hover {
 .bg-primary {
     background-color: #226fbb !important;
 }
+
+.form-check-input:checked {
+    background-color: #226fbb !important;
+}
