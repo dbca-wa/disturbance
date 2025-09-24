@@ -16,6 +16,8 @@
     color: #fcb13f;
 }
 
+/* for header site logo  */
+
 .parks_bg_banner .col-lg-9 {
     display: flex !important;
     align-items: center !important;
@@ -141,4 +143,46 @@ div#app .container {
 
 div#app .container h3 {
     margin-bottom: 0.7em;
+}
+
+/* DataTables buttons spacing */
+
+.dt-buttons {
+    margin-left: 8px;
+}
+
+/* Pagination links */
+.page-item>.page-link {
+    color: #226fbb;
+}
+
+.page-item.active>.page-link {
+    color: #fff;
+    background-color: #226fbb !important;
+    border-color: #226fbb !important;
+}
+
+/* To avoid the change in the arrow display b'coz of the global font-family: var(--bs-font-sans-serif); */
+.dtr-control:before {
+    font-family: None;
+}
+
+/* Datatables styles */
+
+
+table.dataTable a {
+    color: #226fbb;
+}
+
+table.dataTable a:hover {
+    color: #5393d2;
+}
+
+
+.collapse-icon {
+    cursor: pointer;
+}
+
+.expand-icon {
+    cursor: pointer;
 }
