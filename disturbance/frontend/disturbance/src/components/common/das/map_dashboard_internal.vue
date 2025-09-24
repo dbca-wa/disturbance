@@ -5,7 +5,7 @@
                 <div class="filter_search_wrapper" style="margin-bottom: 5px;" id="filter_search_row">
                     <div>
                         <div v-show="select2Applied">
-                        <div class="row">
+                        <div class="row mb-1">
                                 <div class="col-md-3">
                                     <div class="form-group">
                                             <div v-show="select2Applied">
@@ -45,7 +45,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row mb-1">
                                 <div class="col-md-3">
                                     <label for="">Lodged From</label>
                                     <div class="input-group date" ref="proposalDateFromPicker">
@@ -77,8 +77,9 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row mb-1"></div>
                             
-                            <div class="row">
+                            <div class="row mb-1">
                                 <div class="col-md-6">
                                     <!--
                                     <button type="button" class="btn btn-primary" @click="geoJsonButtonClicked"><i class="fa fa-download"></i>
@@ -102,6 +103,7 @@
                                 </div> -->
                                 
                             </div>
+                            <div class="row mb-1"></div>
                         </div>
                     </div>
                 </div>
@@ -944,22 +946,49 @@
                 let clusterSource = new Cluster({
                     distance: 50,
                     source: vm.proposalQuerySource,
-                    geometryFunction: (feature) => {
-                        // let resolution = this.map.getView().getResolution();
+                    // geometryFunction: (feature) => {
+                    //     // let resolution = this.map.getView().getResolution();
                         
-                            let type = feature.getGeometry().getType();
-                            if (type === 'Polygon') {
-                                return feature.getGeometry().getInteriorPoint();
+                    //         let type = feature.getGeometry().getType();
+                    //         if (type === 'Polygon') {
+                    //             return feature.getGeometry().getInteriorPoint();
 
-                            } else if (type === 'LineString') {
-                                return feature.getGeometry().getCoordinateAt(0.5);
+                    //         } else if (type === 'LineString') {
+                    //             return feature.getGeometry().getCoordinateAt(0.5);
 
-                            } else if (type === 'Point') {
-                                return feature.getGeometry();
-                            } else if (type === 'MultiPolygon') {
-                                return new Point(getCenter(feature.getGeometry().getExtent()), 'XY');
-                            }
+                    //         } else if (type === 'Point') {
+                    //             return feature.getGeometry();
+                    //         } else if (type === 'MultiPolygon') {
+                    //             return new Point(getCenter(feature.getGeometry().getExtent()), 'XY');
+                    //         }
                        
+                    // },
+                    geometryFunction: (feature) => {
+                        try {
+                            const geometry = feature.getGeometry();
+                            const proposal = feature.getProperties().proposal.id;
+                            if (!geometry) {
+                                console.warn('Feature with null geometry for Proposal:', proposal);
+                                return null;
+                            }
+                            const type = geometry.getType();
+                            switch (type) {
+                                case 'Polygon':
+                                    return geometry.getInteriorPoint();
+                                case 'LineString':
+                                    return new Point(geometry.getCoordinateAt(0.5));
+                                case 'Point':
+                                    return geometry;
+                                case 'MultiPolygon':
+                                    return new Point(getCenter(feature.getGeometry().getExtent()), 'XY');
+                                default:
+                                    console.warn('Unsupported geometry type:', type, feature);
+                                    return null;
+                            }
+                        } catch (err) {
+                            console.log('Error processing feature', feature, err);
+                            return null;
+                        }
                     },
                 })
 
@@ -1030,69 +1059,6 @@
                 vm.map.addLayer(vm.proposalClusterLayer);
                 vm.proposalClusterLayer.setZIndex(10)  
 
-                //PA code begin
-                
-                vm.newVectorLayer = new VectorLayer({
-                    source: vm.proposalQuerySource,
-                    //name: 'layer1',
-                    visible: true,
-                    maxResolution: 10
-                });
-                
-                //let styleCache = {};
-                vm.newVectorLayerCluster = new VectorLayer({
-                    source: new Cluster({
-                        distance: 50,
-                        source: vm.proposalQuerySource,
-                        geometryFunction: (feature) => {
-                            let resolution = this.map.getView().getResolution();
-                            if (resolution < 0.05 && resolution > 0.0001){
-                                let type = feature.getGeometry().getType();
-                                if (type === 'Polygon') {
-                                    return feature.getGeometry().getInteriorPoint();
-
-                                } else if (type === 'LineString') {
-                                    return feature.getGeometry().getCoordinateAt(0.5);
-
-                                } else if (type === 'Point') {
-                                    return feature.getGeometry();
-                                } else if (type === 'MultiPolygon') {
-                                    return new Point(getCenter(feature.getGeometry().getExtent()), 'XY');
-                                }
-                            }
-                        }
-                    }),
-                    style: (feature) => {
-                        let size = feature.get('features').length;
-                        let style = styleCache[size];
-                        if (!style) {
-                            style = new Style({
-                                image: new CircleStyle({
-                                    radius: 10,
-                                    stroke: new Stroke({
-                                        color: '#fff',
-                                    }),
-                                    fill: new Fill({
-                                        color: '#3399CC',
-                                    }),
-                                }),
-                                text: new Text({
-                                    text: size.toString(),
-                                    fill: new Fill({
-                                        color: '#fff',
-                                    }),
-                                })
-                            });
-                            styleCache[size] = style;
-                        }
-                        return style;
-                    },
-                    //name: layer['layer_id'],
-                    // name: 'layer1',
-                    //visible: false
-                });
-
-                //PA code end
 
                 // Full screen toggle
                 let fullScreenControl = new FullScreenControl()

@@ -180,7 +180,9 @@ export default {
                     "url": vm.schema_masterlist_url, 
                 },
                 columnDefs: [
-                    { visible: false, targets: [ 0, 1, 2, 3, ] } 
+                    { visible: false, targets: [ 0, 1, 2, 3, ] },
+                    { responsivePriority: 1, targets: 0 }, // First visible column has top priority (e.g. proposal_number
+                    { responsivePriority: 2, targets: -1 }, 
                 ],
                 columns: [
                     { 

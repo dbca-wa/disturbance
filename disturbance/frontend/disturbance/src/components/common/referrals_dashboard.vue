@@ -3,7 +3,6 @@
         <div class="col-sm-12">
             <div class="panel panel-default">
                 <div class="row">
-                    <div v-if="!apiaryTemplateGroup">
                         <div class="col-md-3">
                             <div class="form-group">
                                 <!-- <label for="">Region</label>
@@ -37,20 +36,8 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
-                    <div v-else>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="">Application Type</label>
-                                <select class="form-select" v-model="filterProposalApplicationType">
-                                    <option value="All">All</option>
-                                    <option v-for="a in proposal_applicationTypes" :value="a" :key="a">{{a}}</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-
+                    
+                    
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="">Status</label>
@@ -61,7 +48,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mb-1">
                     <div class="col-md-3">
                         <label for="">Lodged From</label>
                         <!-- <div class="input-group date" ref="proposalDateFromPicker">
@@ -178,6 +165,14 @@ export default {
                 order: [
                     [0, 'desc']
                     ],
+                dom:"<'d-flex align-items-center'<'me-auto'l>fB>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'d-flex align-items-center'<'me-auto'i>p>",
+                columnDefs: [
+                    { responsivePriority: 1, targets: 0 }, // First visible column has top priority (e.g. proposal_number
+                    { responsivePriority: 2, targets: -5 }, // If the actions is the last entry in columns then this will make it 2nd top priority soo as long as the screen is a decent size it will always be shown
+                ],
+                buttons:[],                
                 ajax: {
                     //"url": helpers.add_endpoint_json(api_endpoints.referrals,'user_list'),
                     //"url": api_endpoints.list_referrals,

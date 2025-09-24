@@ -1,11 +1,20 @@
 <template>
 <div class="container" id="externalDash">
     <div class="row">
-        <div class="col-sm-12 mb-2">
-            <div class="card">
-                <div class="round-box px-3 mt-4 card-body">
-                    <p class="card-text" v-html="welcomeMessage"></p>
-                    <router-link  style="margin-top:25px;" class="btn btn-primary" :to="{ name: 'apply_proposal' }">New Proposal</router-link>
+        <div class="col-sm-12">
+            <div class="card mb-2 bg-light">
+                <div class="card-body">
+                    <!-- <p class="card-text" v-html="welcomeMessage"></p>
+                    <router-link  class="btn btn-primary" :to="{ name: 'apply_proposal' }">New Proposal</router-link> -->
+                    <div class="row align-items-center">
+                    <div class="col-md-9">
+                        <span v-html="welcomeMessage"></span>
+                    </div>
+                    <div class="col-md-3 text-md-end mt-3 mt-md-0">
+                        <router-link  class="btn btn-primary" :to="{ name: 'apply_proposal' }">New Proposal</router-link>
+                    </div>
+                    </div>
+                    
                 </div>
                 <!-- <div class="row">
                     <div class="col-md-3 text-right">
