@@ -2,7 +2,9 @@
     <div>
         <div class="row">
             <div class="col-sm-12">
-                <label>Print <a :href="deed_poll_url" target="_blank">the deed poll</a>, sign it, have it witnessed and attach it to this application.</label>
+                <label>It is a requirement of all apiary authority holders to sign a deed poll to release and indemnify the State of Western Australia.</label>
+                <label>Please note: electronic or digital signatures cannot be accepted where witnessing is required.</label>
+                 <label>Please click <a :href="deed_poll_url" target="_blank">here</a> to download the deed poll. The deed poll must be signed in the correct section, be dated and have a witness signature when stipulated. Once signed and dated, please attach the deed poll document below.</label>
                     <FileField
                         class="input_file_wrapper"
                         ref="deed_poll_documents"
