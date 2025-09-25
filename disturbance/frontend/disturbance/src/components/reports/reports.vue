@@ -213,7 +213,7 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="checkbox">
-                                      <label><input v-model="oracle_override" type="checkbox" value="">Override closed period check</label>
+                                      <label><input v-model="oracle_override" type="checkbox" class="form-check-input" value="">Override closed period check</label>
                                     </div>
                                 </div>
                             </div>

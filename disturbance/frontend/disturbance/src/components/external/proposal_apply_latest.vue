@@ -12,7 +12,7 @@
                                     <template v-if="apiaryTemplateGroup && !(profile.disturbance_organisations.length)">
                                         <div class="radio">
                                             <label :title="individualHasNoLicenceTitle()">
-                                              <input :disabled="individualDisableApplyRadioButton()" type="radio" name="behalf_of_individual" v-model="behalf_of" value="individual"> On behalf of yourself
+                                              <input :disabled="individualDisableApplyRadioButton()" type="radio" name="behalf_of_individual" v-model="behalf_of" value="individual" class="form-check-input"> On behalf of yourself
                                               <span v-html="individualExistingRecordText"></span>
                                             </label>
                                         </div>
@@ -20,7 +20,7 @@
                                     <div v-if="profile.disturbance_organisations.length > 0">
                                         <div v-for="org in profile.disturbance_organisations" :key="org.id" class="radio">
                                             <label :title="orgHasNoLicenceTitle(org)">
-                                              <input :disabled="orgDisableApplyRadioButton(org)" type="radio" name="behalf_of_org" v-model="behalf_of"  :value="org.id"> On behalf of {{org.name}}
+                                              <input :disabled="orgDisableApplyRadioButton(org)" type="radio" name="behalf_of_org" v-model="behalf_of"  :value="org.id" class="form-check-input"> On behalf of {{org.name}}
                                               <span v-html="org.existing_record_text.notification"></span>
                                             </label>
                                         </div>

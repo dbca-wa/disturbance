@@ -136,27 +136,27 @@
 
                     <div class="row">
                         <div class="col-md-6">
-                            <label><input type="checkbox" :value="true" v-model="getCheckedTag('isRepeatable').isChecked"/>&nbsp;&nbsp;&nbsp;is Repeatable</label>
+                            <label><input type="checkbox" class="form-check-input" :value="true" v-model="getCheckedTag('isRepeatable').isChecked"/>&nbsp;&nbsp;&nbsp;is Repeatable</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <label><input type="checkbox" :value="true" v-model="getCheckedTag('isRequired').isChecked" />&nbsp;&nbsp;&nbsp;is Required</label>
+                            <label><input type="checkbox" class="form-check-input" :value="true" v-model="getCheckedTag('isRequired').isChecked" />&nbsp;&nbsp;&nbsp;is Required</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <label><input type="checkbox" :value="true" v-model="getCheckedTag('isCopiedToPermit').isChecked" />&nbsp;&nbsp;&nbsp;is Copied To Permit</label>
+                            <label><input type="checkbox" class="form-check-input" :value="true" v-model="getCheckedTag('isCopiedToPermit').isChecked" />&nbsp;&nbsp;&nbsp;is Copied To Permit</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <label><input type="checkbox" :value="true" v-model="getCheckedTag('canBeEditedByAssessor').isChecked" />&nbsp;&nbsp;&nbsp;can Be Edited By Assessor</label>
+                            <label><input type="checkbox" class="form-check-input" :value="true" v-model="getCheckedTag('canBeEditedByAssessor').isChecked" />&nbsp;&nbsp;&nbsp;can Be Edited By Assessor</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <label><input type="checkbox" :value="true" v-model="getCheckedTag('isTitleColumnForDashboard').isChecked" />&nbsp;&nbsp;&nbsp;is Title Column For Dashboard</label>
+                            <label><input type="checkbox" class="form-check-input" :value="true" v-model="getCheckedTag('isTitleColumnForDashboard').isChecked" />&nbsp;&nbsp;&nbsp;is Title Column For Dashboard</label>
                         </div>
                     </div>
 

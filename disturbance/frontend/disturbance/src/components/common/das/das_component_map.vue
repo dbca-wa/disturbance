@@ -38,7 +38,7 @@
                                         :id="layer.ol_uid"
                                         :checked="layer.values_.visible"
                                         @change="changeLayerVisibility(layer)"
-                                        class="layer_option"
+                                        class="layer_option form-check-input"
                                     />
                                     <label :for="layer.ol_uid" class="layer_option">{{ layer.get('title') }}</label>
                                 </div>

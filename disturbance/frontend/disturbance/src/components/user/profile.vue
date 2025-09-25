@@ -180,10 +180,10 @@
                                 <label for="" class="col-sm-5 control-label">{{ organisationSectionDetailText }}</label>
                                 <div class="col-sm-4">
                                     <label class="radio-inline">
-                                        <input type="radio" name="behalf_of_org" v-model="managesOrg" value="Yes"> Yes
+                                        <input type="radio" class="form-check-input" name="behalf_of_org" v-model="managesOrg" value="Yes"> Yes
                                     </label>
                                     <label class="radio-inline">
-                                        <input :disabled="hasOrgs" type="radio" name="behalf_of_org" v-model="managesOrg" value="No" > No
+                                        <input :disabled="hasOrgs" type="radio" class="form-check-input" name="behalf_of_org" v-model="managesOrg" value="No" > No
                                     </label>
                                 </div>
                             </div>

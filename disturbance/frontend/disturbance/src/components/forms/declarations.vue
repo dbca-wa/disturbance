@@ -1,7 +1,7 @@
 <template lang="html">
     <div class="form-group">
         <label :id="id">
-            <input ref="Checkbox" :name="name" type="checkbox" @change="handleDeclaration" data-parsley-required :checked="isChecked" :required="isRequired"/>
+            <input ref="Checkbox" :name="name" type="checkbox" class="form-check-input" @change="handleDeclaration" data-parsley-required :checked="isChecked" :required="isRequired"/>
             {{label}}
         </label>
 
