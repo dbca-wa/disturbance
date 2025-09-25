@@ -7,9 +7,9 @@
                         <alert v-if="showError" type="danger"><strong>{{errorString}}</strong></alert>
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <div class="row">
+                                <div class="row mb-3">
                                     <div class="col-sm-3">
-                                        <label class="control-label pull-left"  for="Name">To</label>
+                                        <label class="col-form-label pull-left"  for="Name">To</label>
                                     </div>
                                     <div class="col-sm-4">
                                         <input type="text" class="form-control" name="to" v-model="comms.to">
@@ -17,9 +17,9 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="row">
+                                <div class="row mb-3">
                                     <div class="col-sm-3">
-                                        <label class="control-label pull-left"  for="Name">From</label>
+                                        <label class="col-form-label pull-left"  for="Name">From</label>
                                     </div>
                                     <div class="col-sm-4">
                                         <input type="text" class="form-control" name="fromm" v-model="comms.fromm">
@@ -27,7 +27,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="row">
+                                <div class="row mb-3">
                                     <div class="col-sm-3">
                                         <label class="control-label pull-left"  for="Name">Type</label>
                                     </div>
@@ -42,7 +42,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="row">
+                                <div class="row mb-3">
                                     <div class="col-sm-3">
                                         <label class="control-label pull-left"  for="Name">Subject/Description</label>
                                     </div>
@@ -52,7 +52,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="row">
+                                <div class="row mb-3">
                                     <div class="col-sm-3">
                                         <label class="control-label pull-left"  for="Name">Text</label>
                                     </div>
@@ -62,7 +62,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="row">
+                                <div class="row mb-3">
                                     <div class="col-sm-3">
                                         <label class="control-label pull-left"  for="Name">Attachments</label>
                                     </div>

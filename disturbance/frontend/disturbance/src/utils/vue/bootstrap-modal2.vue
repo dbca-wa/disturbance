@@ -2,18 +2,23 @@
     <!-- minor changes from bootstrap-modal.vue to allow multiple modals on same calling component -->
     <div v-show="show" :transition="transition" :showModal="showModal" modal_id="modal_id">
         <!--{{show}}-->
-        <div class="modal" @click.self="clickMask">
+        <div class="modal" @click.self="clickMask" data-bs-keyboard="false" data-bs-backdrop="static">
             <div class="modal-dialog" :class="modalClass" role="document">
                 <div class="modal-content">
                     <!--Header-->
                     <slot name="header">
                         <div class="modal-header">
-                            <a type="button" class="close" @click="cancel">x</a>
                             <h4 class="modal-title">
                                 <slot name="title">
                                     {{title}}
                                 </slot>
                             </h4>
+                            <button
+                                type="button"
+                                class="btn-close btn-close-white"
+                                aria-label="Close"
+                                @click="cancel"
+                            ></button>
                         </div>
                     </slot>
                     <!--Container-->
@@ -30,6 +35,7 @@
                 </div>
             </div>
         </div>
+
         <div class="modal-backdrop in"></div>
     </div>
 </template>
@@ -171,76 +177,99 @@
 
 <style scoped>
     .modal {
-        display: block;
+    display: block;
+    z-index: 20000 !important;
     }
+
+    .modal-backdrop {
+        z-index: 19999 !important;
+    }
+
     .modal .btn {
         margin-bottom: 0px;
     }
+
     .modal-header {
-        border-top-left-radius: .3rem;
-        border-top-right-radius: .3rem;
+        border-top-left-radius: 0.3rem;
+        border-top-right-radius: 0.3rem;
+        background-color: #226fbb;
+        color: #fff;
+        background: #3580ca url('/static/disturbance_vue/src/parks-bg-banner.gif')
+            repeat-x center bottom;
     }
-    .modal-footer{
-        border-bottom-left-radius: .3rem;
-        border-bottom-right-radius: .3rem;
+
+    .btn-close {
+        color: #eee;
     }
-    .modal-body, .modal-footer, .modal-header {
+
+    .modal-footer {
+        border-bottom-left-radius: 0.3rem;
+        border-bottom-right-radius: 0.3rem;
+    }
+
+    .modal-body {
+        background-color: #fff;
+        color: #333333;
+    }
+
+    .modal-footer {
         /*background-color: #F5F5F5;
-        color: #333333;*/
+            color: #333333;*/
         background-color: #efefef;
         color: #333333;
     }
+
     .modal-transition {
-        transition: all .6s ease;
+        transition: all 0.6s ease;
     }
+
     .modal-leave {
         border-radius: 1px !important;
     }
-    .modal-transition .modal-dialog, .modal-transition .modal-backdrop {
-        transition: all .5s ease;
+
+    .modal-transition .modal-dialog,
+    .modal-transition .modal-backdrop {
+        transition: all 0.5s ease;
     }
-    .modal-enter .modal-dialog, .modal-leave .modal-dialog {
+
+    .modal-enter .modal-dialog,
+    .modal-leave .modal-dialog {
         opacity: 0;
         transform: translateY(-30%);
     }
-    .modal-enter .modal-backdrop, .modal-leave .modal-backdrop {
+
+    .modal-enter .modal-backdrop,
+    .modal-leave .modal-backdrop {
         opacity: 0;
     }
+
     .close {
         font-size: 2.5rem;
-        opacity: .3;
+        opacity: 0.3;
     }
+
     .close:hover {
-        opacity: .7;
+        opacity: 0.7;
     }
+
     #okBtn {
         margin-bottom: 0px;
     }
-
-    @media (min-width: 992px) {
-      .modal-dialog {
-	width: 600px;
-	margin: 30px auto;
-      }
-      .modal-content {
-	-webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-      }
-      .modal-sm {
-	width: 300px;
-      }
-      .modal-md {
-	width: 810px;
-      }
-      .modal-lg {
-	width: 900px;
-      }
-      .modal-xl {
-	width: 990px;
-      }
-      .modal-xxl {
-	width: 1080px;
-      }
+    
+    .modal-sm {
+	    width: 300px;
+    }
+    .modal-md {
+	    width: 810px;
+    }
+    .modal-lg {
+	    width: 900px;
+    }
+    .modal-xl {
+	    width: 990px;
+    }
+    .modal-xxl {
+	    width: 1080px;
     }
 
 /*

@@ -48,6 +48,7 @@ export default defineConfig(() => {
                     { src: 'src/assets/*.jpg', dest: 'src' },
                     { src: 'src/assets/*.json', dest: 'src' },
                     { src: 'src/assets/*.png', dest: 'src' },
+                    { src: 'src/assets/*.gif', dest: 'src' },
                     {
                         src: 'node_modules/font-awesome/fonts',
                         dest: 'node_modules/font-awesome',
