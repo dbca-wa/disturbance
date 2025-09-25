@@ -267,6 +267,10 @@
                         const res = await response.json();
                         // vm.$emit('refreshFromResponse', res);
                         vm.$emit('refreshFromResponseProposal', res);
+                        vm.proposal.shapefile_json = res.shapefile_json;
+                        vm.$nextTick(() => {
+                            vm.$refs.component_map.updateShape();
+                        });
                     } catch (err) {
                         vm.showError = true;
                         //vm.errorString = helpers.apiVueResourceError(err);
@@ -276,7 +280,7 @@
                         vm.incrementComponentMapKey();
                     }
                     
-                vm.$refs.component_map.updateShape();
+                // vm.$refs.component_map.updateShape();
                 vm.isValidating=false;
             },
             prefill_proposal: async function(){

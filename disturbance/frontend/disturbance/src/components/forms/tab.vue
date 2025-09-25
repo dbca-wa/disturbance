@@ -3,8 +3,8 @@
 
     <div id="tabs" class="tab-header">
         <ul class="nav nav-pills mb-3" id="tab-section" data-tabs="tabs" >
-            <li class="nav-item" v-for="(tab, idx) in tabs" :key="idx" v-bind:class="{'nav-item active': activeTab === Object.keys(tab)[0]}">
-                <a :id=idx class="nav-link" data-toggle="pill" v-on:click="switchTab(Object.keys(tab)[0])">
+            <li class="nav-item" v-for="(tab, idx) in tabs" :key="idx" >
+                <a :id=idx class="nav-link" data-toggle="pill" v-on:click="switchTab(Object.keys(tab)[0])" v-bind:class="{'nav-item active': activeTab === Object.keys(tab)[0]}">
                     <slot :name="tabHeadSlotName(Object.keys(tab)[0])">{{ Object.values(tab)[0] }}</slot>
                 </a>
             </li>
@@ -48,8 +48,15 @@ export default {
 }
 </script>
 <style scoped>
-    .nav-item {
-    background-color: rgba(200,200,200,0.8) !important;
+#pill-tabs .nav-pills .nav-link {
+  margin-right: 0.5rem;
+}
+
+#pill-tabs .nav-link.active {
+  background-color: #007bff;
+  color: white;
+}
+ .nav-item {
     cursor: pointer;
 }
 </style>

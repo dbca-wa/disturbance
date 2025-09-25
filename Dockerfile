@@ -132,7 +132,7 @@ RUN pip install -r requirements.txt
 
 # Install the project (ensure that frontend projects have been built prior to this step).
 FROM python_libs_das
-COPY --chown=oim:oim gunicorn.ini manage_ds.py ./
+COPY --chown=oim:oim gunicorn.ini.py manage_ds.py ./
 RUN touch /app/.env
 COPY --chown=oim:oim .git ./.git
 COPY --chown=oim:oim python-cron python-cron
