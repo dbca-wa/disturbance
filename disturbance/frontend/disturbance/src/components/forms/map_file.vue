@@ -27,7 +27,7 @@
             <div v-if="!readonly">
                 <template v-for="n in repeat">
                     <div v-if="isRepeatable || (!isRepeatable && num_documents()==0)" :key="n">
-                        <input :name="name" type="file" class="form-control" :data-que="n" :accept="fileTypes" @change="handleChange" :required="isRequired"/>
+                        <input :name="name" type="file" class="form-control mb-2" :data-que="n" :accept="fileTypes" @change="handleChange" :required="isRequired"/>
                         <!-- <alert v-if="showError" type="danger" style="color: red"><strong>{{errorString}}</strong></alert> -->
                     </div>
                 </template>

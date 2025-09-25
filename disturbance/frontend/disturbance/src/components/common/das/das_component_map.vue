@@ -758,7 +758,7 @@
                 vm.shapeVectorSource=null;
                 vm.shapeVectorLayer=null;
                 if(vm.shapefile_json && Object.keys(vm.shapefile_json).length>0){
-                    console.log(vm.shapefile_json);
+                    console.log('inside update shape',vm.shapefile_json);
                     vm.shapeVectorSource = new VectorSource({
                         features: new GeoJSON().readFeatures(vm.shapefile_json),
                     });
@@ -775,6 +775,7 @@
             },
             displayAllFeaturesShape: function() {
                 if (this.shapeVectorSource.getFeatures().length>0){
+                    console.log('inside display all features shape');
                     let view = this.map.getView()
 
                     let ext = this.shapeVectorSource.getExtent()
