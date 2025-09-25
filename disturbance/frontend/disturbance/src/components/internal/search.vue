@@ -5,21 +5,23 @@
           <FormSection :form-collapse="false" label="Search Organisations" Index="search_organisation">
             <div class="row">
               <form name="searchOrganisationForm">
-                  <div class="col-md-4">
-                      <div class="form-group">
-                          <label class="control-label" for="Organisation">Search Organisation</label>
-                          <select v-if="organisations == null" class="form-select" name="organisation" v-model="selected_organisation">
+                  <div class="form-group">
+                      <label class="col-form-label" for="Organisation">Search Organisation</label>
+                      <div class="row">
+                        <div class="col-md-8">
+                          <select v-if="organisations == null" class="form-select" name="organisation">
                               <option value="">Loading...</option>
                           </select>
                           <select v-else ref="searchOrg" class="form-select" name="organisation">
                               <option value="">Select Organisation</option>
                               <option v-for="o in organisations" :value="o.id" :key="o.id">{{ o.name }}</option>
                           </select>
+                        </div>
+                        <div class="col-md-4">
+                          <router-link v-if="selected_organisation !== ''" :to="{name:'internal-org-detail',params:{'org_id':parseInt(selected_organisation)}}" class="btn btn-primary">View Details</router-link>
+                          <span v-else class="btn btn-primary disabled" style="pointer-events: none; opacity: 0.6;">View Details</span>
+                        </div>
                       </div>
-                  </div>
-                  <div class="col-md-12 text-center">
-                      <router-link v-if="selected_organisation !== ''" :to="{name:'internal-org-detail',params:{'org_id':parseInt(selected_organisation)}}" class="btn btn-primary">View Details</router-link>
-                      <span v-else class="btn btn-primary disabled" style="pointer-events: none; opacity: 0.6;">View Details</span>
                   </div>
               </form>
             </div>
@@ -451,13 +453,9 @@ export default {
                 $( chev ).toggleClass( "glyphicon-chevron-down glyphicon-chevron-up" );
             }, 100 );
         } );
-    },
-    updated: function(){
-        let vm = this;
         this.$nextTick(() => {
             vm.addListeners();
         });
-        
-    }
+    },
 }
 </script>
