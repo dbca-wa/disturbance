@@ -303,7 +303,6 @@
                 )
             },
             setBaseLayer: function(selected_layer_name){
-                console.log('in setBaseLayer')
                 let vm = this
                 if (selected_layer_name == 'sat') {
                     vm.tileLayerOsm.setVisible(false)
@@ -758,7 +757,6 @@
                 vm.shapeVectorSource=null;
                 vm.shapeVectorLayer=null;
                 if(vm.shapefile_json && Object.keys(vm.shapefile_json).length>0){
-                    console.log(vm.shapefile_json);
                     vm.shapeVectorSource = new VectorSource({
                         features: new GeoJSON().readFeatures(vm.shapefile_json),
                     });
