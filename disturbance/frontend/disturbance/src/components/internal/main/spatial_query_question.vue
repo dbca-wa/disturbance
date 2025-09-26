@@ -18,14 +18,14 @@
                 </div>
                 -->
 
-                <div class="row">
+                <div class="row mb-3">
                     <div class="col-md-12">
-                        <button class="btn btn-primary pull-right" @click.prevent="export_layers_used()" name="export-layers-used" :disabled="export_layers_btn_disabled">
+                        <button class="btn btn-primary float-end" @click.prevent="export_layers_used()" name="export-layers-used" :disabled="export_layers_btn_disabled">
                             <i v-if="export_layers_btn_disabled" class="fa fa-download fa-spinner fa-spin"></i>
                             <i v-else class="fa fa-download"></i>
                             Export Layers Used
                         </button>
-                        <button class="btn btn-primary pull-right" @click.prevent="addTableEntry()" name="add-spatialquery">New Question</button>
+                        <button class="btn btn-primary float-end" @click.prevent="addTableEntry()" name="add-spatialquery">New Question</button>
                     </div>
                 </div>
 
@@ -35,8 +35,7 @@
                 </div>
                 -->
 
-                <div class="row"><br/></div> 
-                <div class="row">
+                <div class="row mb-3">
                     <div class="col-md-12">
                         <div class="form-group">
                             <!--{{profile}}-->
@@ -69,17 +68,12 @@
                 <div>
                     <form class="form-horizontal" name="spatial_query_question">
 
-                        <div class="row"><div class="col-md-12" >&nbsp;</div></div>
                         <div>
-                            <div class="row">
-                                <div class="col-md-1"></div>
+                            <div class="row mb-3">
                                 <div class="col-md-3">
-                                    <label class="control-label pull-left" >Question</label><label class="superscript">*</label>
+                                    <label class="col-form-label pull-left" >Question</label><label class="superscript">*</label>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-1"></div>
-                                <div class="col-md-10" id="select_masterlist_wrapper">
+                                <div class="col-md-9" id="select_masterlist_wrapper">
                                     <select class="form-select" ref="select_question" name="select-question" v-model="filterMasterlistQuestion" :disabled="sqq_is_disabled()">
                                         <option v-for="(m, mid) in masterlist_questions" :value="m.question" v-bind:key="`question_${mid}`">{{m.question}}</option>
                                     </select>                         
@@ -88,18 +82,13 @@
                             </div>
                         </div>
 
-                        <div class="row"><div class="col-md-12" ></div></div>
                         <!-- Only show widget if there are options for the given masterlist question i.e. radiobuttons and checkboxes -->
                         <div v-if="spatialquery.question && masterlistQuestionOptions">
-                            <div class="row">
-                                <div class="col-md-1"></div>
+                            <div class="row mb-3">
                                 <div class="col-md-3">
-                                    <label class="control-label pull-left" >Answer</label><label class="superscript">*</label>
+                                    <label class="col-form-label pull-left" >Answer</label><label class="superscript">*</label>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-1"></div>
-                                <div class="col-md-10">
+                                <div class="col-md-9">
                                     <!--<select class="form-control" ref="select_answer" name="select-answer" v-model="filterMasterlistOption" :disabled="sqq_is_disabled()">-->
                                     <select class="form-select" ref="select_answer" name="select-answer" v-model="filterMasterlistOption">
                                         <option v-for="(o, oid) in masterlistQuestionOptions" :value="o.label" v-bind:key="`answer_${oid}`">{{o.label}}</option>
@@ -108,20 +97,12 @@
                             </div>
                         </div>
 
-                        <div class="row"><div class="col-md-12" >&nbsp;</div></div>
                         <div>
-                            <div class="row">
-                                <div class="col-md-1"></div>
-                                
-                                    <div class="col-md-3">
-                                        <label class="control-label pull-left" >Departmental custodian
-                                        </label><label class="superscript">*</label>
-                                    </div>
-                                
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-1"></div>
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <label class="col-form-label float-left" >Departmental custodian
+                                    <span class="superscript">*</span></label>
+                                </div>
                                 <div class="col-md-4">
                                     <!-- <select class="form-control" ref="select_group" name="select-group" v-model="spatialquery.group" :disabled="sqq_is_disabled()"> -->
                                     <select class="form-select" ref="select_group" name="select-group" v-model="spatialquery.group">
@@ -131,7 +112,6 @@
                                         <option v-for="group in editableGroups" :value="group" :key="group.id">{{group.name}}</option>
                                     </select>     
                                 </div>
-                                <div class="col-md-1"></div>
                                 <!--<div v-if="is_text_component()" class="col-md-5">-->
                                 <div class="col-md-5">
                                     <!-- <input type="checkbox" :value="false" v-model="spatialquery.other_data.show_add_info_section_prop" :disabled="sqq_is_disabled()">&nbsp;&nbsp;&nbsp; -->
@@ -140,8 +120,7 @@
                                 </div>
 
                             </div>
-                            <div class="row" v-if="showQuestionModal && has_no_editable_groups()">
-                                <div class="col-md-1"></div>
+                            <div class="row mb-3" v-if="showQuestionModal && has_no_editable_groups()">
                                 <div  class="col-md-3">
                                     <p style="color:red;">You are currently not a member of any Spatial Question Group. To create a new Spatial Query Question, you must first be added to at least one Spatial Question Group.</p>
                                 </div>
@@ -160,7 +139,7 @@
 
                 <span v-show="sqq_is_disabled()">
                         <div class="vl"><hr/></div> 
-                        <div class="row">
+                        <div class="row mb-3">
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <!--{{profile}}-->
@@ -211,45 +190,37 @@
     -->
                         <!-- start of read-only header section -->
                         <div>
-                            <div class="row">
-                                <div class="col-md-1"></div>
+                            <div class="row mb-3">
                                 <div class="col-md-3">
-                                    <label class="control-label pull-left" style="font-weight:normal !important;">Question</label>
+                                    <label class="col-form-label pull-left" style="font-weight:normal !important;">Question</label>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-1"></div>
-                                <div class="col-md-10">
-                    <input type="text" class="form-control" name="select-question" v-model="spatialquery.question" style="width:100%;" disabled/>
+                            <!-- </div>
+                            <div class="row mb-3"> -->
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" name="select-question" v-model="spatialquery.question" style="width:100%;" disabled/>
                                     <i>{{spatialquery.answer_type}}</i>
                                 </div>
                             </div>
                         </div>
                 <!-- options: {{ masterlistQuestionOptions }} -->
                         <div v-if="spatialquery.question && masterlistQuestionOptions">
-                            <div class="row">
-                                <div class="col-md-1"></div>
+                            <div class="row mb-3">
                                 <div class="col-md-3">
-                                    <label class="control-label pull-left" style="font-weight:normal !important;">Answer</label>
+                                    <label class="col-form-label pull-left" style="font-weight:normal !important;">Answer</label>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-1"></div>
-                                <div class="col-md-10">
+                            <!-- </div>
+                            <div class="row"> -->
+                                <div class="col-md-9">
                                     <input type="text" class="form-control" name="select-answer" v-model="spatialquery.answer_mlq" style="width:100%;" disabled/>
                                 </div>
                             </div>
                         </div>
                         <div>
-                            <div class="row">
-                                <div class="col-md-1"></div>
-                                <div class="col-md-5">
-                                    <label class="control-label pull-left" style="font-weight:normal !important;">Departmental custodian</label>
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <label class="col-form-label pull-left" style="font-weight:normal !important;">Departmental custodian</label>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-1"></div>
-                                <div class="col-md-5">
+                                <div class="col-md-4">
                                     <input type="text" class="form-control" name="select-answer" v-model="spatialquery.group.name" style="width:100%;" disabled/>
                                 </div>
                                 <div class="col-md-5">

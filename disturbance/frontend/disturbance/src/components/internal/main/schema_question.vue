@@ -2,29 +2,29 @@
   <div id="schema-question">
     <div class="row">
         <div class="col-sm-12">
-            <div class="row">
-                    <div class="col-md-6">
+                <div class="row mb-3">
+                    <div class="col-md-4">
                         <div class="form-group">
-                            <label for="">Proposal Type</label>
+                            <label class="col-form-label" for="">Proposal Type</label>
                             <select class="form-select" v-model="filterTableProposalType" >
                                 <option value="All">All</option>
                                 <option v-for="(p, pid) in schemaProposalTypes" :value="p.value" v-bind:key="`purpose_${pid}`">{{p.label}}</option>
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <button class="btn btn-primary pull-right" @click.prevent="addTableEntry()" name="add_purpose">New Question</button>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
+                    
+                    <div class="col-md-4">
                         <div class="form-group">
-                            <label for="">Section</label>
+                            <label class="col-form-label" for="">Section</label>
                             <select class="form-select" v-model="filterTableSection" >
                                 <option value="All">All</option>
                                 <option v-for="(s, sid) in schemaSections" :value="s.value" v-bind:key="`section_${sid}`">{{s.label}}</option>
                             </select>
                         </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <button class="btn btn-primary pull-right" @click.prevent="addTableEntry()" name="add_purpose">New Question</button>
                     </div>
                 </div>
                 <!-- <div class="row">
@@ -38,8 +38,7 @@
                         </div>
                     </div>
                 </div> -->
-                <div class="row"><br/></div> 
-                <div class="row">
+                <div class="row mb-3">
                     <div class="col-md-12">
                         <div class="form-group">
 
@@ -68,9 +67,9 @@
             <div>
                 <form class="form-horizontal" name="schema_question">
 
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col-md-3">
-                            <label class="control-label pull-left" >Licence Proposal Type</label>
+                            <label class="col-form-label float-start" >Licence Proposal Type</label>
                         </div>
                         <div class="col-md-6" v-if="isNewEntry">
                             <select class="form-select" ref="select_purpose" name="select-purpose" v-model="filterQuestionProposalType" >
@@ -84,10 +83,9 @@
                             </select>                         
                         </div>
                     </div>
-                    <div class="row">&nbsp;</div>
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col-md-3">
-                            <label class="control-label pull-left" >Section</label>
+                            <label class="col-form-label float-start" >Section</label>
                         </div>
                         <div class="col-md-6" v-if="isNewEntry">
                             <select class="form-select" ref="select_section" name="select-section" v-model="filterQuestionSection" >
@@ -101,10 +99,9 @@
                             </select>                      
                         </div>
                     </div>
-                    <div class="row">&nbsp;</div>
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col-md-3">
-                            <label class="control-label pull-left" >Question</label>
+                            <label class="col-form-label float-start" >Question</label>
                         </div>
                         <div class="col-md-9" v-if="isNewEntry" id="select_question_wrapper">
 
@@ -118,10 +115,7 @@
                             </select>                          
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-12">&nbsp; </div>
-                    </div>
-                    <div class="row" v-if="showOptions">
+                    <div class="row mb-3" v-if="showOptions">
 
                         <SchemaOption ref="schema_option" :addedOptions="addedOptions" :canAddMore="false" />
 
@@ -134,35 +128,35 @@
                         </div>
                     </div> -->
 
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col-md-6">
                             <label><input type="checkbox" class="form-check-input" :value="true" v-model="getCheckedTag('isRepeatable').isChecked"/>&nbsp;&nbsp;&nbsp;is Repeatable</label>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col-md-6">
                             <label><input type="checkbox" class="form-check-input" :value="true" v-model="getCheckedTag('isRequired').isChecked" />&nbsp;&nbsp;&nbsp;is Required</label>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col-md-6">
                             <label><input type="checkbox" class="form-check-input" :value="true" v-model="getCheckedTag('isCopiedToPermit').isChecked" />&nbsp;&nbsp;&nbsp;is Copied To Permit</label>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col-md-6">
                             <label><input type="checkbox" class="form-check-input" :value="true" v-model="getCheckedTag('canBeEditedByAssessor').isChecked" />&nbsp;&nbsp;&nbsp;can Be Edited By Assessor</label>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col-md-6">
                             <label><input type="checkbox" class="form-check-input" :value="true" v-model="getCheckedTag('isTitleColumnForDashboard').isChecked" />&nbsp;&nbsp;&nbsp;is Title Column For Dashboard</label>
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col-md-3">
-                            <label class="control-label pull-left" >Parent Question</label>
+                            <label class="col-form-label float-start" >Parent Question</label>
                         </div>
                         <div class="col-md-9" id="select_parent_wrapper">
                             <select class="form-select" ref="select_parent" name="select-parent" v-if="filterQuestionParent(sectionQuestion.parent_question)" v-model="sectionQuestion.parent_question" >
@@ -171,10 +165,9 @@
                             </select>                            
                         </div>
                     </div>
-                    <div class="row">&nbsp;</div>
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col-md-3">
-                            <label class="control-label pull-left" >Parent Answer</label>
+                            <label class="col-form-label float-start" >Parent Answer</label>
                         </div>
                         <div class="col-md-3">
                             <select class="form-select" ref="select_answer" name="select-answer" v-model="sectionQuestion.parent_answer" >
@@ -183,7 +176,6 @@
                             </select>                            
                         </div>
                     </div>
-                    <div class="row">&nbsp;</div>
                    <!--  <div class="row">
                         <div class="col-md-3">
                             <label class="control-label pull-left" >Group</label>
@@ -195,9 +187,9 @@
                             </select>                            
                         </div>
                     </div> -->
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col-md-3">
-                            <label class="control-label pull-left" >Index</label>
+                            <label class="col-form-label float-start" >Index</label>
                         </div>
                         <div class="col-md-3">
                             <input type="text" class="form-control" v-model="sectionQuestion.order"/>
@@ -615,6 +607,9 @@ export default {
             this.sectionQuestion.tag.filter( t => { this.getCheckedTag(t, true); return });
 
             this.isModalOpen = true;
+            this.$nextTick(() => {
+                this.initQuestionSelector();
+            });
         },
         initEventListeners: function(){
             const self = this;

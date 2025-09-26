@@ -2,10 +2,10 @@
     <div id="schema-purpose">
         <div class="row">
             <div class="col-sm-12">
-                <div class="row">
+                <div class="row mb-3">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="">Proposal Type</label>
+                            <label class="col-form-label" for="">Proposal Type</label>
                             <select class="form-select" v-model="filterTableProposalType" >
                                 <option value="All">All</option>
                                 <option v-for="(p, pid) in schemaProposalTypes" :value="p.value" v-bind:key="`purpose_${pid}`">{{p.label}}</option>
@@ -16,8 +16,7 @@
                         <button class="btn btn-primary pull-right" @click.prevent="addTableEntry()" name="add_purpose">New Section</button>
                     </div>
                 </div>
-                <div class="row"><br/></div> 
-                <div class="row">
+                <div class="row mb-3">
                     <div class="col-md-12">
                         <div class="form-group">
 
@@ -45,9 +44,9 @@
                 </div>
                 <div>
                     <form class="form-horizontal" name="schema_purpose">
-                        <div class="row">
+                        <div class="row mb-3">
                             <div class="col-md-3">
-                                <label class="control-label pull-left" >Proposal Type</label>
+                                <label class="col-form-label pull-left" >Proposal Type</label>
                             </div>
                             <div class="col-md-6">
                                 <select class="form-select" ref="select_purpose" name="select-purpose" v-model="sectionProposalType.proposal_type" >
@@ -56,17 +55,17 @@
                                 </select>                            
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row mb-3">
                             <div class="col-md-3">
-                                <label class="control-label pull-left" >Section Label</label>
+                                <label class="col-form-label pull-left" >Section Label</label>
                             </div>
                             <div class="col-md-6">
                                 <input type='text' class="form-control" v-model='sectionProposalType.section_label' >
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row mb-3">
                             <div class="col-md-3">
-                                <label class="control-label pull-left" >Section Index</label>
+                                <label class="col-form-label pull-left" >Section Index</label>
                             </div>
                             <div class="col-md-3">
                                 <input type='text' class="form-control" v-model='sectionProposalType.index' >

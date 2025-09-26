@@ -5,16 +5,16 @@
                 proposed_issuance.vue
             </template>
             <div class="container-fluid">
-                <div class="row">
+                <div class="row mb-3">
                     <form class="form-horizontal" name="approvalForm">
                         <!-- <alert v-if="isApprovalLevelDocument" type="warning"><strong>{{warningString}}</strong></alert> -->
                         <alert v-if="showError" type="danger"><strong>{{errorString}}</strong></alert>
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <div class="row">
+                                <div class="row mb-3">
                                     <div class="col-sm-3">
                                         <label v-if="processing_status == 'With Approver'" class="control-label pull-left"  for="Name">Start Date</label>
-                                        <label v-else class="control-label pull-left"  for="Name">Proposed Start Date</label>
+                                        <label v-else class="col-form-label pull-left"  for="Name">Proposed Start Date</label>
                                     </div>
                                     <div class="col-sm-9">
                                         <div class="input-group date" ref="start_date" style="width: 70%;">
@@ -25,16 +25,16 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row" v-show="showstartDateError">
+                                <div class="row mb-3" v-show="showstartDateError">
                                     <alert  class="col-sm-12" type="danger"><strong>{{startDateErrorString}}</strong></alert>
                     
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="row">
+                                <div class="row mb-3">
                                     <div class="col-sm-3">
-                                        <label v-if="processing_status == 'With Approver'" class="control-label pull-left"  for="Name">Expiry Date</label>
-                                        <label v-else class="control-label pull-left"  for="Name">Proposed Expiry Date</label>
+                                        <label v-if="processing_status == 'With Approver'" class="col-form-label pull-left"  for="Name">Expiry Date</label>
+                                        <label v-else class="col-form-label pull-left"  for="Name">Proposed Expiry Date</label>
                                     </div>
                                     <div class="col-sm-9">
                                         <div class="input-group date" ref="due_date" style="width: 70%;">
@@ -45,17 +45,17 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row" v-show="showtoDateError">
+                                <div class="row mb-3" v-show="showtoDateError">
                                     <alert  class="col-sm-12" type="danger"><strong>{{toDateErrorString}}</strong></alert>
                     
                                 </div>
                                 
                             </div>
                             <div class="form-group">
-                                <div class="row">
+                                <div class="row mb-3">
                                     <div class="col-sm-3">
-                                        <label v-if="processing_status == 'With Approver'" class="control-label pull-left"  for="Name">Details</label>
-                                        <label v-else class="control-label pull-left"  for="Name">Proposed Details</label>
+                                        <label v-if="processing_status == 'With Approver'" class="col-form-label pull-left"  for="Name">Details</label>
+                                        <label v-else class="col-form-label pull-left"  for="Name">Proposed Details</label>
                                     </div>
                                     <div class="col-sm-9">
                                         <textarea name="approval_details" class="form-control" style="width:70%;" v-model="approval.details"></textarea>
@@ -63,26 +63,26 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="row">
+                                <div class="row mb-3">
                                     <div class="col-sm-3">
-                                        <label v-if="processing_status == 'With Approver'" class="control-label pull-left"  for="Name">BCC email</label>
-                                        <label v-else class="control-label pull-left"  for="Name">Proposed BCC email</label>
+                                        <label v-if="processing_status == 'With Approver'" class="col-form-label pull-left"  for="Name">BCC email</label>
+                                        <label v-else class="col-form-label pull-left"  for="Name">Proposed BCC email</label>
                                     </div>
                                     <div class="col-sm-9">
                                             <input type="text" class="form-control" name="approval_cc" style="width:70%;" ref="bcc_email" v-model="approval.cc_email">
                                     </div>
                                 </div>
-                                <div class="row" v-show="showApprovalCCError">
+                                <div class="row mb-3" v-show="showApprovalCCError">
                                     <alert  class="col-sm-12" type="danger"><strong>{{approvalCCErrorString}}</strong></alert>
                     
                                 </div>
 
                             </div>
                             <div v-if="processing_status != 'With Approver' || !approval.confirmation" class="form-group">
-                                <div class="row">
+                                <div class="row mb-3">
                                     <div class="col-sm-12">
                                         <label>
-                                            <input  name="confirmation" type="checkbox" class="control-label pull-left form-check-input"  v-model="approval.confirmation" /> &nbsp;
+                                            <input  name="confirmation" type="checkbox" class="col-form-label pull-left form-check-input"  v-model="approval.confirmation" /> &nbsp;
                                             As the Assessor I confirm the following.
                                             <ul>
                                                 <li>
@@ -101,10 +101,10 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="row">
+                                <div class="row mb-3">
                                     <div class="col-sm-12">
-                                        <label v-if="submitter_email && applicant_email" class="control-label pull-left"  for="Name">After approving this proposal, approval will be emailed to {{submitter_email}} and {{applicant_email}}.</label>
-                                        <label v-else class="control-label pull-left"  for="Name">After approving this proposal, approval will be emailed to {{submitter_email}}.</label>
+                                        <label v-if="submitter_email && applicant_email" class="col-form-label pull-left"  for="Name">After approving this proposal, approval will be emailed to {{submitter_email}} and {{applicant_email}}.</label>
+                                        <label v-else class="col-form-label pull-left"  for="Name">After approving this proposal, approval will be emailed to {{submitter_email}}.</label>
                                     </div>
                                     
                                 </div>
@@ -114,15 +114,15 @@
                 </div>
             </div>
             <p v-if="can_preview">Click <a href="#" @click.prevent="preview">here</a> to preview the approval letter.</p>
-            <div class="row" v-show="showApplicantAddressError">
+            <div class="row mb-3" v-show="showApplicantAddressError">
                 <alert  class="col-sm-12" type="danger"><strong>{{applicantAddressErrorString}}</strong></alert>
 
             </div>
 
             <template #footer>
-                <button type="button" v-if="issuingApproval" disabled class="btn btn-default" @click="ok"><i class="fa fa-spinner fa-spin"></i> Processing</button>
-                <button type="button" v-else-if="approval && approval.start_date && approval.confirmation" class="btn btn-default" @click="ok">Ok</button>
-                <button type="button" class="btn btn-default" @click="cancel">Cancel</button>
+                <button type="button" v-if="issuingApproval" disabled class="btn btn-primary" @click="ok"><i class="fa fa-spinner fa-spin"></i> Processing</button>
+                <button type="button" v-else-if="approval && approval.start_date && approval.confirmation" class="btn btn-primary" @click="ok">Ok</button>
+                <button type="button" class="btn btn-secondary" @click="cancel">Cancel</button>
             </template>
         </modal>
     </div>

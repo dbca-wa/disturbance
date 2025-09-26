@@ -2,31 +2,31 @@
     <div>
        
         <FormSection :formCollapse="false" label="Options" Index="1">
-            <div class="row">
+            <div class="row mb-3">
                 <div v-for="(a, aidx) in addedOptions" v-bind:key="`a_${aidx}`">
-
-                    <div class="col-md-12">&nbsp; </div>
-                    <div class="col-md-12">
+                    <div class="row">
                         <div class="col-md-3">
-                            <label v-if="aidx===0" class="control-label pull-left" >Add Options</label>
+                            <label v-if="aidx===0" class="col-form-label float-start" >Add Options</label>
                         </div>
-                        <div class="col-md-3" v-if="canAddMore">
+                        <div class="col-md-3 mb-3" v-if="canAddMore">
                             <textarea class="form-control" v-model="a.label"></textarea>
                         </div>
                         <div class="col-md-3" v-else>
                             <label>{{a.label}}</label>
                         </div>
-                        <div class="col-md-6" v-if="canAddMore">
+                        <div class="col-md-6 mb-3" v-if="canAddMore">
                             <a v-if="aidx!==0" class="delete-icon fa fa-trash-o" style="cursor: pointer; color:red;" title="Delete row" @click.prevent="removeOption(aidx)"></a>
-                            <button v-if="aidx===0" class="btn btn-link pull-right" :name="`select_option_link_1`" @click.prevent="addOption()">[ Add Another ]</button>
+                            <button v-if="aidx===0" class="btn btn-link float-end" :name="`select_option_link_1`" @click.prevent="addOption()">[ Add Another ]</button>
                         </div>
-                        <div class="col-md-6" v-else>
+                        <div class="col-md-6 mb-3" v-else>
                             <div v-for="(c, cid) in a.conditions" v-bind:key="`condition_${cid}`" >
-                                <label><input type="checkbox" class="form-check-input" :value="true" v-model="getCheckedConditions(a,c).isChecked" />&nbsp;&nbsp;{{c.label}}<input type='text' v-if="getCheckedConditions(a,c).isDisplay" class="pull-right" v-model="c.value" /></label>
+                                <label>
+                                    <input type="checkbox" class="form-check-input" :value="true" v-model="getCheckedConditions(a,c).isChecked" />&nbsp;&nbsp;{{c.label}}
+                                    <input type='text' v-if="getCheckedConditions(a,c).isDisplay" class="pull-right" v-model="c.value" />
+                                </label>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </FormSection>
