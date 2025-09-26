@@ -2,24 +2,24 @@
     <div id="internal-proposal-amend">
         <modal transition="modal fade" @ok="ok()" @cancel="cancel()" title="Amendment Request" large>
             <div class="container-fluid">
-                <div class="row">
+                <div class="row mb-3">
                     <form class="form-horizontal" name="amendForm">
                         <alert v-if="showError" type="danger"><strong>{{errorString}}</strong></alert>
                         <div class="col-sm-12">
-                            <div class="row">
+                            <div class="row mb-3">
                                 <div class="col-sm-offset-2 col-sm-8">
                                     <div class="form-group">
-                                        <label class="control-label pull-left"  for="Name">Reason</label>
+                                        <label class="col-form-label pull-left"  for="Name">Reason</label>
                                         <select class="form-select" name="reason" ref="reason" v-model="amendment.reason">
                                             <option v-for="r in reason_choices" :value="r.key" :key="r.key">{{r.value}}</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row mb-3">
                                 <div class="col-sm-offset-2 col-sm-8">
                                     <div class="form-group">
-                                        <label class="control-label pull-left"  for="Name">Details</label>
+                                        <label class="col-form-label pull-left"  for="Name">Details</label>
                                         <div v-if="is_apiary_proposal">
                                              <textarea class="form-control" name="name" v-model="amendment.text" id="amendment_text"></textarea>
                                         </div>
@@ -30,7 +30,7 @@
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <div class="row mb-3">
                                 <div class="col-sm-offset-2 col-sm-8">
                                     <div class="form-group">
                                         <div class="input-group date" ref="add_attachments" style="width: 70%;">

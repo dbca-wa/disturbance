@@ -6,20 +6,24 @@
                     <form class="form-horizontal" name="amendForm">
                         <alert v-if="showError" type="danger"><strong>{{errorString}}</strong></alert>
                         <div class="col-sm-12">
-                            <div class="row">
-                                <div class="col-sm-offset-2 col-sm-8">
-                                    <div class="form-group">
-                                        <label class="control-label pull-left"  for="Name">Reason</label>
+                            <div class="form-group">
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label float-start"  for="Name">Reason</label>
+                                    </div>
+                                    <div class="col-sm-9">
                                         <select class="form-select" name="reason" ref="reason" v-model="amendment.reason">
                                             <option v-for="r in reason_choices" :value="r.key" :key="r.key">{{r.value}}</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-sm-offset-2 col-sm-8">
-                                    <div class="form-group">
-                                        <label class="control-label pull-left"  for="Name">Details</label>
+                            <div class="form-group">
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label float-start"  for="Name">Details</label>
+                                    </div>
+                                    <div class="col-sm-9">
                                         <textarea class="form-control" name="name" v-model="amendment.text"></textarea>
                                     </div>
                                 </div>
@@ -180,6 +184,7 @@ export default {
 
             // Intialise select2
             $(vm.$refs.reason).select2({
+                dropdownParent: $(vm.$refs.reason).parent(),
                 "theme": "bootstrap",
                 allowClear: true,
                 placeholder:"Select Reason"

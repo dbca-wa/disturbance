@@ -2,23 +2,18 @@
   <div id="schemaMasterlist">
     <div class="row">
         <div class="col-sm-12">
-            <div class="row">
+            <div class="row mb-3">
                 <div class="col-md-12">
                     <button class="btn btn-primary pull-right" @click.prevent="addTableEntry()" name="add-masterlist">New Question</button>
                 </div>
             </div>
-            <div class="row"><br/></div> 
-            <div class="row">
+            <div class="row mb-3">
                 <div class="col-md-12">
-                    <div class="form-group">
-
-                        <datatable ref="schema_masterlist_table"
-                            :id="schema_masterlist_id" 
-                            :dtOptions="dtOptionsSchemaMasterlist"
-                            :dtHeaders="dtHeadersSchemaMasterlist" 
-                        />
-
-                    </div>
+                    <datatable ref="schema_masterlist_table"
+                        :id="schema_masterlist_id" 
+                        :dtOptions="dtOptionsSchemaMasterlist"
+                        :dtHeaders="dtHeadersSchemaMasterlist" 
+                    />
                 </div>
             </div>
         </div>
@@ -37,18 +32,17 @@
             <div>
                 <form class="form-horizontal" name="schema_masterlist">
 
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col-md-3">
-                            <label class="control-label pull-left" >Question</label>
+                            <label class="col-form-label pull-left" >Question</label>
                         </div>
                         <div class="col-md-9">
                             <textarea class="form-control" name="question" v-model="masterlist.question"></textarea>
                         </div>
                     </div>
-                    <div class="row"><div class="col-md-12" >&nbsp;</div></div>
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col-md-3">
-                            <label class="control-label pull-left" >Answer Type</label>
+                            <label class="col-form-label pull-left" >Answer Type</label>
                         </div>
                         <div class="col-md-6">
                             <div id="select-answer-type-wrapper">
@@ -58,9 +52,7 @@
                             </div>    
                         </div>
                     </div>
-                    <div class="row"><div class="col-md-12" >&nbsp;</div></div>
-
-                    <div class="row" v-if="showOptions">
+                    <div class="row mb-3" v-if="showOptions">
 
                         <SchemaOption  ref="schema_option" :addedOptions="addedOptions" :canAddMore="true" />
 
@@ -71,7 +63,7 @@
                         <SchemaExpander :addedExpanders="addedExpanders" :answerTypes="answerTypes" :canAddMore="true" /> -->
 
                     </div>
-                    <div class="row">
+                    <div class="row mb-3">
                         <div class="col-md-6">
                             <label><input type="checkbox" class="form-check-input" :value="true" v-model="masterlist.help_text_url"/>&nbsp;&nbsp;&nbsp;Help Text url?</label>
                         </div>
@@ -86,7 +78,7 @@
                     </div> -->
                     <div class="row" v-if="isHelptextUrl">
                         <div class="col-md-3">
-                            <label class="control-label pull-left" >Rich Help Text</label>
+                            <label class="col-form-label pull-left" >Rich Help Text</label>
                         </div>
                         <div class="col-md-9">
                              <summernote v-model="masterlist.help_text" ></summernote>
@@ -100,7 +92,7 @@
                     </div>
                     <div class="row" v-if="isHelptextAssessorUrl">
                         <div class="col-md-3">
-                            <label class="control-label pull-left" >Help Text assessor</label>
+                            <label class="col-form-label pull-left" >Help Text assessor</label>
                         </div>
                         <div class="col-md-9">
                              <summernote v-model="masterlist.help_text_assessor" ></summernote>

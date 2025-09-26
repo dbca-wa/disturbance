@@ -2,14 +2,14 @@
     <div id="AddComms">
         <modal transition="modal fade" @ok="ok()" @cancel="cancel()" title="Test CDD Question" large>
             <div class="container-fluid">
-                <div class="row">
+                <div class="row mb-3">
                     <form class="form-horizontal" name="commsForm">
                         <alert v-if="showError" type="danger"><strong>{{errorString}}</strong></alert>
                         <div class="col-sm-12">
                            <div class="form-group">
-                                <div class="row">
+                                <div class="row mb-3">
                                     <div class="col-sm-6">
-                                        <label class="control-label pull-left"  for="Proposal">Proposal Lodgement No.</label>
+                                        <label class="col-form-label pull-left"  for="Proposal">Proposal Lodgement No.</label>
                                     </div>
                                     <div class="col-sm-6">
                                         <input type="text" class="form-control" name="Proposa_ID" v-model="comms.to">
@@ -21,9 +21,9 @@
                 </div>
             </div>
             <template #footer>
-                <button type="button" v-if="addingComms" disabled class="btn btn-default" @click="ok"><i class="fa fa-spinner fa-spin"></i> Testing</button>
-                <button type="button" v-else class="btn btn-default" @click="ok">Test</button>
-                <button type="button" class="btn btn-default" @click="cancel">Cancel</button>
+                <button type="button" v-if="addingComms" disabled class="btn btn-primary" @click="ok"><i class="fa fa-spinner fa-spin"></i> Testing</button>
+                <button type="button" v-else class="btn btn-primary" @click="ok">Test</button>
+                <button type="button" class="btn btn-secondary" @click="cancel">Cancel</button>
             </template>
         </modal>
     </div>

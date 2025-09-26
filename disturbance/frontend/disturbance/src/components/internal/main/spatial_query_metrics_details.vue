@@ -2,7 +2,7 @@
     <div id="proposalRequirementDetail">
         <modal transition="modal fade" @ok="ok()" @cancel="cancel()" title="Requirement" large>
             <div class="container-fluid">
-                <div class="row">
+                <div class="row mb-3">
 
                     <datatable ref="spatial_query_metrics_details_table"
                         :id="spatial_query_metrics_details_id" 

@@ -7,10 +7,9 @@
                         <alert v-if="showError" type="danger"><strong>{{errorString}}</strong></alert>
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <div class="row">
+                                <div class="row mb-3">
                                     <div class="col-sm-3">
-
-                                        <label class="control-label pull-left"  for="Name">From Date</label>
+                                        <label class="col-form-label pull-left"  for="Name">From Date</label>
                                     </div>
                                     <div class="col-sm-9">
                                         <div class="input-group date" ref="from_date" style="width: 70%;">
@@ -31,10 +30,10 @@
                             </div>
 
                             <div class="form-group">
-                                <div class="row">
+                                <div class="row mb-3">
                                     <div class="col-sm-3">
 
-                                        <label class="control-label pull-left"  for="Name">To Date</label>
+                                        <label class="col-form-label pull-left"  for="Name">To Date</label>
                                     </div>
                                     <div class="col-sm-9">
                                         <div class="input-group date" ref="to_date" style="width: 70%;">
@@ -58,7 +57,7 @@
                                 <div class="row">
                                     <div class="col-sm-3">
 
-                                        <label class="control-label pull-left"  for="Name">Suspension Details</label>
+                                        <label class="col-form-label pull-left"  for="Name">Suspension Details</label>
                                     </div>
                                     <div class="col-sm-9">
                                         <textarea name="suspension_details" class="form-control" style="width:70%;" v-model="approval.suspension_details"></textarea>
@@ -72,8 +71,8 @@
             </div>
             <template #footer>
                 <button type="button" v-if="issuingApproval" disabled class="btn btn-default" @click="ok"><i class="fa fa-spinner fa-spin"></i> Processing</button>
-                <button type="button" v-else class="btn btn-default" @click="ok">Ok</button>
-                <button type="button" class="btn btn-default" @click="cancel">Cancel</button>
+                <button type="button" v-else class="btn btn-primary" @click="ok">Ok</button>
+                <button type="button" class="btn btn-secondary" @click="cancel">Cancel</button>
             </template>
         </modal>
     </div>
