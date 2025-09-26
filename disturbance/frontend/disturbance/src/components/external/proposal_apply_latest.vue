@@ -882,13 +882,12 @@ export default {
 }
 </script>
 
-<style lang="css">
+<style lang="css" scoped>
 input[type=text], select{
     width:40%;
     box-sizing:border-box;
 
     min-height: 34px;
-    padding: 0;
     height: auto;
 }
 
