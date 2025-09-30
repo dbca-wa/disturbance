@@ -2,24 +2,28 @@
     <div id="internal-proposal-amend">
         <modal transition="modal fade" @ok="ok()" @cancel="cancel()" title="Amendment Request" large>
             <div class="container-fluid">
-                <div class="row mb-3">
+                <div class="row">
                     <form class="form-horizontal" name="amendForm">
                         <alert v-if="showError" type="danger"><strong>{{errorString}}</strong></alert>
                         <div class="col-sm-12">
-                            <div class="row mb-3">
-                                <div class="col-sm-offset-2 col-sm-8">
-                                    <div class="form-group">
+                            <div class="form-group">
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
                                         <label class="col-form-label pull-left"  for="Name">Reason</label>
+                                    </div>
+                                    <div class="col-sm-9">
                                         <select class="form-select" name="reason" ref="reason" v-model="amendment.reason">
                                             <option v-for="r in reason_choices" :value="r.key" :key="r.key">{{r.value}}</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mb-3">
-                                <div class="col-sm-offset-2 col-sm-8">
-                                    <div class="form-group">
+                            <div class="form-group">
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
                                         <label class="col-form-label pull-left"  for="Name">Details</label>
+                                    </div>
+                                    <div class="col-sm-9">
                                         <div v-if="is_apiary_proposal">
                                              <textarea class="form-control" name="name" v-model="amendment.text" id="amendment_text"></textarea>
                                         </div>
@@ -31,7 +35,7 @@
                             </div>
 
                             <div class="row mb-3">
-                                <div class="col-sm-offset-2 col-sm-8">
+                                <div class="col-sm-8">
                                     <div class="form-group">
                                         <div class="input-group date" ref="add_attachments" style="width: 70%;">
                                             <!--FileField ref="filefield" :uploaded_documents="amendment.amendment_request_documents" :delete_url="delete_url" :proposal_id="proposal_id" isRepeatable="true" name="amendment_request_file" @refreshFromResponse="refreshFromResponse"/-->
@@ -104,8 +108,16 @@ export default {
         },
         delete_url: function() {
             return (this.amendment.id) ? '/api/amendment_request/'+this.amendment.id+'/delete_document/' : '';
-        }
-    },
+        },
+        
+  },
+    // watch: {
+    //     reason_choices() {
+    //         this.$nextTick(() => {
+    //             this.eventListerners();
+    //         });
+    //     }
+    // },
     methods:{
 
         ok:function () {
@@ -235,6 +247,7 @@ export default {
 
             // Intialise select2
             $(vm.$refs.reason).select2({
+                dropdownParent: $(vm.$refs.reason).parent(),
                 "theme": "bootstrap",
                 allowClear: true,
                 placeholder:"Select Reason"
