@@ -77,9 +77,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mb-1"></div>
+                            <div class="row mb-3"></div>
                             
-                            <div class="row mb-1">
+                            <div class="row">
                                 <div class="col-md-6">
                                     <!--
                                     <button type="button" class="btn btn-primary" @click="geoJsonButtonClicked"><i class="fa fa-download"></i>
@@ -103,7 +103,7 @@
                                 </div> -->
                                 
                             </div>
-                            <div class="row mb-1"></div>
+                            <div class="row mb-2"></div>
                         </div>
                     </div>
                 </div>

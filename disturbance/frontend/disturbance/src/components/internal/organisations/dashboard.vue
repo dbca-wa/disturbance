@@ -39,8 +39,9 @@
                     </div>
                 </div>
             </div>
+            <div class="row mb-3"></div>
             <div class="row">
-                <div class="col-lg-12" style="margin-top:25px;">
+                <div class="col-lg-12">
                     <div v-if="table_id">
                         <datatable
                             ref="org_access_table"
