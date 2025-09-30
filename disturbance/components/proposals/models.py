@@ -1015,7 +1015,7 @@ class Proposal(DirtyFieldsMixin, RevisionedMixin):
                 # comments have been added.
                 
                 # Get the number between the first set of square brackets i.e. x in 'root[x].etc[y].etc[z]
-                regex = re.search('(?<=\[).+?(?=\])', str(key))
+                regex = re.search(r'(?<=\[).+?(?=\])', str(key))
                 root_level = regex.group(0)
 
                 differences_list = self.append_to_differences_list_by_field(field, older_version_data, newer_version_data, \
@@ -2931,7 +2931,7 @@ def searchKeyWords(searchWords, searchProposal, searchApproval, searchCompliance
             else:
                 search_words_regex = search_words_regex + "|"
 
-        filter_regex = ".*\".*\":\s\"(\\\\\"|[^\"])*"+search_words_regex+"(\\\\\"|[^\"])*\".*"
+        filter_regex =  r".*\".*\":\s\"(\\\\\"|[^\"])*"+search_words_regex+"(\\\\\"|[^\"])*\".*"
         #extract_regex = "(?i)\'*\':\s\'(?:\\\\\'|[^\'])*"+search_words_regex+"(?:\\\\\'|[^\'])*\'" #attempted to further optimise but additional regex had a negligable impact at the cost of the data key
         if searchProposal:
             proposal_list = proposal_list.filter(data__iregex=filter_regex)
