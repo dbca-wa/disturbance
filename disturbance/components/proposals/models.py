@@ -1015,7 +1015,7 @@ class Proposal(DirtyFieldsMixin, RevisionedMixin):
                 # comments have been added.
                 
                 # Get the number between the first set of square brackets i.e. x in 'root[x].etc[y].etc[z]
-                regex = re.search('(?<=\[).+?(?=\])', str(key))
+                regex = re.search(r'(?<=\[).+?(?=\])', str(key))
                 root_level = regex.group(0)
 
                 differences_list = self.append_to_differences_list_by_field(field, older_version_data, newer_version_data, \
@@ -2931,7 +2931,7 @@ def searchKeyWords(searchWords, searchProposal, searchApproval, searchCompliance
             else:
                 search_words_regex = search_words_regex + "|"
 
-        filter_regex = ".*\".*\":\s\"(\\\\\"|[^\"])*"+search_words_regex+"(\\\\\"|[^\"])*\".*"
+        filter_regex =  r".*\".*\":\s\"(\\\\\"|[^\"])*"+search_words_regex+"(\\\\\"|[^\"])*\".*"
         #extract_regex = "(?i)\'*\':\s\'(?:\\\\\'|[^\'])*"+search_words_regex+"(?:\\\\\'|[^\'])*\'" #attempted to further optimise but additional regex had a negligable impact at the cost of the data key
         if searchProposal:
             proposal_list = proposal_list.filter(data__iregex=filter_regex)
@@ -3126,7 +3126,7 @@ def get_search_geojson(proposal_lodgement_numbers,request):
     except:
         raise
 
-from ckeditor.fields import RichTextField
+from django_ckeditor_5.fields import CKEditor5Field
 class HelpPage(models.Model):
     HELP_TEXT_EXTERNAL = 1
     HELP_TEXT_INTERNAL = 2
@@ -3136,7 +3136,7 @@ class HelpPage(models.Model):
     )
 
     application_type = models.ForeignKey(ApplicationType, on_delete=models.CASCADE)
-    content = RichTextField()
+    content = CKEditor5Field()
     description = models.CharField(max_length=256, blank=True, null=True)
     help_type = models.SmallIntegerField('Help Type', choices=HELP_TYPE_CHOICES, default=HELP_TEXT_EXTERNAL)
     version = models.SmallIntegerField(default=1, blank=False, null=False)
@@ -3189,7 +3189,7 @@ class QuestionOption(models.Model):
     def __str__(self):
         return self.label 
 
-from ckeditor.fields import RichTextField
+from django_ckeditor_5.fields import CKEditor5Field
 class MasterlistQuestion(models.Model):
     ANSWER_TYPE_CHECKBOX = 'checkbox'
     ANSWER_TYPE_RADIO = 'radiobuttons'
@@ -3235,8 +3235,8 @@ class MasterlistQuestion(models.Model):
     # help_text_assessor_url=models.CharField(max_length=400, blank=True, null=True)
     help_text_url=models.BooleanField(default=False)
     help_text_assessor_url=models.BooleanField(default=False)
-    help_text=RichTextField(null=True, blank=True)
-    help_text_assessor=RichTextField(null=True, blank=True)
+    help_text=CKEditor5Field(null=True, blank=True)
+    help_text_assessor=CKEditor5Field(null=True, blank=True)
     property_cache = JSONField(null=True, blank=True, default=dict)
 
     class Meta:

@@ -724,6 +724,8 @@ class ProposalViewSet(viewsets.ModelViewSet):
                     for document in documents:
                         older_document_version = Version.objects.get_for_object(document)\
                         .select_related('revision').filter(revision__date_created__lte=proposal_lodgement_date).order_by('-revision__date_created').first()
+                        if not older_document_version:
+                            continue
                         older_document = ProposalDocument(**older_document_version.field_dict)
                         if not older_document.hidden:
                             older_document = ProposalDocument(**older_document_version.field_dict)

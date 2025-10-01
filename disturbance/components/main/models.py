@@ -291,7 +291,7 @@ class SystemMaintenance(models.Model):
                                                                              self.start_date, self.end_date)
 
 
-from ckeditor.fields import RichTextField
+from django_ckeditor_5.fields import CKEditor5Field
 
 class GlobalSettings(models.Model):
     KEY_ASSESSMENT_REMINDER_DAYS = 'assessment_reminder_days'
@@ -333,7 +333,7 @@ class GlobalSettings(models.Model):
     key = models.CharField(max_length=255, choices=keys, blank=False, null=False, unique=True)
     value = models.CharField(max_length=255)
     help_text_required=models.BooleanField(default=False)
-    help_text=RichTextField(null=True, blank=True)
+    help_text=CKEditor5Field(null=True, blank=True)
 
     class Meta:
         app_label = 'disturbance'

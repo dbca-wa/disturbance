@@ -205,6 +205,11 @@ class HelpPageAdmin(admin.ModelAdmin):
     ordering = ('application_type', 'help_type', '-version')
     list_filter = ('application_type', 'help_type')
 
+    class Media:
+        css = {
+            'all': ('disturbance/css/admin_extra.css',)
+        }
+
 
     def get_urls(self):
         urls = super(HelpPageAdmin, self).get_urls()
@@ -247,6 +252,10 @@ class ApplicationTypeAdmin(admin.ModelAdmin):
 class GlobalSettingsAdmin(admin.ModelAdmin):
     list_display = ['key', 'value', 'help_text_required', 'help_text' ]
     ordering = ('key',)
+    class Media:
+        css = {
+            'all': ('disturbance/css/admin_extra.css',)
+        }
 
 
 @admin.register(models.QuestionOption)
@@ -259,6 +268,10 @@ class MasterlistQuestionAdmin(admin.ModelAdmin):
     list_display = ['question',]
     filter_horizontal = ('option',)
     form = forms.MasterlistQuestionAdminForm
+    class Media:
+        css = {
+            'all': ('disturbance/css/admin_extra.css',)
+        }
     
 
 @admin.register(models.ProposalTypeSection)

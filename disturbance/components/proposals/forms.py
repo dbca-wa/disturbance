@@ -13,7 +13,7 @@ from disturbance.components.proposals.models import (
         SpatialQueryQuestion,
         )
 from disturbance.components.main.models import SystemMaintenance
-from ckeditor.widgets import CKEditorWidget
+from django_ckeditor_5.widgets import CKEditor5Widget
 from django.conf import settings
 import pytz
 from datetime import datetime, timedelta
@@ -95,7 +95,7 @@ class ProposalApproverGroupAdminForm(forms.ModelForm):
 
 
 class DisturbanceHelpPageAdminForm(forms.ModelForm):
-    content = forms.CharField(widget=CKEditorWidget())
+    content = forms.CharField(widget=CKEditor5Widget())
     class Meta:
         model = HelpPage
         fields = '__all__'
@@ -141,8 +141,8 @@ class SystemMaintenanceAdminForm(forms.ModelForm):
 
 
 class MasterlistQuestionAdminForm(forms.ModelForm):
-    # help_text = forms.CharField(widget=CKEditorWidget())
-    # help_text_assessor = forms.CharField(widget=CKEditorWidget())
+    # help_text = forms.CharField(widget=CKEditor5Widget())
+    # help_text_assessor = forms.CharField(widget=CKEditor5Widget())
 
     class Meta:
         model = MasterlistQuestion

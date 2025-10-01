@@ -58,8 +58,9 @@
                             >
                         </div>
                     </div>
+                    <div class="row mb-3"></div>
                     <div class="row">
-                        <div class="col-lg-12" style="margin-top:25px;">
+                        <div class="col-lg-12">
                             <div v-if="datatableReady">
                                 <datatable ref="proposal_datatable" :id="datatable_id" :dtOptions="proposal_options" :dtHeaders="proposal_headers"/>
                             </div>

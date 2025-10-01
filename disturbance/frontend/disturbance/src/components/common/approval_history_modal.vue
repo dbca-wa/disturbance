@@ -65,10 +65,10 @@ export default {
                 deferRender: true, 
                 autowidth: true,
                 order: [[2, 'desc']],
-                dom:
-                    "<'row'<'col-sm-5'l><'col-sm-6'f>>" +
+                dom: "<'d-flex align-items-center'<'me-auto'l>fB>" +
                     "<'row'<'col-sm-12'tr>>" +
-                    "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    "<'d-flex align-items-center'<'me-auto'i>p>",
+                buttons: [],
                 processing:true,
                 ajax: {
                     "url": vm.history_url, 
