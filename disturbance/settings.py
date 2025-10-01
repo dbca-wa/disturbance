@@ -78,8 +78,8 @@ INSTALLED_APPS += [
     'rest_framework_datatables',
     'rest_framework_gis',
     'reset_migrations',
-    'ckeditor',
-    # "django_ckeditor_5",
+    # 'ckeditor',
+    "django_ckeditor_5",
     # 'corsheaders',
     'smart_selects',
     'crispy_forms',
@@ -238,15 +238,35 @@ CRON_CLASSES = [
 ]
 
 
-CKEDITOR_CONFIGS = {
-    'default': {
-        'toolbar': 'full',
-        'height': 300,
-        #'width': 300,
-        'width': '100%',
+# CKEDITOR_CONFIGS = {
+#     'default': {
+#         'toolbar': 'full',
+#         'height': 300,
+#         #'width': 300,
+#         'width': '100%',
+#     },
+#     'awesome_ckeditor': {
+#         'toolbar': 'Basic',
+#     },
+# }
+
+CKEDITOR_5_CONFIGS = {
+    "default": {
+        "toolbar": [
+            "heading", "|",
+            "bold", "italic", "underline", "strikethrough", "code", "subscript", "superscript", "|",
+            "link", "imageUpload", "blockQuote", "insertTable", "mediaEmbed", "codeBlock", "|",
+            "bulletedList", "numberedList", "todoList", "outdent", "indent", "|",
+            "undo", "redo", "alignment", "horizontalLine", "pageBreak", "specialCharacters", "removeFormat", "|",
+            "fontSize", "fontFamily", "fontColor", "fontBackgroundColor", "|",
+            "highlight", "htmlEmbed", "sourceEditing", "findAndReplace", "selectAll", "|",
+            "exportPdf", "exportWord", "textPartLanguage", "style", "mention", "restrictedEditingException"
+        ],
+        "height": 300,
+        "width": "50%",
     },
-    'awesome_ckeditor': {
-        'toolbar': 'Basic',
+    "awesome_ckeditor": {
+        "toolbar": ["bold", "italic"],
     },
 }
 

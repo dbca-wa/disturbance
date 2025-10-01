@@ -1,0 +1,12 @@
+.ck-editor__editable_inline {
+    width: 80% !important;
+    min-width: 300px;
+    min-height: 300px;
+    height: 300px;
+}
+
+.ck.ck-toolbar {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+}
