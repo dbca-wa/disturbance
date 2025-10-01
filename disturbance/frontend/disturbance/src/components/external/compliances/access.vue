@@ -5,95 +5,75 @@
     </div>
     <div v-else class="row">
         <div v-if="!isFinalised">
-            <div v-if="hasAmendmentRequest" class="row" style="color:red;">
-                <div class="col-lg-12 pull-right">
-                  <div class="panel panel-default">
-                      <div class="panel-heading">
-                        <h3 class="panel-title" style="color:red;">An amendment has been requested for this Compliance with Requirements
-                            <a class="panelClicker" :href="'#'+oBody" data-toggle="collapse"  data-parent="#userInfo" expanded="true" :aria-controls="oBody">
-                                <span class="glyphicon glyphicon-chevron-down pull-right "></span>
-                            </a>
-                        </h3>
-                      </div>
-                      <div class="panel-body collapse in" :id="oBody">
+            <div class="col-md-12">
+                <div v-if="hasAmendmentRequest" class="row" style="color:red;">
+                    <FormSection style="color:red;" :formCollapse="false" label="An amendment has been requested for this Compliance with Requirements" Index="compliance_with_req_amend">
                         <div v-for="a in amendment_request" :key="a.id">                      
-                          <p>Reason: {{a.reason}}</p>
-                          <p>Details: {{a.text}}</p>                        
+                        <p>Reason: {{a.reason}}</p>
+                        <p>Details: {{a.text}}</p>                        
                         </div>
-                      </div>
-                  </div>
+                    </FormSection>
                 </div>
             </div>
         </div>
 
-        <h3><strong>Compliance with Requirements: {{ compliance.reference }}</strong></h3>
+        <h3>Compliance with Requirements: {{ compliance.reference }}</h3>
 
         <div class="col-md-12">
             <div class="row">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Compliance with Requirements
-                                        <a class="panelClicker" :href="'#'+pdBody" data-toggle="collapse"  data-parent="#userInfo" expanded="true" :aria-controls="pdBody">
-                                            <span class="glyphicon glyphicon-chevron-up pull-right "></span>
-                                        </a>
-                        </h3>
-                    </div>
-                    <div class="panel-body panel-collapse in" :id="pdBody">
-                        <div class="row">
-                           <div class="col-md-12"> 
-                            <form class="form-horizontal" name="complianceForm" method="post">
-                                <alert v-if="showError" type="danger">
-                                    <strong>{{errorString}}</strong>
-                                </alert>
-                                <div class="row">
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label pull-left"  for="Name">Requirement:</label>
-                                        <div class="col-sm-6">
-                                            {{compliance.requirement}}
+                <FormSection :formCollapse="false" label="Compliance with Requirements" Index="compliance_with_req">
+                    <div class="row">
+                        <div class="col-md-12"> 
+                        <form class="form-horizontal" name="complianceForm" method="post">
+                            <alert v-if="showError" type="danger">
+                                <strong>{{errorString}}</strong>
+                            </alert>
+                            <div class="row mb-3">
+                                <label class="col-sm-3 col-form-label pull-left"  for="Name">Requirement:</label>
+                                <div class="col-sm-6">
+                                    {{compliance.requirement}}
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-3 col-form-label pull-left"  for="Name">Details:</label>
+                                <div class="col-sm-6">
+                                    <textarea :disabled="isFinalised" class="form-control" name="detail" placeholder="" v-model="compliance.text"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div v-if="hasDocuments">
+                                    <div class="col-sm-3 col-form-label pull-left" >  
+                                        <label  for="Name">Documents:</label>
+                                    </div> 
+                                    <div class="col-sm-6">
+                                        <div class="row" v-for="d in compliance.documents" :key="d.id">
+                                            <a :href="d[1]" target="_blank" class="col-form-label pull-left">{{d[0]   }}</a>
+                                            <span v-if="!isFinalised && d.can_delete">
+                                                <a @click="delete_document(d)" class="fa fa-trash-o col-form-label" title="Remove file" style="cursor: pointer; color:red;"></a>
+                                            </span>
+                                            <span v-else >
+                                                <i class="fa fa-info-circle" aria-hidden="true" title="Previously submitted documents cannot be deleted" style="cursor: pointer;"></i>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <div class="row">
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label pull-left"  for="Name">Details:</label>
-                                        <div class="col-sm-6">
-                                            <textarea :disabled="isFinalised" class="form-control" name="detail" placeholder="" v-model="compliance.text"></textarea>
-                                        </div>
+                            <div v-if="!isFinalised">
+                                <div class="row mb-3">
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label pull-left" for="Name">Attachments:</label>
                                     </div>
-                                </div>
-
-                                <div class="row">
-                                    <!--<div v-if="isFinalised && hasDocuments" class="form-group"> -->
-                                    <div v-if="hasDocuments" class="form-group">
-                                        <div class="col-sm-3 control-label pull-left" >  
-                                            <label  for="Name">Documents:</label>
-                                        </div> 
-                                        <div class="col-sm-6">
-                                            <div class="row" v-for="d in compliance.documents" :key="d.id">
-                                                <a :href="d[1]" target="_blank" class="control-label pull-left">{{d[0]   }}</a>
-                                                <span v-if="!isFinalised && d.can_delete">
-                                                    <a @click="delete_document(d)" class="fa fa-trash-o control-label" title="Remove file" style="cursor: pointer; color:red;"></a>
-                                                </span>
-                                                <span v-else >
-                                                    <i class="fa fa-info-circle" aria-hidden="true" title="Previously submitted documents cannot be deleted" style="cursor: pointer;"></i>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div v-if="!isFinalised" class="form-group"> 
-                                        <label class="col-sm-3 control-label pull-left"  for="Name">Attachments:</label>
                                     <div class="col-sm-6">
                                         <template v-for="(f,i) in files" :key="i">
-                                            <div :class="'row top-buffer file-row-'+i">
+                                            <div :class="'row mb-3 top-buffer file-row-'+i">
                                                 <div class="col-sm-4">
-                                                    <span v-if="f.file == null" class="btn btn-info btn-file pull-left" style="margin-bottom: 5px">
+                                                    <span v-if="f.file == null" class="btn btn-info btn-file btn-primary pull-left">
                                                         Attach File <input type="file" :name="'file-upload-'+i" :class="'file-upload-'+i" @change="uploadFile('file-upload-'+i,f)"/>
                                                     </span>
-                                                    <span v-else class="btn btn-info btn-file pull-left" style="margin-bottom: 5px">
+                                                    <span v-else class="btn btn-info btn-file btn-primary pull-left" style="margin-bottom: 5px">
                                                         Update File <input type="file" :name="'file-upload-'+i" :class="'file-upload-'+i" @change="uploadFile('file-upload-'+i,f)"/>
                                                     </span>
                                                 </div>
@@ -107,22 +87,21 @@
                                         </template>
                                         <a href="" @click.prevent="attachAnother"><i class="fa fa-lg fa-plus top-buffer-2x"></i></a>
                                     </div>
-                                    </div>
                                 </div>
+                            </div>
 
-                                <div class="row">
-                                    <div class="form-group">
-                                        <div class="col-lg-2 pull-right">
-                                            <button v-if="!isFinalised" @click.prevent="submit()" class="btn btn-primary btn-margin">Submit</button>
-                                            <button v-if="!isFinalised" @click.prevent="close()" class="btn btn-primary">Close</button>
-                                        </div>
+                            <div class="row mb-3">
+                                <div class="form-group">
+                                    <div class="pull-right">
+                                        <button v-if="!isFinalised" @click.prevent="submit()" class="btn btn-primary btn-margin">Submit</button>
+                                        <button v-if="!isFinalised" @click.prevent="close()" class="btn btn-secondary">Close</button>
                                     </div>
                                 </div>
-                            </form>
-                           </div>
+                            </div>
+                        </form>
                         </div>
-                    </div> 
-                </div>
+                    </div>
+                </FormSection>
             </div>
         </div>
     </div>
@@ -132,6 +111,7 @@
 import $ from 'jquery';
 import { v4 as uuidv4 } from 'uuid';
 import alert from '@vue-utils/alert.vue'
+import FormSection from "@/components/forms/section_toggle.vue";
 import {
   api_endpoints,
   helpers
@@ -175,6 +155,7 @@ export default {
   },
   components: {
     alert,
+    FormSection,
   },
   computed: {
     showError: function() {
