@@ -4,21 +4,27 @@
         <FormSection v-if="org && show_org" :formCollapse="org_collapse" label="Organisation Details" Index="org_details" subheading="View and update the organisation's details">
             <form class="form-horizontal" name="personal_form" method="post">
               <div class="form-group">
-                <label for="" class="col-sm-3 control-label">Name</label>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" name="first_name" placeholder="" v-model="org.name">
+                <div class="row mb-3">
+                    <label for="" class="col-sm-3 col-form-label">Name</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="first_name" placeholder="" v-model="org.name">
+                    </div>
                 </div>
               </div>
               <div class="form-group">
-                <label for="" class="col-sm-3 control-label" >ABN</label>
-                <div class="col-sm-6">
-                    <input type="text" disabled class="form-control" name="last_name" placeholder="" v-model="org.abn">
+                <div class="row mb-3">
+                    <label for="" class="col-sm-3 col-form-label" >ABN</label>
+                    <div class="col-sm-6">
+                        <input type="text" disabled class="form-control" name="last_name" placeholder="" v-model="org.abn">
+                    </div>
                 </div>
               </div>
               <div class="form-group">
-                <label for="" class="col-sm-3 control-label" >Email</label>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" name="email" placeholder="" v-model="org.email">
+                <div class="row mb-3">
+                    <label for="" class="col-sm-3 col-form-label" >Email</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="email" placeholder="" v-model="org.email">
+                    </div>
                 </div>
               </div>
               <div class="form-group">
@@ -33,33 +39,41 @@
         <FormSection v-if="org && show_address" label="Address Details" Index="add_details" subheading="View and update the organisation's address details">
             <form class="form-horizontal" action="index.html" method="post">
               <div class="form-group">
-                <label for="" class="col-sm-3 control-label">Street</label>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" name="street" placeholder="" v-model="org.address.line1">
+                <div class="row mb-3">
+                    <label for="" class="col-sm-3 col-form-label">Street</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="street" placeholder="" v-model="org.address.line1">
+                    </div>
                 </div>
               </div>
               <div class="form-group">
-                <label for="" class="col-sm-3 control-label" >Town/Suburb</label>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" name="surburb" placeholder="" v-model="org.address.locality">
+                <div class="row mb-3">
+                    <label for="" class="col-sm-3 col-form-label" >Town/Suburb</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="surburb" placeholder="" v-model="org.address.locality">
+                    </div>
                 </div>
               </div>
               <div class="form-group">
-                <label for="" class="col-sm-3 control-label">State</label>
-                <div class="col-sm-3">
-                    <input type="text" class="form-control" name="country" placeholder="" v-model="org.address.state">
-                </div>
-                <label for="" class="col-sm-1 control-label">Postcode</label>
-                <div class="col-sm-2">
-                    <input type="text" class="form-control" name="postcode" placeholder="" v-model="org.address.postcode">
+                <div class="row mb-3">
+                    <label for="" class="col-sm-3 col-form-label">State</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" name="country" placeholder="" v-model="org.address.state">
+                    </div>
+                    <label for="" class="col-sm-1 col-form-label">Postcode</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control" name="postcode" placeholder="" v-model="org.address.postcode">
+                    </div>
                 </div>
               </div>
               <div class="form-group">
-                <label for="" class="col-sm-3 control-label">Country</label>
-                <div class="col-sm-4">
-                    <select class="form-control" name="country" v-model="org.address.country">
-                        <option v-for="c in countries" :value="c.code" :key="c.code">{{ c.name }}</option>
-                    </select>
+                <div class="row mb-3">
+                    <label for="" class="col-sm-3 col-form-label">Country</label>
+                    <div class="col-sm-4">
+                        <select class="form-control" name="country" v-model="org.address.country">
+                            <option v-for="c in countries" :value="c.code" :key="c.code">{{ c.name }}</option>
+                        </select>
+                    </div>
                 </div>
               </div>
               <div class="form-group">
@@ -77,37 +91,47 @@
                 <h6>Use the Organisation Administrator pin codes if you want the new user to be linked as organisation administrator.<br> Use the Organisation User pin codes if you want the new user to be linked as organisation user.</h6>
             </div>
             <form class="form-horizontal" action="index.html" method="post">
-                 <div class="col-sm-6 row">
+                <div class="row">
+                <div class="col-sm-6">
                     <div class="form-group">
-                        <label for="" class="col-sm-6 control-label"> Organisation User Pin Code 1:</label>
-                        <div class="col-sm-6">
-                            <label class="control-label">{{org.pins.three}}</label>
+                        <div class="row mb-3">
+                            <label for="" class="col-sm-5 col-form-label"> Organisation User Pin Code 1:</label>
+                            <div class="col-sm-6">
+                                <label class="col-form-label">{{org.pins.three}}</label>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="" class="col-sm-6 control-label" >Organisation User Pin Code 2:</label>
-                        <div class="col-sm-6">
-                            <label class="control-label">{{org.pins.four}}</label>
+                        <div class="row mb-3">
+                            <label for="" class="col-sm-5 col-form-label" >Organisation User Pin Code 2:</label>
+                            <div class="col-sm-6">
+                                <label class="col-form-label">{{org.pins.four}}</label>
+                            </div>
                         </div>
                     </div>
                 </div>
-                 <div class="col-sm-6 row">
+                 <div class="col-sm-6">
                     <div class="form-group" :disabled ='!myorgperms.is_admin'>
-                        <label for="" class="col-sm-6 control-label"> Organisation Administrator Pin Code 1:</label>
-                        <div class="col-sm-6">
-                            <label class="control-label">{{org.pins.one}}</label>
+                        <div class="row mb-3">
+                            <label for="" class="col-sm-5 col-form-label"> Organisation Administrator Pin Code 1:</label>
+                            <div class="col-sm-6">
+                                <label class="col-form-label">{{org.pins.one}}</label>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group" :disabled ='!myorgperms.is_admin'>
-                        <label for="" class="col-sm-6 control-label" >Organisation Administrator Pin Code 2:</label>
-                        <div class="col-sm-6">
-                            <label class="control-label">{{org.pins.two}}</label>
+                        <div class="row mb-3">
+                            <label for="" class="col-sm-5 col-form-label" >Organisation Administrator Pin Code 2:</label>
+                            <div class="col-sm-6">
+                                <label class="col-form-label">{{org.pins.two}}</label>
+                            </div>
                         </div>
                     </div>
+                </div>
                 </div>
             </form>
             <div>
-                <div class="col-sm-12 row">
+                <div class="col-sm-12 row mb-3">
                     <div class="row">
                         <div class="col-sm-12 top-buffer-s">
                             <strong>Persons linked to the organisation are controlled by the organisation. The Department cannot manage this list of people.</strong>
@@ -115,10 +139,10 @@
                     </div>
                 </div>
             </div>
-            <div>
-                <div class="col-sm-12 row">
+            <div class="row mb-3">
+                <div class="col-sm-12">
                     <datatable ref="contacts_datatable_user" id="organisation_contacts_datatable_ref" :dtOptions="contacts_options_ref" :dtHeaders="contacts_headers_ref" v-model="filterOrgContactStatus"/>
-              </div>
+                </div>
             </div>
         </FormSection>
 

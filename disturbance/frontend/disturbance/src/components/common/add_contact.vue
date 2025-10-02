@@ -5,50 +5,50 @@
                 <div class="row">
                     <alert v-if="showError" type="danger"><strong>{{errorString}}</strong></alert>
                     <div class="col-lg-12">
-                        <div class="row mb-3">
-                            <div class="form-group">
-                                <label class="col-md-2 col-form-label pull-left"  for="Name">Given Name(s): </label>
-                                <div class="col-md-10">
+                        <div class="form-group">
+                            <div class="row mb-3">
+                                <label class="col-md-3 col-form-label pull-left"  for="Name">Given Name(s): </label>
+                                <div class="col-md-9">
                                     <input type="text" class="form-control" name="name" v-model="contact.first_name" />
                                 </div>
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="form-group">
-                                <label class="col-md-2 col-form-label pull-left"  for="Name">Surname: </label>
-                                <div class="col-md-10">
+                        <div class="form-group">
+                            <div class="row mb-3">
+                                <label class="col-md-3 col-form-label pull-left"  for="Name">Surname: </label>
+                                <div class="col-md-9">
                                     <input type="text" class="form-control" name="name" v-model="contact.last_name" />
                                 </div>
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="form-group">
-                                <label class="col-md-2 col-form-label pull-left"  for="Phone">Phone: </label>
-                                <div class="col-md-10">
+                        <div class="form-group">
+                            <div class="row mb-3">
+                                <label class="col-md-3 col-form-label pull-left"  for="Phone">Phone: </label>
+                                <div class="col-md-9">
                                     <input type="text" class="form-control" name="phone" v-model="contact.phone_number" />
                                 </div>
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="form-group">
-                                <label class="col-md-2 col-form-label pull-left"  for="Mobile">Mobile: </label>
-                                <div class="col-md-10">
+                        <div class="form-group">
+                            <div class="row mb-3">
+                                <label class="col-md-3 col-form-label pull-left"  for="Mobile">Mobile: </label>
+                                <div class="col-md-9">
                                     <input type="text" class="form-control" name="mobile" v-model="contact.mobile_number" />
                                 </div>
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="form-group">
-                                <label class="col-md-2 col-form-label pull-left"  for="Fax">Fax: </label>
-                                <div class="col-md-10">
+                        <div class="form-group">
+                            <div class="row mb-3">
+                                <label class="col-md-3 col-form-label pull-left"  for="Fax">Fax: </label>
+                                <div class="col-md-9">
                                     <input type="text" class="form-control" name="fax" v-model="contact.fax_number" />
                                 </div>
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="form-group">
-                                <label class="col-md-2 col-form-label pull-left"  for="Email">Email: </label>
-                                <div class="col-md-10">
+                        <div class="form-group">
+                            <div class="row mb-3">
+                                <label class="col-md-3 col-form-label pull-left"  for="Email">Email: </label>
+                                <div class="col-md-9">
                                     <input type="text" class="form-control" name="email" v-model="contact.email" />
                                 </div>
                             </div>
