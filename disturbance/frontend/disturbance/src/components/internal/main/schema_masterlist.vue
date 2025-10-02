@@ -494,7 +494,7 @@ export default {
             const self = this;
             $(self.$refs.select_answer_type).select2({
                 dropdownParent: $('#select-answer-type-wrapper'),
-                "theme": "bootstrap",
+                "theme": "bootstrap-5",
                 placeholder:"Select Answer Type..."
             }).
             on("select2:select",function (e) {
@@ -511,7 +511,7 @@ export default {
             const self = this;
             let header_name = 'header-answer-type-' + index
             $(`[name='${header_name}]`).select2({
-                "theme": "bootstrap",
+                "theme": "bootstrap-5",
                 placeholder:"Select Answer Type..."
             }).
             on("select2:select",function () {

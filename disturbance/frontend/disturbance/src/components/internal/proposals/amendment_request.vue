@@ -248,7 +248,7 @@ export default {
             // Intialise select2
             $(vm.$refs.reason).select2({
                 dropdownParent: $(vm.$refs.reason).parent(),
-                "theme": "bootstrap",
+                "theme": "bootstrap-5",
                 allowClear: true,
                 placeholder:"Select Reason"
             }).

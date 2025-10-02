@@ -1066,7 +1066,7 @@ export default {
             if (!vm.select2Applied){
                 console.log('select2 is being applied')
                 $(vm.$refs.filterRegion).select2({
-                    "theme": "bootstrap",
+                    "theme": "bootstrap-5",
                     allowClear: true,
                     placeholder:"Select Region"
                 }).

@@ -206,7 +206,7 @@
     // import Datatable from '@vue-utils/datatable.vue'
     import Cluster from 'ol/source/Cluster';
     import 'select2/dist/css/select2.min.css'
-    import 'select2-bootstrap-theme/dist/select2-bootstrap.min.css'
+    // import 'select2-bootstrap-theme/dist/select2-bootstrap.min.css'
     import Awesomplete from 'awesomplete'
     import { api_endpoints, helpers } from '@/utils/hooks'
     import {getCenter} from 'ol/extent'
@@ -599,7 +599,7 @@
 
                 if (!vm.select2Applied){
                     $(vm.$refs.filterStatus).select2({
-                        "theme": "bootstrap",
+                        "theme": "bootstrap-5",
                         allowClear: false,
                         placeholder:"Select Status",
                         multiple:true,
@@ -614,7 +614,7 @@
                     })
 
                     $(vm.$refs.filterAvailability).select2({
-                        "theme": "bootstrap",
+                        "theme": "bootstrap-5",
                         allowClear: false,
                         placeholder:"Select Availabilities",
                         multiple:true,

@@ -70,7 +70,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <FormSection :formCollapse="false" label="Address Details" Index="address_details">
+                            <FormSection :formCollapse="true" label="Address Details" Index="address_details">
                                 <form class="form-horizontal" action="index.html" method="post">
                                     <div class="row mb-3">
                                         <label for="" class="col-sm-3 col-form-label">Street</label>
@@ -114,7 +114,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <FormSection :formCollapse="false" label="Contact Details" Index="contact_details">
+                            <FormSection :formCollapse="true" label="Contact Details" Index="contact_details">
                                 <form class="form-horizontal" action="index.html" method="post">
                                     <div class="col-sm-12">
                                         <button @click.prevent="addContact()" style="margin-bottom:10px;" class="btn btn-primary pull-right">Add Contact</button>
@@ -128,7 +128,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <FormSection :formCollapse="false" label="Linked Persons" Index="linked_persons" subtitle="-Manage the user accounts linked to the organisation">
+                            <FormSection :formCollapse="true" label="Linked Persons" Index="linked_persons" subtitle="-Manage the user accounts linked to the organisation">
                                 <div class="col-sm-8">
                                         <div class="col-sm-12">
                                             <h5>Persons linked to this organisation:</h5>
@@ -264,6 +264,10 @@ export default {
                     processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
+                dom: "<'d-flex align-items-center'<'me-auto'l>fB>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'d-flex align-items-center'<'me-auto'i>p>",
+                buttons: [],
                 ajax: {
                     "url": helpers.add_endpoint_json(api_endpoints.organisations,vm.$route.params.org_id+'/contacts'),
                     "dataSrc": ''

@@ -9,9 +9,9 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <div>
-                                    <div v-show="select2Applied">
+                                    <div v-show="select2Applied" id="region-filter">
                                         <label for="">Region</label>
-                                        <select style="width:100%" class="form-select input-sm" ref="filterRegion" >
+                                        <select style="width:100%" class="form-select form-select-sm" ref="filterRegion" >
                                             <template v-if="select2Applied">
                                                 <option v-for="r in proposal_regions" :value="r" :key="r">{{r}}</option>
                                             </template>
@@ -24,9 +24,9 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <div>
-                                    <div v-show="select2bApplied">
+                                    <div v-show="select2bApplied" id="district-filter">
                                         <label for="">District</label>
-                                        <select style="width:100%" class="form-select input-sm" ref="filterDistrict" >
+                                        <select style="width:100%" class="form-select form-select-sm" ref="filterDistrict" >
                                             <template v-if="select2bApplied">
                                                 <option v-for="r in proposal_districts" :value="r" :key="r">{{r}}</option>
                                             </template>
@@ -793,7 +793,8 @@ export default {
 
             if (!vm.select2Applied){
                 $(vm.$refs.filterRegion).select2({
-                    "theme": "bootstrap",
+                    dropdownParent: $("#region-filter"),
+                    "theme": "bootstrap-5",
                     allowClear: true,
                     placeholder:"Select Region",
                     multiple:true,
@@ -815,7 +816,8 @@ export default {
 
             if (!vm.select2bApplied){
                 $(vm.$refs.filterDistrict).select2({
-                    "theme": "bootstrap",
+                    dropdownParent: $("#district-filter"),
+                    "theme": "bootstrap-5",
                     allowClear: true,
                     placeholder:"Select District",
                     multiple:true,
