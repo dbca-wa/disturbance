@@ -269,7 +269,7 @@ import NewApply from '../../external/proposal_apply_new.vue'
 import CommsLogs from '@common-utils/comms_logs.vue'
 import MoreReferrals from '@common-utils/more_referrals.vue'
 import "select2/dist/css/select2.min.css";
-import "select2-bootstrap-theme/dist/select2-bootstrap.min.css";
+// import "select2-bootstrap-theme/dist/select2-bootstrap.min.css";
 
 import {
     api_endpoints,
@@ -519,7 +519,7 @@ export default {
                */
                 $(vm.$refs.department_users).select2({
                     minimumInputLength: 2,
-                    "theme": "bootstrap",
+                    "theme": "bootstrap-5",
                     allowClear: true,
                     placeholder:"Select Referrer",
                     ajax: {
@@ -547,7 +547,7 @@ export default {
 
                 // Assigned officer select
                 $(vm.$refs.assigned_officer).select2({
-                    "theme": "bootstrap",
+                    "theme": "bootstrap-5",
                     allowClear: true,
                     placeholder:"Select Officer"
                 }).

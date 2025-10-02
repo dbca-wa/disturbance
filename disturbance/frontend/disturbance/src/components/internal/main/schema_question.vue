@@ -220,7 +220,7 @@ from '@/utils/hooks';
 
 // var select2 = require('select2');
 import "select2/dist/css/select2.min.css";
-import "select2-bootstrap-theme/dist/select2-bootstrap.min.css";
+// import "select2-bootstrap-theme/dist/select2-bootstrap.min.css";
 
 export default {
     name:'schema-question',
@@ -699,7 +699,7 @@ export default {
                 const self = this;
                 $(self.$refs.select_question).select2({
                     dropdownParent: $('#select_question_wrapper'),
-                    "theme": "bootstrap",
+                    "theme": "bootstrap-5",
                     allowClear: true,
                     minimumInputLength: 2,
                     placeholder:"Select Question..."
@@ -718,7 +718,7 @@ export default {
                 const self = this;
                 $(self.$refs.select_parent).select2({
                     dropdownParent: $('#select_parent_wrapper'),
-                    "theme": "bootstrap",
+                    "theme": "bootstrap-5",
                     allowClear: true,
                     minimumInputLength: 2,
                     placeholder:"Select Parent Question..."
@@ -753,7 +753,7 @@ export default {
         initGroupSelector: function () {
                 const self = this;
                 $(self.$refs.select_group).select2({
-                    "theme": "bootstrap",
+                    "theme": "bootstrap-5",
                     allowClear: true,
                     minimumInputLength: 2,
                     placeholder:"Select Section Group..."

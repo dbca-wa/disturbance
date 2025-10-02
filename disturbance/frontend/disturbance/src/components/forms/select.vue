@@ -69,7 +69,7 @@
 import { v4 as uuidv4 } from 'uuid';
 // var select2 = require('select2');
 import "select2/dist/css/select2.min.css";
-import "select2-bootstrap-theme/dist/select2-bootstrap.min.css";
+// import "select2-bootstrap-theme/dist/select2-bootstrap.min.css";
 // import Comment from './comment.vue'
 import CommentBox from './comment_box_referral.vue'
 import HelpText from './help_text.vue'
@@ -183,7 +183,7 @@ export default {
             let vm =this;
             vm.$nextTick(function () {
                    $('#'+vm.selectid).select2({
-                       "theme": "bootstrap",
+                       "theme": "bootstrap-5",
                        allowClear: true,
                        placeholder:"Select..."
                    }).

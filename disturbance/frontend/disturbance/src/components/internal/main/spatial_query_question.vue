@@ -559,7 +559,7 @@ import {
 from '@/utils/hooks'
 
 import "select2/dist/css/select2.min.css";
-import "select2-bootstrap-theme/dist/select2-bootstrap.min.css";
+// import "select2-bootstrap-theme/dist/select2-bootstrap.min.css";
 
 export default {
     name:'spatialQueryQuestionModal',
@@ -2100,7 +2100,7 @@ export default {
                 const self = this;
                 $(self.$refs.select_question).select2({
                     dropdownParent: $('#select_masterlist_wrapper'),
-                    "theme": "bootstrap",
+                    "theme": "bootstrap-5",
                     allowClear: true,
                     minimumInputLength: 2,
                     placeholder:"Select Question..."

@@ -225,3 +225,12 @@ label {
 .dropdown-menu {
     z-index: 2200 !important;
 }
+
+.select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+    color: #505050 !important;
+}
+
+.select2-container--bootstrap-5 .select2-dropdown .select2-results__options .select2-results__option.select2-results__option--selected {
+    color: #fff;
+    background-color: #226fbb !important;
+}

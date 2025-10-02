@@ -7,7 +7,7 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="">Region</label>
-                                    <select style="width:100%" class="form-select input-sm" ref="filterRegion" >
+                                    <select style="width:100%" class="form-select form-select-sm" ref="filterRegion" >
                                         <template v-if="select2Applied">
                                             <option v-for="r in proposal_regions" :value="r" :key="r">{{r}}</option>
                                         </template>
@@ -74,7 +74,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import datatable from '@/utils/vue/datatable.vue'
 import "select2/dist/css/select2.min.css";
-import "select2-bootstrap-theme/dist/select2-bootstrap.min.css";
+// import "select2-bootstrap-theme/dist/select2-bootstrap.min.css";
 import {
     api_endpoints,
     helpers,
@@ -571,7 +571,7 @@ export default {
             if (!vm.select2Applied){
                 //console.log('select2 is being applied')
                 $(vm.$refs.filterRegion).select2({
-                    "theme": "bootstrap",
+                    "theme": "bootstrap-5",
                     allowClear: true,
                     placeholder: "Select Region",
                     multiple: true,

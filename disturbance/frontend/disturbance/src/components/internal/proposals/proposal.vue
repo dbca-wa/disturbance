@@ -329,7 +329,7 @@
 </template>
 <script>
 import "select2/dist/css/select2.min.css";
-import "select2-bootstrap-theme/dist/select2-bootstrap.min.css";
+// import "select2-bootstrap-theme/dist/select2-bootstrap.min.css";
 import { v4 as uuidv4 } from 'uuid';
 import ProposalDisturbance from '../../form.vue'
 import NewApply from '../../external/proposal_apply_new.vue'
@@ -707,7 +707,7 @@ export default {
                                     replacement.last().after(compare_select);
                                     vm.$nextTick(function(){
                                         $('#'+compare_select_id).select2({
-                                            "theme": "bootstrap",
+                                            "theme": "bootstrap-5",
                                             allowClear: true,
                                             placeholder:"Select..."
                                         });
@@ -1335,7 +1335,7 @@ export default {
             }
             // Assigned officer select
             $(vm.$refs.assigned_officer).select2({
-                "theme": "bootstrap",
+                "theme": "bootstrap-5",
                 allowClear: true,
                 placeholder:"Select Officer"
             }).
@@ -1369,7 +1369,7 @@ export default {
             if (!vm.initialisedSelects){
                 /*
                 $(vm.$refs.department_users).select2({
-                    "theme": "bootstrap",
+                    "theme": "bootstrap-5",
                     allowClear: true,
                     placeholder:"Select Referral"
                 }).
@@ -1530,7 +1530,7 @@ export default {
             let vm = this;
             $(vm.$refs.department_users).select2({
                 minimumInputLength: 2,
-                "theme": "bootstrap",
+                "theme": "bootstrap-5",
                 allowClear: true,
                 placeholder:"Select Referrer",
                 ajax: {
