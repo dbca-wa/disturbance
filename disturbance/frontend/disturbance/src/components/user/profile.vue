@@ -26,7 +26,7 @@
                             </div>
                         </alert>
                         <div class="form-group">
-                            <div class="row">
+                            <div class="row mb-3">
                                 <div class="col-sm-3"></div>
                                 <div class="col-sm-6">
                                     <p>
@@ -38,15 +38,15 @@
                         </div>
 
                         <div class="form-group">
-                            <div class="row">
-                                <label for="" class="col-sm-3 control-label">Given name(s)</label>
+                            <div class="row mb-3">
+                                <label for="" class="col-sm-3 col-form-label">Given name(s)</label>
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control" id="first_name" name="Given name" v-model="profile.first_name" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="row">
+                            <div class="row mb-3">
                                 <label for="" class="col-sm-3 control-label" >Surname</label>
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control" id="surname" name="Surname" v-model="profile.last_name" disabled>
@@ -75,36 +75,36 @@
                             </div>
                         </alert>
                           <div class="form-group">
-                            <div class="row">
-                                <label for="" class="col-sm-3 control-label">Street</label>
+                            <div class="row mb-3">
+                                <label for="" class="col-sm-3 col-form-label">Street</label>
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control" id="line1" name="Street" placeholder="" v-model="profile.residential_address.line1">
                                 </div>
                             </div>
                           </div>
                           <div class="form-group">
-                            <div class="row">
-                                <label for="" class="col-sm-3 control-label" >Town/Suburb</label>
+                            <div class="row mb-3">
+                                <label for="" class="col-sm-3 col-form-label" >Town/Suburb</label>
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control" id="locality" name="Town/Suburb" placeholder="" v-model="profile.residential_address.locality">
                                 </div>
                             </div>
                           </div>
                           <div class="form-group">
-                            <div class="row">
-                                <label for="" class="col-sm-3 control-label">State</label>
+                            <div class="row mb-3">
+                                <label for="" class="col-sm-3 col-form-label">State</label>
                                 <div class="col-sm-3">
                                     <input type="text" class="form-control " id="state" name="State" placeholder="" v-model="profile.residential_address.state">
                                 </div>
-                                <label for="" class="col-sm-1 control-label">Postcode</label>
+                                <label for="" class="col-sm-1 col-form-label">Postcode</label>
                                 <div class="col-sm-2">
                                     <input type="text" class="form-control" id="postcode" name="Postcode" placeholder="" v-model="profile.residential_address.postcode">
                                 </div>
                             </div>
                           </div>
                           <div class="form-group">
-                            <div class="row">
-                                <label for="" class="col-sm-3 control-label" >Country</label>
+                            <div class="row mb-3">
+                                <label for="" class="col-sm-3 col-form-label" >Country</label>
                                 <div class="col-sm-4">
                                     <select class="form-select" id="country" name="Country" v-model="profile.residential_address.country">
                                         <option v-for="c in countries" :key="c.code" :value="c.code">{{ c.name }}</option>
@@ -132,8 +132,8 @@
                             </div>
                         </alert>
                         <div class="form-group">
-                            <div class="row">
-                                <label for="" class="col-sm-3 control-label">Phone (work)</label>
+                            <div class="row mb-3">
+                                <label for="" class="col-sm-3 col-form-label">Phone (work)</label>
                                 <div v-if="profile.is_department_user" class="col-sm-6">
                                     <input :readonly="phoneNumberReadonly" type="text" class="form-control" id="phone" name="Phone" placeholder="" v-model="profile.phone_number">
                                 </div>
@@ -143,8 +143,8 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="row">
-                                <label for="" class="col-sm-3 control-label" >Mobile</label>
+                            <div class="row mb-3">
+                                <label for="" class="col-sm-3 col-form-label" >Mobile</label>
                                 <div v-if="profile.is_department_user" class="col-sm-6">
                                     <input :readonly="mobileNumberReadonly" type="text" class="form-control" id="mobile" name="Mobile" placeholder="" v-model="profile.mobile_number">
                                 </div>
@@ -154,8 +154,8 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="row">
-                                <label for="" class="col-sm-3 control-label" >Email</label>
+                            <div class="row mb-3">
+                                <label for="" class="col-sm-3 col-form-label" >Email</label>
                                 <div class="col-sm-6">
                                     <input type="email" class="form-control" id="email" name="Email" placeholder="" v-model="profile.email">
                                 </div>
@@ -176,8 +176,8 @@
                 <FormSection :form-collapse="true" label="Organisation" Index="organisation_details" :subtitle="organisationSectionTitleText">
                     <form class="form-horizontal" name="orgForm" method="post">
                         <div class="form-group">
-                            <div class="row">
-                                <label for="" class="col-sm-5 control-label">{{ organisationSectionDetailText }}</label>
+                            <div class="row mb-3">
+                                <label for="" class="col-sm-5 col-form-label">{{ organisationSectionDetailText }}</label>
                                 <div class="col-sm-4">
                                     <label class="radio-inline">
                                         <input type="radio" class="form-check-input" name="behalf_of_org" v-model="managesOrg" value="Yes"> Yes
@@ -189,7 +189,7 @@
                             </div>
                         </div>
                         <div class="form-group" v-if="managesOrg=='Yes'">
-                            <div class="row">
+                            <div class="row mb-3">
                                 <div class="col-sm-12">
                                     <button class="btn btn-primary pull-right" v-if="hasOrgs && !addingCompany" @click.prevent="addCompany()">Add Another Organisation</button>
                                 </div>
@@ -197,12 +197,12 @@
                         </div>
                         <div v-for="org in profile.disturbance_organisations" :key="org.id">
                             <div class="form-group">
-                                <div class="row">
-                                    <label for="" class="col-sm-2 control-label" >Organisation</label>
+                                <div class="row mb-3">
+                                    <label for="" class="col-sm-2 col-form-label" >Organisation</label>
                                     <div class="col-sm-3">
                                         <input type="text" disabled class="form-control" name="organisation" v-model="org.name" placeholder="" style="width: 100%">
                                     </div>
-                                    <label for="" class="col-sm-2 control-label" >ABN/ACN</label>
+                                    <label for="" class="col-sm-2 col-form-label" >ABN/ACN</label>
                                     <div class="col-sm-3">
                                         <input type="text" disabled class="form-control" name="organisation" v-model="org.abn" placeholder="">
                                     </div>
@@ -213,12 +213,12 @@
 
                         <div v-for="orgReq in orgRequest_list" :key="orgReq.id">
                             <div class="form-group">
-                                <div class="row">
-                                    <label for="" class="col-sm-2 control-label" >Organisation</label>
+                                <div class="row mb-3">
+                                    <label for="" class="col-sm-2 col-form-label" >Organisation</label>
                                     <div class="col-sm-3">
                                         <input type="text" disabled class="form-control" name="organisation" v-model="orgReq.name" placeholder="" style="width: 100%">
                                     </div>
-                                    <label for="" class="col-sm-2 control-label" >ABN/ACN</label>
+                                    <label for="" class="col-sm-2 col-form-label" >ABN/ACN</label>
                                     <div class="col-sm-3">
                                         <input type="text" disabled class="form-control" name="organisation" v-model="orgReq.abn" placeholder="">
                                     </div>
@@ -230,16 +230,16 @@
                         <div style="margin-top:15px;" v-if="addingCompany">
                             <h3> New Organisation</h3>
                             <div class="form-group">
-                                <div class="row">
-                                    <label for="" class="col-sm-2 control-label" >Organisation</label>
+                                <div class="row mb-3">
+                                    <label for="" class="col-sm-2 col-form-label" >Organisation</label>
                                     <div class="col-sm-6">
                                         <input type="text" class="form-control" name="organisation" v-model="newOrg.name" placeholder="">
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="row">
-                                    <label for="" class="col-sm-2 control-label" >ABN/ACN</label>
+                                <div class="row mb-3">
+                                    <label for="" class="col-sm-2 col-form-label" >ABN/ACN</label>
                                     <div class="col-sm-6">
                                         <input type="text" class="form-control" name="abn" v-model="newOrg.abn" placeholder="" style="width: 40%">
                                     </div>
@@ -249,16 +249,16 @@
                                 </div>
                             </div>
                             <div class="form-group" v-if="newOrg.exists && newOrg.detailsChecked">
-                                <div class="row">
+                                <div class="row mb-3">
                                     <label class="col-sm-12" style="text-align:left;margin-bottom:20px;">
                                         This organisation has already been  registered with the system.Please enter the two pin codes:<br/>
                                         These pin codes can be retrieved from ({{newOrg.first_five}})
                                     </label>
-                                    <label for="" class="col-sm-2 control-label" >Pin 1</label>
+                                    <label for="" class="col-sm-2 col-form-label" >Pin 1</label>
                                     <div class="col-sm-2">
                                         <input type="text" class="form-control" name="abn" v-model="newOrg.pin1" placeholder="" style="width: 100%">
                                     </div>
-                                    <label for="" class="col-sm-2 control-label" >Pin 2</label>
+                                    <label for="" class="col-sm-2 col-form-label" >Pin 2</label>
                                     <div class="col-sm-2">
                                         <input type="text" class="form-control" name="abn" v-model="newOrg.pin2" placeholder="" style="width: 100%">
                                     </div>
@@ -269,7 +269,7 @@
                                 </div>
                             </div>
                             <div class="form-group" v-else-if="!newOrg.exists && newOrg.detailsChecked">
-                                <div class="row">
+                                <div class="row mb-3">
                                     <label class="col-sm-12" style="text-align:left;">
                                         This organisation has not yet been registered with this system. Please upload a letter on organisation head stating that you are an employee of this organisation.<br/>
                                     </label>
@@ -279,7 +279,7 @@
                                         </span>
                                         <span class="pull-left" style="margin-left:10px;margin-top:10px;">{{uploadedFileName}}</span>
                                     </div>
-                                    <label for="" class="col-sm-10 control-label" style="text-align:left;">You will be notified by email once the Department has checked the organisation details.</label>
+                                    <label for="" class="col-sm-10 col-form-label" style="text-align:left;">You will be notified by email once the Department has checked the organisation details.</label>
                                     <div class="col-sm-12">
                                         <button v-if="!completedProfile" disabled title="Please complete details" class="btn btn-primary pull-right">Submit</button>
                                         <button v-else-if="!registeringOrg" :disabled="!isFileUploaded" @click.prevent="orgRequest()" class="btn btn-primary pull-right">Submit</button>

@@ -127,7 +127,7 @@ RUN virtualenv /app/venv
 ENV PATH=/app/venv/bin:$PATH
 RUN git config --global --add safe.directory /app
 COPY --chown=oim:oim requirements.txt ./
-# RUN pip install --upgrade pip
+RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 # Install the project (ensure that frontend projects have been built prior to this step).
