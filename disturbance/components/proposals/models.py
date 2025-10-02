@@ -3328,6 +3328,7 @@ def delete_documents(sender, instance, *args, **kwargs):
         document.delete()
 
 def clone_proposal_with_status_reset(proposal):
+        import shutil
         with transaction.atomic():
             try:
                 proposal.customer_status = 'draft'
@@ -3363,13 +3364,25 @@ def clone_proposal_with_status_reset(proposal):
                 for proposal_document in ProposalDocument.objects.filter(proposal=original_proposal_id):
                     proposal_document.proposal = proposal
                     proposal_document.id = None
-                    proposal_document._file.name = u'proposals/{}/documents/{}'.format(proposal.id, proposal_document.name)
+                    # proposal_document._file.name = u'proposals/{}/documents/{}'.format(proposal.id, proposal_document.name)
+                    proposal_document._file.name = u'proposals/{}/documents/{}'.format(proposal.id, proposal_document.filename)
                     proposal_document.can_delete = True
                     proposal_document.save()
 
                 # copy documents on file system and reset can_delete flag
-                subprocess.call('cp -pr media/proposals/{} media/proposals/{}'.format(original_proposal_id, proposal.id), shell=True)
+                #subprocess.call('cp -pr media/proposals/{} media/proposals/{}'.format(original_proposal_id, proposal.id), shell=True)
+                source_dir = os.path.join(private_storage.location, f'proposals/{original_proposal_id}')
+                dest_dir = os.path.join(private_storage.location, f'proposals/{proposal.id}')
+                
+                # Remove destination if it exists
+                if os.path.exists(dest_dir):
+                    shutil.rmtree(dest_dir)
 
+                # Copy the directory
+                if os.path.exists(source_dir):
+                    shutil.copytree(source_dir, dest_dir)
+                else:
+                    os.makedirs(dest_dir)
                 return proposal
             except:
                 raise
