@@ -77,7 +77,7 @@ export default{
  
               if (typeof text == 'object'){
                   if (Object.prototype.hasOwnProperty.call(text, 'non_field_errors')) {
-                      error_str = text.non_field_errors[0].replace(/[[\]"]/g, '');
+                      error_str = text.non_field_errors[0].replace(/[[\]{}"]/g, '');
                   }
 		  else if (Array.isArray(text) && 'errors' in text) {
 	              error_str = text.errors
@@ -238,7 +238,39 @@ export default{
         await swal.fire({
             title: "Error",
             text: errorText,
-            icon: "error"
+            icon: "error",
+            customClass: {
+                confirmButton: 'btn btn-primary',
+            },
         });
+    },
+    formatFetchError: function(err){
+        console.log(err)
+        let errorText = '';
+        if (err.non_field_errors) {
+            console.log('non_field_errors')
+            // When non field errors raised
+            for (let i=0; i<err.non_field_errors.length; i++){
+                errorText += err.non_field_errors[i];
+            }
+        } else if(Array.isArray(err)) {
+            console.log('isArray')
+            // When serializers.ValidationError raised
+            for (let i=0; i<err.length; i++){
+                errorText += err[i];
+            }
+        } else {
+            console.log('else')
+            // When field errors raised
+            for (let field_name in err){
+                if (Object.prototype.hasOwnProperty.call(err, field_name)){
+                    errorText += field_name + ':';
+                    for (let j=0; j<err[field_name].length; j++){
+                        errorText += err[field_name][j];
+                    }
+                }
+            }
+        }
+        return errorText;
     },
 };

@@ -1177,7 +1177,7 @@ export default {
                     vm.updateAssignedOfficerSelect();
                     swal.fire({
                         title: 'Proposal Error',
-                        text: helpers.apiVueResourceError(error),
+                        text: error,
                         icon: 'error',
                         customClass: {
                             confirmButton: 'btn btn-primary',
