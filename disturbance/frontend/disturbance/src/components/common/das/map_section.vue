@@ -306,7 +306,10 @@
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonText: 'Prefill Proposal',
-                    confirmButtonColor: '#d9534f'
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                        cancelButton: 'btn btn-secondary',
+                    },
                 };
 
                 if (Object.keys(inputOptions).length > 0) {
@@ -336,7 +339,10 @@
                             swal.fire({
                                 title: 'Please select an option',
                                 text: null,
-                                icon: 'warning'
+                                icon: 'warning',
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
                             })
                             return;
                         }  else if (Object.keys(inputOptions).length == 0) {
@@ -385,7 +391,11 @@
                                 title: title,
                                 html: `<p><strong>Your proposal is in the process of being prefilled based on your uploaded shapefile.</strong><br>
                                     <span style="font-size:0.8em">You can close your browser and come back later. You will receive an email when it is complete. (${queue_position})</span>
-                                    </p>`
+                                    </p>`,
+                                icon: 'info',
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
                             });
 
                         } catch (err) {

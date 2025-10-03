@@ -77,6 +77,9 @@ data: function() {
 		    html: '<p><strong>' + msg + '</strong><br>' +
 			  '<span style="font-size:0.8em">You can close your browser and come back later. You will receive an email when it is complete. (' + queue_position+ ')</span>' +
 			  '</p>',
+            customClass: {
+                confirmButton: 'btn btn-primary',
+            },
 		})
 
             },(error)=>{
@@ -84,7 +87,12 @@ data: function() {
                     'Error',
                     helpers.apiVueResourceError(error),
                     //error.body,
-                    'error'
+                    'error',
+                    {
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    }
                 )
                 vm.isRefreshing=false;
             });
@@ -145,7 +153,10 @@ data: function() {
                     html: `<p><strong>${msg}</strong><br>
                         <span style="font-size:0.8em">
                         You can close your browser and come back later. You will receive an email when it is complete. (${queue_position})
-                        </span></p>`
+                        </span></p>`,
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
                 });
 
                 vm.refresh_time = responseData.sqs_timestamp;
@@ -154,7 +165,12 @@ data: function() {
                 swal.fire(
                     'Error',
                     error,
-                    'error'
+                    'error',
+                    {
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    }
                 );
             } finally {
                 vm.isRefreshing = false;

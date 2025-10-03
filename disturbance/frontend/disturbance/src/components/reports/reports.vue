@@ -322,12 +322,18 @@ export default {
                         icon: 'success',
                         title: 'Job Success',
                         text: 'The oracle job was completed successfully',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
                     })
                 },(error) => {
                     swal.fire({
                         icon: 'error',
                         title: 'Oracle Job Error',
                         text: helpers.apiVueResourceError(error),
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
                     })
                 })
             }

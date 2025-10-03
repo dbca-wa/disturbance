@@ -551,10 +551,14 @@ export default {
                 let id = $(e.target).data('id');
                 swal.fire({
                     title: "Delete Contact",
-                    text: "Are you sure you want to remove "+ name + "("+ email + ") as a contact  ?",
+                    text: "Are you sure you want to remove "+ name + "("+ email + ") as a contact?",
                     icon: "error",
                     showCancelButton: true,
-                    confirmButtonText: 'Accept'
+                    confirmButtonText: 'Accept',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                        cancelButton: 'btn btn-secondary',
+                    },
                 }).then((result) => {
                     if(result.isConfirmed){
                         vm.deleteContact(id);
@@ -591,7 +595,11 @@ export default {
                     title: "Contact Accept",
                     text: "Are you sure you want to accept contact request " + name + " (" + email + ")?",
                     showCancelButton: true,
-                    confirmButtonText: 'Accept'
+                    confirmButtonText: 'Accept',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                        cancelButton: 'btn btn-secondary',
+                    },
                 }).then((result) => {
                     if (result.isConfirmed){
                         fetch(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/accept_user'),{
@@ -608,14 +616,21 @@ export default {
                                 title: 'Contact Accept',
                                 text: 'You have successfully accepted ' + name + '.',
                                 icon: 'success',
-                                confirmButtonText: 'Okay'
+                                confirmButtonText: 'Okay',
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
                             }).then(() => {
                                 vm.$refs.contacts_datatable_user.vmDataTable.ajax.reload();
                             },(error) => {
                                 console.log('Swal error: '+error);
                             });
                         }).catch((error) => {
-                            swal.fire('Contact Accept','There was an error accepting ' + name + '.','error')
+                            swal.fire('Contact Accept','There was an error accepting ' + name + '.','error',{
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
+                            });
                             console.log(error?.message || JSON.stringify(error));
                         });
                     }
@@ -641,7 +656,11 @@ export default {
                     title: "Contact Accept (Previously Declined)",
                     text: "Are you sure you want to accept the previously declined contact request for " + name + " (" + email + ")?",
                     showCancelButton: true,
-                    confirmButtonText: 'Accept'
+                    confirmButtonText: 'Accept',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                        cancelButton: 'btn btn-secondary',
+                    },
                 }).then((result) => {
                     if (result.isConfirmed){
                         fetch(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/accept_declined_user'),{
@@ -658,7 +677,10 @@ export default {
                                 title: 'Contact Accept (Previously Declined)',
                                 text: 'You have successfully accepted ' + name + '.',
                                 icon: 'success',
-                                confirmButtonText: 'Okay'
+                                confirmButtonText: 'Okay',
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
                             }).then((result) => {
                                 if(result.isConfirmed){
                                     vm.$refs.contacts_datatable_user.vmDataTable.ajax.reload();
@@ -667,7 +689,11 @@ export default {
                                 console.log(error);
                             });
                         }).catch((error) => {
-                            swal.fire('Contact Accept (Previously Declined)','There was an error accepting ' + name + '.','error')
+                            swal.fire('Contact Accept (Previously Declined)','There was an error accepting ' + name + '.','error',{
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
+                            });
                             console.log(error?.message || JSON.stringify(error));
                         });
                     }
@@ -694,7 +720,11 @@ export default {
                     title: "Contact Decline",
                     text: "Are you sure you want to decline the contact request for " + name + " (" + email + ")?",
                     showCancelButton: true,
-                    confirmButtonText: 'Accept'
+                    confirmButtonText: 'Accept',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                        cancelButton: 'btn btn-secondary',
+                    },
                 }).then((result) => {
                     if (result){
                         fetch(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/decline_user'),{
@@ -711,17 +741,28 @@ export default {
                                 title: 'Contact Decline',
                                 text: 'You have successfully declined ' + name + '.',
                                 icon: 'success',
-                                confirmButtonText: 'Okay'
+                                confirmButtonText: 'Okay',
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
                             }).then((result) => {
                                 if(result.isConfirmed){
                                     vm.$refs.contacts_datatable_user.vmDataTable.ajax.reload();
                                 }
                             }).catch((error) => {
-                                swal.fire('Contact Decline','There was an error declining ' + name + '.','error');
+                                swal.fire('Contact Decline','There was an error declining ' + name + '.','error',{
+                                    customClass: {
+                                        confirmButton: 'btn btn-primary',
+                                    },
+                                });
                                 console.log(error?.message || JSON.stringify(error));
                             });
                         }, (error) => {
-                            swal.fire('Contact Decline','There was an error declining ' + name + '.','error');
+                            swal.fire('Contact Decline','There was an error declining ' + name + '.','error',{
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
+                            });
                             console.log(error?.message || JSON.stringify(error));
                         });
                     }
@@ -747,7 +788,11 @@ export default {
                     title: "Unlink",
                     text: "Are you sure you want to unlink " + name + " (" + email + ")?",
                     showCancelButton: true,
-                    confirmButtonText: 'Accept'
+                    confirmButtonText: 'Accept',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                        cancelButton: 'btn btn-secondary',
+                    },
                 }).then((result) => {
                     if (result.isConfirmed){
                         fetch(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/unlink_user'),{
@@ -765,6 +810,11 @@ export default {
                                         'Unlink',
                                         'Last Organisation Admin cannot be unlinked.',
                                         'error',
+                                        {
+                                            customClass: {
+                                                confirmButton: 'btn btn-primary',
+                                            },
+                                        }
                                     );
                                 } else {
                                     console.log(JSON.stringify(await response.json()));
@@ -777,7 +827,10 @@ export default {
                                 title: 'Unlink',
                                 text: 'You have successfully unlinked ' + name + '.',
                                 icon: 'success',
-                                confirmButtonText: 'Okay'
+                                confirmButtonText: 'Okay',
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
                             }).then((result) => {
                                 if(result.isConfirmed){
                                     vm.$refs.contacts_datatable_user.vmDataTable.ajax.reload();
@@ -811,7 +864,11 @@ export default {
                     title: "Organisation Admin",
                     text: "Are you sure you want to make " + name + " (" + email + ") an Organisation Admin?",
                     showCancelButton: true,
-                    confirmButtonText: 'Accept'
+                    confirmButtonText: 'Accept',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                        cancelButton: 'btn btn-secondary',
+                    },
                 }).then((result) => {
                     if (result.isConfirmed) {
                         fetch(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/make_admin_user'),{
@@ -828,7 +885,10 @@ export default {
                                 title: 'Organisation Admin',
                                 text: 'You have successfully made ' + name + ' an Organisation Admin.',
                                 icon: 'success',
-                                confirmButtonText: 'Okay'
+                                confirmButtonText: 'Okay',
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
                             }).then((result) => {
                                 if(result.isConfirmed){
                                     vm.$refs.contacts_datatable_user.vmDataTable.ajax.reload();
@@ -837,7 +897,11 @@ export default {
                                 console.log('Swal error:'+error);
                             });
                         }).catch((error) => {
-                            swal.fire('Organisation Admin','There was an error making ' + name + ' an Organisation Admin.','error')
+                            swal.fire('Organisation Admin','There was an error making ' + name + ' an Organisation Admin.','error',{
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
+                            });
                             console.log(error?.message || JSON.stringify(error));
                         });
                     }
@@ -863,7 +927,11 @@ export default {
                     title: "Organisation User",
                     text: "Are you sure you want to make " + name + " (" + email + ") an Organisation User?",
                     showCancelButton: true,
-                    confirmButtonText: 'Accept'
+                    confirmButtonText: 'Accept',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                        cancelButton: 'btn btn-secondary',
+                    },
                 }).then((result) => {
                     console.log(result);
                     if (result.isConfirmed) {
@@ -881,7 +949,10 @@ export default {
                                 title: 'Organisation User',
                                 text: 'You have successfully made ' + name + ' an Organisation User.',
                                 icon: 'success',
-                                confirmButtonText: 'Okay'
+                                confirmButtonText: 'Okay',
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
                             }).then((result) => {
                                 if(result.isConfirmed){
                                     vm.$refs.contacts_datatable_user.vmDataTable.ajax.reload();
@@ -890,7 +961,11 @@ export default {
                                 console.log('Swal error:'+error);
                             });
                         }).catch((error) => {
-                            swal.fire('Company Admin','There was an error making ' + name + ' an Organisation User.','error')
+                            swal.fire('Company Admin','There was an error making ' + name + ' an Organisation User.','error',{  
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
+                            });
                             console.log(error?.message || JSON.stringify(error));
                         });
                     }
@@ -916,7 +991,11 @@ export default {
                     title: "Suspend User",
                     text: "Are you sure you want to Suspend  " + name + " (" + email + ")?",
                     showCancelButton: true,
-                    confirmButtonText: 'Accept'
+                    confirmButtonText: 'Accept',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                        cancelButton: 'btn btn-secondary',
+                    },
                 }).then((result) => {
                     if (result.isConfirmed) {
                         fetch(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/suspend_user'),{
@@ -933,7 +1012,10 @@ export default {
                                 title: 'Suspend User',
                                 text: 'You have successfully suspended ' + name + ' as a User.',
                                 icon: 'success',
-                                confirmButtonText: 'Okay'
+                                confirmButtonText: 'Okay',
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
                             }).then((result) => {
                                 if(result.isConfirmed){
                                     vm.$refs.contacts_datatable_user.vmDataTable.ajax.reload();
@@ -942,7 +1024,11 @@ export default {
                                 console.log('Swal error:'+error);
                             });
                         }).catch((error) => {
-                            swal.fire('Suspend User','There was an error suspending ' + name + ' as a User.','error')
+                            swal.fire('Suspend User','There was an error suspending ' + name + ' as a User.','error',{
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
+                            });
                             console.log(error?.message || JSON.stringify(error));
                         });
                     }
@@ -968,7 +1054,11 @@ export default {
                     title: "Reinstate User",
                     text: "Are you sure you want to Reinstate  " + name + " (" + email + ")?",
                     showCancelButton: true,
-                    confirmButtonText: 'Accept'
+                    confirmButtonText: 'Accept',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                        cancelButton: 'btn btn-secondary',
+                    },
                 }).then((result) => {
                     if (result.isConfirmed) {
                         fetch(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/reinstate_user'),{
@@ -985,7 +1075,10 @@ export default {
                                 title: 'Reinstate User',
                                 text: 'You have successfully reinstated ' + name + '.',
                                 icon: 'success',
-                                confirmButtonText: 'Okay'
+                                confirmButtonText: 'Okay',
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
                             }).then((result) => {
                                 if(result.isConfirmed){
                                     vm.$refs.contacts_datatable_user.vmDataTable.ajax.reload();
@@ -994,7 +1087,11 @@ export default {
                                 console.log('Swal error:'+error);
                             });
                         }).catch((error) => {
-                            swal.fire('Reinstate User','There was an error reinstating ' + name + '.','error')
+                            swal.fire('Reinstate User','There was an error reinstating ' + name + '.','error',{
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
+                            });
                             console.log(error?.message || JSON.stringify(error));
                         });
                     }
@@ -1020,7 +1117,11 @@ export default {
                     title: "Relink User",
                     text: "Are you sure you want to Relink  " + name + " (" + email + ")?",
                     showCancelButton: true,
-                    confirmButtonText: 'Accept'
+                    confirmButtonText: 'Accept',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                        cancelButton: 'btn btn-secondary',
+                    },
                 }).then((result) => {
                     if (result.isConfirmed) {
                         fetch(helpers.add_endpoint_json(api_endpoints.organisations,vm.org.id+'/relink_user'),{
@@ -1037,7 +1138,10 @@ export default {
                                 title: 'Relink User',
                                 text: 'You have successfully relinked ' + name + '.',
                                 icon: 'success',
-                                confirmButtonText: 'Okay'
+                                confirmButtonText: 'Okay',
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
                             }).then((result) => {
                                 if(result.isConfirmed){
                                     vm.$refs.contacts_datatable_user.vmDataTable.ajax.reload();
@@ -1046,7 +1150,11 @@ export default {
                                 console.log('Swal error:'+error);
                             });
                         }).catch((error) => {
-                            swal.fire('Relink User','There was an error relink ' + name + '.','error')
+                            swal.fire('Relink User','There was an error relink ' + name + '.','error',{
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
+                            });
                             console.log(error?.message || JSON.stringify(error));
                         });
                     }
@@ -1075,7 +1183,12 @@ export default {
                     swal.fire(
                         'Saved',
                         'Organisation details have been saved',
-                        'success'
+                        'success',
+                        {
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                            },
+                        }
                     )
                 } else {
                     console.log('Org: ' + JSON.stringify(vm.org));
@@ -1092,7 +1205,12 @@ export default {
                 swal.fire(
                     'Error', 
                     'Organisation details cannot be saved because of the following error: '+text,
-                    'error'
+                    'error',
+                    {
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    }
                 )
                 vm.updatingDetails = false;
             });
@@ -1102,7 +1220,12 @@ export default {
             swal.fire(
                 'Added',
                 'The contact has been successfully added.',
-                'success'
+                'success',
+                {
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                }
             )
             vm.$refs.contacts_datatable.vmDataTable.ajax.reload();
         },
@@ -1121,7 +1244,12 @@ export default {
                 swal.fire(
                     'Contact Deleted', 
                     'The contact was successfully deleted',
-                    'success'
+                    'success',
+                    {
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    }
                 )
                 vm.$refs.contacts_datatable.vmDataTable.ajax.reload();
             }).catch((error) => {
@@ -1139,7 +1267,12 @@ export default {
                 swal.fire(
                     'Contact Deletion',
                     errorMessage,
-                    'error'
+                    'error',
+                    {
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    }
                 );
             })
         },
@@ -1158,7 +1291,12 @@ export default {
                 swal.fire(
                     'Update Contact', 
                     'The contact was successfully updated',
-                    'success'
+                    'success',
+                    {
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    }
                 )
                 vm.$refs.contacts_datatable.vmDataTable.ajax.reload();
             }).catch((error) => {
@@ -1167,7 +1305,12 @@ export default {
                 swal.fire(
                     'Contact Edit', 
                     'The contact could not be updated because of the following error : [' + text + ']',
-                    'error'
+                    'error',
+                    {
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    }
                 )
             });
         },
@@ -1191,7 +1334,12 @@ export default {
                     swal.fire(
                         'Saved',
                         'Address details have been saved',
-                        'success'
+                        'success',
+                        {
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                            },
+                        }
                     )
                 } else {
                     console.log('Org: ' + JSON.stringify(vm.org));
@@ -1212,7 +1360,11 @@ export default {
                 text: "Are you sure you want to unlink "+person.name+" "+person.id+" from "+org.name+" ?",
                 icon: "question",
                 showCancelButton: true,
-                confirmButtonText: 'Accept'
+                confirmButtonText: 'Accept',
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                    cancelButton: 'btn btn-secondary',
+                },
             }).then((result) => {
                 if(result.isConfirmed){
                     fetch(helpers.add_endpoint_json(api_endpoints.organisations,org.id+'/unlink_user'),{
@@ -1238,7 +1390,12 @@ export default {
                         swal.fire(
                             'Unlink',
                             'There was an error unlinking '+person.name+' from '+org_name+'. '+error?.message || JSON.stringify(error),
-                            'error'
+                            'error',
+                            {
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
+                            }
                         )
                     });
                 }

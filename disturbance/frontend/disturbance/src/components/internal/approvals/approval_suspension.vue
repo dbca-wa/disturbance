@@ -179,7 +179,12 @@ export default {
                 swal.fire(
                         'Suspend',
                         'An email has been sent to the proponent about suspension of this approval',
-                        'success'
+                        'success',
+                        {
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                            },
+                        }
                 );
                 vm.$emit('refreshFromResponse',data);
 

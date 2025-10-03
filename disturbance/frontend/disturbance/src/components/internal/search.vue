@@ -344,7 +344,10 @@ export default {
             swal.fire({
                     title: 'User not selected',
                     html: 'Please select the user to view the details',
-                    icon: 'error'
+                    icon: 'error',
+                    customClass: {
+                      confirmButton: 'btn btn-primary',
+                    },
                 }).then(() => {
                     
                 });

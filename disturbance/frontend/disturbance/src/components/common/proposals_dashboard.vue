@@ -8,7 +8,6 @@
                 <div class="row mb-1">                    
                         <div class="col-md-3">
                             <div class="form-group">
-                                <div>
                                     <div v-show="select2Applied" id="region-filter">
                                         <label for="">Region</label>
                                         <select style="width:100%" class="form-select form-select-sm" ref="filterRegion" >
@@ -17,7 +16,6 @@
                                             </template>
                                         </select>
                                     </div>
-                                </div>
                             </div>
                         </div>                  
                     
@@ -746,7 +744,10 @@ export default {
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonText: 'Discard Proposal',
-                confirmButtonColor:'#d9534f'
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                    cancelButton: 'btn btn-secondary',
+                },
             }).then((swalresult) => {
                 if (swalresult.isConfirmed) {
                     fetch(api_endpoints.discard_proposal(proposal_id),{
@@ -761,7 +762,10 @@ export default {
                         swal.fire({
                             title: 'Discarded',
                             text: 'Your proposal has been discarded',
-                            icon: 'success'
+                            icon: 'success',
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                            },
                         })
                         vm.$refs.proposal_datatable.vmDataTable.ajax.reload(
                             helpers.enablePopovers,

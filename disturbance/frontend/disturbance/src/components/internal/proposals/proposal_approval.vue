@@ -227,7 +227,16 @@ export default {
                         errorText = errData;
                     } catch { console.log('Error parsing error response'); }
                     
-                    swal.fire('Submit Error', errorText, 'error');
+                    swal.fire(
+                        'Submit Error', 
+                        errorText, 'error',
+                        {
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                                cancelButton: 'btn btn-secondary',
+                            },
+                        }
+                    );
             });
         },
         uploadedFileName: function() {
@@ -244,7 +253,10 @@ export default {
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonText: 'Remove Requirement',
-                confirmButtonColor:'#d9534f'
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                    cancelButton: 'btn btn-secondary',
+                },
             }).then((swalresult) => {
                 if(swalresult.isConfirmed){
                     vm.$http.delete(helpers.add_endpoint_json(api_endpoints.proposal_requirements,_id))

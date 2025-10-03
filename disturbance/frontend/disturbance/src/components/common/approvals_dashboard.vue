@@ -851,7 +851,10 @@ export default {
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonText: 'Reissue approval',
-                //confirmButtonColor:'#d9534f'
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                    cancelButton: 'btn btn-secondary',
+                },
             }).then(
                 (result) => {
                     if (result.isConfirmed) {
@@ -868,6 +871,9 @@ export default {
                                     title: "Reissue Approval",
                                     text: JSON.stringify(data),
                                     icon: "error",
+                                    customClass: {
+                                        confirmButton: 'btn btn-primary',
+                                    },
                                 });
                                 return;
                             }
@@ -893,7 +899,10 @@ export default {
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonText: 'Reinstate approval',
-                //confirmButtonColor:'#d9534f'
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                    cancelButton: 'btn btn-secondary',
+                },
             }).then(
                 (result) => {
                     if (result.isConfirmed) {
@@ -908,13 +917,19 @@ export default {
                                     icon: "error",
                                     title: "Reinstate Approval",
                                     text: JSON.stringify(data),
+                                    customClass: {
+                                        confirmButton: 'btn btn-primary',
+                                    },
                                 });
                                 return;
                             }
                             swal.fire({
                                 title: 'Reinstate',
                                 text: 'Your approval has been reinstated',
-                                icon: 'success'
+                                icon: 'success',
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
                             })
                             vm.$refs.proposal_datatable.vmDataTable.ajax.reload(
                                 helpers.enablePopovers,
@@ -939,7 +954,10 @@ export default {
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonText: 'Renew approval',
-                //confirmButtonColor:'#d9534f'
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                    cancelButton: 'btn btn-secondary',
+                },
             }).then((result) => {
                 if (result.isConfirmed) {
                     fetch(helpers.add_endpoint_json(api_endpoints.proposals,(proposal_id+'/renew_approval')),{}).then(
@@ -950,6 +968,9 @@ export default {
                                     title: "Renew Approval",
                                     text: JSON.stringify(data),
                                     icon: "error",
+                                    customClass: {
+                                        confirmButton: 'btn btn-primary',
+                                    },
                                 });
                                 return;
                             }
@@ -965,6 +986,9 @@ export default {
                                 title: "Renew Approval",
                                 text: error,
                                 icon: "error",
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
                             })
                         }
                     );
@@ -982,7 +1006,10 @@ export default {
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonText: 'Amend approval',
-                //confirmButtonColor:'#d9534f'
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                    cancelButton: 'btn btn-secondary',
+                },
             }).then((result) => {
                 if (result.isConfirmed) {
                     fetch(helpers.add_endpoint_json(api_endpoints.proposals,(proposal_id+'/amend_approval')),{
@@ -994,6 +1021,9 @@ export default {
                                     title: "Ammend Approval",
                                     text: JSON.stringify(data),
                                     icon: "error",
+                                    customClass: {
+                                        confirmButton: 'btn btn-primary',
+                                    },
                                 });
                                 return;
                             }
@@ -1010,6 +1040,9 @@ export default {
                                 title: "Amend Approval",
                                 text: error.text,
                                 icon: "error",
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
                             })
 
                         }

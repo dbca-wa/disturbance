@@ -833,7 +833,12 @@ export default {
                     swal.fire(
                         'Error',
                         'Please assign this proposal to yourself or an officer before proceeding',
-                        'error'
+                        'error',
+                        {
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                            },
+                        }
                     )
                     return false;
                 }
@@ -843,7 +848,12 @@ export default {
                     swal.fire(
                         'Error',
                         'Please assign this proposal to yourself or an officer before proceeding',
-                        'error'
+                        'error',
+                        {
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                            },
+                        }
                     )
                     return false;
             }
@@ -937,7 +947,10 @@ export default {
                 swal.fire({
                     title: 'Error',
                     text: 'Please add Approval document or comments before final approval',
-                    icon: 'error'
+                    icon: 'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
                 })
             }
             else{
@@ -1014,7 +1027,10 @@ export default {
                     swal.fire({
                         title: 'Saved',
                         text: 'Your proposal has been saved',
-                        icon: 'success'
+                        icon: 'success',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
                     });
                 })
                 .catch(err => {
@@ -1096,7 +1112,10 @@ export default {
                 swal.fire({
                     title: 'Proposal Error',
                     text: error,
-                    icon: 'error'
+                    icon: 'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
                 })
             });
         },
@@ -1159,7 +1178,10 @@ export default {
                     swal.fire({
                         title: 'Proposal Error',
                         text: helpers.apiVueResourceError(error),
-                        icon: 'error'
+                        icon: 'error',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
                     });
                 });
             }
@@ -1179,7 +1201,10 @@ export default {
                     swal.fire({
                         title: 'Proposal Error',
                         text: error,
-                        icon: 'error'
+                        icon: 'error',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
                     })
                 });
             }
@@ -1226,10 +1251,13 @@ export default {
                 vm.proposal = helpers.copyObject(vm.original_proposal);
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
                 swal.fire({
-                title: 'Proposal Error',
-                //text: helpers.apiVueResourceError(error),
-                text: error,
-                icon: 'error'
+                    title: 'Proposal Error',
+                    //text: helpers.apiVueResourceError(error),
+                    text: error,
+                    icon: 'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
                 });
             });
             })
@@ -1241,58 +1269,19 @@ export default {
         //if approver is pushing back proposal to Assessor then navigate the approver back to dashboard page
         if(vm.proposal.processing_status == 'With Approver' && (status == 'with_assessor_requirements' || status=='with_assessor')) {
             let data = {
-            status: status,
-            approver_comment: vm.approver_comment
+                status: status,
+                approver_comment: vm.approver_comment
             };
 
             fetch(helpers.add_endpoint_json(api_endpoints.proposals, vm.proposal.id + '/switch_status'), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded' // emulateJSON
-            },
-            body: new URLSearchParams(data)
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded' // emulateJSON
+                },
+                body: new URLSearchParams(data)
             })
             .then(response => response.json())
             .then(response => {
-            vm.proposal = response;
-            vm.original_proposal = helpers.copyObject(response);
-            vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
-            vm.approver_comment = '';
-
-            vm.$nextTick(() => {
-                vm.initialiseAssignedOfficerSelect(true);
-                vm.updateAssignedOfficerSelect();
-            });
-
-            vm.$router.push({ path: '/internal' });
-            })
-            .catch(error => {
-            vm.proposal = helpers.copyObject(vm.original_proposal);
-            vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
-            swal.fire({
-                title: 'Proposal Error',
-                //text: helpers.apiVueResourceError(error),
-                text: error,
-                icon: 'error'
-            });
-            });
-        }
-
-        else{
-                let data = {
-                status: status,
-                approver_comment: vm.approver_comment
-                };
-
-                fetch(helpers.add_endpoint_json(api_endpoints.proposals, vm.proposal.id + '/switch_status'), {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams(data)
-                })
-                .then(response => response.json())
-                .then(response => {
                 vm.proposal = response;
                 vm.original_proposal = helpers.copyObject(response);
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
@@ -1302,16 +1291,61 @@ export default {
                     vm.initialiseAssignedOfficerSelect(true);
                     vm.updateAssignedOfficerSelect();
                 });
-                })
-                .catch(error => {
+
+                vm.$router.push({ path: '/internal' });
+            })
+            .catch(error => {
                 vm.proposal = helpers.copyObject(vm.original_proposal);
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
                 swal.fire({
                     title: 'Proposal Error',
                     //text: helpers.apiVueResourceError(error),
                     text: error,
-                    icon: 'error'
+                    icon: 'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
                 });
+            });
+        }
+
+        else{
+                let data = {
+                    status: status,
+                    approver_comment: vm.approver_comment
+                };
+
+                fetch(helpers.add_endpoint_json(api_endpoints.proposals, vm.proposal.id + '/switch_status'), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams(data)
+                })
+                .then(response => response.json())
+                .then(response => {
+                    vm.proposal = response;
+                    vm.original_proposal = helpers.copyObject(response);
+                    vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
+                    vm.approver_comment = '';
+
+                    vm.$nextTick(() => {
+                        vm.initialiseAssignedOfficerSelect(true);
+                        vm.updateAssignedOfficerSelect();
+                    });
+                })
+                .catch(error => {
+                    vm.proposal = helpers.copyObject(vm.original_proposal);
+                    vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
+                    swal.fire({
+                        title: 'Proposal Error',
+                        //text: helpers.apiVueResourceError(error),
+                        text: error,
+                        icon: 'error',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    });
                 });
             }
             }
@@ -1421,9 +1455,12 @@ export default {
                 vm.proposal.applicant.address = vm.proposal.applicant.address != null ? vm.proposal.applicant.address : {};
 
                 swal.fire({
-                title: 'Referral Sent',
-                text: 'The referral has been sent to ' + vm.selected_referral,
-                icon: 'success'
+                    title: 'Referral Sent',
+                    text: 'The referral has been sent to ' + vm.selected_referral,
+                    icon: 'success',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
                 });
 
                 $(vm.$refs.department_users).val(null).trigger("change");
@@ -1433,10 +1470,13 @@ export default {
             .catch(error => {
                 console.log(error);
                 swal.fire({
-                title: 'Referral Error',
-                //text: helpers.apiVueResourceError(error),
-                text:error,
-                icon: 'error'
+                    title: 'Referral Error',
+                    //text: helpers.apiVueResourceError(error),
+                    text:error,
+                    icon: 'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
                 });
                 vm.sendingReferral = false;
             });
@@ -1459,13 +1499,19 @@ export default {
                 swal.fire({
                     title: 'Referral Reminder',
                     text: 'A reminder has been sent to '+r.referral,
-                    icon: 'success'
+                    icon: 'success',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
                 })
             }).catch(error => {
                 swal.fire({
                     title: 'Proposal Error',
                     text: error,
-                    icon: 'error'
+                    icon: 'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
                 })
             });
         },
@@ -1482,13 +1528,19 @@ export default {
                 swal.fire({
                     title: 'Referral Resent',
                     text: 'The referral has been resent to '+r.referral,
-                    icon: 'success'
+                    icon: 'success',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
                 })
             }).catch(error => {
                 swal.fire({
                     title: 'Proposal Error',
                     text: error,
-                    icon: 'error'
+                    icon: 'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
                 })
             });
         },
@@ -1516,13 +1568,19 @@ export default {
                 swal.fire({
                     title: 'Referral Recall',
                     text: 'The referral has been recalled from '+r.referral,
-                    icon: 'success'
+                    icon: 'success',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
                 })
             }).catch(error => {
                 swal.fire({
                     title: 'Proposal Error',
                     text: error,
-                    icon: 'error'
+                    icon: 'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
                 })
             });
         },

@@ -1139,7 +1139,12 @@ export default {
                 swal.fire(
                     'Error',
                     error,
-                    'error'
+                    'error',
+                    {
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    }
                 )
             });
 
@@ -1183,7 +1188,10 @@ export default {
                         title: 'Save Error',
                         html: error.errors,
                         // helpers.apiVueResourceError(error),
-                        icon: 'error'
+                        icon: 'error',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
                 })
                 });
 
@@ -1209,7 +1217,12 @@ export default {
                     swal.fire(
                         'Save Error',
                         error,
-                        'error'
+                        'error',
+                        {
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                            },
+                        }
                     )
                 });
 
@@ -1241,7 +1254,12 @@ export default {
                     swal.fire(
                         'Layer Limit Reached',
                         'Max number of Layers per Question: ' + env['max_layers_per_sqq'],
-                        'warning'
+                        'warning',
+                        {
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                            },
+                        }
                     )
                     return;
 		}
@@ -1276,6 +1294,11 @@ export default {
                         // helpers.apiVueResourceError(error),
                         error,
                         'error',
+                        {
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                            },
+                        }
                     )
                 });
 
@@ -1317,6 +1340,11 @@ export default {
                         'Save Error',
                         error,
                         'error',
+                        {
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                            },
+                        }
                     )
                 });
 
@@ -1390,7 +1418,12 @@ export default {
                     'Error',
                     // helpers.apiVueResourceError(error),
                     error,
-                    'error'
+                    'error',
+                    {
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    }
                 )
             });
 
@@ -1459,7 +1492,12 @@ export default {
                 swal.fire(
                     'Error',
                     helpers.apiVueResourceError(error),
-                    'error'
+                    'error',
+                    {
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    }
                 )
             });
         },
@@ -1479,7 +1517,11 @@ export default {
                 inputOptions: {
                     'check_layer':  'Check Layer Exists on SQS',
                     'reload_layer': 'Create/Update Layer in SQS',
-                }
+                },
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                    cancelButton: 'btn btn-secondary',
+                },
             }).then(async (result) => {
                 if(result.isConfirmed) {
                     console.log("Result: " + result);
@@ -1487,7 +1529,12 @@ export default {
                         swal.fire(
                             'Please select an option',
                             null,
-                            'warning'
+                            'warning',
+                            {
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
+                            }
                         )
                         return;
                     }
@@ -1518,14 +1565,24 @@ export default {
                 swal.fire(
                     'Layer Exists in SQS!',
                     data.message,
-                    'success'
+                    'success',
+                    {
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    }
                 )
                 self.show_spinner = false;
             }).catch((error) => {
                 swal.fire(
                     'Layer Check Error',
                     error,
-                    'error'
+                    'error',
+                    {
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    }
                 )
                 self.show_spinner = false;
             });
@@ -1556,7 +1613,12 @@ export default {
                 swal.fire(
                     'Create/Update Error',
                     error,
-                    'error'
+                    'error',
+                    {
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    }
                 )
                 self.show_spinner = false;
             });
@@ -1581,7 +1643,12 @@ export default {
                 swal.fire(
                     'Check Question Error',
                     error,
-                    'error'
+                    'error',
+                    {
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    }
                 )
                 self.show_spinner = false;
             });
@@ -1595,7 +1662,10 @@ export default {
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonText: 'Export',
-                //confirmButtonColor:'#d9534f'
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                    cancelButton: 'btn btn-secondary',
+                },
             }).then((swalresult) => {
                 if(swalresult.isConfirmed) {
                     vm.show_spinner = true;
@@ -1617,7 +1687,12 @@ export default {
                         swal.fire(
                             'Export \'Layers Used\' Completed',
                             "Export completed",
-                            'success'
+                            'success',
+                            {
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
+                            }
                         )
                     }).catch((error) => {
                         console.log(error);
@@ -1625,6 +1700,9 @@ export default {
                             title: "Export Layers Used",
                             text: error,
                             icon: "error",
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                            },
                         })
                         vm.show_spinner = false;
                         vm.export_layers_btn_disabled = false;
@@ -1817,9 +1895,14 @@ export default {
                         $(self.$refs.select_question).val(self.spatialquery.question).trigger('change');
                     }).catch(err=>{
                         swal.fire(
-                        'Get Application Selects Error',
-                        err,
-                        'error'
+                            'Get Application Selects Error',
+                            err,
+                            'error',
+                            {
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
+                            }
                         )
                     }
                 );
@@ -1922,7 +2005,11 @@ export default {
                     text: "Are you sure you want to delete?",
                     icon: "question",
                     showCancelButton: true,
-                    confirmButtonText: 'Accept'
+                    confirmButtonText: 'Accept',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                        cancelButton: 'btn btn-secondary',
+                    },
 
                 }).then(async (result) => {
                     if (result.isConfirmed) {
@@ -1941,7 +2028,12 @@ export default {
                             swal.fire(
                                 'Delete Error',
                                 error,
-                                'error'
+                                'error',
+                                {
+                                    customClass: {
+                                        confirmButton: 'btn btn-primary',
+                                    },
+                                }
                             )
                         });
                     }
@@ -1961,7 +2053,11 @@ export default {
                     text: "Are you sure you want to delete?",
                     type: "question",
                     showCancelButton: true,
-                    confirmButtonText: 'Accept'
+                    confirmButtonText: 'Accept',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                        cancelButton: 'btn btn-secondary',
+                    },
 
                 }).then(async (result) => {
                     if (result.isConfirmed) {
@@ -1987,7 +2083,12 @@ export default {
                             swal.fire(
                                 'Delete Error',
                                 error,
-                                'error'
+                                'error',
+                                {
+                                    customClass: {
+                                        confirmButton: 'btn btn-primary',
+                                    },
+                                }
                             )
                         });
                     }
@@ -2131,7 +2232,12 @@ export default {
                     swal.fire(
                         'Get Application Selects Error',
                         err,
-                        'error'
+                        'error',
+                        {
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                            },
+                        }
                     )
                 }
             );

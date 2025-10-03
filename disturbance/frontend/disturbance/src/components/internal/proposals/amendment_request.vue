@@ -185,7 +185,10 @@ export default {
                 swal.fire({
                     title: 'Sent',
                     text: 'An email has been sent to the proponent with the request to amend this ' + proposal_or_licence,
-                    icon: 'success'
+                    icon: 'success',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
                 });
 
                 vm.amendingProposal = true;

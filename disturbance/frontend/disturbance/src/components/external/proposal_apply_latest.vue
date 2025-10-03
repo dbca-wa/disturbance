@@ -414,7 +414,11 @@ export default {
             text: text,
             icon: "question",
             showCancelButton: true,
-            confirmButtonText: 'Accept'
+            confirmButtonText: 'Accept',
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-secondary',
+            },
         }).then((swalresult) => {
             if(swalresult.isConfirmed) {
                 vm.createProposal();
@@ -504,7 +508,10 @@ export default {
                     title: "Cannot create application",
                     text: "Please add your address",
                     icon: "error",
-                    confirmButtonText: 'Ok'
+                    confirmButtonText: 'Ok',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
                 }).then((swalresult) => {
                     if (swalresult.isConfirmed) {
                         vm.$router.push({ name: "account" });

@@ -195,7 +195,10 @@ export default {
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonText: 'Delete Document',
-                confirmButtonColor: '#d9534f'
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                    cancelButton: 'btn btn-secondary',
+                },
             }).then(async (swalresult) => {
                 if (swalresult.isConfirmed) {
                     try {

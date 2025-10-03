@@ -357,7 +357,10 @@ export default {
                         swal.fire({
                             title: 'Saved',
                             text: 'Your proposal has been saved',
-                            icon: 'success'
+                            icon: 'success',
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                            },
                         });
                 }
                 vm.isSaving = false;
@@ -369,7 +372,10 @@ export default {
                 swal.fire({
                     title: "Error",
                     text: errorText,
-                    icon: "error"
+                    icon: "error",
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
                 });
                 //helpers.processError(err);
                 
@@ -655,7 +661,10 @@ export default {
               swal.fire({
                 title: "Please fix following errors before submitting",
                 text: missing_files,
-                icon:'error'
+                icon:'error',
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                },
               })
             //vm.paySubmitting=false;
             return false;
@@ -678,7 +687,10 @@ export default {
               swal.fire({
                 title: "Please fix following errors before submitting",
                 text: missing_data,
-                icon:'error'
+                icon:'error',
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                },
               })
             //vm.paySubmitting=false;
             return false;
@@ -697,7 +709,11 @@ export default {
                 text: swalText,
                 icon: "question",
                 showCancelButton: true,
-                confirmButtonText: 'Submit'
+                confirmButtonText: 'Submit',
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                    cancelButton: 'btn btn-secondary',
+                },
             }).then(async (swalresult) => {
                 if (swalresult.isConfirmed) {
                     vm.submittingProposal = true;
@@ -727,7 +743,10 @@ export default {
                             swal.fire({
                                 title: 'Submit Error',
                                 text: helpers.apiVueResourceError(err),
-                                icon: 'error'
+                                icon: 'error',
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
                             })
                         }
                     
