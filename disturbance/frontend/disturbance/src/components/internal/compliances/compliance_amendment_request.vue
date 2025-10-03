@@ -128,7 +128,12 @@ export default {
                 swal.fire(
                         'Sent',
                         'An email has been sent to the proponent with the request to amend this compliance',
-                        'success'
+                        'success',
+                        {
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                            },
+                        }
                 );
                 vm.amendingcompliance = true;
                 console.log(res)

@@ -156,7 +156,12 @@ export default {
                 swal.fire(
                         'Surrender',
                         'An email has been sent to the proponent about surrender of this approval',
-                        'success'
+                        'success',
+                        {
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                            },
+                        }
                 );
                 vm.$emit('refreshFromResponse',data);
 

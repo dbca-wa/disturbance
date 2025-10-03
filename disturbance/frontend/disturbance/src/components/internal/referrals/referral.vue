@@ -426,11 +426,14 @@ export default {
             //return response.json(); // or response.text(), depending on your backend
             })
             .then(() => {
-            swal.fire({
-                title: 'Saved',
-                text: 'Your proposal has been saved',
-                icon: 'success'
-            });
+                swal.fire({
+                    title: 'Saved',
+                    text: 'Your proposal has been saved',
+                    icon: 'success',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                });
             })
             .catch(err => {
             console.log(err);
@@ -607,7 +610,10 @@ export default {
             swal.fire({
                 title: 'Referral Sent',
                 text: 'The referral has been sent to ' + vm.selected_referral,
-                icon: 'success'
+                icon: 'success',
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                },
             });
 
             $(vm.$refs.department_users).val(null).trigger("change");
@@ -620,7 +626,10 @@ export default {
             swal.fire({
                 title: 'Referral Error',
                 text: error,
-                icon: 'error'
+                icon: 'error',
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                },
             });
 
             vm.sendingReferral = false;
@@ -640,14 +649,20 @@ export default {
                 swal.fire({
                     title: 'Referral Reminder',
                     text: 'A reminder has been sent to '+r.referral,
-                    icon: 'success'
+                    icon: 'success',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
                 })
             })
             .catch(error => {
                 swal.fire({
                     title: 'Proposal Error',
                     text: error,
-                    icon: 'error'
+                    icon: 'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
                 })
             });
         },
@@ -663,14 +678,20 @@ export default {
                 swal.fire({
                     title: 'Referral Resent',
                     text: 'The referral has been resent to '+r.referral,
-                    icon: 'success'
+                    icon: 'success',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
                 })
             })
             .catch(error => {
                 swal.fire({
                     title: 'Proposal Error',
                     text: error,
-                    icon: 'error'
+                    icon: 'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
                 })
             });
         },
@@ -689,14 +710,20 @@ export default {
                 swal.fire({
                     title: 'Referral Recall',
                     text: 'The referral has been recalled from '+r.referral,
-                    icon: 'success'
+                    icon: 'success',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
                 })
             })
             .catch(error => {
                 swal.fire({
                     title: 'Proposal Error',
                     text: error,
-                    icon: 'error'
+                    icon: 'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
                 })
             });
         },
@@ -735,7 +762,11 @@ export default {
                 text: "Are you sure you want to complete this referral?",
                 icon: "question",
                 showCancelButton: true,
-                confirmButtonText: 'Submit'
+                confirmButtonText: 'Submit',
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                    cancelButton: 'btn btn-secondary',
+                },
             }).then((swalresult) => {
                 if (swalresult.isConfirmed) {
                 let formData = new FormData(vm.form);
@@ -777,9 +808,12 @@ export default {
                 .catch(error => {
                     console.log(error);
                     swal.fire({
-                    title: 'Referral Error',
-                    text: error,
-                    icon: 'error'
+                        title: 'Referral Error',
+                        text: error,
+                        icon: 'error',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
                     });
                 });
                 }

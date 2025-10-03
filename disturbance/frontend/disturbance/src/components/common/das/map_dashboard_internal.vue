@@ -521,7 +521,8 @@
                     swal.fire({
                         title: 'Create shapefile',
                         html: data.message + "<br> Click <a href='/filelist' target='_blank'> here </a> to view downloaded file",
-                        icon: 'success'
+                        icon: 'success',
+                        customClass: {confirmButton: 'btn btn-primary'},
                     });
                     vm.show_spinner = false;
                     vm.download_shapefile_btn_disabled = false;
@@ -531,7 +532,8 @@
                         title: 'Create shapefile Error',
                         //text: helpers.apiVueResourceError(error),
                         text: error,
-                        icon: 'error'
+                        icon: 'error',
+                        customClass: {confirmButton: 'btn btn-primary'},
                     });
                     vm.show_spinner = false;
                     vm.download_shapefile_btn_disabled = false;

@@ -391,7 +391,11 @@ export default {
             text: "Are you sure you want to accept this organisation request?",
             icon: "question",
             showCancelButton: true,
-            confirmButtonText: 'Accept'
+            confirmButtonText: 'Accept',
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-secondary',
+            },
         }).then((swalresult) => {
             if(swalresult.isConfirmed) {
                 fetch(helpers.add_endpoint_json(api_endpoints.organisation_requests,(vm.access.id+'/accept')))
@@ -416,7 +420,11 @@ export default {
             text: "Are you sure you want to decline this organisation request?",
             type: "question",
             showCancelButton: true,
-            confirmButtonText: 'Decline'
+            confirmButtonText: 'Decline',
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-secondary',
+            },
         }).then((swalresult) => {
             if(swalresult.isConfirmed) {
                 fetch(helpers.add_endpoint_json(api_endpoints.organisation_requests,(vm.access.id+'/decline')))

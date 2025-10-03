@@ -155,7 +155,12 @@ export default {
                 swal.fire(
                         'Cancelled',
                         'An email has been sent to the proponent about cancellation of this approval',
-                        'success'
+                        'success',
+                        {
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                            },
+                        }
                 );
                 vm.$emit('refreshFromResponse',data );
 

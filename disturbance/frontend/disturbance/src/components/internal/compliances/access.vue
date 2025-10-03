@@ -217,7 +217,11 @@ export default {
             text: "Are you sure you want to accept this compliance with requirements?",
             icon: "question",
             showCancelButton: true,
-            confirmButtonText: 'Accept'
+            confirmButtonText: 'Accept',
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-secondary',
+            },
         }).then((swalresult) => {
             if(swalresult.isConfirmed){
                 fetch(helpers.add_endpoint_json(api_endpoints.compliances,(vm.compliance.id+'/accept'))).then(

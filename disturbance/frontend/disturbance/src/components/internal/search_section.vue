@@ -393,7 +393,12 @@ export default {
             swal.fire(
                   'Missing fields',
                   'Please select all the mandatory fields',
-                  'error'
+                  'error',
+                  {
+                    customClass: {
+                      confirmButton: 'btn btn-primary',
+                    },
+                  }
                 );
           }
           else
@@ -724,7 +729,12 @@ export default {
                     swal.fire(
                       'Missing records',
                       'No search results to include in the Spatial file',
-                      'error'
+                      'error',
+                      {
+                        customClass: {
+                          confirmButton: 'btn btn-primary',
+                        },
+                      }
                   );
                 }
                 

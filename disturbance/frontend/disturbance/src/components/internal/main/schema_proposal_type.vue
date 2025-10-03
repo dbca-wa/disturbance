@@ -243,7 +243,12 @@ export default {
                     swal.fire(
                         'Save Error',
                         error,
-                        'error'
+                        'error',
+                        {
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                            },
+                        }
                     )
                 });
 
@@ -269,7 +274,12 @@ export default {
                     swal.fire(
                         'Save Error',
                         error,
-                        'error'
+                        'error',
+                        {
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                            },
+                        }
                     )
                 });
 
@@ -312,8 +322,11 @@ export default {
                     text: "Are you sure you want to delete?",
                     type: "question",
                     showCancelButton: true,
-                    confirmButtonText: 'Accept'
-
+                    confirmButtonText: 'Accept',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                        cancelButton: 'btn btn-secondary',
+                    },
                 }).then(async (result) => {
 
                     if (result.isConfirmed) {
@@ -353,7 +366,12 @@ export default {
                 swal.fire(
                     'Get Application Selects Error',
                     err,
-                    'error'
+                    'error',
+                    {
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    }
                 )
             });
         },

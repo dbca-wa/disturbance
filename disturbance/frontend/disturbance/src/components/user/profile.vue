@@ -584,14 +584,20 @@ export default {
                 swal.fire({
                     title: 'Check Organisation',
                     text: 'Organisation ABN "' + vm.newOrg.abn + '" is already linked.',
-                    icon: 'success'
+                    icon: 'success',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
                 })
                 return;
             } else if (vm.checkOrgRequestList()) {
                 swal.fire({
                     title: 'Check Organisation',
                     text: 'Organisation ABN "' + vm.newOrg.abn + '" is already registered and is Pending Approval.',
-                    icon: 'success'
+                    icon: 'success',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
                 })
                 return;
             }
@@ -614,7 +620,10 @@ export default {
                     {
                         title: 'Check Organisation',
                         text: error,
-                        icon: 'error'
+                        icon: 'error',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
                     }
                 )
             });
@@ -657,7 +666,10 @@ export default {
                     swal.fire({
                         title: 'Validate Pins',
                         text: 'The pins you entered have been validated and your request will be processed by Organisation Administrator.',
-                        icon: 'success'
+                        icon: 'success',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
                     })
                     vm.registeringOrg = false;
                     vm.uploadedFile = null;
@@ -676,7 +688,10 @@ export default {
                     swal.fire({
                         title: 'Validate Pins',
                         text: 'The pins you entered were incorrect',
-                        icon: 'error'
+                        icon: 'error',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
                     })
                 }
                 vm.validatingPins = false;
@@ -698,7 +713,10 @@ export default {
                 swal.fire({
                     title: 'Error submitting organisation request',
                     text: 'Please enter the organisation details and attach a file before submitting your request.',
-                    icon: 'error'
+                    icon: 'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
                 })
             } else {
                 fetch(api_endpoints.organisation_requests,{
@@ -717,6 +735,9 @@ export default {
                         title: 'Sent',
                         html: 'Your organisation request has been successfully submitted.',
                         icon: 'success',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
                     }).then((swalresult) => {
                         if(swalresult.isConfirmed) {
                             window.location.reload(true);
@@ -737,7 +758,10 @@ export default {
                     swal.fire({
                         title: 'Error submitting organisation request',
                         html: error_msg,
-                        icon: 'error'
+                        icon: 'error',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
                     });
                 });
             }
@@ -753,7 +777,10 @@ export default {
                     swal.fire({
                         title: 'Checking Organisation',
                         html: 'You are already associated with this organisation.',
-                        icon: 'info'
+                        icon: 'info',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
                     })
                     vm.registeringOrg = false;
                     vm.uploadedFile = null;
@@ -771,7 +798,10 @@ export default {
                 swal.fire({
                     title: 'Error submitting organisation request',
                     text: 'Please enter the organisation details and attach a file before submitting your request.',
-                    icon: 'error'
+                    icon: 'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
                 })
             } else {
                 fetch(api_endpoints.organisation_requests,{
@@ -790,6 +820,9 @@ export default {
                         title: 'Sent',
                         html: 'Your organisation request has been successfully submitted.',
                         icon: 'success',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
                     }).then((swalresult) => {
                         if(swalresult.isConfirmed) {
                             if (this.$route.name == 'account'){
@@ -807,7 +840,10 @@ export default {
                     swal.fire({
                         title: 'Error submitting organisation request',
                         html: error_msg,
-                        icon: 'error'
+                        icon: 'error',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
                     });
                 });
             }
@@ -843,7 +879,11 @@ export default {
                 text: "Are you sure you want to be unlinked from "+org.name+" ?",
                 icon: "question",
                 showCancelButton: true,
-                confirmButtonText: 'Accept'
+                confirmButtonText: 'Accept',
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                    cancelButton: 'btn btn-secondary',
+                },
             }).then((swalresult) => {
                 if(swalresult.isConfirmed) {
                     console.log(vm.profile.first_name);
@@ -871,13 +911,19 @@ export default {
                         swal.fire({
                             title: 'Unlink',
                             text: 'You have been successfully unlinked from '+org_name+'.',
-                            icon: 'success'
+                            icon: 'success',
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                            },
                         })
                     }).catch((error) => {
                         swal.fire({
                             title: 'Unlink',
                             text: 'There was an error unlinking you from '+org_name+'. '+(error?.message || JSON.stringify(error)),
-                            icon: 'error'
+                            icon: 'error',
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                            },
                         })
                     });
                 }

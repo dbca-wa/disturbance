@@ -384,7 +384,11 @@ export default {
                     text: "Are you sure you want to remove "+ name + "("+ email + ") as a contact  ?",
                     icon: "error",
                     showCancelButton: true,
-                    confirmButtonText: 'Accept'
+                    confirmButtonText: 'Accept',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                        cancelButton: 'btn btn-secondary',
+                    },
                 }).then((swalresult) => {
                     if(swalresult.isConfirmed){
                         vm.deleteContact(id);
@@ -426,7 +430,12 @@ export default {
                 swal.fire(
                     'Saved',
                     'Organisation details have been saved',
-                    'success'
+                    'success',
+                    {
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    }
                 )
             }).catch((error) => {
                 console.log(error);
@@ -440,7 +449,12 @@ export default {
                 swal.fire(
                     'Error', 
                     'Organisation details have cannot be saved because of the following error: '+text,
-                    'error'
+                    'error',
+                    {
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    }
                 )
                 vm.updatingDetails = false;
             });
@@ -450,7 +464,12 @@ export default {
             swal.fire(
                 'Added',
                 'The contact has been successfully added.',
-                'success'
+                'success',
+                {
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                }
             )
             vm.$refs.contacts_datatable.vmDataTable.ajax.reload();
         },
@@ -469,7 +488,12 @@ export default {
                 swal.fire(
                     'Contact Deleted', 
                     'The contact was successfully deleted',
-                    'success'
+                    'success',
+                    {
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    }
                 )
                 vm.$refs.contacts_datatable.vmDataTable.ajax.reload();
             }).catch((error) => {
@@ -487,7 +511,12 @@ export default {
                 swal.fire(
                     'Contact Deletion Failed',
                     errorMessage,
-                    'error'
+                    'error',
+                    {
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    }
                 );
             });
 
@@ -511,7 +540,12 @@ export default {
                 swal.fire(
                     'Saved',
                     'Address details have been saved',
-                    'success'
+                    'success',
+                    {
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    }
                 )
                 if (vm.org.address == null){ vm.org.address = {}; }
             }).catch((error) => {

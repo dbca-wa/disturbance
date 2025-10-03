@@ -154,13 +154,19 @@ export default {
                     swal.fire({
                         title: 'Referral Reminder',
                         text: 'A reminder has been sent to '+user,
-                        icon: 'success'
+                        icon: 'success',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
                     })
                 }).catch(error => {
                     swal.fire({
                         title: 'Proposal Error',
                         text: error,
-                        icon: 'error'
+                        icon: 'error',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
                     })
                 }
             );
@@ -178,13 +184,19 @@ export default {
                     swal.fire({
                         title: 'Referral Resent',
                         text: 'The referral has been resent to '+user,
-                        icon: 'success'
+                        icon: 'success',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
                     })
                 }).catch(error => {
                     swal.fire({
                         title: 'Proposal Error',
                         text: error,
-                        icon: 'error'
+                        icon: 'error',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
                     })
                 }
             );
@@ -213,13 +225,19 @@ export default {
                     swal.fire({
                         title: 'Referral Recall',
                         text: 'The referral has been recalled from '+user,
-                        icon: 'success'
+                        icon: 'success',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
                     })
                 }).catch(error => {
                     swal.fire({
                         title: 'Proposal Error',
                         text: error,
-                        icon: 'error'
+                        icon: 'error',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
                     })
                 }
             );

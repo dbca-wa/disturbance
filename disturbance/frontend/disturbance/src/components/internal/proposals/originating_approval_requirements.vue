@@ -208,7 +208,10 @@ export default {
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonText: 'Remove Requirement',
-                confirmButtonColor:'#d9534f'
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                    cancelButton: 'btn btn-secondary',
+                },
             }).then((swalresult) => {
                 if(swalresult.isConfirmed){
                     // vm.$http.delete(helpers.add_endpoint_json(api_endpoints.proposal_requirements,_id))
