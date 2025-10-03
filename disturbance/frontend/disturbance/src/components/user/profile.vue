@@ -619,7 +619,7 @@ export default {
                 swal.fire(
                     {
                         title: 'Check Organisation',
-                        text: error,
+                        text: helpers.formatFetchError(error),
                         icon: 'error',
                         customClass: {
                             confirmButton: 'btn btn-primary',
@@ -723,10 +723,9 @@ export default {
                     method: 'POST',
                     body: data
                 }).then(async (response) => {
-                    const res = await response.json();
-                    if (!res.ok) {
-                        throw new Error(`Submit Organisation request failed: ${res.status}`);
-                    }
+                    // const res = await response.json();
+                    if (!response.ok) { return response.json().then(err => { throw err }); }
+
                     vm.registeringOrg = false;
                     vm.uploadedFile = null;
                     vm.addingCompany = false;
@@ -744,20 +743,11 @@ export default {
                         }
                     });
                 }).catch((error) => {
-                    console.log(error.message);
+                    console.log(error);
                     vm.registeringOrg = false;
-                    let error_msg = '<br/>';
-                    if (error.body) {
-                        for (var key in error.body) {
-                            error_msg += key + ': ' + error.body[key] + '<br/>';
-                        }
-                    }
-                    else {
-                            error_msg += error.message + '<br/>';
-                    }
                     swal.fire({
                         title: 'Error submitting organisation request',
-                        html: error_msg,
+                        text: helpers.formatFetchError(error),
                         icon: 'error',
                         customClass: {
                             confirmButton: 'btn btn-primary',
