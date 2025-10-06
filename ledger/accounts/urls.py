@@ -24,5 +24,5 @@ urlpatterns = [
     url(r'^firsttime/', views.first_time, name='first_time'),
     url(r'accounts/', include(api_patterns)),
     url(r'account-management/(?P<pk>\d+)/change/$', views.AccountChange.as_view(), name='account_management_change'),    
-    url(r'account-management/', views.AccountManagement.as_view(), name='account_management')
+    url(r'account-management/', views.AccountManagement.as_view(), name='account_management'),
 ]
