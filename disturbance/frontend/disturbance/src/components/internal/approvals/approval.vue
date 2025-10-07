@@ -1,5 +1,5 @@
 <template>
-<div class="container" id="internalApproval">
+<div id="internalApproval">
     <div class="row">
         <h3>Approval {{ approval.lodgement_number }}</h3>
         <div class="col-md-3">
@@ -35,7 +35,7 @@
             </div>
         </div>
         <!-- <div class="col-md-1"></div> -->
-        <div class="col-md-8">
+        <div class="col-md-9">
             <FormSection :formCollapse="false" label="Holder" Index="holder">
                 <form class="form-horizontal" name="approval_form">
                     <div class="row mb-3">

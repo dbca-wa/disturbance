@@ -88,40 +88,40 @@
             //Renderer.store_status_data(vm.proposal.readonly,vm.proposal.assessor_data,vm.proposal.comment_data,vm.proposal.current_assessor,vm.proposal.assessor_mode,vm.proposal.can_user_edit,vm.proposal.documents_url, vm.proposal.id, vm.proposal.application_type, vm.proposal.lodgement_date);
             if (vm.withSectionsSelector){
                 return (
-                    <div class="container">
-                        <div id="scrollspy-heading" class="col-lg-12 noPrint" >
+                    <div>
+                        <div id="scrollspy-heading" class="col-sm-12 noPrint" >
                             <h3>Proposal: <small>{vm.proposal.lodgement_number}</small></h3>
                         </div>
                         <div class="row">   
-                        <div v-show={vm.showSections} class="col-md-3 noPrint" >
-                            {/* <div class="panel panel-default fixed">
-                              <div class="panel-heading">
-                                <h5>Sections</h5>
-                              </div>
-                              <div class="panel-body" style="padding:0">
-                                  <ul class="list-group" id="scrollspy-section" style="margin-bottom:0">
+                            <div v-show={vm.showSections} class="col-md-3 noPrint" >
+                                {/* <div class="panel panel-default fixed">
+                                <div class="panel-heading">
+                                    <h5>Sections</h5>
+                                </div>
+                                <div class="panel-body" style="padding:0">
+                                    <ul class="list-group" id="scrollspy-section" style="margin-bottom:0">
 
-                                  </ul>
-                              </div>
-                            </div> */}
-                            <div class="card fixed" style={{ position: 'sticky' }}>
-                                <div class="card-header">
-                                <h5 class="mb-0">Sections</h5>
+                                    </ul>
                                 </div>
-                                <div class="card-body p-0">
-                                <ul class="list-group list-group-flush" id="scrollspy-section" style="margin-bottom:0">
-                                </ul>
+                                </div> */}
+                                <div class="card fixed" style={{ position: 'sticky' }}>
+                                    <div class="card-header">
+                                    <h5 class="mb-0">Sections</h5>
+                                    </div>
+                                    <div class="card-body p-0">
+                                    <ul class="list-group list-group-flush" id="scrollspy-section" style="margin-bottom:0">
+                                    </ul>
+                                    </div>
                                 </div>
+
                             </div>
-
-                        </div>
-                        <div class="col-md-9">
-                            {vm.proposal.schema.map(d =>{
-                                return Renderer.renderChildren(h,d,vm.values,vm.proposal.assessor_data,vm.proposal.layer_data,vm.proposal.readonly,vm.proposal.assessor_mode,vm.proposal.assessor)
-                            })}
-                            {/* { this.$slots.default } */}
-                            { typeof this.$slots.default === 'function' ? this.$slots.default() : null }
-                        </div>
+                            <div class="col-md-9">
+                                {vm.proposal.schema.map(d =>{
+                                    return Renderer.renderChildren(h,d,vm.values,vm.proposal.assessor_data,vm.proposal.layer_data,vm.proposal.readonly,vm.proposal.assessor_mode,vm.proposal.assessor)
+                                })}
+                                {/* { this.$slots.default } */}
+                                { typeof this.$slots.default === 'function' ? this.$slots.default() : null }
+                            </div>
                         </div>
                     </div>
                 )

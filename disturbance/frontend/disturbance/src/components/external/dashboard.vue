@@ -15,40 +15,41 @@
                     
                 </div>
             </div>
-        </div>
+        
+            <FormSection
+                    :form-collapse="false"
+                    label="Proposals Map"
+                    Index="proposals_map"
+                >
+                <MapDashboard  v-if="show_das_map && !apiaryTemplateGroup" level="external" :is_external="true"/>
+            </FormSection>      
+            <FormSection
+                    :form-collapse="false"
+                    label="Proposals"
+                    Index="proposals"
+                    subtitle="View existing proposals and lodge new ones"
+                >
+                <ProposalDashTable level='external' :url='proposals_url'/>
+            </FormSection>
+            <FormSection
+                    :form-collapse="false"
+                    label="Approvals"
+                    Index="approvals"
+                    subtitle="View existing approvals and amend or renew them"
+                >
+                <ApprovalDashTable level='external' :url='approvals_url'/>
+            </FormSection>
+            <FormSection
+                    :form-collapse="false"
+                    label="Compliances with requirements"
+                    Index="compliances"
+                    subtitle="View submitted compliances and submit new ones"
+                >
+                <ComplianceDashTable level='external' :url='compliances_url'/>
+            </FormSection>
+            <!-- <MapDashboard  v-if="show_das_map" level="external" :is_external="true"/> -->
+     </div>
     </div>
-    <FormSection
-            :form-collapse="false"
-            label="Proposals Map"
-            Index="proposals_map"
-        >
-        <MapDashboard  v-if="show_das_map && !apiaryTemplateGroup" level="external" :is_external="true"/>
-    </FormSection>      
-    <FormSection
-            :form-collapse="false"
-            label="Proposals"
-            Index="proposals"
-            subtitle="View existing proposals and lodge new ones"
-        >
-        <ProposalDashTable level='external' :url='proposals_url'/>
-    </FormSection>
-    <FormSection
-            :form-collapse="false"
-            label="Approvals"
-            Index="approvals"
-            subtitle="View existing approvals and amend or renew them"
-        >
-        <ApprovalDashTable level='external' :url='approvals_url'/>
-    </FormSection>
-    <FormSection
-            :form-collapse="false"
-            label="Compliances with requirements"
-            Index="compliances"
-            subtitle="View submitted compliances and submit new ones"
-        >
-        <ComplianceDashTable level='external' :url='compliances_url'/>
-    </FormSection>
-    <!-- <MapDashboard  v-if="show_das_map" level="external" :is_external="true"/> -->
 </div>
 </template>
 <script>

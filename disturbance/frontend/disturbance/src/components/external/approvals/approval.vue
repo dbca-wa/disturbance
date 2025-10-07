@@ -1,99 +1,107 @@
 <template>
-<div class="container" id="externalApproval">
+<div id="externalApproval">
     <div class="row">
         <h3>Approval {{ approval.lodgement_number }}</h3>
 
         <div class="col-sm-12">
-            <div class="row">
-                <FormSection :formCollapse="false" label="Holder" Index="holder">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <form class="form-horizontal" name="approval_form">
-                                    <div class="form-group">
-                                        <label for="" class="col-sm-3 control-label">Organisation</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" disabled class="form-control" name="name" placeholder="" v-model="org.name">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="" class="col-sm-3 control-label">ABN</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" disabled class="form-control" name="abn" placeholder="" v-model="org.abn">
-                                        </div>
-                                    </div>
-                                </form>
+            <FormSection :formCollapse="false" label="Holder" Index="holder">
+                <form class="form-horizontal" name="approval_form">
+                    <div class="form-group">
+                        <div class="row mb-3">
+                            <label for="" class="col-sm-3 control-label">Organisation</label>
+                            <div class="col-sm-6">
+                                <input type="text" disabled class="form-control" name="name" placeholder="" v-model="org.name">
                             </div>
                         </div>
-                </FormSection>
-            </div>
-
-            <div class="row">
-                <FormSection :formCollapse="false" label="Address Details" Index="address_details">
-                        <form class="form-horizontal" action="index.html" method="post">
-                            <div class="form-group">
-                                <label for="" class="col-sm-3 control-label">Street</label>
-                                <div class="col-sm-6">
-                                    <input type="text" disabled class="form-control" name="street" placeholder="" v-model="org.address.line1">
-                                </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row mb-3">
+                            <label for="" class="col-sm-3 control-label">ABN</label>
+                            <div class="col-sm-6">
+                                <input type="text" disabled class="form-control" name="abn" placeholder="" v-model="org.abn">
                             </div>
-                            <div class="form-group">
-                                <label for="" class="col-sm-3 control-label" >Town/Suburb</label>
-                                <div class="col-sm-6">
-                                    <input type="text" disabled class="form-control" name="surburb" placeholder="" v-model="org.address.locality">
-                                </div>
+                        </div>
+                    </div>
+                </form>
+            </FormSection>
+            
+            <FormSection :formCollapse="false" label="Address Details" Index="address_details">
+                <form class="form-horizontal" action="index.html" method="post">
+                    <div class="form-group">
+                        <div class="row mb-3">
+                            <label for="" class="col-sm-3 control-label">Street</label>
+                            <div class="col-sm-6">
+                                <input type="text" disabled class="form-control" name="street" placeholder="" v-model="org.address.line1">
                             </div>
-                            <div class="form-group">
-                                <label for="" class="col-sm-3 control-label">State</label>
-                                <div class="col-sm-3">
-                                    <input type="text" disabled class="form-control" name="country" placeholder="" v-model="org.address.state">
-                                </div>
-                                <label for="" class="col-sm-1 control-label">Postcode</label>
-                                <div class="col-sm-2">
-                                    <input type="text" disabled class="form-control" name="postcode" placeholder="" v-model="org.address.postcode">
-                                </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row mb-3">
+                            <label for="" class="col-sm-3 control-label" >Town/Suburb</label>
+                            <div class="col-sm-6">
+                                <input type="text" disabled class="form-control" name="surburb" placeholder="" v-model="org.address.locality">
                             </div>
-                            <div class="form-group">
-                                <label for="" class="col-sm-3 control-label" >Country</label>
-                                <div class="col-sm-4">
-                                    <input type="text" disabled class="form-control" name="country" v-model="org.address.country"/>
-                                </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row mb-3">
+                            <label for="" class="col-sm-3 control-label">State</label>
+                            <div class="col-sm-3">
+                                <input type="text" disabled class="form-control" name="country" placeholder="" v-model="org.address.state">
                             </div>
-                         </form>
-                </FormSection>
-            </div>
-
-            <div class="row">
-                <FormSection :formCollapse="false" label="Approval Details" Index="approval_details">
-                    <form class="form-horizontal" action="index.html" method="post">
-                        <div class="form-group">
+                            <label for="" class="col-sm-1 control-label">Postcode</label>
+                            <div class="col-sm-2">
+                                <input type="text" disabled class="form-control" name="postcode" placeholder="" v-model="org.address.postcode">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row mb-3">
+                            <label for="" class="col-sm-3 control-label" >Country</label>
+                            <div class="col-sm-4">
+                                <input type="text" disabled class="form-control" name="country" v-model="org.address.country"/>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </FormSection>
+            
+            <FormSection :formCollapse="false" label="Approval Details" Index="approval_details">
+                <form class="form-horizontal" action="index.html" method="post">
+                    <div class="form-group">
+                        <div class="row mb-3">
                             <label for="" class="col-sm-3 control-label">Issue Date</label>
                             <div class="col-sm-6">
                                 <label for="" class="control-label pull-left">{{formatDate(approval.issue_date)}}</label>
                             </div>
                         </div>
-                        <div class="form-group">
+                    </div>
+                    <div class="form-group">
+                        <div class="row mb-3">
                             <label for="" class="col-sm-3 control-label" >Start Date</label>
                             <div class="col-sm-6">
                                 <label for="" class="control-label pull-left">{{formatDate(approval.start_date)}}</label>
                             </div>
                         </div>
-                        <div class="form-group">
+                    </div>
+                    <div class="form-group">
+                        <div class="row mb-3">
                             <label for="" class="col-sm-3 control-label">Expiry Date</label>
                             <div class="col-sm-3">
                                 <label for="" class="control-label pull-left">{{formatDate(approval.expiry_date)}}</label>
                             </div>
                         </div>
-                        <div class="form-group">
+                    </div>
+                    <div class="form-group">
+                        <div class="row mb-3">
                             <label for="" class="col-sm-3 control-label" >Document</label>
                             <div class="col-sm-4">
                                 <p><a target="_blank" :href="approval.licence_document" class="control-label pull-left">Approval.pdf</a></p>
                             </div>
                         </div>
-                     </form>
-                </FormSection>
-
-            </div>
-
+                    </div>
+                    </form>
+            </FormSection>
         </div>
     </div>
 </div>

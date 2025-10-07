@@ -7,9 +7,7 @@
         <ReturnDashTable level='external' :url='returns_url'/>
     </div-->
     <div v-if="proposalId">
-        <div>
-            <Proposal :proposalId="proposalId"/>
-        </div>
+        <Proposal :proposalId="proposalId"/>
     </div>
 
 </div>

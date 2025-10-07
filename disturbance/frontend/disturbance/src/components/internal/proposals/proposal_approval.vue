@@ -1,4 +1,4 @@
-<template id="proposal_requirements">
+<template id="proposal_approval">
     <div>
         <template v-if="isFinalised">
             <div class="col-md-12 alert alert-success" v-if="proposal.processing_status == 'Approved'">

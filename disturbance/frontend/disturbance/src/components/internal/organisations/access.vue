@@ -75,7 +75,7 @@
             </div>
         </div>
         <!-- <div class="col-md-1"></div> -->
-        <div class="col-md-8">
+        <div class="col-md-9">
             <FormSection :formCollapse="false" label="Organisation Access Request" Index="org_access_req">
                 <form class="form-horizontal" name="access_form">
                     <div class="row mb-3">

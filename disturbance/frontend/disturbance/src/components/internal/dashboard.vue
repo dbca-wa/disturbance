@@ -1,23 +1,27 @@
 <template>
 <div class="container" id="internalDash">
-    <FormSection :formCollapse="false" label="Proposals Map" Index="available_sites">
-        <MapDashboard v-if="show_das_map  && !apiaryTemplateGroup" level="internal" :is_internal="true" />
-    </FormSection>
-    <FormSection
-        :form-collapse="false"
-        label="Proposals"
-        Index="proposals"
-    >
-        <ProposalDashTable level='internal' :url='proposals_url'/>
-    </FormSection>
-    <FormSection
-        :form-collapse="false"
-        label="Proposals referred to me"
-        Index="referrals"
-    >
-        <ReferralDashTable :url="referrals_url"/>
-    </FormSection>
-    <!-- <MapDashboard v-if="show_das_map" level="internal" :is_internal="true" /> -->
+    <div class="row">
+        <div class="col-sm-12">
+            <FormSection :formCollapse="false" label="Proposals Map" Index="available_sites">
+                <MapDashboard v-if="show_das_map  && !apiaryTemplateGroup" level="internal" :is_internal="true" />
+            </FormSection>
+            <FormSection
+                :form-collapse="false"
+                label="Proposals"
+                Index="proposals"
+            >
+                <ProposalDashTable level='internal' :url='proposals_url'/>
+            </FormSection>
+            <FormSection
+                :form-collapse="false"
+                label="Proposals referred to me"
+                Index="referrals"
+            >
+                <ReferralDashTable :url="referrals_url"/>
+            </FormSection>
+            <!-- <MapDashboard v-if="show_das_map" level="internal" :is_internal="true" /> -->
+         </div>
+    </div>
 </div>
 </template>
 <script>
