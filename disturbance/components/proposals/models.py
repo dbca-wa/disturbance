@@ -3368,6 +3368,15 @@ def clone_proposal_with_status_reset(proposal):
                     proposal_document._file.name = u'proposals/{}/documents/{}'.format(proposal.id, proposal_document.filename)
                     proposal_document.can_delete = True
                     proposal_document.save()
+                
+                for proposal_map_document in ProposalMapDocument.objects.filter(proposal=original_proposal_id):
+                    proposal_map_document.proposal = proposal
+                    proposal_map_document.id = None
+                    # proposal_document._file.name = u'proposals/{}/documents/{}'.format(proposal.id, proposal_document.name)
+                    proposal_map_document._file.name = u'proposals/{}/documents/map_docs/{}'.format(proposal.id, proposal_document.filename)
+                    proposal_map_document.input_name = u'proposal_{}_map_doc'.format(proposal.id)
+                    proposal_map_document.can_delete = True
+                    proposal_map_document.save()
 
                 # copy documents on file system and reset can_delete flag
                 #subprocess.call('cp -pr media/proposals/{} media/proposals/{}'.format(original_proposal_id, proposal.id), shell=True)
