@@ -1,8 +1,12 @@
 <template>
 <div class="container" id="internalDash">
-    <FormSection :form-collapse="false" label="Compliances with requirements" Index="compliances">
-        <ComplianceDashTable level="internal" :url="compliances_url"/>
-    </FormSection>
+    <div class="row">
+        <div class="col-sm-12">
+            <FormSection :form-collapse="false" label="Compliances with requirements" Index="compliances">
+                <ComplianceDashTable level="internal" :url="compliances_url"/>
+            </FormSection>
+        </div>
+    </div>
 </div>
 </template>
 <script>

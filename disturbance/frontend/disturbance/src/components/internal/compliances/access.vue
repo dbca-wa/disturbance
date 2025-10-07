@@ -74,7 +74,7 @@
                 </div>
             </div> 
         </div>
-        <div class="col-md-8">
+        <div class="col-md-9">
             <FormSection :formCollapse="false" label="Compliance with Requirements" Index="compliance_with_req">
                 <form class="form-horizontal" name="compliance_form">
                     <div class="row mb-3">

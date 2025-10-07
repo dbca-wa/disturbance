@@ -20,7 +20,7 @@
         <h3>Compliance with Requirements: {{ compliance.reference }}</h3>
 
         <div class="col-md-12">
-            <div class="row">
+            <!-- <div class="row"> -->
                 <FormSection :formCollapse="false" label="Compliance with Requirements" Index="compliance_with_req">
                     <div class="row">
                         <div class="col-md-12"> 
@@ -102,7 +102,7 @@
                         </div>
                     </div>
                 </FormSection>
-            </div>
+            <!-- </div> -->
         </div>
     </div>
 </div>

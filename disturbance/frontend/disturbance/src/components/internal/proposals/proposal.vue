@@ -1,5 +1,5 @@
 <template lang="html">
-    <div v-if="proposal" class="container" id="internalProposal">
+    <div v-if="proposal" id="internalProposal">
         <template v-if="is_local">
             proposal.vue
         </template>
@@ -208,7 +208,7 @@
                 </div>
             </div>
             <!-- <div class="col-md-1"></div> -->
-            <div class="col-md-8">
+            <div class="col-md-9">
                 <div v-if="proposal_compare_version!=0" class="card-body border-top sticky-footer">
                     Comparing
                     <span class="badge bg-secondary">

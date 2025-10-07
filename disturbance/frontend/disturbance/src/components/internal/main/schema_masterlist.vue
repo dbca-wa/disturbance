@@ -4,7 +4,7 @@
         <div class="col-sm-12">
             <div class="row mb-3">
                 <div class="col-md-12">
-                    <button class="btn btn-primary pull-right" @click.prevent="addTableEntry()" name="add-masterlist">New Question</button>
+                    <button class="btn btn-primary float-end" @click.prevent="addTableEntry()" name="add-masterlist">New Question</button>
                 </div>
             </div>
             <div class="row mb-3">

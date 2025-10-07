@@ -1,59 +1,63 @@
 <template id="internalOrgAccessDash">
     <div class="container">
-        <FormSection :form-collapse="false" label="Organisation Access Requests" Index="organisation_access_requests">
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="">Organisation</label>
-                        <select class="form-select" v-model="filterOrganisation">
-                            <option value="All">All</option>
-                            <option v-for="o in organisationChoices" :value="o" :key="o">{{o}}</option>
-                        </select>
+        <div class="row">
+            <div class="col-sm-12">
+                <FormSection :form-collapse="false" label="Organisation Access Requests" Index="organisation_access_requests">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="">Organisation</label>
+                                <select class="form-select" v-model="filterOrganisation">
+                                    <option value="All">All</option>
+                                    <option v-for="o in organisationChoices" :value="o" :key="o">{{o}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="">Applicant</label>
+                                <select class="form-select" v-model="filterApplicant">
+                                    <option value="All">All</option>
+                                    <option v-for="a  in applicantChoices" :value="a" :key="a">{{a}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="">Role</label>
+                                <select class="form-select" v-model="filterRole">
+                                    <option value="All">All</option>
+                                    <option v-for="r in roleChoices" :value="r" :key="r">{{r}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="">Status</label>
+                                <select class="form-select" v-model="filterStatus">
+                                    <option value="All">All</option>
+                                    <option v-for="s in statusChoices" :value="s" :key="s">{{s}}</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="">Applicant</label>
-                        <select class="form-select" v-model="filterApplicant">
-                            <option value="All">All</option>
-                            <option v-for="a  in applicantChoices" :value="a" :key="a">{{a}}</option>
-                        </select>
+                    <div class="row mb-3"></div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div v-if="table_id">
+                                <datatable
+                                    ref="org_access_table"
+                                    id="org-access-table"
+                                    :dtOptions="dtOptions"
+                                    :dtHeaders="dtHeaders"
+                                    :key="table_id">
+                                </datatable>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="">Role</label>
-                        <select class="form-select" v-model="filterRole">
-                            <option value="All">All</option>
-                            <option v-for="r in roleChoices" :value="r" :key="r">{{r}}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <label for="">Status</label>
-                        <select class="form-select" v-model="filterStatus">
-                            <option value="All">All</option>
-                            <option v-for="s in statusChoices" :value="s" :key="s">{{s}}</option>
-                        </select>
-                    </div>
-                </div>
+                </FormSection>
             </div>
-            <div class="row mb-3"></div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <div v-if="table_id">
-                        <datatable
-                            ref="org_access_table"
-                            id="org-access-table"
-                            :dtOptions="dtOptions"
-                            :dtHeaders="dtHeaders"
-                            :key="table_id">
-                        </datatable>
-                    </div>
-                </div>
-            </div>
-        </FormSection>
+        </div>
     </div>
 </template>
 <script>

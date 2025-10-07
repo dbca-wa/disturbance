@@ -1,190 +1,192 @@
 <template lang="html">
-    <div class="container" >
+    <div>
         <template v-if="is_local">
             proposal_external.vue
         </template>
-        <form :action="proposal_form_url" method="post" name="new_proposal" enctype="multipart/form-data">
-            <div v-if="!proposal_readonly">
-                <div v-if="!proposal.apiary_group_application_type && !proposal.shapefile_json" class="row">
-                    <!-- <div class="col-lg-12 alert alert-danger" > -->
-                        <alert type="danger"><strong>Your Proposal is currently missing a shapefile. Please upload a shapefile, validate and prefill the Proposal</strong></alert>
-                    <!-- </div> -->
-                </div>
-              <div v-if="hasAmendmentRequest" class="row" style="color:red;">
-                <div class="col-lg-12 pull-right">
-                    <div class="panel panel-default">
-                      <div class="panel-heading">
-                          <h3 class="panel-title" style="color:red;">{{ amendmentRequestText }}
-                          <a class="panelClicker" :href="'#'+pBody" data-toggle="collapse"  data-parent="#userInfo" expanded="true" :aria-controls="pBody">
-                                <span class="glyphicon glyphicon-chevron-down pull-right "></span>
-                          </a>
-                        </h3>
-                      </div>
-                      <div class="panel-body collapse in" :id="pBody">
-                        <div v-for="a in amendment_request" :key="a.id">
-                          <p>Reason: {{a.reason}}</p>
-                          <p v-if="a.amendment_request_documents">Documents:</p>
-                              <p v-for="d in a.amendment_request_documents" :key="d.id">
-                                <a :href="d._file" target="_blank" class="control-label pull-left">{{d.name   }}</a><br>
-                              </p>
-                          <p>Details: </p>
-                              <p v-for="t in splitText(a.text)" :key="t.text">{{t}}</p>
-                      </div>
+        <div class="row">
+            <form :action="proposal_form_url" method="post" name="new_proposal" enctype="multipart/form-data">
+                <div v-if="!proposal_readonly">
+                    <div v-if="!proposal.apiary_group_application_type && !proposal.shapefile_json">
+                        <!-- <div class="col-lg-12 alert alert-danger" > -->
+                            <alert type="danger"><strong>Your Proposal is currently missing a shapefile. Please upload a shapefile, validate and prefill the Proposal</strong></alert>
+                        <!-- </div> -->
                     </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!--
-            <label for="region-label">Region(*)</label>
-            <input type="text" name="region-text"class="form-control" disabled="true">
-            -->
-
-            <div id="error" v-if="missing_fields.length > 0" style="margin: 10px; padding: 5px; color: red; border:1px solid red;">
-                <b>Please answer the following mandatory question(s):</b>
-                <ul>
-                    <li v-for="error in missing_fields" :key="error.id">
-                        {{ error.label }}
-                    </li>
-                </ul>
-            </div> 
-            <!-- <template> -->
-                <MapSection v-if="proposal && show_das_map" :proposal="proposal" @refreshFromResponse="refreshFromResponse" @refreshFromResponseProposal="refreshFromResponseProposal" ref="mapSection" :is_external="true" />
-                <ProposalDisturbance v-if="proposal" :proposal="proposal" id="proposalStart" :showSections="sectionShow" :key="proposalComponentMapKey">
-                <NewApply v-if="proposal" :proposal="proposal" ref="proposal_apply"></NewApply>
-
-                <!-- From master 28-Mar-2024 TODO remove this commented section
-                <ProposalDisturbance v-if="proposal" :proposal="proposal" id="proposalStart" :showSections="sectionShow">
-                <NewApply v-if="proposal" :proposal="proposal" ref="proposal_apply"></NewApply>
-                -->
-                <div>
-                    <input type="hidden" name="csrfmiddlewaretoken" :value="csrf_token"/>
-                    <input type='hidden' name="schema" :value="JSON.stringify(proposal)" />
-                    <input type='hidden' name="proposal_id" :value="1" />
-
-                    <!-- <div class="row" style="margin-bottom: 50px">
-                      <div class="navbar navbar-fixed-bottom" style="background-color: #f5f5f5 ">
-                      <div class="navbar-inner">
-                        <div v-if="proposal && !proposal.readonly" class="container">
-                            <template v-if="proposal && proposal.apiary_group_application_type">
-                            </template>
-                            <template v-else>
-                                <p class="pull-right" style="margin-top:5px;">
-                                    <button id="sectionHide" @click.prevent="sectionHide" class="btn btn-primary btn-margin">Show/Hide sections</button>
-                                    <span v-if="!isSubmitting">
-                                        <input type="button" @click.prevent="save_exit" class="btn btn-primary btn-margin" value="Save and Exit"/>
-                                        <input type="button" @click.prevent="save(true)" class="btn btn-primary btn-margin" value="Save and Continue"/>
-                                        <span v-if="!isSaving">
-                                            <input type="button" @click.prevent="submit" class="btn btn-primary" value="Submit"/>
-                                        </span>
-                                    </span>
-                                    <span v-else-if="isSubmitting">
-                                        <button disabled class="btn btn-primary"><i class="fa fa-spin fa-spinner"></i>&nbsp;Submitting</button>
-                                    </span>
-                                    <input id="save_and_continue_btn" type="hidden" @click.prevent="save_wo_confirm" class="btn btn-primary" value="Save Without Confirmation"/>
+                <div v-if="hasAmendmentRequest" class="row" style="color:red;">
+                    <div class="col-lg-12 pull-right">
+                        <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title" style="color:red;">{{ amendmentRequestText }}
+                            <a class="panelClicker" :href="'#'+pBody" data-toggle="collapse"  data-parent="#userInfo" expanded="true" :aria-controls="pBody">
+                                    <span class="glyphicon glyphicon-chevron-down pull-right "></span>
+                            </a>
+                            </h3>
+                        </div>
+                        <div class="panel-body collapse in" :id="pBody">
+                            <div v-for="a in amendment_request" :key="a.id">
+                            <p>Reason: {{a.reason}}</p>
+                            <p v-if="a.amendment_request_documents">Documents:</p>
+                                <p v-for="d in a.amendment_request_documents" :key="d.id">
+                                    <a :href="d._file" target="_blank" class="control-label pull-left">{{d.name   }}</a><br>
                                 </p>
-                            </template>
+                            <p>Details: </p>
+                                <p v-for="t in splitText(a.text)" :key="t.text">{{t}}</p>
                         </div>
-                        <div v-else class="container">
-                          <p class="pull-right" style="margin-top:5px;">
-                            <input
-                            id="sectionHide"
-                            v-if="proposal && !proposal.apiary_group_application_type"
-                            type="button"
-                            @click.prevent="sectionHide"
-                            class="btn btn-primary btn-margin"
-                            value="Show/Hide Sections"/>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+                <!--
+                <label for="region-label">Region(*)</label>
+                <input type="text" name="region-text"class="form-control" disabled="true">
+                -->
 
-                            <router-link class="btn btn-primary" :to="{name: 'external-proposals-dash'}">Back to Dashboard</router-link>
-                          </p>
-                        </div>
-                      </div>
-                      </div>
-                    </div> -->
-                    <div class="row mb-5">
-                        <nav class="navbar fixed-bottom bg-light">
-                            <div class="container d-flex">
-                            <div v-if="proposal && !proposal.readonly" class="ms-auto">
+                <div id="error" v-if="missing_fields.length > 0" style="margin: 10px; padding: 5px; color: red; border:1px solid red;">
+                    <b>Please answer the following mandatory question(s):</b>
+                    <ul>
+                        <li v-for="error in missing_fields" :key="error.id">
+                            {{ error.label }}
+                        </li>
+                    </ul>
+                </div> 
+                <!-- <template> -->
+                    <MapSection v-if="proposal && show_das_map" :proposal="proposal" @refreshFromResponse="refreshFromResponse" @refreshFromResponseProposal="refreshFromResponseProposal" ref="mapSection" :is_external="true" />
+                    <ProposalDisturbance v-if="proposal" :proposal="proposal" id="proposalStart" :showSections="sectionShow" :key="proposalComponentMapKey">
+                    <NewApply v-if="proposal" :proposal="proposal" ref="proposal_apply"></NewApply>
+
+                    <!-- From master 28-Mar-2024 TODO remove this commented section
+                    <ProposalDisturbance v-if="proposal" :proposal="proposal" id="proposalStart" :showSections="sectionShow">
+                    <NewApply v-if="proposal" :proposal="proposal" ref="proposal_apply"></NewApply>
+                    -->
+                    <div>
+                        <input type="hidden" name="csrfmiddlewaretoken" :value="csrf_token"/>
+                        <input type='hidden' name="schema" :value="JSON.stringify(proposal)" />
+                        <input type='hidden' name="proposal_id" :value="1" />
+
+                        <!-- <div class="row" style="margin-bottom: 50px">
+                        <div class="navbar navbar-fixed-bottom" style="background-color: #f5f5f5 ">
+                        <div class="navbar-inner">
+                            <div v-if="proposal && !proposal.readonly" class="container">
                                 <template v-if="proposal && proposal.apiary_group_application_type">
-                                <!-- Content for apiary_group_application_type -->
                                 </template>
                                 <template v-else>
-                                <div class="d-flex justify-content-end mt-1">
-                                    <button
-                                    id="sectionHide"
-                                    @click.prevent="sectionHide"
-                                    class="btn btn-primary me-2"
-                                    >
-                                    Show/Hide sections
-                                    </button>
-
-                                    <span v-if="!isSubmitting">
-                                    <input
-                                        type="button"
-                                        @click.prevent="save_exit"
-                                        class="btn btn-primary me-2"
-                                        value="Save and Exit"
-                                    />
-                                    <input
-                                        type="button"
-                                        @click.prevent="save(true)"
-                                        class="btn btn-primary me-2"
-                                        value="Save and Continue"
-                                    />
-                                    <span v-if="!isSaving">
-                                        <input
-                                        type="button"
-                                        @click.prevent="submit"
-                                        class="btn btn-primary"
-                                        value="Submit"
-                                        />
-                                    </span>
-                                    </span>
-
-                                    <span v-else-if="isSubmitting">
-                                    <button disabled class="btn btn-primary">
-                                        <i class="fa fa-spinner fa-spin"></i>&nbsp;Submitting
-                                    </button>
-                                    </span>
-
-                                    <input
-                                    id="save_and_continue_btn"
-                                    type="hidden"
-                                    @click.prevent="save_wo_confirm"
-                                    class="btn btn-primary"
-                                    value="Save Without Confirmation"
-                                    />
-                                </div>
+                                    <p class="pull-right" style="margin-top:5px;">
+                                        <button id="sectionHide" @click.prevent="sectionHide" class="btn btn-primary btn-margin">Show/Hide sections</button>
+                                        <span v-if="!isSubmitting">
+                                            <input type="button" @click.prevent="save_exit" class="btn btn-primary btn-margin" value="Save and Exit"/>
+                                            <input type="button" @click.prevent="save(true)" class="btn btn-primary btn-margin" value="Save and Continue"/>
+                                            <span v-if="!isSaving">
+                                                <input type="button" @click.prevent="submit" class="btn btn-primary" value="Submit"/>
+                                            </span>
+                                        </span>
+                                        <span v-else-if="isSubmitting">
+                                            <button disabled class="btn btn-primary"><i class="fa fa-spin fa-spinner"></i>&nbsp;Submitting</button>
+                                        </span>
+                                        <input id="save_and_continue_btn" type="hidden" @click.prevent="save_wo_confirm" class="btn btn-primary" value="Save Without Confirmation"/>
+                                    </p>
                                 </template>
                             </div>
-
-                            <div v-else class="ms-auto">
-                                <div class="d-flex justify-content-end mt-1">
+                            <div v-else class="container">
+                            <p class="pull-right" style="margin-top:5px;">
                                 <input
-                                    id="sectionHide"
-                                    v-if="proposal && !proposal.apiary_group_application_type"
-                                    type="button"
-                                    @click.prevent="sectionHide"
-                                    class="btn btn-primary me-2"
-                                    value="Show/Hide Sections"
-                                />
+                                id="sectionHide"
+                                v-if="proposal && !proposal.apiary_group_application_type"
+                                type="button"
+                                @click.prevent="sectionHide"
+                                class="btn btn-primary btn-margin"
+                                value="Show/Hide Sections"/>
 
-                                <router-link
-                                    class="btn btn-primary"
-                                    :to="{ name: 'external-proposals-dash' }"
-                                >
-                                    Back to Dashboard
-                                </router-link>
-                                </div>
+                                <router-link class="btn btn-primary" :to="{name: 'external-proposals-dash'}">Back to Dashboard</router-link>
+                            </p>
                             </div>
-                            </div>
-                        </nav>
                         </div>
+                        </div>
+                        </div> -->
+                        <div class="row mb-5">
+                            <nav class="navbar fixed-bottom bg-light">
+                                <div class="container d-flex">
+                                <div v-if="proposal && !proposal.readonly" class="ms-auto">
+                                    <template v-if="proposal && proposal.apiary_group_application_type">
+                                    <!-- Content for apiary_group_application_type -->
+                                    </template>
+                                    <template v-else>
+                                    <div class="d-flex justify-content-end mt-1">
+                                        <button
+                                        id="sectionHide"
+                                        @click.prevent="sectionHide"
+                                        class="btn btn-primary me-2"
+                                        >
+                                        Show/Hide sections
+                                        </button>
 
-                </div>
-                </ProposalDisturbance>
-            <!-- </template> -->
-        </form>
+                                        <span v-if="!isSubmitting">
+                                        <input
+                                            type="button"
+                                            @click.prevent="save_exit"
+                                            class="btn btn-primary me-2"
+                                            value="Save and Exit"
+                                        />
+                                        <input
+                                            type="button"
+                                            @click.prevent="save(true)"
+                                            class="btn btn-primary me-2"
+                                            value="Save and Continue"
+                                        />
+                                        <span v-if="!isSaving">
+                                            <input
+                                            type="button"
+                                            @click.prevent="submit"
+                                            class="btn btn-primary"
+                                            value="Submit"
+                                            />
+                                        </span>
+                                        </span>
+
+                                        <span v-else-if="isSubmitting">
+                                        <button disabled class="btn btn-primary">
+                                            <i class="fa fa-spinner fa-spin"></i>&nbsp;Submitting
+                                        </button>
+                                        </span>
+
+                                        <input
+                                        id="save_and_continue_btn"
+                                        type="hidden"
+                                        @click.prevent="save_wo_confirm"
+                                        class="btn btn-primary"
+                                        value="Save Without Confirmation"
+                                        />
+                                    </div>
+                                    </template>
+                                </div>
+
+                                <div v-else class="ms-auto">
+                                    <div class="d-flex justify-content-end mt-1">
+                                    <input
+                                        id="sectionHide"
+                                        v-if="proposal && !proposal.apiary_group_application_type"
+                                        type="button"
+                                        @click.prevent="sectionHide"
+                                        class="btn btn-primary me-2"
+                                        value="Show/Hide Sections"
+                                    />
+
+                                    <router-link
+                                        class="btn btn-primary"
+                                        :to="{ name: 'external-proposals-dash' }"
+                                    >
+                                        Back to Dashboard
+                                    </router-link>
+                                    </div>
+                                </div>
+                                </div>
+                            </nav>
+                            </div>
+
+                    </div>
+                    </ProposalDisturbance>
+                <!-- </template> -->
+            </form>
+        </div>
         <div v-if="isSubmitting" id="overlay">
         </div>
     </div>

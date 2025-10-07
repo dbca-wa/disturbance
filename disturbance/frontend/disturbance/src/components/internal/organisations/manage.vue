@@ -7,7 +7,7 @@
         </div>
         <!-- <div class="col-md-1">
         </div> -->
-        <div class="col-md-8">
+        <div class="col-md-9">
             <ul class="nav nav-pills" role="tablist">
                 <li class="nav-item">
                     <a

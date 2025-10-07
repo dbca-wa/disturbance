@@ -1,99 +1,97 @@
-<template id="proposal_dashboard">
+<template id="approvals_dashboard">
     <div class="row">
         <div class="col-sm-12">
-            <div class="panel panel-default">
-                    <div class="row">
-                        <!-- <div v-if="templateGroupDetermined && !apiaryTemplateGroup"> -->
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="">Region</label>
-                                    <select class="form-select" v-model="filterProposalRegion">
-                                        <option value="All">All</option>
-                                        <option v-for="r in proposal_regions" :value="r" :key="r">{{r}}</option>
-                                    </select>
-                                    <!--
-                                    <select style="width:100%" class="form-control input-sm" multiple ref="filterRegion" >
-                                        <option v-for="r in proposal_regions" :value="r">{{r}}</option>
-                                    </select>
-                                    -->
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="">Activity</label>
-                                    <select class="form-select" v-model="filterProposalActivity">
-                                        <option value="All">All</option>
-                                        <option v-for="a in proposal_activityTitles" :value="a" :key="a">{{a}}</option>
-                                    </select>
-                                </div>
-                            </div>
-                        <!-- </div> -->
-
-                        <!--div class="col-md-3">
-                            <div class="form-group">
-                                <label for="">Region</label>
-                                <select class="form-control" v-model="filterProposalRegion">
-                                    <option value="All">All</option>
-                                    <option v-for="r in proposal_regions" :value="r">{{r}}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="">Activity</label>
-                                <select class="form-control" v-model="filterProposalActivity">
-                                    <option value="All">All</option>
-                                    <option v-for="a in proposal_activityTitles" :value="a">{{a}}</option>
-                                </select>
-                            </div>
-                        </div-->
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label for="">Status</label>
-                                <select class="form-select" v-model="filterProposalStatus">
-                                    <option value="All">All</option>
-                                    <option v-for="s in approval_status" :value="s" :key="s">{{s}}</option>
-                                </select>
-                            </div>
-                        </div>
+            <div class="row">
+                <!-- <div v-if="templateGroupDetermined && !apiaryTemplateGroup"> -->
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="">Region</label>
+                        <select class="form-select" v-model="filterProposalRegion">
+                            <option value="All">All</option>
+                            <option v-for="r in proposal_regions" :value="r" :key="r">{{r}}</option>
+                        </select>
+                        <!--
+                        <select style="width:100%" class="form-control input-sm" multiple ref="filterRegion" >
+                            <option v-for="r in proposal_regions" :value="r">{{r}}</option>
+                        </select>
+                        -->
                     </div>
-                    
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label for="">Expiry From</label>
-                            <input
-                                id="proposal-expiry-from"
-                                type="date"
-                                class="form-control"
-                                v-model="proposal_expiry_from"
-                                placeholder="DD/MM/YYYY"
-                                :max="proposal_expiry_to"
-                            >
-                        </div>
-                        <div class="col-md-3">
-                            <label for="">Expiry To</label>
-                            <input
-                                id="proposal-expiry-to"
-                                type="date"
-                                class="form-control"
-                                v-model="proposal_expiry_to"
-                                placeholder="DD/MM/YYYY"
-                                :min="proposal_expiry_from"
-                            >
-
-                        </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="">Activity</label>
+                        <select class="form-select" v-model="filterProposalActivity">
+                            <option value="All">All</option>
+                            <option v-for="a in proposal_activityTitles" :value="a" :key="a">{{a}}</option>
+                        </select>
                     </div>
-                    <div class="row mb-3"></div>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div v-if="datatableReady">
-                                <div class="row">
-                                    <datatable ref="proposal_datatable" :id="datatable_id" :dtOptions="proposal_options" :dtHeaders="proposal_headers"/>
-                                </div>
-                            </div>
-                        </div>
-                    </div> 
+                </div>
+                <!-- </div> -->
+
+                <!--div class="col-md-3">
+                    <div class="form-group">
+                        <label for="">Region</label>
+                        <select class="form-control" v-model="filterProposalRegion">
+                            <option value="All">All</option>
+                            <option v-for="r in proposal_regions" :value="r">{{r}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="">Activity</label>
+                        <select class="form-control" v-model="filterProposalActivity">
+                            <option value="All">All</option>
+                            <option v-for="a in proposal_activityTitles" :value="a">{{a}}</option>
+                        </select>
+                    </div>
+                </div-->
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="">Status</label>
+                        <select class="form-select" v-model="filterProposalStatus">
+                            <option value="All">All</option>
+                            <option v-for="s in approval_status" :value="s" :key="s">{{s}}</option>
+                        </select>
+                    </div>
+                </div>
             </div>
+            
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="">Expiry From</label>
+                    <input
+                        id="proposal-expiry-from"
+                        type="date"
+                        class="form-control"
+                        v-model="proposal_expiry_from"
+                        placeholder="DD/MM/YYYY"
+                        :max="proposal_expiry_to"
+                    >
+                </div>
+                <div class="col-md-3">
+                    <label for="">Expiry To</label>
+                    <input
+                        id="proposal-expiry-to"
+                        type="date"
+                        class="form-control"
+                        v-model="proposal_expiry_to"
+                        placeholder="DD/MM/YYYY"
+                        :min="proposal_expiry_from"
+                    >
+
+                </div>
+            </div>
+            <div class="row mb-3"></div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div v-if="datatableReady">
+                        <div class="row">
+                            <datatable ref="proposal_datatable" :id="datatable_id" :dtOptions="proposal_options" :dtHeaders="proposal_headers"/>
+                        </div>
+                    </div>
+                </div>
+            </div> 
         </div>
         <ApprovalCancellation ref="approval_cancellation"  @refreshFromResponse="refreshFromResponse"></ApprovalCancellation>
         <ApprovalSuspension ref="approval_suspension"  @refreshFromResponse="refreshFromResponse"></ApprovalSuspension>
