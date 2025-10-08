@@ -150,6 +150,35 @@ class CompliancePaginatedViewSet(viewsets.ModelViewSet):
             queryset =  Compliance.objects.filter(id__in=compliance_id_list)
             return queryset
         return Compliance.objects.none()
+    
+    def get_external_queryset(self):
+        if is_internal(self.request):
+            #return Compliance.objects.all()
+            #return Compliance.objects.all().exclude(processing_status='discarded')
+            user_orgs = [org.id for org in self.request.user.disturbance_organisations.all()]
+            compliance_id_list = []
+            
+            # DAS logic
+            for das_compliance in Compliance.objects.filter( 
+                    Q(proposal__applicant_id__in = user_orgs) | Q(proposal__submitter = self.request.user
+                        ) ).exclude(processing_status='discarded'):
+                        compliance_id_list.append(das_compliance.id)
+            # Return all records
+            queryset =  Compliance.objects.filter(id__in=compliance_id_list)
+            return queryset
+        elif is_customer(self.request):
+            user_orgs = [org.id for org in self.request.user.disturbance_organisations.all()]
+            compliance_id_list = []
+            # DAS logic
+            for das_compliance in Compliance.objects.filter( 
+                    Q(proposal__applicant_id__in = user_orgs) | Q(proposal__submitter = self.request.user
+                        ) ).exclude(processing_status='discarded'):
+                        compliance_id_list.append(das_compliance.id)
+            # Return all records
+            queryset =  Compliance.objects.filter(id__in=compliance_id_list)
+            return queryset
+        return Compliance.objects.none()
+
 
 
     @action(methods=['GET',], detail=False)
@@ -163,7 +192,8 @@ class CompliancePaginatedViewSet(viewsets.ModelViewSet):
         template_group  =  get_template_group(request)
         if template_group == 'das':
             apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
-            qs = self.get_queryset().exclude(proposal__application_type__name__in=apiary_proposal_types)
+            # qs = self.get_queryset().exclude(proposal__application_type__name__in=apiary_proposal_types)
+            qs = self.get_external_queryset().exclude(proposal__application_type__name__in=apiary_proposal_types)
         qs = self.filter_queryset(qs)
 
         applicant_id = request.GET.get('org_id')
@@ -219,7 +249,8 @@ class ComplianceViewSet(viewsets.ModelViewSet):
         except Exception as e:
             print(traceback.print_exc())
             raise serializers.ValidationError(str(e))
-
+        
+    
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         # Filter by org
