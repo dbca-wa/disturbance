@@ -308,7 +308,7 @@ export default {
             let my_content =
                 '<table id="' +
                 commsLogId +
-                '" class="hover table table-striped table-bordered dt-responsive" cellspacing="0"></table>';
+                '" class="hover table border table-striped table-bordered dt-responsive" cellspacing="0"></table>';
             let my_template =
                 '<div class="popover ' +
                 popover_name +
@@ -356,7 +356,7 @@ export default {
             let my_content =
                 '<table id="' +
                 actionLogId +
-                '" class="hover table table-striped table-bordered dt-responsive" cellspacing="0" width="100%"></table>';
+                '" class="hover table border table-striped table-bordered dt-responsive" cellspacing="0" width="100%"></table>';
             let my_template =
                 '<div class="popover ' +
                 popover_name +
