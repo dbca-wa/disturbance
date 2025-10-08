@@ -91,17 +91,15 @@ data: function() {
                 vm.refresh_time= response.body.sqs_timestamp;
                 vm.isRefreshing= false;   
             },(error)=>{
-                swal.fire(
-                    'Error',
-                    helpers.apiVueResourceError(error),
+                swal.fire({
+                    title:'Error',
+                    text:helpers.apiVueResourceError(error),
                     //error.body,
-                    'error',
-                    {
-                        customClass: {
-                            confirmButton: 'btn btn-primary',
-                        },
-                    }
-                )
+                    icon:'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                })
             });
             vm.isRefreshing= false;  
         },
@@ -178,17 +176,15 @@ data: function() {
                 })
 
             },(error)=>{
-                swal.fire(
-                    'Error',
-                    helpers.apiVueResourceError(error),
+                swal.fire({
+                    title:'Error',
+                    text:helpers.apiVueResourceError(error),
                     //error.body,
-                    'error',
-                    {
-                        customClass: {
-                            confirmButton: 'btn btn-primary',
-                        },
-                    }
-                )
+                    icon:'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                });
             });
             vm.isRefreshing= false;  
         },
@@ -250,16 +246,14 @@ data: function() {
                     },
                 });
             } catch (error) {
-                swal.fire(
-                    'Error',
-                    error,
-                    'error',
-                    {
-                        customClass: {
-                            confirmButton: 'btn btn-primary',
-                        },
-                    }
-                );
+                swal.fire({
+                    title:'Error',
+                    text:error,
+                    icon:'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                });
             } finally {
                 vm.isRefreshing = false;
             }

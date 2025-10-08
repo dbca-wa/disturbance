@@ -427,16 +427,14 @@ export default {
                 vm.updatingDetails = false;
                 vm.org = await response.json();
                 if (vm.org.address == null){ vm.org.address = {}; }
-                swal.fire(
-                    'Saved',
-                    'Organisation details have been saved',
-                    'success',
-                    {
-                        customClass: {
-                            confirmButton: 'btn btn-primary',
-                        },
-                    }
-                )
+                swal.fire({
+                    title:'Saved',
+                    text:'Organisation details have been saved',
+                    icon:'success',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                });
             }).catch((error) => {
                 console.log(error);
                 var text= error;
@@ -446,31 +444,27 @@ export default {
                         text=text.email[0];
                     }
                 }
-                swal.fire(
-                    'Error', 
-                    'Organisation details have cannot be saved because of the following error: '+text,
-                    'error',
-                    {
-                        customClass: {
-                            confirmButton: 'btn btn-primary',
-                        },
-                    }
-                )
+                swal.fire({
+                    title:'Error', 
+                    text:'Organisation details have cannot be saved because of the following error: '+text,
+                    icon:'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                });
                 vm.updatingDetails = false;
             });
         },
         addedContact: function() {
             let vm = this;
-            swal.fire(
-                'Added',
-                'The contact has been successfully added.',
-                'success',
-                {
-                    customClass: {
-                        confirmButton: 'btn btn-primary',
-                    },
-                }
-            )
+            swal.fire({
+                title:'Added',
+                text:'The contact has been successfully added.',
+                icon:'success',
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                },
+            });
             vm.$refs.contacts_datatable.vmDataTable.ajax.reload();
         },
         deleteContact: function(id){
@@ -485,16 +479,14 @@ export default {
                 if (!response.ok) {
                     throw new Error(`Contact Deletetion Failed: ${response.status}`);
                 }
-                swal.fire(
-                    'Contact Deleted', 
-                    'The contact was successfully deleted',
-                    'success',
-                    {
-                        customClass: {
-                            confirmButton: 'btn btn-primary',
-                        },
-                    }
-                )
+                swal.fire({
+                    title:'Contact Deleted', 
+                    text:'The contact was successfully deleted',
+                    icon:'success',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                });
                 vm.$refs.contacts_datatable.vmDataTable.ajax.reload();
             }).catch((error) => {
                 console.log(error);
@@ -508,16 +500,14 @@ export default {
 
                 errorMessage += ']';
 
-                swal.fire(
-                    'Contact Deletion Failed',
-                    errorMessage,
-                    'error',
-                    {
-                        customClass: {
-                            confirmButton: 'btn btn-primary',
-                        },
-                    }
-                );
+                swal.fire({
+                    title:'Contact Deletion Failed',
+                    text:errorMessage,
+                    icon:'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                });
             });
 
 
@@ -537,16 +527,14 @@ export default {
                 }
                 vm.updatingAddress = false;
                 vm.org = await response.json();
-                swal.fire(
-                    'Saved',
-                    'Address details have been saved',
-                    'success',
-                    {
-                        customClass: {
-                            confirmButton: 'btn btn-primary',
-                        },
-                    }
-                )
+                swal.fire({
+                    title:'Saved',
+                    text:'Address details have been saved',
+                    icon:'success',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                });
                 if (vm.org.address == null){ vm.org.address = {}; }
             }).catch((error) => {
                 console.log(error);

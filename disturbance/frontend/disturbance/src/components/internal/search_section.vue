@@ -390,16 +390,14 @@ export default {
           if(!vm.selected_application_name || !vm.selected_section || !vm.selected_question || !vm.selected_option )
           {
             //console.log('here');
-            swal.fire(
-                  'Missing fields',
-                  'Please select all the mandatory fields',
-                  'error',
-                  {
-                    customClass: {
-                      confirmButton: 'btn btn-primary',
-                    },
-                  }
-                );
+            swal.fire({
+                  title:'Missing fields',
+                  text:'Please select all the mandatory fields',
+                  icon:'error',
+                  customClass: {
+                    confirmButton: 'btn btn-primary',
+                  },
+                });
           }
           else
           {
@@ -726,16 +724,14 @@ export default {
                   });
                 }
                 else{
-                    swal.fire(
-                      'Missing records',
-                      'No search results to include in the Spatial file',
-                      'error',
-                      {
-                        customClass: {
-                          confirmButton: 'btn btn-primary',
-                        },
-                      }
-                  );
+                    swal.fire({
+                      title:'Missing records',
+                      text:'No search results to include in the Spatial file',
+                      icon:'error',
+                      customClass: {
+                        confirmButton: 'btn btn-primary',
+                      },
+                  });
                 }
                 
             },

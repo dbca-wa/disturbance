@@ -97,7 +97,7 @@ data: function() {
 		let queue_position = response['body']['position']
 		swal.fire({
 		    title: 'Refresh Question',
-                    html: '<p><strong>' + msg + '</strong><br>' +
+            html: '<p><strong>' + msg + '</strong><br>' +
 			  '<span style="font-size:0.8em">You can close your browser and come back later. You will receive an email when it is complete. (' + queue_position+ ')</span>' +
 			  '</p>',
             customClass: {
@@ -106,17 +106,15 @@ data: function() {
 		})
                
             },(error)=>{
-                swal.fire(
-                    'Error',
-                    helpers.apiVueResourceError(error),
+                swal.fire({
+                    title:'Error',
+                    text:helpers.apiVueResourceError(error),
                     //error.body,
-                    'error',
-                    {
-                        customClass: {
-                            confirmButton: 'btn btn-primary',
-                        },
-                    }
-                )
+                    icon:'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                });
                 vm.isRefreshing=false;
             });
             vm.isRefreshing=false;
@@ -167,16 +165,14 @@ data: function() {
                     },
                 });
             } catch (error) {
-                swal.fire(
-                    'Error',
-                    error,
-                    'error',
-                    {
-                        customClass: {
-                            confirmButton: 'btn btn-primary',
-                        },
-                    }
-                );
+                swal.fire({
+                    title:'Error',
+                    text:error,
+                    icon:'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                });
             } finally {
                 vm.isRefreshing = false;
             }

@@ -626,7 +626,10 @@ export default {
                                 console.log('Swal error: '+error);
                             });
                         }).catch((error) => {
-                            swal.fire('Contact Accept','There was an error accepting ' + name + '.','error',{
+                            swal.fire({
+                                title:'Contact Accept',
+                                text:'There was an error accepting ' + name + '.',
+                                icon:'error',
                                 customClass: {
                                     confirmButton: 'btn btn-primary',
                                 },
@@ -689,7 +692,10 @@ export default {
                                 console.log(error);
                             });
                         }).catch((error) => {
-                            swal.fire('Contact Accept (Previously Declined)','There was an error accepting ' + name + '.','error',{
+                            swal.fire({
+                                title:'Contact Accept (Previously Declined)',
+                                text:'There was an error accepting ' + name + '.',
+                                icon:'error',
                                 customClass: {
                                     confirmButton: 'btn btn-primary',
                                 },
@@ -750,7 +756,10 @@ export default {
                                     vm.$refs.contacts_datatable_user.vmDataTable.ajax.reload();
                                 }
                             }).catch((error) => {
-                                swal.fire('Contact Decline','There was an error declining ' + name + '.','error',{
+                                swal.fire({
+                                    title:'Contact Decline',
+                                    text:'There was an error declining ' + name + '.',
+                                    icon:'error',
                                     customClass: {
                                         confirmButton: 'btn btn-primary',
                                     },
@@ -758,7 +767,10 @@ export default {
                                 console.log(error?.message || JSON.stringify(error));
                             });
                         }, (error) => {
-                            swal.fire('Contact Decline','There was an error declining ' + name + '.','error',{
+                            swal.fire({
+                                title:'Contact Decline',
+                                text:'There was an error declining ' + name + '.',
+                                icon:'error',
                                 customClass: {
                                     confirmButton: 'btn btn-primary',
                                 },
@@ -806,16 +818,14 @@ export default {
 
                                 // Check for specific status code
                                 if (response.status === 500) {
-                                    swal.fire(
-                                        'Unlink',
-                                        'Last Organisation Admin cannot be unlinked.',
-                                        'error',
-                                        {
-                                            customClass: {
-                                                confirmButton: 'btn btn-primary',
-                                            },
-                                        }
-                                    );
+                                    swal.fire({
+                                        title:'Unlink',
+                                        text:'Last Organisation Admin cannot be unlinked.',
+                                        icon:'error',
+                                        customClass: {
+                                            confirmButton: 'btn btn-primary',
+                                        },
+                                    });
                                 } else {
                                     console.log(JSON.stringify(await response.json()));
                                 }
@@ -897,7 +907,10 @@ export default {
                                 console.log('Swal error:'+error);
                             });
                         }).catch((error) => {
-                            swal.fire('Organisation Admin','There was an error making ' + name + ' an Organisation Admin.','error',{
+                            swal.fire({
+                                title:'Organisation Admin',
+                                text:'There was an error making ' + name + ' an Organisation Admin.',
+                                icon:'error',
                                 customClass: {
                                     confirmButton: 'btn btn-primary',
                                 },
@@ -961,7 +974,10 @@ export default {
                                 console.log('Swal error:'+error);
                             });
                         }).catch((error) => {
-                            swal.fire('Company Admin','There was an error making ' + name + ' an Organisation User.','error',{  
+                            swal.fire({
+                                title:'Company Admin',
+                                text:'There was an error making ' + name + ' an Organisation User.',
+                                icon:'error',  
                                 customClass: {
                                     confirmButton: 'btn btn-primary',
                                 },
@@ -1024,7 +1040,10 @@ export default {
                                 console.log('Swal error:'+error);
                             });
                         }).catch((error) => {
-                            swal.fire('Suspend User','There was an error suspending ' + name + ' as a User.','error',{
+                            swal.fire({
+                                title:'Suspend User',
+                                text:'There was an error suspending ' + name + ' as a User.',
+                                icon:'error',
                                 customClass: {
                                     confirmButton: 'btn btn-primary',
                                 },

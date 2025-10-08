@@ -1136,16 +1136,14 @@ export default {
                 return data;
             }).catch((error)=>{
                 console.log('Error: ' + JSON.stringify(error))
-                swal.fire(
-                    'Error',
-                    error,
-                    'error',
-                    {
-                        customClass: {
-                            confirmButton: 'btn btn-primary',
-                        },
-                    }
-                )
+                swal.fire({
+                    title:'Error',
+                    text:error,
+                    icon:'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                });
             });
 
         },
@@ -1192,7 +1190,7 @@ export default {
                         customClass: {
                             confirmButton: 'btn btn-primary',
                         },
-                })
+                    });
                 });
 
             } else {
@@ -1214,16 +1212,14 @@ export default {
                     //self.close();
                 }).catch((error)=>{
                     console.log('Error: ' + JSON.stringify(error))
-                    swal.fire(
-                        'Save Error',
-                        error,
-                        'error',
-                        {
-                            customClass: {
-                                confirmButton: 'btn btn-primary',
-                            },
-                        }
-                    )
+                    swal.fire({
+                        title:'Save Error',
+                        text:error,
+                        icon:'error',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    });
                 });
 
             }
@@ -1251,16 +1247,14 @@ export default {
 
                 let num_layers = this.$refs.spatial_query_layer_table.vmDataTable.rows()[0].length // number of rows
                 if (num_layers==env['max_layers_per_sqq']) {
-                    swal.fire(
-                        'Layer Limit Reached',
-                        'Max number of Layers per Question: ' + env['max_layers_per_sqq'],
-                        'warning',
-                        {
-                            customClass: {
-                                confirmButton: 'btn btn-primary',
-                            },
-                        }
-                    )
+                    swal.fire({
+                        title:'Layer Limit Reached',
+                        text:'Max number of Layers per Question: ' + env['max_layers_per_sqq'],
+                        icon:'warning',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    });
                     return;
 		}
 
@@ -1289,17 +1283,15 @@ export default {
                     //self.close();
                 }).catch(error => {
                     console.log('Error: ' + JSON.stringify(error));
-                    swal.fire(
-                        'Save Error',
+                    swal.fire({
+                        title:'Save Error',
                         // helpers.apiVueResourceError(error),
-                        error,
-                        'error',
-                        {
-                            customClass: {
-                                confirmButton: 'btn btn-primary',
-                            },
-                        }
-                    )
+                        text:error,
+                        icon:'error',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    });
                 });
 
             } else {
@@ -1336,16 +1328,14 @@ export default {
                     //self.close();
                 }).catch(error => {
                     console.log('Error: ' + JSON.stringify(error.message));
-                    swal.fire(
-                        'Save Error',
-                        error,
-                        'error',
-                        {
-                            customClass: {
-                                confirmButton: 'btn btn-primary',
-                            },
-                        }
-                    )
+                    swal.fire({
+                        title:'Save Error',
+                        text:error,
+                        icon:'error',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    });
                 });
 
 
@@ -1414,17 +1404,15 @@ export default {
                 self.num_layers_utilised = uniq(res_body['layer_data'].map((item) => item.layer_name)).length // unique layers used
             }).catch(error => {
                 console.log('Error: ' + JSON.stringify(error))
-                swal.fire(
-                    'Error',
+                swal.fire({
+                    title:'Error',
                     // helpers.apiVueResourceError(error),
-                    error,
-                    'error',
-                    {
-                        customClass: {
-                            confirmButton: 'btn btn-primary',
-                        },
-                    }
-                )
+                    text:error,
+                    icon:'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                });
             });
 
             self.request_time = new Date() - start_time
@@ -1526,16 +1514,14 @@ export default {
                 if(result.isConfirmed) {
                     console.log("Result: " + result);
                     if (!result.value) {
-                        swal.fire(
-                            'Please select an option',
-                            null,
-                            'warning',
-                            {
-                                customClass: {
-                                    confirmButton: 'btn btn-primary',
-                                },
-                            }
-                        )
+                        swal.fire({
+                            title:'Please select an option',
+                            text:null,
+                            icon:'warning',
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                            },
+                        });
                         return;
                     }
                     if (result=='check_layer') {
@@ -1562,28 +1548,24 @@ export default {
             fetch(url).then(async (response) => {
                 if (!response.ok) { return response.json().then(err => { throw err }); }
                 let data = await response.json();
-                swal.fire(
-                    'Layer Exists in SQS!',
-                    data.message,
-                    'success',
-                    {
-                        customClass: {
-                            confirmButton: 'btn btn-primary',
-                        },
-                    }
-                )
+                swal.fire({
+                    title:'Layer Exists in SQS!',
+                    text:data.message,
+                    icon:'success',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                });
                 self.show_spinner = false;
             }).catch((error) => {
-                swal.fire(
-                    'Layer Check Error',
-                    error,
-                    'error',
-                    {
-                        customClass: {
-                            confirmButton: 'btn btn-primary',
-                        },
-                    }
-                )
+                swal.fire({
+                    title:'Layer Check Error',
+                    text:error,
+                    icon:'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                });
                 self.show_spinner = false;
             });
         },
@@ -1603,23 +1585,24 @@ export default {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
                 let data = await response.json();
-                swal.fire(
-                    'Create/Update SQS Layer!',
-                    data.message,
-                    'success'
-                )
+                swal.fire({
+                    title:'Create/Update SQS Layer!',
+                    text:data.message,
+                    icon:'success',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                })
                 self.show_spinner = false;
             }).catch((error) => {
-                swal.fire(
-                    'Create/Update Error',
-                    error,
-                    'error',
-                    {
-                        customClass: {
-                            confirmButton: 'btn btn-primary',
-                        },
-                    }
-                )
+                swal.fire({
+                    title:'Create/Update Error',
+                    text:error,
+                    icon:'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                });
                 self.show_spinner = false;
             });
         },
@@ -1633,23 +1616,24 @@ export default {
             fetch(url).then(async (response) => {
                 if (!response.ok) { return response.json().then(err => { throw err }); }
                 let data = await response.json();
-                swal.fire(
-                    'Question Found in Proposal Schema!',
-                    data.message,
-                    'success'
-                )
-                self.show_spinner = false;
-            }).catch((error) => {
-                swal.fire(
-                    'Check Question Error',
-                    error,
-                    'error',
-                    {
-                        customClass: {
+                swal.fire({
+                    title:'Question Found in Proposal Schema!',
+                    text:data.message,
+                    icon:'success',
+                    customClass: {
                             confirmButton: 'btn btn-primary',
                         },
-                    }
-                )
+                })
+                self.show_spinner = false;
+            }).catch((error) => {
+                swal.fire({
+                    title:'Check Question Error',
+                    text:error,
+                    icon:'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                });
                 self.show_spinner = false;
             });
         },
@@ -1684,16 +1668,14 @@ export default {
                         vm.show_spinner = false;
                         vm.export_layers_btn_disabled = false;
 
-                        swal.fire(
-                            'Export \'Layers Used\' Completed',
-                            "Export completed",
-                            'success',
-                            {
-                                customClass: {
-                                    confirmButton: 'btn btn-primary',
-                                },
-                            }
-                        )
+                        swal.fire({
+                            title:'Export \'Layers Used\' Completed',
+                            text:"Export completed",
+                            icon:'success',
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                            },
+                        });
                     }).catch((error) => {
                         console.log(error);
                         swal.fire({
@@ -2025,16 +2007,14 @@ export default {
                             }
                             self.$refs.spatial_query_question_table.vmDataTable.ajax.reload();
                         }).catch((error) => {
-                            swal.fire(
-                                'Delete Error',
-                                error,
-                                'error',
-                                {
-                                    customClass: {
-                                        confirmButton: 'btn btn-primary',
-                                    },
-                                }
-                            )
+                            swal.fire({
+                                title:'Delete Error',
+                                text:error,
+                                icon:'error',
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
+                            });
                         });
                     }
 
@@ -2080,16 +2060,14 @@ export default {
                             self.$refs.spatial_query_question_table.vmDataTable.ajax.reload();
 
                         }).catch((error) => {
-                            swal.fire(
-                                'Delete Error',
-                                error,
-                                'error',
-                                {
-                                    customClass: {
-                                        confirmButton: 'btn btn-primary',
-                                    },
-                                }
-                            )
+                            swal.fire({
+                                title:'Delete Error',
+                                text:error,
+                                icon:'error',
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
+                            });
                         });
                     }
                 },(error) => {
@@ -2229,16 +2207,14 @@ export default {
                     this.masterlist_questions = this.spatialquery_selects.all_masterlist
                     this.is_admin = this.spatialquery_selects.permissions.is_admin
                 },err=>{
-                    swal.fire(
-                        'Get Application Selects Error',
-                        err,
-                        'error',
-                        {
-                            customClass: {
-                                confirmButton: 'btn btn-primary',
-                            },
-                        }
-                    )
+                    swal.fire({
+                        title:'Get Application Selects Error',
+                        text:err,
+                        icon:'error',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    });
                 }
             );
 
