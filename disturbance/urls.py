@@ -128,7 +128,7 @@ api_patterns = [
 # Django searches matching url from the top of the list, and once found a matching url, it never goes through the urls below it.
 urlpatterns = [
     #url(r'^admin/', disturbance_admin_site.urls),
-    url(r'^ledger/admin/', admin.site.urls, name='ledger_admin'),
+    # url(r'^ledger/admin/', admin.site.urls, name='ledger_admin'),
     url(r'^chaining/', include('smart_selects.urls')),
     url('summernote/', include('django_summernote.urls')),
     url(r'', include(api_patterns)),
