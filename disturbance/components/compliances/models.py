@@ -107,7 +107,8 @@ class Compliance(RevisionedMixin):
         """
         :return: True if the application is in one of the editable status.
         """
-        return self.customer_status == 'with_assessor' or self.customer_status == 'approved'
+        # return self.customer_status == 'with_assessor' or self.customer_status == 'approved'
+        return self.customer_status == 'with_assessor' or self.customer_status == 'approved' or self.customer_status == 'future' 
 
 
     @property

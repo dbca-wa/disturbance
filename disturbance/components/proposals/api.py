@@ -312,6 +312,23 @@ class ProposalPaginatedViewSet(viewsets.ModelViewSet):
             return qs
             #queryset =  Proposal.objects.filter(region__isnull=False).filter( Q(applicant_id__in = user_orgs) | Q(submitter = user) )
         return Proposal.objects.none()
+    
+    def get_external_queryset(self):
+        user = self.request.user
+        if is_internal(self.request): #user.is_authenticated():
+            #return Proposal.objects.all().order_by('-id')
+            #return Proposal.objects.exclude(processing_status='hidden')
+            user_orgs = [org.id for org in user.disturbance_organisations.all()]
+            qs = Proposal.objects.exclude(processing_status='hidden').filter(Q(applicant_id__in=user_orgs) | Q(submitter=user) | Q(proxy_applicant=user))
+            return qs
+        elif is_customer(self.request):
+            user_orgs = [org.id for org in user.disturbance_organisations.all()]
+            #return  Proposal.objects.filter( Q(applicant_id__in = user_orgs) | Q(submitter = user) )
+            #return Proposal.objects.filter( Q(applicant_id__in = user_orgs) | Q(submitter = user) | Q(proxy_applicant = user)).order_by('-id')
+            qs = Proposal.objects.exclude(processing_status='hidden').filter(Q(applicant_id__in=user_orgs) | Q(submitter=user) | Q(proxy_applicant=user))
+            return qs
+            #queryset =  Proposal.objects.filter(region__isnull=False).filter( Q(applicant_id__in = user_orgs) | Q(submitter = user) )
+        return Proposal.objects.none()
 
     @action(methods=['GET',], detail=False)
     def proposals_internal(self, request, *args, **kwargs):
@@ -384,7 +401,9 @@ class ProposalPaginatedViewSet(viewsets.ModelViewSet):
         template_group = get_template_group(request)
         if template_group == 'das':
             apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
-            qs = self.get_queryset().exclude(application_type__name__in=apiary_proposal_types
+            # qs = self.get_queryset().exclude(application_type__name__in=apiary_proposal_types
+            #                                  ).exclude(processing_status=Proposal.PROCESSING_STATUS_DISCARDED)
+            qs = self.get_external_queryset().exclude(application_type__name__in=apiary_proposal_types
                                              ).exclude(processing_status=Proposal.PROCESSING_STATUS_DISCARDED)
         qs = self.filter_queryset(qs)
 

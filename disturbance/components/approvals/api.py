@@ -151,6 +151,18 @@ class ApprovalPaginatedViewSet(viewsets.ModelViewSet):
             return queryset
         return Approval.objects.none()
 
+    def get_external_queryset(self):
+        if is_internal(self.request):
+            user_orgs = [org.id for org in self.request.user.disturbance_organisations.all()]
+            queryset =  Approval.objects.filter(Q(applicant_id__in = user_orgs)|Q(proxy_applicant_id=self.request.user.id)).exclude(status='hidden')
+            return queryset
+            #return Approval.objects.all().exclude(status='hidden')
+        elif is_customer(self.request):
+            user_orgs = [org.id for org in self.request.user.disturbance_organisations.all()]
+            queryset =  Approval.objects.filter(Q(applicant_id__in = user_orgs)|Q(proxy_applicant_id=self.request.user.id)).exclude(status='hidden')
+            #queryset =  Approval.objects.filter(applicant_id__in = user_orgs)
+            return queryset
+        return Approval.objects.none()
 #    def list(self, request, *args, **kwargs):
 #        response = super(ProposalPaginatedViewSet, self).list(request, args, kwargs)
 #
@@ -205,7 +217,8 @@ class ApprovalPaginatedViewSet(viewsets.ModelViewSet):
             # TODO as apiary_approval field is removed from migrations, changed the qurery
             # qs = self.get_queryset().exclude(apiary_approval=True).filter(id__in=ids)
             apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
-            qs = self.get_queryset().exclude(current_proposal__application_type__name__in=apiary_proposal_types).filter(id__in=ids)
+            # qs = self.get_queryset().exclude(current_proposal__application_type__name__in=apiary_proposal_types).filter(id__in=ids)
+            qs = self.get_external_queryset().exclude(current_proposal__application_type__name__in=apiary_proposal_types).filter(id__in=ids)
         qs = self.filter_queryset(qs)
 
         # on the internal organisations dashboard, filter the Proposal/Approval/Compliance datatables by applicant/organisation
