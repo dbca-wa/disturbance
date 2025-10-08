@@ -12,27 +12,20 @@
                         <!-- </div> -->
                     </div>
                 <div v-if="hasAmendmentRequest" class="row" style="color:red;">
+                    <!-- <div class="col-md-3">
+                    </div> -->
                     <div class="col-lg-12 pull-right">
-                        <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title" style="color:red;">{{ amendmentRequestText }}
-                            <a class="panelClicker" :href="'#'+pBody" data-toggle="collapse"  data-parent="#userInfo" expanded="true" :aria-controls="pBody">
-                                    <span class="glyphicon glyphicon-chevron-down pull-right "></span>
-                            </a>
-                            </h3>
-                        </div>
-                        <div class="panel-body collapse in" :id="pBody">
+                        <FormSection style="color:red;" :formCollapse="false" :label="amendmentRequestText" Index="proposal_amend_request">
                             <div v-for="a in amendment_request" :key="a.id">
-                            <p>Reason: {{a.reason}}</p>
-                            <p v-if="a.amendment_request_documents">Documents:</p>
-                                <p v-for="d in a.amendment_request_documents" :key="d.id">
-                                    <a :href="d._file" target="_blank" class="control-label pull-left">{{d.name   }}</a><br>
-                                </p>
-                            <p>Details: </p>
-                                <p v-for="t in splitText(a.text)" :key="t.text">{{t}}</p>
-                        </div>
-                        </div>
-                    </div>
+                                <p>Reason: {{a.reason}}</p>
+                                <p v-if="a.amendment_request_documents">Documents:</p>
+                                    <p v-for="d in a.amendment_request_documents" :key="d.id">
+                                        <a :href="d._file" target="_blank" class="control-label pull-left">{{d.name   }}</a><br>
+                                    </p>
+                                <p>Details: </p>
+                                    <p v-for="t in splitText(a.text)" :key="t.text">{{t}}</p>
+                            </div>
+                        </FormSection>
                     </div>
                 </div>
                 </div>
@@ -196,6 +189,7 @@ import ProposalDisturbance from '../form.vue'
 import NewApply from './proposal_apply_new.vue'
 import MapSection from '@/components/common/das/map_section.vue'
 import alert from '@/utils/vue/alert.vue'
+import FormSection from "@/components/forms/section_toggle.vue"
 import {
   api_endpoints,
   helpers
@@ -253,6 +247,7 @@ export default {
         NewApply,
         MapSection,
         alert,
+        FormSection,
     },
     computed: {
         show_das_map : function(){

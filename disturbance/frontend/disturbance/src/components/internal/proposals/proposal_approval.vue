@@ -227,16 +227,14 @@ export default {
                         errorText = errData;
                     } catch { console.log('Error parsing error response'); }
                     
-                    swal.fire(
-                        'Submit Error', 
-                        errorText, 'error',
-                        {
-                            customClass: {
-                                confirmButton: 'btn btn-primary',
-                                cancelButton: 'btn btn-secondary',
-                            },
-                        }
-                    );
+                    swal.fire({
+                        title:'Submit Error', 
+                        text:errorText,
+                        icon:'error',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    });
             });
         },
         uploadedFileName: function() {

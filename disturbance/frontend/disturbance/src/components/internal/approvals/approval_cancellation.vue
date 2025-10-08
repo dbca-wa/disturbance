@@ -152,16 +152,14 @@ export default {
                 const data = await response.json();
                 vm.issuingApproval = false;
                 vm.close();
-                swal.fire(
-                        'Cancelled',
-                        'An email has been sent to the proponent about cancellation of this approval',
-                        'success',
-                        {
-                            customClass: {
-                                confirmButton: 'btn btn-primary',
-                            },
-                        }
-                );
+                swal.fire({
+                    title:'Cancelled',
+                    text:'An email has been sent to the proponent about cancellation of this approval',
+                    icon:'success',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                });
                 vm.$emit('refreshFromResponse',data );
 
             }).catch((error)=>{

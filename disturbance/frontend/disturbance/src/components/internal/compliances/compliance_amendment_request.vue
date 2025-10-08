@@ -125,16 +125,14 @@ export default {
                     throw new Error(`Compliance Amendment Request Failed: ${response.status}`);
                 }
                 const res = await response.json();
-                swal.fire(
-                        'Sent',
-                        'An email has been sent to the proponent with the request to amend this compliance',
-                        'success',
-                        {
-                            customClass: {
-                                confirmButton: 'btn btn-primary',
-                            },
-                        }
-                );
+                swal.fire({
+                    title:'Sent',
+                    text:'An email has been sent to the proponent with the request to amend this compliance',
+                    icon:'success',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                });
                 vm.amendingcompliance = true;
                 console.log(res)
                 vm.close();

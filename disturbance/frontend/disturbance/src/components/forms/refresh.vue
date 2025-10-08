@@ -83,17 +83,15 @@ data: function() {
 		})
 
             },(error)=>{
-                swal.fire(
-                    'Error',
-                    helpers.apiVueResourceError(error),
+                swal.fire({
+                    title:'Error',
+                    text:helpers.apiVueResourceError(error),
                     //error.body,
-                    'error',
-                    {
-                        customClass: {
-                            confirmButton: 'btn btn-primary',
-                        },
-                    }
-                )
+                    icon:'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                });
                 vm.isRefreshing=false;
             });
             vm.isRefreshing=false;
@@ -162,16 +160,14 @@ data: function() {
                 vm.refresh_time = responseData.sqs_timestamp;
 
             } catch (error) {
-                swal.fire(
-                    'Error',
-                    error,
-                    'error',
-                    {
-                        customClass: {
-                            confirmButton: 'btn btn-primary',
-                        },
-                    }
-                );
+                swal.fire({
+                    title:'Error',
+                    text:error,
+                    icon:'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                });
             } finally {
                 vm.isRefreshing = false;
             }

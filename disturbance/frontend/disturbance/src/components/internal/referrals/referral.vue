@@ -1,216 +1,216 @@
 <template lang="html">
-    <div v-if="proposal" class="container" id="internalReferral">
-            <div class="row">
-        <h3>Proposal: {{ proposal.lodgement_number }}</h3>
-        <div class="col-md-3">
-            <CommsLogs :comms_url="comms_url" :logs_url="logs_url" comms_add_url="test"/>
-            <div class="mb-3">
-                <div class="card card-default">
-                    <div class="card-header">
-                       Submission 
-                    </div>
-                    <div class="card-body py-2">
-                        <strong>Submitted by</strong><br/>
-                        {{ proposal.submitter }}
-                    </div>
-                    <div class="card-body border-top py-2">
-                        <strong>Lodged on</strong><br/>
-                        {{ formatDate(proposal.lodgement_date) }}
-                    </div>
-                    <div class="card-body border-top py-2">
-                        <table class="table small-table">
-                            <thead>
-                                <tr>
-                                    <th>Lodgement</th>
-                                    <th>Date</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                        </table>
+    <div v-if="proposal" id="internalReferral">
+        <div class="row">
+            <h3>Proposal: {{ proposal.lodgement_number }}</h3>
+            <div class="col-md-3">
+                <CommsLogs :comms_url="comms_url" :logs_url="logs_url" comms_add_url="test"/>
+                <div class="mb-3">
+                    <div class="card card-default">
+                        <div class="card-header">
+                        Submission 
+                        </div>
+                        <div class="card-body py-2">
+                            <strong>Submitted by</strong><br/>
+                            {{ proposal.submitter }}
+                        </div>
+                        <div class="card-body border-top py-2">
+                            <strong>Lodged on</strong><br/>
+                            {{ formatDate(proposal.lodgement_date) }}
+                        </div>
+                        <div class="card-body border-top py-2">
+                            <table class="table small-table">
+                                <thead>
+                                    <tr>
+                                        <th>Lodgement</th>
+                                        <th>Date</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="mb-3">
-                <div class="card card-default sticky-top">
-                    <div class="card-header">
-                        Workflow 
-                    </div>
-                    <div class="card-body py-2">
-                        <strong>Status</strong><br/>
-                        {{ proposal.processing_status }}
-                    </div>
-                    <div class="card-body py-2 border-top">
-                        <div class="row">
-                            <div class="col-sm-12 top-buffer-s">
-                                <div class="mb-2"><strong>Referrals</strong></div>
-                                <div class="form-group mb-3" v-if="!isFinalised">
-                                    <select 
-                                        id="department_users"  
-                                        name="department_users"  
-                                        ref="department_users" 
-                                        class="form-select" 
-                                    />
+                <div class="mb-3">
+                    <div class="card card-default sticky-top">
+                        <div class="card-header">
+                            Workflow 
+                        </div>
+                        <div class="card-body py-2">
+                            <strong>Status</strong><br/>
+                            {{ proposal.processing_status }}
+                        </div>
+                        <div class="card-body py-2 border-top">
+                            <div class="row">
+                                <div class="col-sm-12 top-buffer-s">
+                                    <div class="mb-2"><strong>Referrals</strong></div>
+                                    <div class="form-group mb-3" v-if="!isFinalised">
+                                        <select 
+                                            id="department_users"  
+                                            name="department_users"  
+                                            ref="department_users" 
+                                            class="form-select" 
+                                        />
 
-                                    <template v-if='!sendingReferral'>
-                                        <template v-if="selected_referral && !isFinalised && !proposal.can_user_edit && referral.sent_from == 1">
-                                            <label class="control-label pull-left"  for="Name">Comments</label>
-                                            <textarea class="form-control" name="name" v-model="referral_text"></textarea>
-                                            <a v-if="!isFinalised && !proposal.can_user_edit && referral.sent_from == 1" @click.prevent="sendReferral()" class="actionBtn pull-right">Send</a>
-                                        </template>
-                                    </template>
-                                    <template v-else>
-                                        <span v-if="!isFinalised && !proposal.can_user_edit && referral.sent_from == 1" class="text-primary pull-right">
-                                            Sending Referral&nbsp;
-                                            <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
-                                        </span>
-                                    </template>
-                                </div>
-                                <table class="table small-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Referral</th>
-                                            <th>Status/Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="r in referral.latest_referrals" :key="r.id">
-                                            <td>
-                                                <small><strong>{{r.referral}}</strong></small><br/>
-                                                <small><strong>{{ formatDate(r.lodged_on) }}</strong></small>
-                                            </td>
-                                            <td><small><strong>{{r.processing_status}}</strong></small><br/>
-                                            <template v-if="!isFinalised && referral.referral == proposal.current_assessor.id">
-                                                <template v-if="r.processing_status == 'Awaiting'">
-                                                    <small><a @click.prevent="remindReferral(r)" href="#">Remind</a> / <a @click.prevent="recallReferral(r)" href="#">Recall</a></small>
-                                                </template>
-                                                <template v-else>
-                                                    <small><a @click.prevent="resendReferral(r)" href="#">Resend</a></small>
-                                                </template>
+                                        <template v-if='!sendingReferral'>
+                                            <template v-if="selected_referral && !isFinalised && !proposal.can_user_edit && referral.sent_from == 1">
+                                                <label class="control-label pull-left"  for="Name">Comments</label>
+                                                <textarea class="form-control" name="name" v-model="referral_text"></textarea>
+                                                <a v-if="!isFinalised && !proposal.can_user_edit && referral.sent_from == 1" @click.prevent="sendReferral()" class="actionBtn pull-right">Send</a>
                                             </template>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <MoreReferrals @refreshFromResponse="refreshFromResponse" :proposal="proposal" :canAction="!isFinalised && referral.referral == proposal.current_assessor.id" :isFinalised="isFinalised" :referral_url="referralListURL"/>
+                                        </template>
+                                        <template v-else>
+                                            <span v-if="!isFinalised && !proposal.can_user_edit && referral.sent_from == 1" class="text-primary pull-right">
+                                                Sending Referral&nbsp;
+                                                <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+                                            </span>
+                                        </template>
+                                    </div>
+                                    <table class="table small-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Referral</th>
+                                                <th>Status/Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="r in referral.latest_referrals" :key="r.id">
+                                                <td>
+                                                    <small><strong>{{r.referral}}</strong></small><br/>
+                                                    <small><strong>{{ formatDate(r.lodged_on) }}</strong></small>
+                                                </td>
+                                                <td><small><strong>{{r.processing_status}}</strong></small><br/>
+                                                <template v-if="!isFinalised && referral.referral == proposal.current_assessor.id">
+                                                    <template v-if="r.processing_status == 'Awaiting'">
+                                                        <small><a @click.prevent="remindReferral(r)" href="#">Remind</a> / <a @click.prevent="recallReferral(r)" href="#">Recall</a></small>
+                                                    </template>
+                                                    <template v-else>
+                                                        <small><a @click.prevent="resendReferral(r)" href="#">Resend</a></small>
+                                                    </template>
+                                                </template>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <MoreReferrals @refreshFromResponse="refreshFromResponse" :proposal="proposal" :canAction="!isFinalised && referral.referral == proposal.current_assessor.id" :isFinalised="isFinalised" :referral_url="referralListURL"/>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="card-body border-top" v-if="!isFinalised && referral.referral == proposal.current_assessor.id && referral.can_be_completed">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="row mb-2">
-                                    <strong>Action</strong><br/>
+                        <div class="card-body border-top" v-if="!isFinalised && referral.referral == proposal.current_assessor.id && referral.can_be_completed">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="row mb-2">
+                                        <strong>Action</strong><br/>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-12">
-                                <label class="control-label pull-left"  for="Name">Comments</label>
-                                <textarea class="form-control" name="name" v-model="referral_comment"></textarea>
-                                <button style="width:90%;" class="btn btn-primary top-buffer-s" :disabled="proposal.can_user_edit" @click.prevent="completeReferral">Complete Referral Task</button>
+                                <div class="col-sm-12">
+                                    <label class="control-label pull-left"  for="Name">Comments</label>
+                                    <textarea class="form-control" name="name" v-model="referral_comment"></textarea>
+                                    <button style="width:90%;" class="btn btn-primary top-buffer-s" :disabled="proposal.can_user_edit" @click.prevent="completeReferral">Complete Referral Task</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-8">
-                <div v-show="false">
-                    <FormSection :formCollapse="true" label="Level of Approval" Index="level_of_approval">
-                        <div>
-                        </div>
-                    </FormSection>
-                </div>
-                <FormSection :formCollapse="false" label="Applicant" Index="applicant">
-                    <form class="form-horizontal">
-                        <div class="form-group">
-                            <div class="row mb-3">
-                                <label for="" class="col-sm-3 col-form-label">Name</label>
-                                <div class="col-sm-6">
-                                    <input disabled type="text" class="form-control" name="applicantName" placeholder="" v-model="proposal.applicant.name">
-                                </div>
+            <div class="col-md-9">
+                    <div v-show="false">
+                        <FormSection :formCollapse="true" label="Level of Approval" Index="level_of_approval">
+                            <div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="row mb-3">
-                                <label for="" class="col-sm-3 col-form-label" >ABN/ACN</label>
-                                <div class="col-sm-6">
-                                    <input disabled type="text" class="form-control" name="applicantABN" placeholder="" v-model="proposal.applicant.abn">
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </FormSection>
-                <FormSection :formCollapse="true" label="Address Details" Index="address_details">
-                    <form class="form-horizontal">
-                        <div class="form-group">
-                            <div class="row mb-3">
-                                <label for="" class="col-sm-3 col-form-label">Street</label>
-                                <div class="col-sm-6">
-                                    <input disabled type="text" class="form-control" name="street" placeholder="" v-model="proposal.applicant.address.line1">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="row mb-3">
-                                <label for="" class="col-sm-3 col-form-label" >Town/Suburb</label>
-                                <div class="col-sm-6">
-                                    <input disabled type="text" class="form-control" name="surburb" placeholder="" v-model="proposal.applicant.address.locality">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="row mb-3">
-                                <label for="" class="col-sm-3 col-form-label">State</label>
-                                <div class="col-sm-2">
-                                    <input disabled type="text" class="form-control" name="country" placeholder="" v-model="proposal.applicant.address.state">
-                                </div>
-                                <label for="" class="col-sm-2 col-form-label">Postcode</label>
-                                <div class="col-sm-2">
-                                    <input disabled type="text" class="form-control" name="postcode" placeholder="" v-model="proposal.applicant.address.postcode">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="row mb-3">
-                                <label for="" class="col-sm-3 col-form-label" >Country</label>
-                                <div class="col-sm-4">
-                                    <input disabled type="text" class="form-control" name="country" v-model="proposal.applicant.address.country"/>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </FormSection>
-                <FormSection :formCollapse="true" label="Contact Details" Index="contact_details">
-                    <table ref="contacts_datatable" :id="contacts_table_id" class="hover table table-striped table-bordered dt-responsive" cellspacing="0" width="100%">
-                    </table>
-                </FormSection>
-                <form :action="proposal_form_url" method="post" name="new_proposal" enctype="multipart/form-data">
-                    <div>
-                        <Proposal form_width="inherit" :withSectionsSelector="false" v-if="proposal" :proposal="proposal"/>
-                        <NewApply v-if="proposal" :proposal="proposal"></NewApply>
+                        </FormSection>
                     </div>
-                    <div>
-                        <input type="hidden" name="csrfmiddlewaretoken" :value="csrf_token"/>
-                        <input type='hidden' name="schema" :value="JSON.stringify(proposal)" />
-                        <input type='hidden' name="proposal_id" :value="1" />
-                        <!--<div v-if="!proposal.can_user_edit" class="row" style="margin-bottom:20px;">
-                            <div class="col-lg-12 pull-right" v-if="!isFinalised">
-                            <button class="btn btn-primary pull-right" @click.prevent="save()">Save Changes</button>
-                            </div> 
-                        </div>-->
-                        <div class="row mb-5" style="margin-bottom: 50px">
-                            <div class="fixed-bottom bg-light" v-if="!proposal.can_user_edit && !isFinalised" style="background-color: #f5f5f5 ">
-                                <div class="container d-flex">
-                                    <div v-if="!isFinalised" class="ms-auto">
-                                    <p class="d-flex justify-content-end mt-1">                     
-                                        <button class="btn btn-primary btn-margin" style="margin-top:5px;" @click.prevent="save()">Save Changes</button>
-                                    </p>                      
-                                    </div>                   
+                    <FormSection :formCollapse="false" label="Applicant" Index="applicant">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <div class="row mb-3">
+                                    <label for="" class="col-sm-3 col-form-label">Name</label>
+                                    <div class="col-sm-6">
+                                        <input disabled type="text" class="form-control" name="applicantName" placeholder="" v-model="proposal.applicant.name">
+                                    </div>
                                 </div>
-                            </div> 
+                            </div>
+                            <div class="form-group">
+                                <div class="row mb-3">
+                                    <label for="" class="col-sm-3 col-form-label" >ABN/ACN</label>
+                                    <div class="col-sm-6">
+                                        <input disabled type="text" class="form-control" name="applicantABN" placeholder="" v-model="proposal.applicant.abn">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </FormSection>
+                    <FormSection :formCollapse="true" label="Address Details" Index="address_details">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <div class="row mb-3">
+                                    <label for="" class="col-sm-3 col-form-label">Street</label>
+                                    <div class="col-sm-6">
+                                        <input disabled type="text" class="form-control" name="street" placeholder="" v-model="proposal.applicant.address.line1">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row mb-3">
+                                    <label for="" class="col-sm-3 col-form-label" >Town/Suburb</label>
+                                    <div class="col-sm-6">
+                                        <input disabled type="text" class="form-control" name="surburb" placeholder="" v-model="proposal.applicant.address.locality">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row mb-3">
+                                    <label for="" class="col-sm-3 col-form-label">State</label>
+                                    <div class="col-sm-2">
+                                        <input disabled type="text" class="form-control" name="country" placeholder="" v-model="proposal.applicant.address.state">
+                                    </div>
+                                    <label for="" class="col-sm-2 col-form-label">Postcode</label>
+                                    <div class="col-sm-2">
+                                        <input disabled type="text" class="form-control" name="postcode" placeholder="" v-model="proposal.applicant.address.postcode">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row mb-3">
+                                    <label for="" class="col-sm-3 col-form-label" >Country</label>
+                                    <div class="col-sm-4">
+                                        <input disabled type="text" class="form-control" name="country" v-model="proposal.applicant.address.country"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </FormSection>
+                    <FormSection :formCollapse="true" label="Contact Details" Index="contact_details">
+                        <table ref="contacts_datatable" :id="contacts_table_id" class="hover table table-striped table-bordered dt-responsive" cellspacing="0" width="100%">
+                        </table>
+                    </FormSection>
+                    <form :action="proposal_form_url" method="post" name="new_proposal" enctype="multipart/form-data">
+                        <div>
+                            <Proposal form_width="inherit" :withSectionsSelector="false" v-if="proposal" :proposal="proposal"/>
+                            <NewApply v-if="proposal" :proposal="proposal"></NewApply>
                         </div>
-                    </div>     
-                </form>
-        </div>
+                        <div>
+                            <input type="hidden" name="csrfmiddlewaretoken" :value="csrf_token"/>
+                            <input type='hidden' name="schema" :value="JSON.stringify(proposal)" />
+                            <input type='hidden' name="proposal_id" :value="1" />
+                            <!--<div v-if="!proposal.can_user_edit" class="row" style="margin-bottom:20px;">
+                                <div class="col-lg-12 pull-right" v-if="!isFinalised">
+                                <button class="btn btn-primary pull-right" @click.prevent="save()">Save Changes</button>
+                                </div> 
+                            </div>-->
+                            <div class="row mb-5" style="margin-bottom: 50px">
+                                <div class="fixed-bottom bg-light" v-if="!proposal.can_user_edit && !isFinalised" style="background-color: #f5f5f5 ">
+                                    <div class="container d-flex">
+                                        <div v-if="!isFinalised" class="ms-auto">
+                                        <p class="d-flex justify-content-end mt-1">                     
+                                            <button class="btn btn-primary btn-margin" style="margin-top:5px;" @click.prevent="save()">Save Changes</button>
+                                        </p>                      
+                                        </div>                   
+                                    </div>
+                                </div> 
+                            </div>
+                        </div>     
+                    </form>
+            </div>
         </div>
     </div>
 </template>

@@ -9,8 +9,8 @@
                 <div v-if="hasAmendmentRequest" class="row" style="color:red;">
                     <FormSection style="color:red;" :formCollapse="false" label="An amendment has been requested for this Compliance with Requirements" Index="compliance_with_req_amend">
                         <div v-for="a in amendment_request" :key="a.id">                      
-                        <p>Reason: {{a.reason}}</p>
-                        <p>Details: {{a.text}}</p>                        
+                            <p>Reason: {{a.reason}}</p>
+                            <p>Details: {{a.text}}</p>                        
                         </div>
                     </FormSection>
                 </div>

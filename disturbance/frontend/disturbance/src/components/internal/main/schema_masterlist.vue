@@ -373,16 +373,14 @@ export default {
                     );
                     self.close();
                 }).catch((error) => {
-                    swal.fire(
-                        'Save Error',
-                        error,
-                        'error',
-                        {
-                            customClass: {
-                                confirmButton: 'btn btn-primary',
-                            },
-                        }
-                    )
+                    swal.fire({
+                        title:'Save Error',
+                        text:error,
+                        icon:'error',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    });
                 });
 
             } else {
@@ -403,16 +401,14 @@ export default {
                     );
                     self.close();
                 }).catch((error) => {
-                    swal.fire(
-                        'Save Error',
-                        error,
-                        'error',
-                        {
-                            customClass: {
-                                confirmButton: 'btn btn-primary',
-                            },
-                        }
-                    )
+                    swal.fire({
+                        title:'Save Error',
+                        text:error,
+                        icon:'error',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    });
                 });
 
             }
@@ -491,16 +487,14 @@ export default {
                                 false
                             );
                         }, (error) => {
-                            swal.fire(
-                                'Delete Error',
-                                error,
-                                'error',
-                                {
-                                    customClass: {
-                                        confirmButton: 'btn btn-primary',
-                                    },
-                                }
-                            )
+                            swal.fire({
+                                title:'Delete Error',
+                                text:error,
+                                icon:'error',
+                                customClass: {
+                                    confirmButton: 'btn btn-primary',
+                                },
+                            });
                         });
                     }
 
@@ -552,16 +546,14 @@ export default {
                 this.answerTypes = data.all_answer_types;
 
             }).catch(err=>{
-                swal.fire(
-                    'Get Application Selects Error',
-                    err,
-                    'error',
-                    {
-                        customClass: {
-                            confirmButton: 'btn btn-primary',
-                        },
-                    }
-                )
+                swal.fire({
+                    title:'Get Application Selects Error',
+                    text:err,
+                    icon:'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                });
             });
             this.initAnswerTypeSelector();
         },        

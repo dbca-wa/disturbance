@@ -830,31 +830,27 @@ export default {
         checkAssignedOfficer: function() {
             if (this.proposal.processing_status == 'With Approver'){
                 if(this.proposal && this.proposal.assigned_approver==null){
-                    swal.fire(
-                        'Error',
-                        'Please assign this proposal to yourself or an officer before proceeding',
-                        'error',
-                        {
-                            customClass: {
-                                confirmButton: 'btn btn-primary',
-                            },
-                        }
-                    )
+                    swal.fire({
+                        title:'Error',
+                        text:'Please assign this proposal to yourself or an officer before proceeding',
+                        icon:'error',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    })
                     return false;
                 }
                 return true;
             }
             else if(this.proposal && this.proposal.assigned_officer==null){
-                    swal.fire(
-                        'Error',
-                        'Please assign this proposal to yourself or an officer before proceeding',
-                        'error',
-                        {
-                            customClass: {
-                                confirmButton: 'btn btn-primary',
-                            },
-                        }
-                    )
+                    swal.fire({
+                        title:'Error',
+                        text:'Please assign this proposal to yourself or an officer before proceeding',
+                        icon:'error',
+                        customClass: {
+                            confirmButton: 'btn btn-primary',
+                        },
+                    })
                     return false;
             }
             else{
