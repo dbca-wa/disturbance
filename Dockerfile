@@ -1,3 +1,5 @@
+# syntax = docker/dockerfile:1.2
+
 # Prepare the base environment.
 FROM ubuntu:24.04 as builder_base_das
 MAINTAINER asi@dbca.wa.gov.au
