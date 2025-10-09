@@ -204,6 +204,31 @@ class CompliancePaginatedViewSet(viewsets.ModelViewSet):
         result_page = self.paginator.paginate_queryset(qs, request)
         serializer = DTComplianceSerializer(result_page, context={'request':request}, many=True)
         return self.paginator.get_paginated_response(serializer.data)
+    
+    @action(methods=['GET',], detail=False)
+    def compliances_internal(self, request, *args, **kwargs):
+        """
+        Paginated serializer for datatables - used by the external dashboard
+        To test:
+            http://localhost:8000/api/compliance_paginated/compliances_external/?format=datatables&draw=1&length=2
+        """
+
+        apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
+        qs = self.get_queryset().exclude(
+                    proposal__application_type__name__in=apiary_proposal_types
+                    )
+        qs = self.filter_queryset(qs)
+        #qs = qs.order_by('lodgement_number', '-issue_date').distinct('lodgement_number')
+
+        # on the internal organisations dashboard, filter the Proposal/Approval/Compliance datatables by applicant/organisation
+        applicant_id = request.GET.get('org_id')
+        if applicant_id:
+            qs = qs.filter(proposal__applicant_id=applicant_id)
+
+        self.paginator.page_size = qs.count()
+        result_page = self.paginator.paginate_queryset(qs, request)
+        serializer = DTComplianceSerializer(result_page, context={'request':request}, many=True)
+        return self.paginator.get_paginated_response(serializer.data)
 
 
 class ComplianceViewSet(viewsets.ModelViewSet):
@@ -272,45 +297,6 @@ class ComplianceViewSet(viewsets.ModelViewSet):
         return Response(data)
 
 
-#    @list_route(methods=['GET',])
-#    def compliances_paginated(self, request, *args, **kwargs):
-#        """
-#        Used by the external dashboard
-#
-#        http://localhost:8499/api/compliances/compliances_external/paginated/?format=datatables&draw=1&length=2
-#        """
-#
-#        qs = self.get_queryset().exclude(processing_status='future')
-#        qs = ProposalFilterBackend().filter_queryset(request, qs, self)
-#
-#        paginator = DatatablesPageNumberPagination()
-#        paginator.page_size = qs.count()
-#        result_page = paginator.paginate_queryset(qs, request)
-#        serializer = ComplianceSerializer(result_page, context={'request':request}, many=True)
-#        return paginator.get_paginated_response(serializer.data)
-
-#    @list_route(methods=['GET',])
-#    def user_list(self, request, *args, **kwargs):
-#        #Remove filter to include 'Apporved Proposals in external dashboard .exclude(processing_status=Proposal.PROCESSING_STATUS_CHOICES[13][0])
-#        queryset = self.get_queryset().exclude(processing_status='future')
-#        serializer = ComplianceSerializer(queryset, many=True)
-#        return Response(serializer.data)
-#
-#    @list_route(methods=['GET'])
-#    def user_list_paginated(self, request, *args, **kwargs):
-#        """
-#        Placing Paginator class here (instead of settings.py) allows specific method for desired behaviour),
-#        otherwise all serializers will use the default pagination class
-#
-#        https://stackoverflow.com/questions/29128225/django-rest-framework-3-1-breaks-pagination-paginationserializer
-#        """
-#        queryset = self.get_queryset().exclude(processing_status='future')
-#        paginator = DatatablesPageNumberPagination()
-#        paginator.page_size = queryset.count()
-#        result_page = paginator.paginate_queryset(queryset, request)
-#        #serializer = ListProposalSerializer(result_page, context={'request':request}, many=True)
-#        serializer = self.get_serializer(result_page, context={'request':request}, many=True)
-#        return paginator.get_paginated_response(serializer.data)
 
     @action(methods=['POST',], detail=True)
     @renderer_classes((JSONRenderer,))

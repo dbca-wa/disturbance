@@ -22,7 +22,7 @@ export default {
         // let vm = this;
         return {
             //compliances_url: api_endpoints.compliances,
-            compliances_url: api_endpoints.compliances_paginated_external,
+            compliances_url: api_endpoints.compliances_paginated_internal,
         }
     
     },
