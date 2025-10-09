@@ -8,16 +8,17 @@
                             <tr>
                                 <th>Lodgement</th>
                                 <th style="padding-left: 10px;">Date</th>
-                                <th style="padding-left: 10px; text-align:center">Actions</th>
+                                <!-- <th style="padding-left: 10px; text-align:center">Actions</th> -->
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="revision in this.lodgement_revisions_actions" :key="revision.id">
                                 <td>{{ revision.id }}</td>
                                 <td style="padding-left: 10px;">{{ formatDateNoTime(revision.date) }}</td>
-                                <td style="padding-left: 10px;" v-on:click="getCompareVersions(revision['index'],revision.date)">
+                                <!-- Commented for now as the Compare is broken, need to work later if required -->
+                                <!-- <td style="padding-left: 10px;" v-on:click="getCompareVersions(revision['index'],revision.date)">
                                     <span v-bind:id=revision.id v-html=revision.action></span>
-                                </td>
+                                </td> -->
                             </tr>
                         </tbody>
                     </table>
@@ -26,7 +27,8 @@
                     <table class="table small-table">
                         <thead>
                             <tr>
-                                <th style="visibility: hidden;">Version</th>
+                                <!-- <th style="visibility: hidden;">Version</th> -->
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -143,7 +145,7 @@ export default {
 
             // Set initial values for the View table.
             for (let index = 0; index < this.lodgement_revisions_view_actions.length; index++) {
-                this.lodgement_revisions_view_actions[index].view_action = '<a style="visibility: visible; cursor:pointer;">View</a>'
+                this.lodgement_revisions_view_actions[index].view_action = '<a style="visibility: visible; cursor:pointer;" href="#">View</a>'
                 clicked_version.view_action = '<div style="">&#x1f441;</div>'
                 this.lodgement_revisions_actions[0].action = '<div style="visibility: hidden;">&#x1f441;</div>'
                 this.lodgement_revisions_actions[index].action = '<a style="cursor:pointer;">Compare</a>'
@@ -238,7 +240,7 @@ export default {
             let index = 0
             for (let prop in this.model_object.reversion_history) {
                 let action_label = '<a style="cursor:pointer;">Compare</a>'
-                let view_action_label = `<a style="cursor:pointer;">View</a>`
+                let view_action_label = `<a style="cursor:pointer;" href="#">View</a>`
                 if (index === 0) { 
                     view_action_label = '<div style="pointer-events: none;">&#x1f441;</div>'
                     action_label = '<div style="visibility: hidden; pointer-events: none;">View</div>'
