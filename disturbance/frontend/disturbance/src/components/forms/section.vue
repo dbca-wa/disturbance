@@ -44,12 +44,13 @@
 import { v4 as uuid } from 'uuid';
 export default {
   name: "sectionComp",
-  props: ["label", "secKey"],
+  props: ["label", "secKey" ],
   data() {
     return {
       eventInitialised: false,
       expandForPrint: true,
       chevron_elem_id: 'chevron_elem_' + uuid(),
+      customColor: 'black',
     };
   },
   computed: {
