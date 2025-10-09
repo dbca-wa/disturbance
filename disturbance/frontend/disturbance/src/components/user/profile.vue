@@ -222,7 +222,7 @@
                                     <div class="col-sm-3">
                                         <input type="text" disabled class="form-control" name="organisation" v-model="orgReq.abn" placeholder="">
                                     </div>
-                                    <lable class="col-sm-2">&nbsp;Pending for approval</lable>
+                                    <label class="col-sm-2">&nbsp;Pending for approval</label>
                                 </div>
                             </div>
                         </div>
@@ -300,6 +300,7 @@ import { v4 as uuidv4 } from 'uuid';
 import $ from 'jquery'
 import { api_endpoints, helpers } from '@/utils/hooks'
 import FormSection from '@/components/forms/section_toggle.vue';
+import alert from '@vue-utils/alert.vue'
 export default {
     name: 'UserProfile',
     data () {
@@ -341,10 +342,13 @@ export default {
             role: null,
             apiaryTemplateGroup: false,
             dasTemplateGroup: false,
+            phoneNumberReadonly: false,
+            mobileNumberReadonly: false,
         }
     },
     components: {
-        FormSection
+        FormSection,
+        alert
     },
     watch: {
         // managesOrg: function() {
