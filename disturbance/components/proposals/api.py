@@ -922,7 +922,7 @@ class ProposalViewSet(viewsets.ModelViewSet):
         try:
             instance = self.get_object()
             #qs = instance.requirements.all()
-            qs = instance.requirements.all().exclude(is_deleted=True)
+            qs = instance.requirements.all().exclude(is_deleted=True).order_by('order')
             serializer = ProposalRequirementSerializer(qs,many=True)
             return Response(serializer.data)
         except serializers.ValidationError:
