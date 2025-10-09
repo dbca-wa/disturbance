@@ -3,6 +3,12 @@
         <template v-if="is_local">
             proposal_external.vue
         </template>
+        <template v-if="isLoading">
+            <div class="loading-container">
+                <div class="spinner"></div>
+                <p class="loading-text">Loading...</p>
+            </div>
+        </template>
         <div class="row">
             <form :action="proposal_form_url" method="post" name="new_proposal" enctype="multipart/form-data">
                 <div v-if="!proposal_readonly">
@@ -824,16 +830,15 @@ export default {
         let proposal_id = this.$route.params.proposal_id
 
         let vm = this;
+        vm.loading.push('Loading Proposal')
         fetch(`/api/proposal/${ proposal_id }.json`).then(
             async (res) => {
-                vm.loading.push('fetching proposal')
+                //vm.loading.push('fetching proposal')
                 if (!res.ok) {
                     return await res.json().then(err => { throw err });
                 }
                 vm.proposal = await res.json();
-                console.log('vm.proposal')
-                console.log(vm.proposal)
-                vm.loading.splice('fetching proposal', 1);
+                vm.loading.splice('Loading Proposal', 1);
                 vm.setdata(vm.proposal.readonly);
 
                 fetch(helpers.add_endpoint_json(api_endpoints.proposals, proposal_id + '/amendment_request')).then(
@@ -845,6 +850,7 @@ export default {
                         vm.setAmendmentData(data);
                     }).catch(err => {
                         console.log(err);
+                        vm.loading.splice('Loading Proposal', 1);
                     });
             }).catch(err => {
                 console.log(err);

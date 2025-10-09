@@ -1,4 +1,10 @@
 <template lang="html">
+    <template v-if="isLoading">
+            <div class="loading-container">
+                <div class="spinner"></div>
+                <p class="loading-text">Loading...</p>
+            </div>
+    </template>
     <div v-if="proposal" id="internalProposal">
         <template v-if="is_local">
             proposal.vue
@@ -1654,6 +1660,7 @@ export default {
         // window.addEventListener('afterprint', this.afterPrinting);
     },
     created: function() {
+        this.loading.push('Loading Proposal');
         fetch(`/api/proposal/${this.proposalId}/internal_proposal.json`)
         .then(async (res) => {
             if (!res.ok) { return res.json().then(err => { throw err }); }
@@ -1666,8 +1673,10 @@ export default {
             if(this.reversion_history_length>1){
                 this.showHistory = true;
             }
+            this.loading.splice('Loading Proposal', 1);
         }).catch(err => {
           console.log(err);
+          this.loading.splice('Loading Proposal', 1);
         });
 
     },
