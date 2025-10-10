@@ -1,7 +1,7 @@
 <script lang="jsx">
     export default {
         name: 'ConditionsComponent',
-        props:["conditions","renderer","name","data","readonly"],
+        props:["conditions","renderer","name","data","readonly","id","isRequired"],
         mounted(){
 
         },
