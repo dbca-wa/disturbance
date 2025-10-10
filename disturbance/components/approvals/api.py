@@ -535,5 +535,40 @@ class ApprovalViewSet(viewsets.ModelViewSet):
         except Exception as e:
             print(traceback.print_exc())
             raise serializers.ValidationError(str(e))
+        
 
+class ApprovalDocumentPaginatedViewSet(viewsets.ModelViewSet):
+    filter_backends = (ApprovalFilterBackend,)
+    pagination_class = DatatablesPageNumberPagination
+    #renderer_classes = (ApprovalRenderer,)
+    page_size = 10
+    queryset = ApprovalDocument.objects.none()
+    serializer_class = ApprovalDocumentHistorySerializer
+
+    def get_queryset(self):
+        
+        return ApprovalDocument.objects.all()
+    
+    @action(methods=['GET',], detail=True)
+    def approvals_document_external(self, request, pk=None):
+        
+        qs = self.get_queryset()
+        # allow approval id to be passed either as URL pk or as query param approval_id
+        approval_id = pk or request.GET.get('approval_id', None)
+        if approval_id:
+            try:
+                instance = Approval.objects.get(id=approval_id)
+                qs = qs.filter(approval__lodgement_number=instance.lodgement_number, name__icontains='approval')
+            except Approval.DoesNotExist:
+                qs = qs.none()
+
+        qs = qs.order_by("-uploaded_date")
+
+        self.paginator.page_size = qs.count()
+        result_page = self.paginator.paginate_queryset(qs, request)
+        serializer = ApprovalDocumentHistorySerializer(result_page, context={
+            'request': request,
+        }, many=True)
+        return self.paginator.get_paginated_response(serializer.data)
+    
 

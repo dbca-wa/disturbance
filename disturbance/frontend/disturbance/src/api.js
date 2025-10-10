@@ -95,4 +95,7 @@ export default {
     history_versions: "/api/history/versions/",
     history_version: "/api/history/version/",
     geocoding_address_search: "https://api.mapbox.com/geocoding/v5/mapbox.places/",
+    lookup_history_approvals: function (id) {
+        return `/api/approval_document_paginated/approvals_document_external/${id}/`;
+    },
 }

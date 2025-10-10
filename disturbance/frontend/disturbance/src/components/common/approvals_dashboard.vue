@@ -96,7 +96,7 @@
         <ApprovalCancellation ref="approval_cancellation"  @refreshFromResponse="refreshFromResponse"></ApprovalCancellation>
         <ApprovalSuspension ref="approval_suspension"  @refreshFromResponse="refreshFromResponse"></ApprovalSuspension>
         <ApprovalSurrender ref="approval_surrender"  @refreshFromResponse="refreshFromResponse"></ApprovalSurrender>
-        <ApprovalHistory ref="approval_history" />
+        <ApprovalHistory ref="approval_history" :key="approval_history_id" :approval_id="approval_history_id"/>
 
     </div>
 </template>
@@ -137,10 +137,7 @@ export default {
             //datatable_id: 'proposal-datatable-'+uuidv4(),
             //Profile to check if user has access to process Proposal
             profile: {},
-            approval_history: {
-                isModalOpen: false,
-                approval_history_id: null,
-            },
+            approval_history_id: null,
             // Filters for Proposals
             filterProposalRegion: 'All',
             filterProposalActivity: 'All',
@@ -734,8 +731,9 @@ export default {
             vm.$refs.proposal_datatable.vmDataTable.on('click', 'a[approval-history]', function(e) {
                 e.preventDefault();
                 let approval_id = $(this).attr('approval-history');
-                vm.$refs.approval_history.approval_history_id = approval_id;
-                vm.$refs.approval_history.isModalOpen = true;
+                vm.historyDocument(approval_id);
+                // vm.$refs.approval_history.approval_history_id = approval_id;
+                // vm.$refs.approval_history.isModalOpen = true;
             });
 
         },
@@ -837,6 +835,13 @@ export default {
             }
             else
                 return false;
+        },
+        historyDocument: function (id) {
+            this.approval_history_id = parseInt(id);
+            this.uuid++;
+            this.$nextTick(() => {
+                this.$refs.approval_history.isModalOpen = true;
+            });
         },
 
         reissueApproval:function (proposal_id) {
