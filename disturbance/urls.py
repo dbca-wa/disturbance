@@ -121,6 +121,7 @@ api_patterns = [
     url(r'^api/history/version/(?P<app_label>[\w-]+)/(?P<component_name>[\w-]+)/(?P<model_name>[\w-]+)/(?P<serializer_name>[\w-]+)/(?P<pk>\d+)/(?P<version_number>\d+)/$',
             history_api.GetVersionView.as_view(), name='get-version'),
     url(r'^api/geocoding_address_search_token', GeocodingAddressSearchTokenView.as_view(), name='geocoding_address_search_token'),
+    url(r'^api/approval_document_paginated/approvals_document_external/(?P<pk>\d+)/$', approval_api.ApprovalDocumentPaginatedViewSet.as_view({'get': 'approvals_document_external'}), name="approval_document_paginated_external"),
 ]
 
 # URL Patterns

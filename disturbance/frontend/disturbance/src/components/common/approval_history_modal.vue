@@ -1,15 +1,15 @@
 <template lang="html">
-    <div id="historyDetail" v-show='showApprovalHistory'>
+    <div id="historyDetail">
 
         <modal transition="modal fade" :title="dashboardTitle" :showOK='false' :showCancel="false" large force>
             <div class="container-fluid">
 
                 <form class="form-horizontal" name="approvalHistoryForm">
 
-                    <div class="col-sm-12">
+                    <div class="col-sm-12" v-if="approval_id">
 
                         <datatable ref="approval_history_table" 
-                            id="approval-history-table" 
+                            :id="datatable_id" 
                             :dtOptions="dtOptionsApprovalHistory"
                             :dtHeaders="dtHeadersApprovalHistory" 
                         />
@@ -26,6 +26,7 @@
 <script>
 import modal from "@vue-utils/bootstrap-modal.vue";
 import datatable from "@vue-utils/datatable.vue";
+import { v4 as uuid } from 'uuid';
 // import alert from '@vue-utils/alert.vue';
 import {
     api_endpoints,
@@ -35,7 +36,10 @@ import {
 export default {
     name: 'ApprovalHistoryModal',
     props: {
-        approval_id: String,
+        approval_id: {
+            type: Number,
+            required: true,
+        },
     },
     components:{
         modal,
@@ -47,44 +51,33 @@ export default {
         return {
             isModalOpen: false,
             processingDetails: false,
-            apiaryTemplateGroup: false,
-            dasTemplateGroup: false,
-
-            //approval_history_id: '0',
             approval_history_id: null,
-            historyTable: null,
-            popoversInitialised: false,
-            dtOptionsApprovalHistory:{
-                // language: {
-                //     processing: "<i class='fa fa-4x fa-spinner fa-spin'></i>"
-                // },
-                language: {
-                    processing: constants.DATATABLE_PROCESSING_HTML,
-                },
-                responsive: true,
-                deferRender: true, 
-                autowidth: true,
-                order: [[2, 'desc']],
-                dom: "<'d-flex align-items-center'<'me-auto'l>fB>" +
-                    "<'row'<'col-sm-12'tr>>" +
-                    "<'d-flex align-items-center'<'me-auto'i>p>",
-                buttons: [],
-                processing:true,
-                ajax: {
-                    "url": vm.history_url, 
-                    type: 'GET',
-                    "dataSrc": '',
-                    data: function(_data) {
-                        console.log(_data)
-                        _data.approval_history_id = vm.approval_history_id
-                    return _data;
-                    },
-                },
-                //order: [0],
-                columnDefs: [
-                    { visible: false, targets: [ 0 ] } // hide order column.
-                ],
-                columns:[
+            datatable_id: 'history-datatable-' + uuid(),
+        }
+    },
+    watch:{
+        isModalOpen() {
+            if (this.isModalOpen) {
+                this.$refs.approval_history_table.vmDataTable.ajax.reload();
+            }
+        },
+    },
+    computed: {
+        dtHeadersApprovalHistory: function() {
+                return  ["order","Date","Approval"]
+        },
+
+        is_external: function(){
+            return this.level == 'external';
+        },
+        dashboardTitle: function() {
+            let title = ''
+            title = 'Approval History';
+            return title;
+        },
+        dtOptionsApprovalHistory: function () {
+            //let vm = this;
+            let columns = [
                     { data:"history_date" },
                     { data:"history_date" },
                     {
@@ -94,39 +87,34 @@ export default {
                         },
                         orderable: false
                     },
-                ]
-            },
-        }
-    },
-    watch:{
-
-    },
-    computed: {
-        dtHeadersApprovalHistory: function() {
-            if (this.apiaryTemplateGroup) {
-                return  ["order","Date","Licence"]
-            } else {
-                return  ["order","Date","Approval"]
-            }
-        },
-
-        is_external: function(){
-            return this.level == 'external';
-        },
-        showApprovalHistory: function(){
-            if (this.isModalOpen && !this.processingDetails){
-                this.getHistory()
-            }
-            return this.isModalOpen
-        },
-        dashboardTitle: function() {
-            let title = ''
-            if (this.apiaryTemplateGroup) {
-                title = 'Licence History';
-            } else {
-                title = 'Approval History';
-            }
-            return title;
+                ];
+            return {
+                autoWidth: false,
+                language: {
+                    processing: constants.DATATABLE_PROCESSING_HTML,
+                },
+                responsive: true,
+                searching: true,
+                ordering: true,
+                order: [[0, 'asc']],
+                serverSide: true,
+                ajax: {
+                    url:
+                        api_endpoints.lookup_history_approvals(this.approval_id) +
+                        '?format=datatables',
+                    dataSrc: 'data',
+                    data: function (d) {
+                        d.approval_id = this.approval_id;
+                    },
+                },
+                buttons: [],
+                dom:
+                    "<'d-flex align-items-center'<'me-auto'l>fB>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'d-flex align-items-center'<'me-auto'i>p>",
+                columns: columns,
+                processing: true,
+            };
         },
 
     },
@@ -138,33 +126,9 @@ export default {
             this.processingDetails = false;
             this.isModalOpen = false;
         },
-        getHistory: function() {
-            this.processingDetails = true;  
-            this.$refs.approval_history_table.vmDataTable.clear().draw();
-            this.url = this.$refs.approval_history_table.vmDataTable.ajax.url
-            this.$refs.approval_history_table.vmDataTable.ajax.reload();
-        }
     },
     created: function() {
-        // retrieve template group
-        fetch('/template_group',{
-            emulateJSON:true
-        }).then(
-            async (res)=>{
-                if (!res.ok) {
-                    return await res.json().then(err => { throw err });
-                }
-                //this.template_group = res.body.template_group;
-                const template_group_res= await res.json();
-                if (template_group_res.template_group === 'apiary') {
-                    this.apiaryTemplateGroup = true;
-                } else {
-                    this.dasTemplateGroup = true;
-                }
-            },err=>{
-                console.log(err);
-            }
-        );
+        
     },
 
 }
