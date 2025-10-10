@@ -243,7 +243,9 @@ export default {
         preview_licence_url: function() {
           return (this.proposal_id) ? `/preview/licence-pdf/${this.proposal_id}` : '';
         },
-
+        today() {
+            return moment().format('YYYY-MM-DD'); // Format for <input type="date">
+        }
     },
     methods:{
         preview:function () {
