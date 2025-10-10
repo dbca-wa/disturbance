@@ -9,7 +9,7 @@
             <!-- <div class="col-sm-12">
                 <button v-if="hasAssessorMode" @click.prevent="addRequirement()" style="margin-bottom:10px;" class="btn btn-primary pull-right">Add Requirement</button>
             </div> -->
-            <datatable ref="requirements_datatable" :id="'requirements-datatable-'+_uid" :dtOptions="requirement_options" :dtHeaders="requirement_headers"/>
+            <datatable ref="requirements_datatable" :id="datatable_id" :dtOptions="requirement_options" :dtHeaders="requirement_headers"/>
         </form>
     </FormSection>
         <RequirementDetail ref="requirement_detail" :proposal_id="proposal.id" :requirements="requirements"/>
@@ -30,10 +30,12 @@ export default {
     props: {
         proposal: Object
     },
+    emits: ['refreshRequirements'],
     data: function() {
         let vm = this;
         return {
             panelBody: "proposal-requirements-"+uuidv4(),
+            datatable_id: 'requirements-datatable-'+uuidv4(),
             requirements: [],
             requirement_headers:["Requirement","Due Date","Recurrence","Action","Order"],
             requirement_options:{
