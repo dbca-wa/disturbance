@@ -355,7 +355,7 @@
                 endTime: null,
 
                 dtHeaders: [
-                    'Id',
+                    'Site',
                     'Latitude',
                     'Longitude',
                     'Category',
@@ -377,12 +377,13 @@
                     columns: [
                         {
                             // id
-                            visible: false,
+                            visible: true,
                             mRender: function (data, type, full) {
-                                if (full.id) {
-                                    return full.id;
+                                const siteId = full.getId()
+                                if (isNaN(siteId)) {
+                                    return '---';
                                 } else {
-                                    return '';
+                                    return 'site:' + full.getId();
                                 }
                             }
                         },
@@ -849,7 +850,6 @@
                 return styles
             },
             styleFunctionForNewSite: function(feature){
-                console.log('in styleFunctionForNewSite')
                 // This is used for the proposed apiary sites
                 let vacant_selected = feature.get('vacant_selected')
                 if (vacant_selected){
@@ -1824,7 +1824,6 @@
             display_duration: function(label){
                 let finishedDate = new Date()
                 let delta = finishedDate - this.startTime
-                console.log(label + ' ' + delta + ' [ms]')
                 if (this.proposal_vacant_draft_loaded &&
                     this.proposal_vacant_processed_loaded &&
                     this.approval_vacant_loaded &&
@@ -1834,7 +1833,6 @@
                         this.endTime = new Date()
                         let timeDiff = this.endTime - this.startTime
                         let features = this.apiarySitesQuerySource.getFeatures()
-                        console.log('total time: ' + timeDiff + ' [ms] (' + features.length + ' sites)')
                     }
             },
             load_existing_sites: function(){
