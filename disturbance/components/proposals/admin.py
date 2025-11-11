@@ -163,8 +163,10 @@ class ProposalAdmin(VersionAdmin):
 
 @admin.register(models.ApiarySite)
 class ApiarySite(admin.ModelAdmin):
-    list_display = ['id', 'site_guid','is_vacant']
+    list_display = ['id', 'site_guid', 'latest_proposal_link', 'latest_approval_link', 'is_vacant', 'exempt_from_radius_restriction',]
     readonly_fields = ['site_guid','is_vacant','latest_proposal_link','latest_approval_link','proposal_link_for_vacant','approval_link_for_vacant', 'coordinates']
+    search_fields = ['id']
+    list_filter = ['is_vacant', 'exempt_from_radius_restriction',]
 
 @admin.register(models.ProposalAssessorGroup)
 class ProposalAssessorGroupAdmin(admin.ModelAdmin):
