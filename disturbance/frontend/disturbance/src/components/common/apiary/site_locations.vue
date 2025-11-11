@@ -355,7 +355,7 @@
                 endTime: null,
 
                 dtHeaders: [
-                    'Id',
+                    'Site',
                     'Latitude',
                     'Longitude',
                     'Category',
@@ -377,12 +377,12 @@
                     columns: [
                         {
                             // id
-                            visible: false,
+                            visible: true,
                             mRender: function (data, type, full) {
-                                if (full.id) {
-                                    return full.id;
+                                if (full.id_) {
+                                    return 'site:' + full.getId();
                                 } else {
-                                    return '';
+                                    return '---';
                                 }
                             }
                         },
@@ -1027,6 +1027,8 @@
                         vm.drawingLayerSource.addFeature(feature);
                     } else {
                         let feature = (new GeoJSON).readFeature(apiary_site)
+                        console.log('--- else ---')
+                        console.log({feature})
                         this.drawingLayerSource.addFeature(feature)
                         this.createBufferForSite(feature);
                     }
