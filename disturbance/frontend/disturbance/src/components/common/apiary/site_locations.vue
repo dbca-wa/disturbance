@@ -850,7 +850,6 @@
                 return styles
             },
             styleFunctionForNewSite: function(feature){
-                console.log('in styleFunctionForNewSite')
                 // This is used for the proposed apiary sites
                 let vacant_selected = feature.get('vacant_selected')
                 if (vacant_selected){
@@ -1028,8 +1027,6 @@
                         vm.drawingLayerSource.addFeature(feature);
                     } else {
                         let feature = (new GeoJSON).readFeature(apiary_site)
-                        console.log('--- else ---')
-                        console.log({feature})
                         this.drawingLayerSource.addFeature(feature)
                         this.createBufferForSite(feature);
                     }
@@ -1827,7 +1824,6 @@
             display_duration: function(label){
                 let finishedDate = new Date()
                 let delta = finishedDate - this.startTime
-                console.log(label + ' ' + delta + ' [ms]')
                 if (this.proposal_vacant_draft_loaded &&
                     this.proposal_vacant_processed_loaded &&
                     this.approval_vacant_loaded &&
@@ -1837,7 +1833,6 @@
                         this.endTime = new Date()
                         let timeDiff = this.endTime - this.startTime
                         let features = this.apiarySitesQuerySource.getFeatures()
-                        console.log('total time: ' + timeDiff + ' [ms] (' + features.length + ' sites)')
                     }
             },
             load_existing_sites: function(){
