@@ -1,4 +1,4 @@
-Django==5.2.6
+Django~=5.2.1
 django-extensions~=3.2.3
 psycopg2==2.9.4
 git+https://github.com/dbca-wa/wagov_utils.git#egg=wagov_utils
