@@ -23,3 +23,10 @@ class ApprovalAdmin(admin.ModelAdmin):
     raw_id_fields = ('applicant','proxy_applicant','current_proposal')
     readonly_fields = ['replaced_by', 'licence_document', 'cover_letter_document','renewal_document']
     search_fields = ['lodgement_number', 'current_proposal__lodgement_number', 'applicant__organisation__name', 'proxy_applicant__first_name', 'proxy_applicant__last_name']
+    list_filter = [
+        'set_to_cancel',
+        'set_to_suspend',
+        'set_to_surrender',
+        'reissued',
+        'migrated',
+    ]
