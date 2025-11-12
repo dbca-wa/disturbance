@@ -1,11 +1,10 @@
-Django==5.2.8
+Django~=5.2.1
 django-extensions~=3.2.3
 psycopg2==2.9.4
 git+https://github.com/dbca-wa/wagov_utils.git#egg=wagov_utils
 git+https://github.com/dbca-wa/dbca-utils.git@2.1.0#egg=dbca-utils
 git+https://github.com/dbca-wa/wagov_utils.git#egg=wagov_utils
 
-social-auth-app-django==5.4.3
 social-auth-core~=4.4
 coverage==6.5.0
 coveralls==3.3.1
