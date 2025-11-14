@@ -924,16 +924,16 @@
             set_mode: function(mode){
                 this.mode = mode
                 if (mode === 'measure'){
-                    this.drawForMeasure.setActive(true)
-                    this.drawForApiarySite.setActive(false)
+                    if(this.drawForMeasure) this.drawForMeasure.setActive(true)
+                    if(this.drawForApiarySite) this.drawForApiarySite.setActive(false)
                 } else if (mode === 'layer'){
                     this.clearMeasurementLayer()
-                    this.drawForMeasure.setActive(false)
-                    this.drawForApiarySite.setActive(false)
+                    if(this.drawForMeasure) this.drawForMeasure.setActive(false)
+                    if(this.drawForApiarySite) this.drawForApiarySite.setActive(false)
                 } else if (mode === 'normal') {
                     this.clearMeasurementLayer()
-                    this.drawForApiarySite.setActive(true)
-                    this.drawForMeasure.setActive(false)
+                    if(this.drawForApiarySite) this.drawForApiarySite.setActive(true)
+                    if(this.drawForMeasure) this.drawForMeasure.setActive(false)
                 }
             },
             clearMeasurementLayer: function(){
