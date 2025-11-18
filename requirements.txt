@@ -7,7 +7,7 @@ git+https://github.com/dbca-wa/ledger#egg=ledger
 #git+https://github.com/dbca-wa/ledger@4818666a1bda5fac274e9d0b48008797f04f6545
 git+https://github.com/dbca-wa/dpaw-utils.git@0.3a16#egg=dpaw-utils
 git+https://github.com/django-oscar/django-oscar.git@8a3288da439cc2a878f44ae5c5101043e658d2a2#egg=django-oscar
-social-auth-app-django==2.1.0
+social-auth-app-django==5.6.0
 git+https://github.com/scottp-dpaw/social-core.git@email_fix#egg=social-auth-core
 coverage==4.3.1
 coveralls==1.1
