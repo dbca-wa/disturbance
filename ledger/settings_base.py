@@ -85,7 +85,7 @@ MIDDLEWARE = [
 # Authentication settings
 LOGIN_URL = '/'
 AUTHENTICATION_BACKENDS = (
-    'social_core.backends.email.EmailAuth',
+    # 'social_core.backends.email.EmailAuth',
     'django.contrib.auth.backends.ModelBackend',
 )
 AUTH_USER_MODEL = 'accounts.EmailUser'
@@ -94,32 +94,32 @@ AUTH_USER_MODEL = 'accounts.EmailUser'
 USER_FIELDS = ['email']
 # SOCIAL_AUTH_STRATEGY = 'social_django.strategy.DjangoStrategy'
 # SOCIAL_AUTH_STORAGE = 'social_django.models.DjangoStorage'
-SOCIAL_AUTH_EMAIL_FORM_URL = '/ledger/'
-SOCIAL_AUTH_EMAIL_VALIDATION_FUNCTION = 'ledger.accounts.mail.send_validation'
-SOCIAL_AUTH_EMAIL_VALIDATION_URL = '/ledger/validation-sent/'
-SOCIAL_AUTH_EMAIL_VALIDATION_ALLOW_REUSE = True
-SOCIAL_AUTH_EMAIL_VALIDATION_EXPIRED_THRESHOLD = env('EMAIL_VALIDATION_EXPIRY', 86400)
-SOCIAL_AUTH_PASSWORDLESS = True
-SOCIAL_AUTH_SESSION_EXPIRATION = env('SESSION_EXPIRATION', False)
-SOCIAL_AUTH_MAX_SESSION_LENGTH = env('MAX_SESSION_LENGTH', 1209600)     # two weeks
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
-SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
-SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['first_name', 'last_name', 'email']
-SOCIAL_AUTH_PIPELINE = (
-    'social_core.pipeline.social_auth.social_details',
-    'ledger.accounts.pipeline.lower_email_address',
-    'ledger.accounts.pipeline.logout_previous_session',
-    'social_core.pipeline.social_auth.social_uid',
-    'social_core.pipeline.social_auth.auth_allowed',
-    'social_core.pipeline.social_auth.social_user',
-    'social_core.pipeline.user.get_username',
-    'ledger.accounts.pipeline.mail_validation',
-    'ledger.accounts.pipeline.user_by_email',
-    'social_core.pipeline.user.create_user',
-    'ledger.accounts.pipeline.user_is_new_session',
-    'social_core.pipeline.social_auth.associate_user',
-    'social_core.pipeline.social_auth.load_extra_data',
-)
+# SOCIAL_AUTH_EMAIL_FORM_URL = '/ledger/'
+# SOCIAL_AUTH_EMAIL_VALIDATION_FUNCTION = 'ledger.accounts.mail.send_validation'
+# SOCIAL_AUTH_EMAIL_VALIDATION_URL = '/ledger/validation-sent/'
+# SOCIAL_AUTH_EMAIL_VALIDATION_ALLOW_REUSE = True
+# SOCIAL_AUTH_EMAIL_VALIDATION_EXPIRED_THRESHOLD = env('EMAIL_VALIDATION_EXPIRY', 86400)
+# SOCIAL_AUTH_PASSWORDLESS = True
+# SOCIAL_AUTH_SESSION_EXPIRATION = env('SESSION_EXPIRATION', False)
+# SOCIAL_AUTH_MAX_SESSION_LENGTH = env('MAX_SESSION_LENGTH', 1209600)     # two weeks
+# SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
+# SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
+# SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['first_name', 'last_name', 'email']
+# SOCIAL_AUTH_PIPELINE = (
+#     'social_core.pipeline.social_auth.social_details',
+#     'ledger.accounts.pipeline.lower_email_address',
+#     'ledger.accounts.pipeline.logout_previous_session',
+#     'social_core.pipeline.social_auth.social_uid',
+#     'social_core.pipeline.social_auth.auth_allowed',
+#     'social_core.pipeline.social_auth.social_user',
+#     'social_core.pipeline.user.get_username',
+#     'ledger.accounts.pipeline.mail_validation',
+#     'ledger.accounts.pipeline.user_by_email',
+#     'social_core.pipeline.user.create_user',
+#     'ledger.accounts.pipeline.user_is_new_session',
+#     'social_core.pipeline.social_auth.associate_user',
+#     'social_core.pipeline.social_auth.load_extra_data',
+# )
 
 SESSION_COOKIE_DOMAIN = env('SESSION_COOKIE_DOMAIN', None)
 if SESSION_COOKIE_DOMAIN:
