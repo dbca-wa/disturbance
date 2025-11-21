@@ -196,5 +196,6 @@ if settings.DEBUG:
 # DBCA Template URLs
 urlpatterns.append(url("logout/", auth_views.LogoutView.as_view(), {"next_page": "/"}, name="logout"))
 if settings.ENABLE_DJANGO_LOGIN:
+    urlpatterns.append(url(r'^login/',auth_views.LoginView.as_view(),name='login'))
     urlpatterns.append(url(r"^ssologin/", auth_views.LoginView.as_view(), name="ssologin"))
     
