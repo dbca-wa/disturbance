@@ -826,11 +826,12 @@ export default {
                                             confirmButton: 'btn btn-primary',
                                         },
                                     });
+                                    return;
                                 } else {
                                     console.log(JSON.stringify(await response.json()));
+                                    throw new Error(`Unlink user failed: ${response.status}`);
                                 }
 
-                                throw new Error(`Unlink user failed: ${response.status}`);
                             }
 
                             swal.fire({

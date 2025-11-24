@@ -891,7 +891,22 @@ export default {
                         'mobile_number':vm.profile.mobile_number, 'phone_number':vm.profile.phone_number})
                     }).then(async (response) => {
                         if (!response.ok) {
-                            throw new Error(`Unlink User failed: ${response.status}`);
+                            // Check for specific status code
+                                if (response.status === 500) {
+                                    swal.fire({
+                                        title:'Unlink',
+                                        text:'Last Organisation Admin cannot be unlinked.',
+                                        icon:'error',
+                                        customClass: {
+                                            confirmButton: 'btn btn-primary',
+                                        },
+                                    });
+                                    return;
+                                } else {
+                                    console.log(JSON.stringify(await response.json()));
+                                    throw new Error(`Unlink user failed: ${response.status}`);
+                                }
+
                         }
                         fetch(api_endpoints.profile)
                         .then(async (response) => {
