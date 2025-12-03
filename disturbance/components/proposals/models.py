@@ -3817,16 +3817,17 @@ class ProposalApiary(RevisionedMixin):
 
         # Check the distance among the requested sites
         for apiary_site in self.apiary_sites.all():
-            relation = self.get_relation(apiary_site)
-            # Check among the apiary sites in this proposal except current one of the loop
-            q_objects = Q(apiary_site__in=self.apiary_sites.all())
-            q_objects &= Q(wkb_geometry_draft__distance_lte=(relation.wkb_geometry_draft, Distance(m=RESTRICTED_RADIUS)))
-            qs_sites_within = ApiarySiteOnProposal.objects.filter(q_objects).exclude(apiary_site=apiary_site)
-            if qs_sites_within:
-                # In this proposal, there are apiary sites which are too close to each other
-                if raise_exception:
-                    # raise serializers.ValidationError(['There are apiary sites in this proposal which are too close to each other.',])
-                    raise ValidationError('There are apiary sites in this proposal which are too close to each other.')
+            if not apiary_site.exempt_from_radius_restriction:
+                relation = self.get_relation(apiary_site)
+                # Check among the apiary sites in this proposal except current one of the loop
+                q_objects = Q(apiary_site__in=self.apiary_sites.all())
+                q_objects &= Q(wkb_geometry_draft__distance_lte=(relation.wkb_geometry_draft, Distance(m=RESTRICTED_RADIUS)))
+                qs_sites_within = ApiarySiteOnProposal.objects.filter(q_objects).exclude(apiary_site=apiary_site)
+                if qs_sites_within:
+                    # In this proposal, there are apiary sites which are too close to each other
+                    if raise_exception:
+                        # raise serializers.ValidationError(['There are apiary sites in this proposal which are too close to each other.',])
+                        raise ValidationError('There are apiary sites in this proposal which are too close to each other.')
                 validity = False
 
         return validity
