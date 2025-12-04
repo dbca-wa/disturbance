@@ -784,24 +784,32 @@ def save_proponent_data_apiary(proposal_obj, request, viewset):
                 if is_internal(request) or not renewal:
                     for index, feature in enumerate(site_locations_received):
                         feature['proposal_apiary_id'] = proposal_obj.proposal_apiary.id
-                        #TODO the below code had problems, using site_guid in place of where id is now - unsure why but it would cause problems saving renewals internally
-                        try:
-                            # Update existing
-                            # for the newely addes apiary site, 'id_' has its guid
-                            # for the existing apiary site, 'value_'.'site_guid' has its guid
-                            try:
-                                # Try to get this apiary site assuming already saved as 'draft'
-                                a_site = ApiarySite.objects.get(id=feature['id_'])
 
-                            except ApiarySite.DoesNotExist:
-                                # Try to get this apiary site assuming it is 'vacant' site (available site)
-                                a_site = ApiarySite.objects.get(id=feature['values_']['site_guid'])
+                        #first check if apiary site with site guid exists, checking with a provided feature['_id']
+                        site_check = ApiarySite.objects.none()
+                        if type(feature['id_']) == int:
+                            site_check = ApiarySite.objects.filter(id=feature['id_'])
+                        else:
+                            site_check = ApiarySite.objects.filter(site_guid=feature['id_'])
 
+                        if site_check.exists():
+                            a_site = site_check.first()
                             serializer = ApiarySiteSerializer(a_site, data=feature)
-                        except:  # when 'site_guid' is not defined above
-                            # Create new apiary site when both of the above queries failed
-                            feature['site_guid'] = feature['id_']
-                            serializer = ApiarySiteSerializer(data=feature)
+                        else:
+                            if 'site_guid' in feature['values_']:
+                                site_check = ApiarySite.objects.filter(site_guid=feature['values_']['site_guid'])
+                                # Try to get this apiary site assuming it is 'vacant' site (available site)
+                                if site_check.exists():
+                                    a_site = site_check.first()
+                                    serializer = ApiarySiteSerializer(a_site, data=feature)
+                                else:
+                                    # Create new apiary site when both of the above queries failed
+                                    feature['site_guid'] = feature['id_']
+                                    serializer = ApiarySiteSerializer(data=feature)
+                            else:
+                                # Create new apiary site when both of the above queries failed
+                                feature['site_guid'] = feature['id_']
+                                serializer = ApiarySiteSerializer(data=feature)
 
                         if serializer:
                             serializer.is_valid(raise_exception=True)
