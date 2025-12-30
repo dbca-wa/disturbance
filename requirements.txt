@@ -78,3 +78,5 @@ setuptools~=80.9.0
 django-summernote==0.8.20.0
 django-vite~=3.1.0
 git+https://github.com/dbca-wa/webtemplate2.git#egg=webtemplate_dbca
+urllib3==2.6.2
+sqlparse==0.5.5
