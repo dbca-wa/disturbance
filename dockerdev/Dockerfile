@@ -1,7 +1,9 @@
 # Prepare the base environment.
 FROM ghcr.io/dbca-wa/disturbance:latest as builder_base_disturbancedev
 USER root
-RUN apt-get update
+# Temporary disabled due ubuntu mirror issues
+#RUN apt-get update
+
 RUN apt-get install --no-install-recommends -y patch
 RUN apt-get install --no-install-recommends -y libpq-dev git ssh sudo 
 RUN apt-get install --no-install-recommends -y screen
