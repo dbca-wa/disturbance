@@ -1,5 +1,5 @@
 import re
-from telnetlib import NEW_ENVIRON
+from telnetlib3 import NEW_ENVIRON
 import traceback
 import os
 import csv
