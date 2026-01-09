@@ -1,9 +1,8 @@
 Django~=5.2.1
 django-extensions~=3.2.3
-psycopg2==2.9.4
+psycopg2~=2.9.10
 git+https://github.com/dbca-wa/wagov_utils.git#egg=wagov_utils
 git+https://github.com/dbca-wa/dbca-utils.git@2.1.0#egg=dbca-utils
-git+https://github.com/dbca-wa/wagov_utils.git#egg=wagov_utils
 
 social-auth-core~=4.4
 coverage==6.5.0
@@ -62,7 +61,7 @@ click-plugins==1.1.1
 cligj==0.7.2
 fiona==1.10.1
 munch==4.0.0
-numpy==2.1.1
+numpy~=2.2.6
 pandas==2.2.3
 pyproj==3.7.1
 python-dateutil==2.9.0.post0
