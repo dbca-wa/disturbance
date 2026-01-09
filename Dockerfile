@@ -1,7 +1,7 @@
 # syntax = docker/dockerfile:1.2
 
 # Prepare the base environment.
-FROM ubuntu:24.04 as builder_base_das
+FROM ghcr.io/dbca-wa/docker-apps-dev:ubuntu_2510_base_python_node as builder_base_das
 MAINTAINER asi@dbca.wa.gov.au
 ENV DEBIAN_FRONTEND=noninteractive
 ENV DEBUG=True
@@ -42,55 +42,11 @@ RUN apt-get clean && \
 apt-get update && \
 apt-get upgrade -y && \
 apt-get install --no-install-recommends -y \
-wget \
-git \
-libmagic-dev \
-gcc \
-binutils \
-libproj-dev \
-gdal-bin \
 libgdal-dev \
-python3 \
-python3-setuptools \
-python3-dev \
-python3-pip \
-tzdata \
-libreoffice \
-libpq-dev \
-patch \
-postgresql-client \
-mtr \
-htop \
-vim \
 software-properties-common \
 imagemagick \
-libspatialindex-dev \
-bzip2 \
-curl \
-npm \
-virtualenv
-#RUN apt-get install -y ca-certificates curl gnupg build-essential
-#RUN mkdir -p /etc/apt/keyrings && \
-#    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
-#    NODE_MAJOR=10 && \
-#    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
-#RUN apt-get update
-#RUN apt-get install nodejs -y
+libspatialindex-dev
 
-# nvm env vars
-# RUN mkdir -p /usr/local/nvm
-# ENV NVM_DIR /usr/local/nvm
-# ENV NODE_VERSION v10.19.0
-# RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-# RUN /bin/bash -c ". $NVM_DIR/nvm.sh && nvm install $NODE_VERSION && nvm use --delete-prefix $NODE_VERSION"
-# ENV NODE_PATH $NVM_DIR/versions/node/$NODE_VERSION/bin
-# ENV PATH $NODE_PATH:$PATH
-
-
-# RUN add-apt-repository ppa:deadsnakes/ppa
-# RUN apt-get install --no-install-recommends -y python3.7 python3.7-dev python3.7-distutils 
-# RUN ln -s /usr/bin/python3.7 /usr/bin/python && \
-# python3.7 -m pip install --upgrade pip==21.3.1 && \
 RUN update-ca-certificates
 RUN mkdir -p /etc/apt/keyrings && \
     curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
@@ -98,10 +54,6 @@ RUN mkdir -p /etc/apt/keyrings && \
     | tee /etc/apt/sources.list.d/nodesource.list && \
     apt-get update && \
     apt-get install -y nodejs
-
-RUN wget https://raw.githubusercontent.com/dbca-wa/wagov_utils/main/wagov_utils/bin/default_script_installer.sh -O /tmp/default_script_installer.sh
-RUN chmod 755 /tmp/default_script_installer.sh
-RUN /tmp/default_script_installer.sh
 
 # Install nodejs
 COPY startup.sh /
