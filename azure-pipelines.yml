@@ -31,7 +31,7 @@ stages:
         tags: | 
               latest
               $(tagDate)
-        containerRegistry: DockerHub
+        containerRegistry: DockerGitHub
         repository: ghcr.io/dbca-wa/disturbance
       env:
         DOCKER_BUILDKIT: 1
@@ -43,5 +43,5 @@ stages:
         tags: | 
               disturbance_django_5_dev_latest
               disturbance_django_5_dev_$(tagDate)              
-        containerRegistry: DockerHub
+        containerRegistry: DockerGitHub
         repository: ghcr.io/dbca-wa/docker_app_dev   
