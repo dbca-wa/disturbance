@@ -4,6 +4,7 @@ from django.core.mail import EmailMultiAlternatives, EmailMessage
 from django.utils.encoding import smart_str
 from django.urls import reverse
 from django.conf import settings
+from disturbance.helpers import convert_external_url_to_internal_url
 
 from disturbance.components.emails.emails import TemplateEmailBase
 from disturbance.components.main.decorators import update_settings_handler
@@ -275,8 +276,9 @@ def send_organisation_request_email_notification(org_request, request, contact):
     url = request.build_absolute_uri('/internal/organisations/access/{}'.format(org_request.id))
     if "-internal" not in url:
         #url = "{0}://{1}{2}.{3}{4}".format(request.scheme, settings.SITE_PREFIX, '-internal', settings.SITE_DOMAIN, url.split(request.get_host())[1])
-        site_prefix = request.META['HTTP_HOST'].split('.')[0]
-        url = "{0}://{1}{2}.{3}{4}".format(request.scheme, site_prefix, '-internal', settings.SITE_DOMAIN, url.split(request.get_host())[1])
+        # site_prefix = request.META['HTTP_HOST'].split('.')[0]
+        # url = "{0}://{1}{2}.{3}{4}".format(request.scheme, site_prefix, '-internal', settings.SITE_DOMAIN, url.split(request.get_host())[1])
+        url = convert_external_url_to_internal_url(url)
 
     context = {
         'request': request.data,
@@ -335,7 +337,8 @@ def send_org_access_group_request_accept_email_notification(org_request, request
 
     url = request.build_absolute_uri('/internal/organisations/access/{}'.format(org_request.id))
     if "-internal" not in url:
-        url = '-internal.{}'.format(settings.SITE_DOMAIN).join(url.split('.' + settings.SITE_DOMAIN))
+        # url = '-internal.{}'.format(settings.SITE_DOMAIN).join(url.split('.' + settings.SITE_DOMAIN))
+        url = convert_external_url_to_internal_url(url)
 
     context = {
         'name': request.data.get('name'),

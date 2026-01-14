@@ -7,7 +7,7 @@ import json
 
 from rest_framework import serializers
 
-from disturbance.components.organisations.models import Organisation
+# from disturbance.components.organisations.models import Organisation
 from disturbance.components.main.models import DASMapLayer, Notice
 from django.core.cache import cache
 
@@ -195,5 +195,17 @@ def get_notices():
     else:
        notices_obj = json.loads(notices_dumped_data)
     return notices_obj
+
+
+def convert_external_url_to_internal_url(url):
+    if not settings.SITE_SUBDOMAIN_INTERNAL_SUFFIX:
+        return url
+
+    if settings.SITE_SUBDOMAIN_INTERNAL_SUFFIX not in url:
+        # Add the internal subdomain suffix to the url
+        url = f"{settings.SITE_SUBDOMAIN_INTERNAL_SUFFIX}.{settings.SITE_DOMAIN}".join(
+            url.split("." + settings.SITE_DOMAIN)
+        )
+    return url
 
 
