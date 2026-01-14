@@ -185,6 +185,16 @@ SYSTEM_NAME_SHORT = env('SYSTEM_NAME_SHORT', 'DAS')
 SITE_PREFIX = env('SITE_PREFIX')
 SITE_PREFIX_APIARY = env('SITE_PREFIX_APIARY')
 SITE_DOMAIN = env('SITE_DOMAIN')
+
+# These are used for converting between internal and external urls
+# This is useful when generating urls for emails when the current request user
+# is external and the link needs to be internal or vis versa
+# To get email links to work locally, set SITE_SUBDOMAIN_INTERNAL_SUFFIX=None in .env
+SITE_RANCHER_CLUSTER = env("SITE_RANCHER_CLUSTER", None)
+SITE_SUBDOMAIN_INTERNAL_SUFFIX = env("SITE_SUBDOMAIN_INTERNAL_SUFFIX", "-internal")
+if SITE_RANCHER_CLUSTER:
+    SITE_SUBDOMAIN_INTERNAL_SUFFIX += "-" + SITE_RANCHER_CLUSTER
+
 SUPPORT_EMAIL = env('SUPPORT_EMAIL', SYSTEM_NAME_SHORT.lower() + '@' + SITE_DOMAIN).lower()
 APIARY_SUPPORT_EMAIL = env('APIARY_SUPPORT_EMAIL', SUPPORT_EMAIL).lower()
 DEP_URL = env('DEP_URL','www.' + SITE_DOMAIN)

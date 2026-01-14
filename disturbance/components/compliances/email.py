@@ -8,6 +8,7 @@ from django.conf import settings
 from disturbance.components.emails.emails import TemplateEmailBase
 from ledger.accounts.models import EmailUser
 from disturbance.components.main.models import GlobalSettings
+from disturbance.helpers import convert_external_url_to_internal_url
 
 logger = logging.getLogger(__name__)
 
@@ -141,7 +142,8 @@ def send_internal_reminder_email_notification(compliance):
     url+=reverse('internal-compliance-detail',kwargs={'compliance_pk': compliance.id})
     if "-internal" not in url:
         # add it. This email is for internal staff
-        url = '-internal.{}'.format(settings.SITE_DOMAIN).join(url.split('.' + settings.SITE_DOMAIN))
+        # url = '-internal.{}'.format(settings.SITE_DOMAIN).join(url.split('.' + settings.SITE_DOMAIN))
+        url = convert_external_url_to_internal_url(url)
 
     context = {
         'compliance': compliance,
@@ -193,7 +195,8 @@ def send_internal_due_email_notification(compliance):
     url+=reverse('internal-compliance-detail',kwargs={'compliance_pk': compliance.id})
     if "-internal" not in url:
         # add it. This email is for internal staff
-        url = '-internal.{}'.format(settings.SITE_DOMAIN).join(url.split('.' + settings.SITE_DOMAIN))
+        # url = '-internal.{}'.format(settings.SITE_DOMAIN).join(url.split('.' + settings.SITE_DOMAIN))
+        url = convert_external_url_to_internal_url(url)
 
     context = {
         'compliance': compliance,
@@ -241,7 +244,8 @@ def send_submit_email_notification(request, compliance):
     url = request.build_absolute_uri(reverse('internal-compliance-detail',kwargs={'compliance_pk': compliance.id}))
     if "-internal" not in url:
         # add it. This email is for internal staff
-        url = '-internal.{}'.format(settings.SITE_DOMAIN).join(url.split('.' + settings.SITE_DOMAIN))
+        # url = '-internal.{}'.format(settings.SITE_DOMAIN).join(url.split('.' + settings.SITE_DOMAIN))
+        url = convert_external_url_to_internal_url(url)
     assessor_name=compliance.assigned_to.get_full_name() if compliance.assigned_to else ''
 
     context = {
