@@ -34,7 +34,7 @@ def search(dictionary, search_list):
     result = []
     flat_dict = flatten(dictionary)
     for k, v in flat_dict.items():
-        if any(x.lower()==v.lower() for x in search_list):
+        if any(x.lower() in v.lower() for x in search_list):
             result.append( {k: v} )
     return result
 
