@@ -710,7 +710,6 @@ class ProposalSqsViewSet(viewsets.ModelViewSet):
 
             if instance.shapefile_json:
                 start_time = time.time()
-
                 proposal = instance
                 proposal.prefill_requested=True
                 # current_ts = request.data.get('current_ts') # format required '%Y-%m-%dT%H:%M:%S'
@@ -769,11 +768,28 @@ class ProposalSqsViewSet(viewsets.ModelViewSet):
                 url = get_sqs_url('das/task_queue')
                 #url = get_sqs_url('das_queue/')
                 log_request(f'{request.user} - {self.__class__.__name__}.{inspect.currentframe().f_code.co_name} - {url}')
-                resp = requests.post(url=url, data={'data': json.dumps(data)}, auth=HTTPBasicAuth(settings.SQS_USER,settings.SQS_PASS), verify=False)
-                resp_data = resp.json()
+                resp = requests.post(url=url, data={'data': json.dumps(data)}, auth=HTTPBasicAuth(settings.SQS_USER,settings.SQS_PASS))
+                if resp.status_code != 200:
+                    logger.error(f'SpatialQuery API call error: {resp.content}')
+                    try:
+                        return Response(resp.json(), status=resp.status_code)
+                    except:
+                        return Response({'errors': resp.content.decode('utf-8') if isinstance(resp.content, bytes) else resp.content}, status=resp.status_code)
+                
+                # Handle empty response
+                if not resp.content:
+                    logger.error('Empty response from SQS API')
+                    return Response({'errors': 'Empty response from SQS API'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                
+                try:
+                    resp_data = resp.json()
+                except ValueError as e:
+                    logger.error(f'JSON decode error: {e}, Response content: {resp.content}')
+                    return Response({'errors': f'Invalid JSON response from SQS: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                
                 if 'errors' in resp_data:
                     logger.error(f'Error: {resp_data["errors"]}')
-                    raise serializers.ValidationError(f'Error: {resp_data["errors"]}')                   
+                    raise serializers.ValidationError(f'Error: {resp_data["errors"]}')                       
                 
                 sqs_task_id = resp_data['data']['task_id']
                 task, created = TaskMonitor.objects.get_or_create(
