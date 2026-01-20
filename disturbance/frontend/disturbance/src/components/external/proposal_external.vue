@@ -733,7 +733,7 @@ export default {
                 }
 
                 if (this.type == 'textarea') {
-                    if (this.value == '') {
+                    if (this.value.trim() == '') {
                         var text = $('#'+id).text()
                         console.log('textarea not provided: ' + this.type + ' ' + this.name)
                         vm.missing_fields.push({id: id, label: text});
