@@ -1491,6 +1491,21 @@ class Proposal(DirtyFieldsMixin, RevisionedMixin):
                 #The features id has to be unique for each shapefile_json
                 if shapefile_json and 'features' in shapefile_json:
                     num_features = len(shapefile_json['features'])
+                    # Check for non-polygon geometries
+                    invalid_geom = []
+                    for idx, feature in enumerate(shapefile_json['features']):
+                        if 'geometry' in feature and feature['geometry']:
+                            geom_type = feature['geometry'].get('type', '').lower()
+                            if geom_type not in ['polygon', 'multipolygon']:
+                                invalid_geom.append({
+                                    'feature_index': idx,
+                                    'geometry_type': geom_type
+                                })
+                    
+                    if invalid_geom:
+                        invalid_types = ', '.join(set(g['geometry_type'] for g in invalid_geom))
+                        raise ValidationError(f'Shapefile contains non-polygon geometries: {invalid_types}. Only Polygon and MultiPolygon geometries are allowed.')
+                
                     if num_features > 0 and num_features <= MAX_NO_POLYGONS:
                         if 'id' in shapefile_json['features'][0]:
                             shapefile_json['features'][0]['id']=self.id
