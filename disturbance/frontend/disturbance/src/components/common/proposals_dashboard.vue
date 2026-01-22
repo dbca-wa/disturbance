@@ -333,7 +333,7 @@ export default {
             if (this.apiaryTemplateGroup) {
                 label = 'Applicant';
             } else {
-                label = 'Proposal';
+                label = 'Proponent';
             }
             return label;
         },
