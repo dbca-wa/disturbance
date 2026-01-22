@@ -675,7 +675,7 @@ class ProposalViewSet(viewsets.ModelViewSet):
 
         activity_qs =  qs.filter(activity__isnull=False).values_list('activity', flat=True).distinct()
         submitters = [dict(email=i[2], search_term='{} {} ({})'.format(i[0], i[1], i[2])) for i in submitter_qs]
-        application_type_qs =  qs.filter(application_type__isnull=False).values_list('application_type__name', flat=True).distinct()
+        application_type_qs =  qs.filter(application_type__isnull=False, application_type__visible=True).values_list('application_type__name', flat=True).distinct()
         applicants = [dict(id=i[0], search_term='{}'.format(i[1])) for i in applicant_qs]
         data = dict(
             regions=region_qs,
@@ -3139,7 +3139,7 @@ class DASMapFilterViewSet(viewsets.ReadOnlyModelViewSet):
             applicant_qs = qs.filter(applicant__isnull=False).distinct(
                         'applicant_id').values_list('applicant_id','applicant__organisation__name',)
 
-        application_type_qs =  qs.filter(application_type__isnull=False).values_list('application_type__name', flat=True).distinct()
+        application_type_qs =  qs.filter(application_type__isnull=False, application_type__visible=True).values_list('application_type__name', flat=True).distinct()
         activity_qs =  qs.filter(activity__isnull=False).values_list('activity', flat=True).distinct()
         submitters = [dict(email=i[2], search_term='{} {} ({})'.format(i[0], i[1], i[2])) for i in submitter_qs]
         applicants = [dict(id=i[0], search_term='{}'.format(i[1])) for i in applicant_qs]
