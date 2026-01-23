@@ -261,14 +261,15 @@ def send_due_email_notification(compliance):
             all_ccs = [cc_list]
 
     submitter = compliance.submitter.email if compliance.submitter and compliance.submitter.email else compliance.approval.relevant_applicant_email
-    msg = email.send(submitter, cc=all_ccs, context=context)
-    sender = settings.DEFAULT_FROM_EMAIL
-    try:
-        sender_user = EmailUser.objects.get(email__icontains=sender)
-    except:
-        sender_user = EmailUser.objects.create(email=sender, password='')
-    _log_compliance_email(msg, compliance, sender=sender_user)
-    _log_org_email(msg, compliance.approval.applicant, compliance.submitter, sender=sender_user)
+    if submitter:
+        msg = email.send(submitter, cc=all_ccs, context=context)
+        sender = settings.DEFAULT_FROM_EMAIL
+        try:
+            sender_user = EmailUser.objects.get(email__icontains=sender)
+        except:
+            sender_user = EmailUser.objects.create(email=sender, password='')
+        _log_compliance_email(msg, compliance, sender=sender_user)
+        _log_org_email(msg, compliance.approval.applicant, compliance.submitter, sender=sender_user)
 
 def send_apiary_due_email_notification(compliance):
     email = ComplianceDueNotificationEmail()
