@@ -149,6 +149,7 @@ def send_reminder_email_notification(compliance):
         'approval': compliance.approval,
     }
     all_ccs = []
+    #TODO what if it is from a site tranfer? We should use the site tranferee! (unless we only use this for das, not apiary)
     if compliance.proposal.applicant.email:
         cc_list = compliance.proposal.applicant.email
         if cc_list:
@@ -249,6 +250,9 @@ def send_due_email_notification(compliance):
         'proposal': compliance.proposal,
         'approval': compliance.approval,
     }
+
+    #TODO what if it is a site transfer? we should not send it to the submitter/applicant if that is the case (unless we only use this for das, not apiary)
+
     all_ccs = []
     if compliance.proposal.applicant.email:
         cc_list = compliance.proposal.applicant.email

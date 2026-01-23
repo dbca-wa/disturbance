@@ -4503,6 +4503,7 @@ class ProposalApiary(RevisionedMixin):
                         ProposalUserAction.ACTION_UPDATE_APPROVAL_FOR_PROPOSAL.format(
                             target_approval.lodgement_number,
                             self.proposal.id), request)
+
                     # Log entry for organisation
                     if self.proposal.applicant:
                         self.proposal.applicant.log_user_action(
