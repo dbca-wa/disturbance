@@ -3071,15 +3071,15 @@ class DASMapFilterViewSet(viewsets.ReadOnlyModelViewSet):
                     return i[0]
             return None
 
-        # on the internal dashboard, the Region filter is multi-select - have to use the custom filter below
-        regions = request.GET.get('regions')
-        if regions:
+        region = request.GET.get('region')
+        if region and not region.lower() =='all':
             if queryset.model is Proposal:
-                queryset = queryset.filter(region__name__iregex=regions.replace(',', '|'))
+                # queryset = queryset.filter(region__name__iregex=region.replace(',', '|'))
+                queryset = queryset.filter(region=region)
             elif queryset.model is Referral or queryset.model is Compliance:
-                queryset = queryset.filter(proposal__region__name__iregex=regions.replace(',', '|'))
+                queryset = queryset.filter(proposal__region=region)
             #elif queryset.model is Approval:
-            #    queryset = queryset.filter(region__iregex=regions.replace(',', '|'))
+            #    queryset = queryset.filter(region__iregex=region.replace(',', '|'))
 
         
         application_type = request.GET.get('application_type')

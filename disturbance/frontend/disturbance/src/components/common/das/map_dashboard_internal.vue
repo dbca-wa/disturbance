@@ -11,7 +11,6 @@
                                             <div v-show="select2Applied">
                                                 <label for="">Region</label>
                                                 <select class="form-select" ref="filterRegion" v-model="filterProposalRegion">
-                                                    <option value="All">All</option>
                                                     <option v-for="r in regions" :value="r.id" :key="r.id">{{r.search_term}}</option>
                                                 </select>
                                             </div>
@@ -331,6 +330,7 @@
         },
         watch: {
              filterProposalRegion: function () {
+                this.fetchProposals();
                 this.applyFiltersFrontEnd();
                 this.$emit('filter-appied');
             },
@@ -382,6 +382,9 @@
         },
         methods: {
             applyFiltersFrontEnd: function () {
+                if (!this.proposals){
+                    return;
+                }
                 this.filteredProposals = [...this.proposals];
                 if ('All' != this.filterProposalRegion) {
                     this.filteredProposals = [...this.filteredProposals.filter(proposal => proposal.region == this.filterProposalRegion)]
@@ -659,6 +662,8 @@
                         });
                     }
                     vm.proposalQuerySource.addFeatures(feature);
+                    // Zoom to loaded features
+                    vm.displayAllFeatures(vm.proposalQuerySource);
                 });
             },
             addEventListeners: function () {
@@ -1600,6 +1605,16 @@
                         vm.proposal_applicants = filter_lists.applicants;
                         //vm.proposal_status = response.body.processing_status_choices;
                         vm.proposal_status = vm.level == 'internal' ? vm.internal_status: vm.external_status;
+                        // Set default region to Warren's region's ID if regions exist as per request
+                        if (vm.regions && vm.regions.length > 0) {
+                            const region = vm.regions.find(region => region.search_term.toLowerCase() === 'warren');
+                            if(region){
+                                vm.filterProposalRegion = region.id; // warren
+                            } else {
+                                vm.filterProposalRegion = vm.regions[0].id;
+                            }
+                            vm.fetchProposals();
+                        }
                     }).catch((error) => {
                         console.log(error);
                     });
@@ -1609,6 +1624,10 @@
                 let vm=this;
                 // let _ajax_obj=null;
                 var ajax_data={"proposal_status": 'All'}
+                // Add region filter if not 'All'
+                if (vm.filterProposalRegion && vm.filterProposalRegion !== 'All') {
+                    ajax_data['region'] = vm.filterProposalRegion;
+                }
                 let url = api_endpoints.das_map_proposal 
                 $.ajax({
                             url: url,
@@ -1619,12 +1638,14 @@
                             dataType: 'json',
                             success: function(re){
                                 vm.proposals = re;
-                                vm.filteredProposals = [...vm.proposals]
-                                // for (let proposal of re){
-                                //     vm.addProposalsToMap(proposal.shapefile_json);
-
-                                // }
-                                vm.loadFeatures(vm.proposals);
+                                if(vm.proposals.length>0){
+                                    vm.filteredProposals = [...vm.proposals]
+                                    // for (let proposal of re){
+                                    //     vm.addProposalsToMap(proposal.shapefile_json);
+                                        
+                                    // }
+                                    vm.loadFeatures(vm.proposals);
+                                }
                             },
                             error: function (jqXhr, textStatus, errorMessage) { // error callback
                                 console.log(errorMessage);
@@ -1649,7 +1670,7 @@
                 vm.addEventListeners()
             });
             vm.initMap()
-            vm.fetchProposals()
+            // vm.fetchProposals()
             vm.fetchFilterLists();
             vm.setBaseLayer('osm')
             vm.set_mode('layer')
