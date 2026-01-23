@@ -149,7 +149,7 @@ def send_reminder_email_notification(compliance):
         'approval': compliance.approval,
     }
     all_ccs = []
-    if compliance.proposal.applicant.email:
+    if compliance.proposal and compliance.proposal.applicant:
         cc_list = compliance.proposal.applicant.email
         if cc_list:
             all_ccs = [cc_list]
@@ -177,21 +177,22 @@ def send_apiary_reminder_email_notification(compliance):
         'approval': compliance.approval,
     }
     all_ccs = []
-    if compliance.approval.applicant and compliance.approval.applicant.email:
+    if compliance.approval:
         cc_list = compliance.approval.relevant_applicant_email
         if cc_list:
             all_ccs = [cc_list]
 
     submitter = compliance.submitter.email if compliance.submitter and compliance.submitter.email else compliance.approval.relevant_applicant_email
-    msg = email.send(submitter, cc=all_ccs, context=context)
-    sender = settings.DEFAULT_FROM_EMAIL
-    try:
-        sender_user = EmailUser.objects.get(email__icontains=sender)
-    except:
-        sender_user = EmailUser.objects.create(email=sender, password='')
-    _log_compliance_email(msg, compliance, sender=sender_user)
-    if compliance.approval.applicant:
-        _log_org_email(msg, compliance.approval.applicant, compliance.submitter, sender=sender_user)
+    if submitter:
+        msg = email.send(submitter, cc=all_ccs, context=context)
+        sender = settings.DEFAULT_FROM_EMAIL
+        try:
+            sender_user = EmailUser.objects.get(email__icontains=sender)
+        except:
+            sender_user = EmailUser.objects.create(email=sender, password='')
+        _log_compliance_email(msg, compliance, sender=sender_user)
+        if compliance.approval.applicant:
+            _log_org_email(msg, compliance.approval.applicant, compliance.submitter, sender=sender_user)
 
 def send_internal_reminder_email_notification(compliance):
     email = ComplianceInternalReminderNotificationEmail()
@@ -252,8 +253,33 @@ def send_due_email_notification(compliance):
         'approval': compliance.approval,
     }
 
-    #TODO what if it is a site transfer? we should not send it to the submitter/applicant if that is the case (unless we only use this for das, not apiary)
+    all_ccs = []
+    if compliance.proposal.applicant.email:
+        cc_list = compliance.proposal.applicant.email
+        if cc_list:
+            all_ccs = [cc_list]
 
+    submitter = compliance.submitter.email if compliance.submitter and compliance.submitter.email else compliance.proposal.submitter.email
+    msg = email.send(submitter, cc=all_ccs, context=context)
+    sender = settings.DEFAULT_FROM_EMAIL
+    try:
+        sender_user = EmailUser.objects.get(email__icontains=sender)
+    except:
+        sender_user = EmailUser.objects.create(email=sender, password='')
+    _log_compliance_email(msg, compliance, sender=sender_user)
+    _log_org_email(msg, compliance.proposal.applicant, compliance.submitter, sender=sender_user)
+
+def send_apiary_due_email_notification(compliance):
+    email = ComplianceDueNotificationEmail()
+    #url = request.build_absolute_uri(reverse('external-compliance-detail',kwargs={'compliance_pk': compliance.id}))
+    url=settings.SITE_URL
+    url+=reverse('external-compliance-detail',kwargs={'compliance_pk': compliance.id})
+    context = {
+        'compliance': compliance,
+        'url': url,
+        'proposal': compliance.proposal,
+        'approval': compliance.approval,
+    }
     all_ccs = []
     if compliance.approval:
         cc_list = compliance.approval.relevant_applicant_email
@@ -269,33 +295,8 @@ def send_due_email_notification(compliance):
         except:
             sender_user = EmailUser.objects.create(email=sender, password='')
         _log_compliance_email(msg, compliance, sender=sender_user)
-        _log_org_email(msg, compliance.approval.applicant, compliance.submitter, sender=sender_user)
-
-def send_apiary_due_email_notification(compliance):
-    email = ComplianceDueNotificationEmail()
-    #url = request.build_absolute_uri(reverse('external-compliance-detail',kwargs={'compliance_pk': compliance.id}))
-    url=settings.SITE_URL
-    url+=reverse('external-compliance-detail',kwargs={'compliance_pk': compliance.id})
-    context = {
-        'compliance': compliance,
-        'url': url
-    }
-    all_ccs = []
-    if compliance.approval.applicant and compliance.approval.applicant.email:
-        cc_list = compliance.approval.applicant.email
-        if cc_list:
-            all_ccs = [cc_list]
-
-    submitter = compliance.submitter.email if compliance.submitter and compliance.submitter.email else compliance.approval.current_proposal.submitter.email
-    msg = email.send(submitter, cc=all_ccs, context=context)
-    sender = settings.DEFAULT_FROM_EMAIL
-    try:
-        sender_user = EmailUser.objects.get(email__icontains=sender)
-    except:
-        sender_user = EmailUser.objects.create(email=sender, password='')
-    _log_compliance_email(msg, compliance, sender=sender_user)
-    if compliance.approval.applicant:
-        _log_org_email(msg, compliance.proposal.applicant, compliance.submitter, sender=sender_user)
+        if compliance.approval.applicant:
+            _log_org_email(msg, compliance.approval.applicant, compliance.submitter, sender=sender_user)
 
 def send_internal_due_email_notification(compliance):
     email = ComplianceInternalDueNotificationEmail()
