@@ -268,7 +268,8 @@ def send_due_email_notification(compliance):
         except:
             sender_user = EmailUser.objects.create(email=sender, password='')
         _log_compliance_email(msg, compliance, sender=sender_user)
-        _log_org_email(msg, compliance.proposal.applicant, compliance.submitter, sender=sender_user)
+        if compliance.proposal and compliance.proposal.applicant:
+            _log_org_email(msg, compliance.proposal.applicant, compliance.submitter, sender=sender_user)
 
 def send_apiary_due_email_notification(compliance):
     email = ComplianceDueNotificationEmail()
