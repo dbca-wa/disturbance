@@ -663,7 +663,7 @@ def send_site_transfer_approval_email_notification(proposal, request, approval):
         msg = email.send(approval.relevant_applicant_email, bcc= all_ccs, attachments=attachment, context=context)
         sender = get_sender_user()
         _log_proposal_email(msg, proposal, sender=sender)
-        if approval.applicant and hasattr(approval.applicant.organisation, 'email') and approval.applicant.organisation.email:
+        if approval.applicant and approval.applicant.organisation and hasattr(approval.applicant.organisation, 'email') and approval.applicant.organisation.email:
             _log_org_email(msg, approval.applicant, proposal.submitter, sender=sender)
 
 def send_assessment_reminder_email_notification(proposal):
