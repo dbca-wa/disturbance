@@ -149,7 +149,6 @@ def send_reminder_email_notification(compliance):
         'approval': compliance.approval,
     }
     all_ccs = []
-    #TODO what if it is from a site tranfer? We should use the site tranferee! (unless we only use this for das, not apiary)
     if compliance.proposal.applicant.email:
         cc_list = compliance.proposal.applicant.email
         if cc_list:
@@ -173,15 +172,17 @@ def send_apiary_reminder_email_notification(compliance):
     url+=reverse('external-compliance-detail',kwargs={'compliance_pk': compliance.id})
     context = {
         'compliance': compliance,
-        'url': url
+        'url': url,
+        'proposal': compliance.proposal,
+        'approval': compliance.approval,
     }
     all_ccs = []
     if compliance.approval.applicant and compliance.approval.applicant.email:
-        cc_list = compliance.approval.applicant.email
+        cc_list = compliance.approval.relevant_applicant_email
         if cc_list:
             all_ccs = [cc_list]
 
-    submitter = compliance.submitter.email if compliance.submitter and compliance.submitter.email else compliance.approval.current_proposal.submitter.email
+    submitter = compliance.submitter.email if compliance.submitter and compliance.submitter.email else compliance.approval.relevant_applicant_email
     msg = email.send(submitter, cc=all_ccs, context=context)
     sender = settings.DEFAULT_FROM_EMAIL
     try:
@@ -254,12 +255,12 @@ def send_due_email_notification(compliance):
     #TODO what if it is a site transfer? we should not send it to the submitter/applicant if that is the case (unless we only use this for das, not apiary)
 
     all_ccs = []
-    if compliance.proposal.applicant.email:
-        cc_list = compliance.proposal.applicant.email
+    if compliance.approval:
+        cc_list = compliance.approval.relevant_applicant_email
         if cc_list:
             all_ccs = [cc_list]
 
-    submitter = compliance.submitter.email if compliance.submitter and compliance.submitter.email else compliance.proposal.submitter.email
+    submitter = compliance.submitter.email if compliance.submitter and compliance.submitter.email else compliance.approval.relevant_applicant_email
     msg = email.send(submitter, cc=all_ccs, context=context)
     sender = settings.DEFAULT_FROM_EMAIL
     try:
@@ -267,7 +268,7 @@ def send_due_email_notification(compliance):
     except:
         sender_user = EmailUser.objects.create(email=sender, password='')
     _log_compliance_email(msg, compliance, sender=sender_user)
-    _log_org_email(msg, compliance.proposal.applicant, compliance.submitter, sender=sender_user)
+    _log_org_email(msg, compliance.approval.applicant, compliance.submitter, sender=sender_user)
 
 def send_apiary_due_email_notification(compliance):
     email = ComplianceDueNotificationEmail()
