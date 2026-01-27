@@ -78,7 +78,8 @@ export default{
 	    var show_add_info_proponent = true;
         if(layer_val){
   	    try {
-	        show_add_info_proponent = layer_val.sqs_data.other_data.show_add_info_section_prop	
+	        show_add_info_proponent = layer_val.sqs_data.other_data.show_add_info_section_prop
+            // show_add_info_proponent = layer_val.sqs_data && layer_val.sqs_data.other_data && layer_val.sqs_data.other_data.show_add_info_section_prop ? layer_val.sqs_data.other_data.show_add_info_section_prop : true;	
 	    } catch (ex) {
             show_add_info_proponent = true;
             console.log(ex);
@@ -335,9 +336,9 @@ export default{
             // var cons = Object.keys(conditions);
             var btns = $('input[name='+e.target.name+']');
             $.each(btns,function (i,input) {
-                $("#cons_"+e.target.name+'_'+input.value).addClass('hidden');
+                $("#cons_"+e.target.name+'_'+input.value).addClass('d-none');
             });
-            $("#cons_"+e.target.name+'_'+e.target.value).removeClass('hidden');
+            $("#cons_"+e.target.name+'_'+e.target.value).removeClass('d-none');
         }
     },
     handleCheckBoxChange(e){
@@ -346,11 +347,11 @@ export default{
             // var cons = Object.keys(conditions);
             var btns = $('input[name='+e.target.name+']');
             $.each(btns,function (i,input) {
-                $("#cons_"+e.target.name+'_'+input.value).addClass('hidden');
+                $("#cons_"+e.target.name+'_'+input.value).addClass('d-none');
 
             });
             if(e.target.checked){
-                $("#cons_"+e.target.name+'_'+e.target.value).removeClass('hidden');
+                $("#cons_"+e.target.name+'_'+e.target.value).removeClass('d-none');
             }
         }
 
@@ -365,9 +366,9 @@ export default{
             var cons = Object.keys(conditions);
             for (var i = 0; i < cons.length; i++) {
                 if (cons[i] == target.value) {
-                    $("#cons_"+target.name+'_'+target.value).removeClass('hidden');
+                    $("#cons_"+target.name+'_'+target.value).removeClass('d-none');
                 }else{
-                    $("#cons_"+target.name+'_'+cons[i]).addClass('hidden');
+                    $("#cons_"+target.name+'_'+cons[i]).addClass('d-none');
                 }
             }
         }

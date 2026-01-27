@@ -1,9 +1,8 @@
-<template lang="html">
-    <div class="top-buffer bottom-buffer">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <label :id="id" class="inline">{{label}}</label>
-                    <!--<i data-toggle="tooltip" v-if="help_text" data-placement="right" class="fa fa-question-circle" :title="help_text"> &nbsp; </i>-->
+<template>
+    <div class="mb-3 pb-3">
+        <div class="card">
+            <div class="card-body">
+                <label :id="id" class="form-label">{{ label }}</label>
                 <template v-if="help_text">
                     <HelpText :help_text="help_text" /> 
                 </template>
@@ -12,17 +11,28 @@
                     <HelpTextUrl :help_text_url="help_text_url" /> 
                 </template>
                 <template v-if="!assessorMode && layer_val">
-                    <RefreshCheckbox :parent_name="name" :parent_label="label" :assessorMode="assessorMode" :layer_data="layer_val" :proposal_id="proposal_id" :refresh_time_value="refresh_time_value"/>
+                    <RefreshCheckbox 
+                        :parent_name="name" 
+                        :parent_label="label" 
+                        :assessorMode="assessorMode" 
+                        :layer_data="layer_val" 
+                        :proposal_id="proposal_id" 
+                        :refresh_time_value="refresh_time_value"
+                    />
                 </template>
                 
-                <a class="collapse-link-top pull-right" @click.prevent="expand"><span class="glyphicon glyphicon-chevron-down"></span></a>
-                <div class="children-anchor-point collapse in" style="padding-left: 0px"></div>
-                <span :class="{'hidden':isRemovable}" v-if="isPreviewMode">
-                    <a :id="'remove_'+name" >Remove {{label}}</a>
+                <a class="collapse-link-top float-end" @click.prevent="expand">
+                    <i class="bi bi-chevron-down"></i>
+                </a>
+                <div class="collapse show" style="padding-left: 0px"></div>
+                <span v-if="isPreviewMode && !isRemovable">
+                    <a :id="'remove_'+name">Remove {{ label }}</a>
                 </span>
-                <a class="collapse-link-bottom pull-right"  @click.prevent="minimize"><span class="glyphicon glyphicon-chevron-up"></span></a>
-                <div :class="{'row':true,'collapse':true, 'in':isExpanded}" style="margin-top:10px;" >
-                    <div class="col-sm-12">
+                <a class="collapse-link-bottom float-end" @click.prevent="minimize">
+                    <i class="bi bi-chevron-up"></i>
+                </a>
+                <div :class="{ 'row': true, 'collapse': true, 'show': isExpanded }" style="margin-top: 10px;">
+                    <div class="col-12">
                         <slot></slot>
                     </div>
                 </div>
