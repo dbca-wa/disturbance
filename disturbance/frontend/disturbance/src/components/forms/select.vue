@@ -1,6 +1,6 @@
 <template lang="html">
     <div>
-        <div class="form-group">
+        <div class="form-group mb-3">
             <label :id="id">{{ label }}</label>
 
             <template v-if="help_text">

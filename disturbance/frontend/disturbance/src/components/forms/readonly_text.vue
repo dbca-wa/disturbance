@@ -1,6 +1,6 @@
 <template lang="html">
     <div class="col-md-12">
-        <div v-show="box_view" class="form-group">
+        <div v-show="box_view" class="form-group mb-3">
             <div class="row">
               <label :id="id" class="col-md-3" for="label" >{{ label }}</label>
               <div v-if="isPrinting" class="col-md-9"><br>{{ value }}</div>
