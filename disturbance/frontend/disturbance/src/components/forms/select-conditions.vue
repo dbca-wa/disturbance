@@ -19,7 +19,7 @@
                             <div>
                                 {values.map(val =>{
                                     {return (
-                                        <div id={'cons_'+vm.name+'_'+val} class="hidden">
+                                        <div id={'cons_'+vm.name+'_'+val} class="d-none">
                                             {conditions[val].map(c=>{
                                                 return vm.renderer.renderChildren(h,c,vm.data,vm.readonly)
                                             })}
