@@ -78,7 +78,9 @@ export default{
 	    var show_add_info_proponent = true;
         if(layer_val){
   	    try {
-	        show_add_info_proponent = layer_val.sqs_data.other_data.show_add_info_section_prop	
+	        // show_add_info_proponent = layer_val.sqs_data.other_data.show_add_info_section_prop
+            show_add_info_proponent = layer_val.sqs_data && layer_val.sqs_data.other_data && 
+                                     layer_val.sqs_data.other_data.show_add_info_section_prop ? layer_val.sqs_data.other_data.show_add_info_section_prop : true;	
 	    } catch (ex) {
             show_add_info_proponent = true;
             console.log(ex);
@@ -211,7 +213,7 @@ export default{
                   value = ( data )? data : null ;
                 }
                 _elements.push(
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                         <label id={id} class="inline">{c.label}</label>
                             <HelpText help_text={help_text}/>
                             <HelpText help_text={help_text_assessor} assessorMode={assessorMode} isForAssessor={true}/>
@@ -273,7 +275,7 @@ export default{
 
             case 'checkbox':
                 _elements.push(
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                         <Checkbox group={c.group} name={c.name} label={c.label} id={id1} help_text={help_text} help_text_url={help_text_url} value={val} handleChange={this.handleCheckBoxChange} conditions={c.conditions} readonly={readonly} isRequired={c.isRequired} layer_value={layer_val} assessorMode={assessorMode}/>
                         <Conditions conditions={c.conditions} renderer={this} name={c.name} data={data} id={id2} isRequired={c.isRequired}/>
                     </div>
@@ -285,7 +287,7 @@ export default{
                   value = ( data[c.name] )? data[c.name] : null ;
                 }
                 _elements.push(
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                         <label id={id1}>{c.label}</label>
                         <Checkbox name={c.name} label={c.label} value={val} id={id2} help_text={help_text} help_text_url={help_text_url} handleChange={this.handleCheckBoxChange} conditions={c.conditions} isRequired={c.isRequired}/>
                         <Conditions conditions={c.conditions} renderer={this} name={c.name} data={value} id={id3} isRequired={c.isRequired}/>
@@ -335,9 +337,9 @@ export default{
             // var cons = Object.keys(conditions);
             var btns = $('input[name='+e.target.name+']');
             $.each(btns,function (i,input) {
-                $("#cons_"+e.target.name+'_'+input.value).addClass('hidden');
+                $("#cons_"+e.target.name+'_'+input.value).addClass('d-none');
             });
-            $("#cons_"+e.target.name+'_'+e.target.value).removeClass('hidden');
+            $("#cons_"+e.target.name+'_'+e.target.value).removeClass('d-none');
         }
     },
     handleCheckBoxChange(e){
@@ -346,11 +348,11 @@ export default{
             // var cons = Object.keys(conditions);
             var btns = $('input[name='+e.target.name+']');
             $.each(btns,function (i,input) {
-                $("#cons_"+e.target.name+'_'+input.value).addClass('hidden');
+                $("#cons_"+e.target.name+'_'+input.value).addClass('d-none');
 
             });
             if(e.target.checked){
-                $("#cons_"+e.target.name+'_'+e.target.value).removeClass('hidden');
+                $("#cons_"+e.target.name+'_'+e.target.value).removeClass('d-none');
             }
         }
 
@@ -365,9 +367,9 @@ export default{
             var cons = Object.keys(conditions);
             for (var i = 0; i < cons.length; i++) {
                 if (cons[i] == target.value) {
-                    $("#cons_"+target.name+'_'+target.value).removeClass('hidden');
+                    $("#cons_"+target.name+'_'+target.value).removeClass('d-none');
                 }else{
-                    $("#cons_"+target.name+'_'+cons[i]).addClass('hidden');
+                    $("#cons_"+target.name+'_'+cons[i]).addClass('d-none');
                 }
             }
         }
