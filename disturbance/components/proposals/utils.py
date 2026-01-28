@@ -2207,7 +2207,6 @@ def gen_shapefile(user, qs=Proposal.objects.none(), filter_kwargs={}, geojson=Fa
         Proposal.PROCESSING_STATUS_DECLINED, 
         Proposal.PROCESSING_STATUS_DISCARDED,
     ]
-
     if qs.exists():
         qs = qs.exclude(Q(processing_status__in=status_exc) | Q(shapefile_json__isnull=True)).filter(**filter_kwargs)
     else:
@@ -2226,19 +2225,21 @@ def gen_shapefile(user, qs=Proposal.objects.none(), filter_kwargs={}, geojson=Fa
                 gdf.set_crs = settings.CRS
                 #gdf['geometry'] = gdf['geometry']
 
-                gdf['org']        = p.applicant.name if p.applicant else None
-                gdf['app_no']     = p.approval.lodgement_number if p.approval else None
-                gdf['prop_title'] = p.title
-                gdf['appissdate'] = p.approval.issue_date.strftime("%Y-%d-%d") if p.approval else None
-                gdf['appstadate'] = p.approval.start_date.strftime("%Y-%d-%d") if p.approval else None
-                gdf['appexpdate'] = p.approval.expiry_date.strftime("%Y-%d-%d") if p.approval else None
-                gdf['appstatus']  =  p.approval.status if p.approval else None
-                gdf['propstatus'] =  p.processing_status
-                gdf['assocprop']  = list(Proposal.objects.filter(approval__lodgement_number=p.approval.lodgement_number).values_list('lodgement_number', flat=True)) if p.approval else None
-                gdf['proptype']   = p.application_type.name
+                # Broadcast scalar values to all rows in the GeoDataFrame
+                gdf['org']        = [p.applicant.name if p.applicant else None] * len(gdf)
+                gdf['app_no']     = [p.approval.lodgement_number if p.approval else None] * len(gdf)
+                gdf['prop_title'] = [p.title] * len(gdf)
+                gdf['appissdate'] = [p.approval.issue_date.strftime("%Y-%m-%d") if p.approval else None] * len(gdf)
+                gdf['appstadate'] = [p.approval.start_date.strftime("%Y-%m-%d") if p.approval else None] * len(gdf)
+                gdf['appexpdate'] = [p.approval.expiry_date.strftime("%Y-%m-%d") if p.approval else None] * len(gdf)
+                gdf['appstatus']  = [p.approval.status if p.approval else None] * len(gdf)
+                gdf['propstatus'] = [p.processing_status] * len(gdf)
+                assocprop_val = ','.join(Proposal.objects.filter(approval__lodgement_number=p.approval.lodgement_number).values_list('lodgement_number', flat=True)) if p.approval else None
+                gdf['assocprop']  = [assocprop_val] * len(gdf)
+                gdf['proptype']   = [p.application_type.name] * len(gdf)
                 #gdf['propurl']    = request.build_absolute_uri(reverse('internal-proposal-detail',kwargs={'proposal_pk': p.id}))
-                gdf['propurl']    = settings.BASE_URL + reverse('internal-proposal-detail',kwargs={'proposal_pk': p.id})
-                gdf['activity'] = p.activity
+                gdf['propurl']    = [settings.BASE_URL + reverse('internal-proposal-detail',kwargs={'proposal_pk': p.id})] * len(gdf)
+                gdf['activity']   = [p.activity] * len(gdf)
 
                 #gdf.set_crs = settings.CRS
                 gdf_concat = pd.concat([gdf_concat, gdf[columns]], ignore_index=True)
