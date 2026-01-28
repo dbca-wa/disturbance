@@ -1,6 +1,6 @@
 <template lang="html">
     <div>
-        <div class="form-group">
+        <div class="form-group mb-3">
 
             <!-- using num_files to determine if files have been uploaded for this question/label (used in disturbance/frontend/disturbance/src/components/external/proposal.vue) -->
             <label :id="id" :num_files="num_documents()">{{label}}</label>
