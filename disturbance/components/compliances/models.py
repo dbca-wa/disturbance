@@ -100,7 +100,7 @@ class Compliance(RevisionedMixin):
 
     @property
     def holder(self):
-        return self.proposal.applicant
+        return self.approval.applicant
 
     @property
     def reference(self):
@@ -236,7 +236,10 @@ class Compliance(RevisionedMixin):
             try:
                 if self.processing_status =='due':
                     if self.due_date < today and self.lodgement_date==None and self.post_reminder_sent==False:
-                        send_reminder_email_notification(self)
+                        if self.proposal and self.proposal.apiary_group_application_type:
+                            send_apiary_reminder_email_notification(self)
+                        else:   
+                            send_reminder_email_notification(self)
                         send_internal_reminder_email_notification(self)
                         self.post_reminder_sent=True
                         self.reminder_sent=True
@@ -245,7 +248,10 @@ class Compliance(RevisionedMixin):
                         logger.info('Post due date reminder sent for Compliance {} '.format(self.lodgement_number))
                     elif self.due_date >= today and today >= self.due_date - datetime.timedelta(days=14) and self.reminder_sent==False:
                         # second part: if today is with 14 days of due_date, and email reminder is not sent (deals with Compliances created with the reminder period)
-                        send_due_email_notification(self)
+                        if self.proposal and self.proposal.apiary_group_application_type:
+                            send_apiary_due_email_notification(self)
+                        else:   
+                            send_due_email_notification(self)
                         send_internal_due_email_notification(self)
                         self.reminder_sent=True
                         self.save()
