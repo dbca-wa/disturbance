@@ -158,7 +158,7 @@ export default {
                             filteredOrganisations.push(org);
                         }
                     });
-                    vm.organisationChoices = filteredOrganisations;
+                    vm.organisationChoices = filteredOrganisations.sort();
                     // Grab Applicant from the data in the table
                     var applicantColumn = vm.$refs.org_access_table.vmDataTable.columns(2);
                     applicantColumn.data().unique().sort().each( function ( d ) {
