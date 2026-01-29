@@ -149,15 +149,16 @@ export default {
                     },
                 ],
                 initComplete: function(){
-                    // Grab Organisation from the data in the table
-                    var organisationColumn = vm.$refs.org_access_table.vmDataTable.columns(1);
-                    organisationColumn.data().unique().sort().each( function ( d ) {
-                        let organisationChoices = [];
-                        $.each(d,(index,a) => {
-                            a != null && organisationChoices.indexOf(a) < 0 ? organisationChoices.push(a): '';
-                        })
-                        vm.organisationChoices = organisationChoices;
+                    // Grab Organisation  with status!=Declined from the data in the table
+                    var statusColumnData = vm.$refs.org_access_table.vmDataTable.column(4).data();
+                    var organisationColumn2 = vm.$refs.org_access_table.vmDataTable.column(1).data();
+                    let filteredOrganisations = [];
+                    $.each(organisationColumn2, (index, org) => {
+                        if (org != null && statusColumnData[index] !== 'Declined' && filteredOrganisations.indexOf(org) < 0) {
+                            filteredOrganisations.push(org);
+                        }
                     });
+                    vm.organisationChoices = filteredOrganisations;
                     // Grab Applicant from the data in the table
                     var applicantColumn = vm.$refs.org_access_table.vmDataTable.columns(2);
                     applicantColumn.data().unique().sort().each( function ( d ) {
