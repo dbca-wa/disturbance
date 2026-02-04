@@ -1106,6 +1106,13 @@ export default {
 
         toggleProposal:function(){
             this.showingProposal = !this.showingProposal;
+            let vm = this;
+            if (this.showingProposal) {
+                vm.$nextTick(() => {
+                    vm.contacts_table_initialised = false;
+                    vm.initialiseOrgContactTable();
+                });
+            }
         },
         toggleRequirements:function(){
             this.showingRequirements = !this.showingRequirements;
