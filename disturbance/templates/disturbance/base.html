@@ -16,7 +16,7 @@
 {% system_name as system_name %}
 {% system_name_short as system_name_short %}
 {% support_email as support_email %}
-{% get_notices as notices_obj %}
+
 
 {% block header_top_menu %}
 {% endblock %}
@@ -62,6 +62,7 @@
 {% block menu_spacer %}
  <BR>
 {% endblock menu_spacer %}
+
 {% block messages %}
     <div class="container">
         <div class="row">
@@ -82,14 +83,17 @@
     </div>
 {% endblock %}
 
-{% block content %}
-  {% if notices_obj.notices|length > 0 %}
-      <div class="container">
-          <div class="col-lg-12 ">
-              <div class="row flex-wrap">
-                  {% for notice in notices_obj.notices %}
+{% block before_content %}
+  {% get_notices_tag as notices%}
+  {% if notices|length > 0 %}
+  <div class="container">
+      <div class="container-fluid">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-12">
+                  {% for notice in notices %}
                       {% if notice.notice_type == 0 and notice.active %}
-                        <div class="col-sm-12 col-md-6 d-flex">
+                        <div class="col-sm-12 col-md-12 d-flex">
                             <div class="round-box col-12 px-3" style='background-color: #ffcbcb; border: 1px solid #fb9e9e;'>
                                 <div style='margin-bottom:-12px; margin-left: 10px'>
                                     <span style='color:red;'>{{ notice.message|safe }}</span>
@@ -97,7 +101,7 @@
                             </div>
                         </div>
                       {% elif notice.notice_type == 1 and notice.active %}
-                        <div class="col-sm-12 col-md-6 d-flex">
+                        <div class="col-sm-12 col-md-12 d-flex">
                             <div class="round-box col-12 px-3 d-flex" style='background-color: #fff4e0; border: 1px solid #ff89358a;'>
                                 <div style='margin-bottom:-12px; margin-left: 10px'>
                                     <span style='color:#ffa500;'>{{ notice.message|safe }}</span>
@@ -105,7 +109,7 @@
                             </div>
                         </div>
                       {% elif notice.notice_type == 2 and notice.active %}
-                        <div class="col-sm-12 col-md-6 d-flex">
+                        <div class="col-sm-12 col-md-12 d-flex">
                             <div class="round-box col-12 px-3" style='background-color: #cbe5ff; border: 1px solid #9eccfb;'>
                                 <div style='margin-bottom:-12px; margin-left: 10px'>
                                     <span style='color:#2a84e0;'>{{ notice.message|safe }}</span>
@@ -113,7 +117,7 @@
                             </div>
                         </div>
                       {% elif notice.notice_type == 3 and notice.active %}
-                        <div class="col-sm-12 col-md-6 d-flex">
+                        <div class="col-sm-12 col-md-12 d-flex">
                             <div class="round-box col-12 px-3" style='background-color: #e9f9ea; border: 1px solid #21ab26;'>
                                 <div style='margin-bottom:-12px; margin-left: 10px'>
                                     <span style='color:#1a851d;'>{{ notice.message|safe }}</span>
@@ -125,8 +129,10 @@
               </div>
           </div>
       </div>
+      </div>
+    </div>
   {% endif %}
-{% endblock content %}
+{% endblock before_content %}
 
 {% block footer %}
   {% application_version as application_version %}

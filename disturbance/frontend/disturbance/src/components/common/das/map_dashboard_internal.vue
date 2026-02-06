@@ -1153,7 +1153,7 @@
                                     feature = vm.proposalQuerySource.getFeaturesAtCoordinate(coord)
                                 }
                                 // let proposal = features[0].getProperties().proposal;
-                                vm.showPopup(feature[0])
+                                vm.showPopup(features[0])
                             } else {
                                 //if proposal id is different but geometry is exactly same
                                 sameFeature = false;

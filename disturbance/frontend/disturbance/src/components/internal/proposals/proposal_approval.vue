@@ -131,8 +131,8 @@ export default {
         */
         approvalExpiryDate: function() {
             let returnDate = null;
-            if (this.proposal && this.proposal.approval) {
-                returnDate = moment(this.proposal.approval.expiry_date, 'YYYY-MM-DD').format('DD/MM/YYYY');
+            if (this.proposal && this.proposal.approval_expiry_date) {
+                returnDate = moment(this.proposal.approval_expiry_date, 'YYYY-MM-DD').format('DD/MM/YYYY');
             }
             return returnDate;
         },

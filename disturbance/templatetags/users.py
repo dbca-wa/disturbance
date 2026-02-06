@@ -86,7 +86,6 @@ def system_maintenance_can_start():
 def dept_support_phone2():
     return settings.DEPT_NAME
 
-@register.simple_tag()
-def get_notices():
-    return disturbance_helpers.get_notices()
-
+@register.simple_tag(takes_context=True)
+def get_notices_tag(context):
+    return disturbance_helpers.get_notices()['notices'] 
