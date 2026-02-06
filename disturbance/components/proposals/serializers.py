@@ -417,6 +417,7 @@ class InternalProposalSerializer(BaseProposalSerializer):
     reversion_history = serializers.SerializerMethodField()
     # region_name=serializers.CharField(source='region.name', read_only=True)
     # district_name=serializers.CharField(source='district.name', read_only=True)
+    approval_expiry_date= serializers.SerializerMethodField()
     
     class Meta:
         model = Proposal
@@ -494,6 +495,7 @@ class InternalProposalSerializer(BaseProposalSerializer):
                 'region_name',
                 'district_name',
                 'draft_assessor_mode',
+                'approval_expiry_date',
                 )
         read_only_fields=('documents','requirements','gis_info',)
 
@@ -571,6 +573,11 @@ class InternalProposalSerializer(BaseProposalSerializer):
         request = self.context['request']
         user = request.user._wrapped if hasattr(request.user,'_wrapped') else request.user
         return obj.draft_assessor_mode(user)
+    
+    def get_approval_expiry_date(self,obj):
+        if obj.approval:
+            return obj.approval.expiry_date
+        return None
 
 
 class ReferralProposalSerializer(InternalProposalSerializer):
