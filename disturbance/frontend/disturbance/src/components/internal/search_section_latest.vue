@@ -521,7 +521,7 @@ export default {
       },
       fetchSections: function(){
         let vm = this;
-
+        // no need to call this as we get the sections from the chainedSelectAppType() when the proposal type is selected. This is kept here in case we want to load all sections at once and filter them on the frontend based on the selected proposal type
         fetch(api_endpoints.proposal_type_sections).then(
           async (response) => {
             if (!response.ok) { return response.json().then(err => { throw err }); }
@@ -822,7 +822,8 @@ export default {
         vm.fetchProposalTypes();
         // vm.fetchActivityMatrix();
         vm.fetchAllActivityMatrices();
-        vm.fetchSections();
+        // no need to call fetchSections() as we get the sections from the chainedSelectAppType() when the proposal type is selected. This is kept here in case we want to load all sections at once and filter them on the frontend based on the selected proposal type
+        // vm.fetchSections();
         vm.proposal_options.data = vm.results;
         vm.$refs.proposal_datatable.vmDataTable.draw();
         this.$nextTick(()=>{

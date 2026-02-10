@@ -26,6 +26,7 @@ import time
 from reversion.models import Version
 from django.core.cache import cache
 from rest_framework.exceptions import NotFound
+from django.db.models import Prefetch
 
 from django.http import HttpResponse, JsonResponse #, Http404
 from disturbance.components.main.decorators import basic_exception_handler, timeit, query_debugger, api_exception_handler
@@ -2138,7 +2139,13 @@ class ProposalTypeSectionViewSet(viewsets.ReadOnlyModelViewSet):
 class SearchProposalTypeViewSet(viewsets.ReadOnlyModelViewSet):
     #Only select Proposal Types which has Sections linked to them
     proposal_type_ids= ProposalTypeSection.objects.all().values_list('proposal_type_id', flat=True).distinct()
-    queryset = ProposalType.objects.filter(id__in=proposal_type_ids)
+    queryset = ProposalType.objects.filter(id__in=proposal_type_ids).prefetch_related(
+        Prefetch(
+            'sections',
+            queryset=ProposalTypeSection.objects.order_by('index')
+        )
+    )
+
     serializer_class = SearchProposalTypeSerializer
 
 class SearchSectionsView(views.APIView):
