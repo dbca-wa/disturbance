@@ -514,7 +514,7 @@ def getPrivateFile(request):
             mimetypes.types_map.update({'.prj': 'application/octet-stream'})
             mimetypes.types_map.update({'.shp': 'x-gis/x-shapefile'})
             mimetypes.types_map.update({'.shx': 'x-gis/x-shapefile'})
-            mimetypes.types_map.update({'.dbf': 'text/plain'})
+            mimetypes.types_map.update({'.dbf': 'application/x-dbf'})
             return HttpResponse(the_data, content_type=mimetypes.types_map['.'+str(extension.lower())])
        
     return HttpResponse()
