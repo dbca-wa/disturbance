@@ -572,4 +572,9 @@ export default {
   .cke_notifications_area {
     display: none !important;
   }
+  
+  /* Fix double scrollbar in Select2 dropdown */
+  .select2-results__options {
+    max-height: none !important;
+  }
 </style>
