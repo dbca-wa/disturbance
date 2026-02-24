@@ -652,7 +652,11 @@ export default {
         submit: function(){
 
             // Expand all sections - forces components to be rendered for validation
-            $('.collapse').collapse('show')
+            document.querySelectorAll('.collapse').forEach(element => {
+                // Remove inline display style that might be blocking visibility
+                element.style.display = '';
+                new bootstrap.Collapse(element, { show: true, toggle: false });
+            });
 
             let vm = this;
             vm.form=document.forms.new_proposal;
