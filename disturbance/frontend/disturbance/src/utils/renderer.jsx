@@ -79,8 +79,9 @@ export default{
         if(layer_val){
   	    try {
 	        // show_add_info_proponent = layer_val.sqs_data.other_data.show_add_info_section_prop
-            show_add_info_proponent = layer_val.sqs_data && layer_val.sqs_data.other_data && 
-                                     layer_val.sqs_data.other_data.show_add_info_section_prop ? layer_val.sqs_data.other_data.show_add_info_section_prop : true;	
+            show_add_info_proponent = (layer_val.sqs_data && layer_val.sqs_data.other_data && 
+                                     'show_add_info_section_prop' in layer_val.sqs_data.other_data) 
+                                     ? layer_val.sqs_data.other_data.show_add_info_section_prop : true;	
 	    } catch (ex) {
             show_add_info_proponent = true;
             console.log(ex);
