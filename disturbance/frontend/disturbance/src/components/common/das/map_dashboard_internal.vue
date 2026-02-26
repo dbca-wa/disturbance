@@ -1163,6 +1163,7 @@
                                     let feature2 = formatwkt.writeGeometry(features[i].getGeometry());
                                     if(feature1==feature2){
                                         sameFeature=true;
+                                        break;
                                     }
                                     else{
                                         sameFeature=false;
