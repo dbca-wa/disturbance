@@ -263,3 +263,9 @@ label {
     transform: rotate(360deg);
   }
 }
+
+/* Fix double scrollbar in Select2 dropdown */
+.select2-container--bootstrap-5 .select2-dropdown .select2-results__options {
+    max-height: none !important;
+    overflow-y: auto !important;
+}
