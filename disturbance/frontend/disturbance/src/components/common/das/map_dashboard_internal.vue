@@ -1161,15 +1161,16 @@
                                     let formatwkt = new formatWKT();
                                     let feature1 = formatwkt.writeGeometry(features[0].getGeometry());
                                     let feature2 = formatwkt.writeGeometry(features[i].getGeometry());
-                                    if(feature1==feature2){
+                                    if(feature1 === feature2){
                                         sameFeature=true;
-                                        break;
+                                        //break;
                                     }
                                     else{
                                         sameFeature=false;
                                         break;
-                                    }     
+                                    }       
                                 }
+                                console.log('samefeature', sameFeature) 
                                 if(sameFeature){
                                         //vm.proposalClusterLayer.setStyle(zoomedInStyle);
                                         vm.showPopupforSameFeatures(features)
@@ -1177,10 +1178,17 @@
                                 }
                                 else{
                                     //else keep zooming in
-                                    let geometry = feature.getGeometry();
-                                    let coordinates = geometry.getCoordinates();
                                     let currentZoomLevel = vm.map.getView().getZoom()
-                                    zoomToCoordinates(vm.map, coordinates, currentZoomLevel + 1)
+                                    let maxZoom = vm.map.getView().getMaxZoom() || 20
+                                    
+                                    // If we've reached max zoom or zoom level 18, show all features instead of zooming
+                                    if (currentZoomLevel >= Math.min(maxZoom, 18)) {
+                                        vm.showPopupforSameFeatures(features)
+                                    } else {
+                                        let geometry = feature.getGeometry();
+                                        let coordinates = geometry.getCoordinates();
+                                        zoomToCoordinates(vm.map, coordinates, currentZoomLevel + 1)
+                                    }
                                 }
                                 //end
                                 // //else keep zooming in
