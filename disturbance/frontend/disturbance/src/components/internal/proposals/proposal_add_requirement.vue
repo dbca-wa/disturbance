@@ -217,7 +217,9 @@ export default {
         },
         close:function () {
             this.isModalOpen = false;
-            $(this.$refs.standard_req).val(null).trigger('change');
+            try {
+                $(this.$refs.standard_req).val(null).trigger('change');
+            } catch (e) {console.log(e)}
             this.requirement = {
                 standard: true,
                 recurrence: false,
@@ -226,10 +228,13 @@ export default {
                 proposal: this.proposal_id
             };
             this.errors = false;
-            $('.has-error').removeClass('has-error');
-            //$(this.$refs.due_date).data('DateTimePicker').clear();
-            $(this.$refs.due_date).clear();
-            this.validation_form.resetForm();
+            $('.is-invalid').removeClass('is-invalid');
+            try {
+                $(this.$refs.due_date).find('input').val('');
+            } catch (e) {console.log(e)}
+            try {
+                this.validation_form.resetForm();
+            } catch (e) {console.log(e)}
         },
         fetchContact: function(id){
             let vm = this;
@@ -284,7 +289,7 @@ export default {
                     headers: {
                     'Content-Type': 'application/x-www-form-urlencoded' // emulateJSON
                     },
-                    body: new URLSearchParams(requirement)
+                    body: JSON.stringify(requirement)
                 })
                 .then(response => {
                     if (!response.ok) throw response;
@@ -344,6 +349,15 @@ export default {
         addFormValidations: function() {
             let vm = this;
             vm.validation_form = $(vm.form).validate({
+                errorClass: 'is-invalid',
+                errorElement: 'div',
+                errorPlacement: function(error) {
+                    error.addClass('invalid-feedback');
+                    // element.parent().append(error);
+                },
+                highlight: function(element) {
+                    $(element).addClass('is-invalid');
+                },
                 rules: {
                     standard_requirement:{
                         required: {
@@ -367,30 +381,11 @@ export default {
                         }
                     }
                 },
-                messages: {
-                    arrival:"field is required",
-                    departure:"field is required",
-                    campground:"field is required",
-                    campsite:"field is required"
-                },
-                showErrors: function(errorMap, errorList) {
-                    $.each(this.validElements(), function(index, element) {
-                        var $element = $(element);
-                        $element.attr("data-original-title", "").parents('.form-group').removeClass('has-error');
-                    });
-                    // destroy tooltips on valid elements
-                    $("." + this.settings.validClass).tooltip("destroy");
-                    // add or update tooltips
-                    for (var i = 0; i < errorList.length; i++) {
-                        var error = errorList[i];
-                        $(error.element)
-                            .tooltip({
-                                trigger: "focus"
-                            })
-                            .attr("data-original-title", error.message)
-                            .parents('.form-group').addClass('has-error');
-                    }
-                }
+                // messages: {
+                //     standard_requirement: "Requirement is required",
+                //     free_requirement: "Requirement is required",
+                //     schedule: "Schedule is required"
+                // }
             });
        },
        eventListeners:function () {
@@ -436,4 +431,5 @@ export default {
 </script>
 
 <style lang="css">
+/* Bootstrap 5 native validation styles are used */
 </style>

@@ -154,7 +154,9 @@ export default {
                 ],
                 processing: true,
                 rowCallback: function ( row, data) {
-                    if (data.copied_for_renewal && data.require_due_date && !data.due_date) {
+                   const missingDueDate = data.due_date === null || data.due_date === undefined || data.due_date === '';
+                    // Check if data has the required fields, and if they're truthy
+                    if (data.copied_for_renewal && data.require_due_date && missingDueDate) {
                         $('td', row).css('background-color', 'Red');
                         vm.setApplicationWorkflowState(false)
                         //vm.$emit('refreshRequirements',false);
