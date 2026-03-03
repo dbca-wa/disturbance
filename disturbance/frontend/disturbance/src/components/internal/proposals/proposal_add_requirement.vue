@@ -70,14 +70,16 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="row">
-                                            <div class="col-sm-12">
-                                                <label class="col-form-label"  for="Name">
-                                                    <strong class="pull-left">Recur every</strong> 
-                                                    <input class="pull-left" style="width:10%; margin-left:10px;" type="number" name="schedule" v-model="requirement.recurrence_schedule"/> 
-                                                    <strong v-if="requirement.recurrence_pattern == '1'" class="pull-left" style="margin-left:10px;">week(s)</strong>
-                                                    <strong v-else-if="requirement.recurrence_pattern == '2'" class="pull-left" style="margin-left:10px;">month(s)</strong>
-                                                    <strong v-else-if="requirement.recurrence_pattern == '3'" class="pull-left" style="margin-left:10px;">year(s)</strong>
-                                                </label>
+                                            <div class="col-sm-3">
+                                                <label class="col-form-label">Recur every</label>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <div class="d-flex align-items-center">
+                                                    <input class="form-control" style="width: 80px; margin-right: 10px;" type="number" name="schedule" v-model="requirement.recurrence_schedule" min="1"/>
+                                                    <strong v-if="requirement.recurrence_pattern == '1'">week(s)</strong>
+                                                    <strong v-else-if="requirement.recurrence_pattern == '2'">month(s)</strong>
+                                                    <strong v-else-if="requirement.recurrence_pattern == '3'">year(s)</strong>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -287,7 +289,7 @@ export default {
                 fetch(helpers.add_endpoint_json(api_endpoints.proposal_requirements, requirement.id), {
                     method: 'PUT',
                     headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded' // emulateJSON
+                        'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(requirement)
                 })
@@ -318,9 +320,9 @@ export default {
                 fetch(api_endpoints.proposal_requirements, {
                     method: 'POST',
                     headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded' // emulateJSON
+                        'Content-Type': 'application/json',
                     },
-                    body: new URLSearchParams(requirement)
+                    body: JSON.stringify(requirement)
                 })
                 .then(response => {
                     if (!response.ok) throw response;
