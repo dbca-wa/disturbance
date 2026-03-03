@@ -25,7 +25,7 @@ export default{
     renderChildren(h,c,data=null,assessorData=null) {
         var is_readonly = this.status_data.readonly;
         var assessorStatus = this.status_data.assessorStatus;
-        // var assessorData = this.status_data.assessorData;
+        assessorData = this.status_data.assessorData;
         var commentData = this.status_data.commentData;
         var layerData= this.status_data.layerData;
         var assessorInfo = this.status_data.assessorInfo;
