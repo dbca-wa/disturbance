@@ -302,8 +302,8 @@ export default {
                         name: '',
                         defaultContent: '',
                     },
-                    {data: "can_be_processed", visible: false,},
-                    {data: "proposal_lodgement_number", visible: false},
+                    {data: "can_be_processed", visible: false, searchable: false,},
+                    {data: "proposal_lodgement_number", visible: false, searchable: false},
                     {data: "id", visible: false},
                     {
                         data: 'template_group',
