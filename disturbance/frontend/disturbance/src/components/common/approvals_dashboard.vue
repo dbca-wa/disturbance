@@ -1021,7 +1021,7 @@ export default {
                             if (!response.ok) {
                                 const data = await response.json();
                                 swal.fire({
-                                    title: "Ammend Approval",
+                                    title: "Amend Approval",
                                     text: JSON.stringify(data),
                                     icon: "error",
                                     customClass: {
