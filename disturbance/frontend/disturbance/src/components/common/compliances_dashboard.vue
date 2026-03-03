@@ -246,19 +246,12 @@ export default {
             let holder_or_organisation = this.dasTemplateGroup ? 'Organisation' : 'Holder';
             let columnHeaders = [
                 "Number"]
-            if (this.dasTemplateGroup) {
-                columnHeaders.push("Region")
-            };
+            
+            columnHeaders.push("Region")
             columnHeaders.push("Activity");
-            if (this.dasTemplateGroup) {
-                columnHeaders.push("Title");
-            };
-            if (this.dasTemplateGroup) {
-                columnHeaders.push("Requirement");
-            };
-            if (this.dasTemplateGroup) {
-                columnHeaders.push("Proposal");
-            };
+            columnHeaders.push("Title");
+            columnHeaders.push("Requirement");
+            columnHeaders.push("Proposal");
             columnHeaders.push(
                 "Due Date",
                 "District",
@@ -285,7 +278,7 @@ export default {
                         name: "id, lodgement_number",
                         defaultContent: '',
                     }]
-            if (this.dasTemplateGroup) {
+            
                 columnList.push(
                     {
                         // 2. Region/District
@@ -294,7 +287,6 @@ export default {
                         //visible: false,
                         defaultContent: '',
                     });
-            };
             columnList.push(
                     {
                         // 3. Activity
@@ -303,7 +295,6 @@ export default {
                         //visible: true,
                         defaultContent: '',
                     });
-            if (this.dasTemplateGroup) {
                 columnList.push(
                     {
                         // 4. Title
@@ -312,8 +303,6 @@ export default {
                         //visible: false,
                         defaultContent: '',
                     });
-            };
-            if (this.dasTemplateGroup) {
                 columnList.push(
                     {
                         // 5. Requirement
@@ -329,8 +318,6 @@ export default {
                         },
                         defaultContent: '',
                     });
-            };
-            if (this.dasTemplateGroup) {
                 columnList.push(
                     {
                         // 6. Proposal
@@ -339,7 +326,6 @@ export default {
                         //visible: false,
                         defaultContent: '',
                     });
-            };
             columnList.push(
                     {
                         // 7. Due Date
