@@ -321,12 +321,15 @@ export default {
                     let regionColumn = vm.$refs.proposal_datatable.vmDataTable.column('region:name');
                     let titleColumn = vm.$refs.proposal_datatable.vmDataTable.column('proposal__title:name');
                     let assignedOfficerColumn = vm.$refs.proposal_datatable.vmDataTable.column('assigned_officer:name');
-                    if (vm.dasTemplateGroup) {
-                        regionColumn.visible(true);
-                        titleColumn.visible(true);
-                    } else {
-                        assignedOfficerColumn.visible(true);
-                    }
+                    // if (vm.dasTemplateGroup) {
+                    //     regionColumn.visible(true);
+                    //     titleColumn.visible(true);
+                    // } else {
+                    //     assignedOfficerColumn.visible(true);
+                    // }
+                    regionColumn.visible(true);
+                    titleColumn.visible(true);
+                    assignedOfficerColumn.visible(true);
                 },
                 /*
                 initComplete: function () {
