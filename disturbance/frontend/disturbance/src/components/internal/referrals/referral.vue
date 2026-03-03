@@ -316,7 +316,7 @@ export default {
     },
     computed: {
         proposal: function(){
-            return this.referral != null && this.referall != 'undefined' ? this.referral.proposal : null;
+            return this.referral != null && this.referral != 'undefined' ? this.referral.proposal : null;
         },
         contactsURL: function(){
             return this.proposal!= null ? helpers.add_endpoint_json(api_endpoints.organisations,this.proposal.applicant.id+'/contacts') : '';

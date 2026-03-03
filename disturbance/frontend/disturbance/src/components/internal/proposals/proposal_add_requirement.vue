@@ -70,14 +70,16 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="row">
-                                            <div class="col-sm-12">
-                                                <label class="col-form-label"  for="Name">
-                                                    <strong class="pull-left">Recur every</strong> 
-                                                    <input class="pull-left" style="width:10%; margin-left:10px;" type="number" name="schedule" v-model="requirement.recurrence_schedule"/> 
-                                                    <strong v-if="requirement.recurrence_pattern == '1'" class="pull-left" style="margin-left:10px;">week(s)</strong>
-                                                    <strong v-else-if="requirement.recurrence_pattern == '2'" class="pull-left" style="margin-left:10px;">month(s)</strong>
-                                                    <strong v-else-if="requirement.recurrence_pattern == '3'" class="pull-left" style="margin-left:10px;">year(s)</strong>
-                                                </label>
+                                            <div class="col-sm-3">
+                                                <label class="col-form-label">Recur every</label>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <div class="d-flex align-items-center">
+                                                    <input class="form-control" style="width: 80px; margin-right: 10px;" type="number" name="schedule" v-model="requirement.recurrence_schedule" min="1"/>
+                                                    <strong v-if="requirement.recurrence_pattern == '1'">week(s)</strong>
+                                                    <strong v-else-if="requirement.recurrence_pattern == '2'">month(s)</strong>
+                                                    <strong v-else-if="requirement.recurrence_pattern == '3'">year(s)</strong>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -217,7 +219,9 @@ export default {
         },
         close:function () {
             this.isModalOpen = false;
-            $(this.$refs.standard_req).val(null).trigger('change');
+            try {
+                $(this.$refs.standard_req).val(null).trigger('change');
+            } catch (e) {console.log(e)}
             this.requirement = {
                 standard: true,
                 recurrence: false,
@@ -226,10 +230,13 @@ export default {
                 proposal: this.proposal_id
             };
             this.errors = false;
-            $('.has-error').removeClass('has-error');
-            //$(this.$refs.due_date).data('DateTimePicker').clear();
-            $(this.$refs.due_date).clear();
-            this.validation_form.resetForm();
+            $('.is-invalid').removeClass('is-invalid');
+            try {
+                $(this.$refs.due_date).find('input').val('');
+            } catch (e) {console.log(e)}
+            try {
+                this.validation_form.resetForm();
+            } catch (e) {console.log(e)}
         },
         fetchContact: function(id){
             let vm = this;
@@ -282,9 +289,9 @@ export default {
                 fetch(helpers.add_endpoint_json(api_endpoints.proposal_requirements, requirement.id), {
                     method: 'PUT',
                     headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded' // emulateJSON
+                        'Content-Type': 'application/json',
                     },
-                    body: new URLSearchParams(requirement)
+                    body: JSON.stringify(requirement)
                 })
                 .then(response => {
                     if (!response.ok) throw response;
@@ -313,9 +320,9 @@ export default {
                 fetch(api_endpoints.proposal_requirements, {
                     method: 'POST',
                     headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded' // emulateJSON
+                        'Content-Type': 'application/json',
                     },
-                    body: new URLSearchParams(requirement)
+                    body: JSON.stringify(requirement)
                 })
                 .then(response => {
                     if (!response.ok) throw response;
@@ -344,6 +351,15 @@ export default {
         addFormValidations: function() {
             let vm = this;
             vm.validation_form = $(vm.form).validate({
+                errorClass: 'is-invalid',
+                errorElement: 'div',
+                errorPlacement: function(error) {
+                    error.addClass('invalid-feedback');
+                    // element.parent().append(error);
+                },
+                highlight: function(element) {
+                    $(element).addClass('is-invalid');
+                },
                 rules: {
                     standard_requirement:{
                         required: {
@@ -367,30 +383,11 @@ export default {
                         }
                     }
                 },
-                messages: {
-                    arrival:"field is required",
-                    departure:"field is required",
-                    campground:"field is required",
-                    campsite:"field is required"
-                },
-                showErrors: function(errorMap, errorList) {
-                    $.each(this.validElements(), function(index, element) {
-                        var $element = $(element);
-                        $element.attr("data-original-title", "").parents('.form-group').removeClass('has-error');
-                    });
-                    // destroy tooltips on valid elements
-                    $("." + this.settings.validClass).tooltip("destroy");
-                    // add or update tooltips
-                    for (var i = 0; i < errorList.length; i++) {
-                        var error = errorList[i];
-                        $(error.element)
-                            .tooltip({
-                                trigger: "focus"
-                            })
-                            .attr("data-original-title", error.message)
-                            .parents('.form-group').addClass('has-error');
-                    }
-                }
+                // messages: {
+                //     standard_requirement: "Requirement is required",
+                //     free_requirement: "Requirement is required",
+                //     schedule: "Schedule is required"
+                // }
             });
        },
        eventListeners:function () {
@@ -436,4 +433,5 @@ export default {
 </script>
 
 <style lang="css">
+/* Bootstrap 5 native validation styles are used */
 </style>
