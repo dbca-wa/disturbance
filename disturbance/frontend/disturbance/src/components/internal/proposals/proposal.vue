@@ -917,6 +917,16 @@ export default {
                 // if(this.proposal.applicant.email){
                 //     this.$refs.proposed_approval.applicant_email=helpers.copyObject(this.proposal.applicant.email);
                 // }
+                if (this.proposal.proposed_issuance_approval) {
+                    this.$refs.proposed_approval.approval.start_date =
+                        this.proposal.proposed_issuance_approval.start_date !=null &&
+                        this.proposal.proposed_issuance_approval.start_date !=undefined? 
+                            moment(this.proposal.proposed_issuance_approval.start_date,'DD/MM/YYYY').format('YYYY-MM-DD'): '';
+                    this.$refs.proposed_approval.approval.expiry_date =
+                        this.proposal.proposed_issuance_approval.expiry_date != null &&
+                        this.proposal.proposed_issuance_approval.expiry_date != undefined? 
+                            moment(this.proposal.proposed_issuance_approval.expiry_date,'DD/MM/YYYY').format('YYYY-MM-DD'): '';
+                }
                 this.$refs.proposed_approval.isModalOpen = true;
             }
         },

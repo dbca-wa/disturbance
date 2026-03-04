@@ -254,7 +254,12 @@ export default {
             // convert formData to json
             let jsonObject = {};
             for (const [key, value] of formData.entries()) {
-                jsonObject[key] = value;
+                // Convert date fields from YYYY-MM-DD to DD/MM/YYYY format
+                if ((key === 'start_date' || key === 'due_date') && value) {
+                    jsonObject[key] = moment(value, 'YYYY-MM-DD').format('DD/MM/YYYY');
+                } else {
+                    jsonObject[key] = value;
+                }
             }
             vm.post_and_redirect(vm.preview_licence_url, {'csrfmiddlewaretoken' : vm.csrf_token, 'formData': JSON.stringify(jsonObject)});
         },
@@ -290,7 +295,8 @@ export default {
             this.errors = false;
             this.toDateError = false;
             this.startDateError = false;
-            $('.has-error').removeClass('has-error');
+            $('.is-invalid').removeClass('is-invalid');
+            // $('.has-error').removeClass('has-error');
             this.validation_form.resetForm();
         },
         fetchContact: function(id){
@@ -401,6 +407,15 @@ export default {
         addFormValidations: function() {
             let vm = this;
             vm.validation_form = $(vm.form).validate({
+                errorClass: 'is-invalid',
+                errorElement: 'div',
+                errorPlacement: function(error) {
+                    error.addClass('invalid-feedback');
+                    // element.parent().append(error);
+                },
+                highlight: function(element) {
+                    $(element).addClass('is-invalid');
+                },
                 rules: {
                     start_date:"required",
                     due_date:"required",
@@ -408,24 +423,24 @@ export default {
                 },
                 messages: {
                 },
-                showErrors: function(errorMap, errorList) {
-                    $.each(this.validElements(), function(index, element) {
-                        var $element = $(element);
-                        $element.attr("data-original-title", "").parents('.form-group').removeClass('has-error');
-                    });
-                    // destroy tooltips on valid elements
-                    $("." + this.settings.validClass).tooltip("destroy");
-                    // add or update tooltips
-                    for (var i = 0; i < errorList.length; i++) {
-                        var error = errorList[i];
-                        $(error.element)
-                            .tooltip({
-                                trigger: "focus"
-                            })
-                            .attr("data-original-title", error.message)
-                            .parents('.form-group').addClass('has-error');
-                    }
-                }
+                // showErrors: function(errorMap, errorList) {
+                //     $.each(this.validElements(), function(index, element) {
+                //         var $element = $(element);
+                //         $element.attr("data-original-title", "").parents('.form-group').removeClass('has-error');
+                //     });
+                //     // destroy tooltips on valid elements
+                //     $("." + this.settings.validClass).tooltip("destroy");
+                //     // add or update tooltips
+                //     for (var i = 0; i < errorList.length; i++) {
+                //         var error = errorList[i];
+                //         $(error.element)
+                //             .tooltip({
+                //                 trigger: "focus"
+                //             })
+                //             .attr("data-original-title", error.message)
+                //             .parents('.form-group').addClass('has-error');
+                //     }
+                // }
             });
        },
        eventListeners:function () {

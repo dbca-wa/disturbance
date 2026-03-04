@@ -139,7 +139,8 @@ export default {
             };
             this.errors = false;
             $(this.$refs.reason).val(null).trigger('change');
-            $('.has-error').removeClass('has-error');
+             $('.is-invalid').removeClass('is-invalid');
+            // $('.has-error').removeClass('has-error');
 
             this.validation_form.resetForm();
         },
@@ -216,6 +217,15 @@ export default {
         addFormValidations: function() {
             let vm = this;
             vm.validation_form = $(vm.form).validate({
+                errorClass: 'is-invalid',
+                errorElement: 'div',
+                errorPlacement: function(error) {
+                    error.addClass('invalid-feedback');
+                    // element.parent().append(error);
+                },
+                highlight: function(element) {
+                    $(element).addClass('is-invalid');
+                },
                 rules: {
                     reason: "required"
 
@@ -225,24 +235,6 @@ export default {
                     reason: "field is required",
 
                 },
-                showErrors: function(errorMap, errorList) {
-                    $.each(this.validElements(), function(index, element) {
-                        var $element = $(element);
-                        $element.attr("data-original-title", "").parents('.form-group').removeClass('has-error');
-                    });
-                    // destroy tooltips on valid elements
-                    $("." + this.settings.validClass).tooltip("destroy");
-                    // add or update tooltips
-                    for (var i = 0; i < errorList.length; i++) {
-                        var error = errorList[i];
-                        $(error.element)
-                            .tooltip({
-                                trigger: "focus"
-                            })
-                            .attr("data-original-title", error.message)
-                            .parents('.form-group').addClass('has-error');
-                    }
-                }
             });
        },
        eventListerners:function () {
@@ -258,7 +250,7 @@ export default {
             on("select2:select",function (e) {
                 var selected = $(e.currentTarget);
                 vm.amendment.reason = selected.val();
-                vm.amendment.reason_id = selected.val();
+                vm.amendment.reason_id = selected.val();    
             }).
             on("select2:unselect",function (e) {
                 var selected = $(e.currentTarget);
@@ -281,4 +273,18 @@ export default {
 </script>
 
 <style lang="css">
+textarea[readonly] {
+    background-color: #e9ecef !important;
+    color: #6c757d !important;
+    cursor: not-allowed;
+    opacity: 1;
+}
+
+textarea[readonly]:focus,
+textarea[readonly]:focus-visible {
+    background-color: #e9ecef !important;
+    color: #6c757d !important;
+    border-color: #dee2e6 !important;
+    box-shadow: none !important;
+}
 </style>
