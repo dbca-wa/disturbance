@@ -548,7 +548,7 @@ export default{
                         "readonly": assessor_visibility,
                         "question": c.label,
                         "referral_box": false,
-                        "box_class": "form-control deficiency"
+                        "box_class": "form-control deficiency mb-3"
                     }
 
                     //<AssessorText box_view={box_visibility} type="text" name={assessor_name} value={assessor_val} label={'Assessor'} help_text={c.help_text} readonly={assessor_visibility}/>
@@ -570,7 +570,7 @@ export default{
                                 "readonly": readonly,
                                 "question": c.label,
                                 "referral_box": true,
-                                "box_class": "form-control"
+                                "box_class": "form-control mb-3",
                             }
                             //<AssessorText box_view={box_visibility} type="text" name={referral_name} value={v.value} label={v.full_name} help_text={c.help_text} readonly={readonly}/>
                         )
@@ -590,7 +590,7 @@ export default{
                                 "readonly": referral_visibility,
                                 "question": c.label,
                                 "referral_box": true,
-                                "box_class": "form-control",
+                                "box_class": "form-control mb-3",
                             }
                             // <AssessorText box_view={box_visibility} type="text" name={referral_name} value={assessor_val} label={referral_label} readonly={referral_visibility}/>
                             //<AssessorText box_view={box_visibility} type="text" name={referral_name} label={referral_label} readonly={referral_visibility}/>
@@ -613,7 +613,7 @@ export default{
                                 "value": '',
                                 "question": c.label,
                                 "referral_box": false,
-                                "box_class": "form-control deficiency",
+                                "box_class": "form-control deficiency mb-3",
                         }
                         //<AssessorText box_view={box_visibility} type="text" name={name} value={val} label={'Assessor'} help_text={c.help_text} readonly={assessor_visibility}/>
                     )
@@ -633,7 +633,7 @@ export default{
                                 "value": '',
                                 "question": c.label,
                                 "referral_box": false,
-                                "box_class": "form-control deficiency",
+                                "box_class": "form-control deficiency mb-3",
                         }
                         //<AssessorText box_view={box_visibility} type="text" name={name} value={val} label={'Assessor'} help_text={c.help_text} readonly={assessor_visibility}/>
                     )
@@ -651,7 +651,7 @@ export default{
                                 "value": '',
                                 "question": c.label,
                                 "referral_box": true,
-                                "box_class": "form-control",
+                                "box_class": "form-control mb-3",
                         }
                         //<AssessorText box_view={box_visibility} type="text" name={referral_name} value={val} label={referral_label} readonly={referral_visibility}/>
                     )
