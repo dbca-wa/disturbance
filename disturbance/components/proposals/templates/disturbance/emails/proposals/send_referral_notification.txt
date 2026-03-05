@@ -17,6 +17,8 @@
         Activity: {{proposal.activity}}
         Assessor: {{assessor_name}}
 
+    Comments: {{comments}}
+    
     You can access this referral using the following link:
 
     {{url}}
