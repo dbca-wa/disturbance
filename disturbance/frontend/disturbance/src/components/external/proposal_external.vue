@@ -102,7 +102,7 @@
                         </div>
                         </div> -->
                         <div class="row mb-5">
-                            <nav class="navbar fixed-bottom bg-light">
+                            <nav class="navbar fixed-bottom bg-light noPrint">
                                 <div class="container d-flex">
                                 <div v-if="proposal && !proposal.readonly" class="ms-auto">
                                     <template v-if="proposal && proposal.apiary_group_application_type">

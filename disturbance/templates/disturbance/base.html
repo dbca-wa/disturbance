@@ -25,6 +25,13 @@
   <link rel="icon" type="image/png" href="/static/favicon.ico" />
 
   <link rel="stylesheet" href="{% static 'disturbance/css/base.css' %}?v={{ GIT_COMMIT_HASH }}" />
+  <style>
+    @media print { 
+      .noPrint { 
+        display: none;
+      }
+    }
+  </style>
 {% endblock extra_css %}
 
 {% block extra_js %}
@@ -42,6 +49,12 @@
     </script>
     {% vite_asset vue3_entry_script %}
 {% endblock custom_js %}
+
+{% block main_menu %}
+  <div class="noPrint">
+    {{ block.super }}
+  </div>
+{% endblock main_menu %}
 
 {% block menu_items_left_brand %}
   <div class="navbar-nav">

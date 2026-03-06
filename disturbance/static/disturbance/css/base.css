@@ -269,3 +269,9 @@ label {
     max-height: none !important;
     overflow-y: auto !important;
 }
+
+@media print { 
+.noPrint { 
+  display: none;
+ }
+}

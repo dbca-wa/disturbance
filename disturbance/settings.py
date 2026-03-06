@@ -123,7 +123,7 @@ REST_FRAMEWORK = {
 
 USE_DJANGO_JQUERY= True
 # JQUERY_URL = True
-TEMPLATE_TITLE = "Disturbance Assessment System"
+TEMPLATE_TITLE = "Disturbance Approval System"
 TEMPLATE_HEADER_LOGO = "/static/disturbance/img/logo-park-stay-trunc.gif"
 TEMPLATE_GROUP = "parkswildlife"
 
