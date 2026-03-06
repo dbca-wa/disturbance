@@ -233,10 +233,10 @@ class Organisation(models.Model):
                 raise ValidationError('This user has already been linked to {}'.format(str(self.organisation)))
             except UserDelegation.DoesNotExist:
                 delegate = UserDelegation.objects.create(organisation=self, user=user)
-            if self.first_five_admin:
-                is_admin = True
-                role = 'organisation_admin'
-            elif admin_flag:
+            # if self.first_five_admin:
+            #     is_admin = True
+            #     role = 'organisation_admin'
+            if admin_flag:
                 role = 'organisation_admin'
                 is_admin = True
             else:
@@ -275,15 +275,15 @@ class Organisation(models.Model):
                 raise ValidationError('This user has already been linked to {}'.format(str(self.organisation)))
             except UserDelegation.DoesNotExist:
                 delegate = UserDelegation.objects.create(organisation=self, user=user)
-            if self.first_five_admin:
-                is_admin = True
-                role = 'organisation_admin'
-            elif admin_flag:
-                role = 'organisation_admin'
-                is_admin = True
-            else:
-                role = 'organisation_user'
-                is_admin = False
+            # if self.first_five_admin:
+            #     is_admin = True
+            #     role = 'organisation_admin'
+            # if admin_flag:
+            #     role = 'organisation_admin'
+            #     is_admin = True
+            # else:
+            #     role = 'organisation_user'
+            #     is_admin = False
 
             try:
                 org_contact = OrganisationContact.objects.get(organisation = self,email = delegate.user.email)
