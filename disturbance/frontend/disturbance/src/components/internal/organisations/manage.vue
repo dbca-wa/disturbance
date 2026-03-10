@@ -120,7 +120,7 @@
                                         <button @click.prevent="addContact()" style="margin-bottom:10px;" class="btn btn-primary pull-right">Add Contact</button>
                                     </div>
                                     <div class="col-sm-12 row top-buffer-s">
-                                        <datatable ref="contacts_datatable" id="organisation_contacts_datatable" :dtOptions="contacts_options" :dtHeaders="contacts_headers"/>
+                                        <datatable ref="contacts_datatable" :id="datatable_id" :dtOptions="contacts_options" :dtHeaders="contacts_headers"/>
                                     </div>
                                 </form>
                             </FormSection>
@@ -233,6 +233,7 @@ export default {
         return {
             dTab: 'dTab'+uuidv4(),
             oTab: 'oTab'+uuidv4(),
+            datatable_id: 'organisation-contacts-datatable-'+uuidv4(),
             org: {
                 address: {}
             },
@@ -264,13 +265,14 @@ export default {
                     processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
+                serverSide: true,
                 dom: "<'d-flex align-items-center'<'me-auto'l>fB>" +
                     "<'row'<'col-sm-12'tr>>" +
                     "<'d-flex align-items-center'<'me-auto'i>p>",
                 buttons: [],
                 ajax: {
                     "url": helpers.add_endpoint_json(api_endpoints.organisations,vm.$route.params.org_id+'/contacts'),
-                    "dataSrc": ''
+                    "dataSrc": 'data'
                 },
                 columnDefs: [
                                 { responsivePriority: 1, targets: 0 }, // First visible column has top priority (e.g. proposal_number

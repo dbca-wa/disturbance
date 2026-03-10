@@ -141,7 +141,7 @@ class Organisation(models.Model):
 
     def update_contacts(self, request):
         try:
-            contact = self.contact.last()
+            contact = self.contacts.last()
             self.log_user_action(OrganisationAction.ACTION_UPDATE_CONTACTS.format('{} {}({})'.format(contact.first_name, contact.last_name, contact.email)), request)
         except:
             pass
