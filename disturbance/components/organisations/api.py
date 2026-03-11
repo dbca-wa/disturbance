@@ -331,9 +331,6 @@ class OrganisationViewSet(viewsets.ModelViewSet):
             print(traceback.print_exc())
             raise serializers.ValidationError(str(e))
 
-
-
-
     @action(methods=['POST',], detail=True)
     def make_admin_user(self, request, *args, **kwargs):
         try:
