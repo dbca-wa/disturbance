@@ -2,7 +2,10 @@ select lorg.name,ap.lodgement_number AS app_no,pp.title AS prop_title,
 TO_CHAR(ap.issue_date, 'yyyy-mm-dd') AS appissdate,
 TO_CHAR(ap.start_date, 'yyyy-mm-dd') AS appstadate,  
 ap.status AS appstatus, 
-(select lodgement_number from disturbance_proposal  where ap.lodgement_number = app.lodgement_number) AS assocprop ,
+(select string_agg(DISTINCT dp.lodgement_number::text, ',' ORDER BY dp.lodgement_number::text)
+ from disturbance_approval ap2
+ join disturbance_proposal dp on dp.id = ap2.current_proposal_id
+ where ap2.lodgement_number = ap.lodgement_number) AS assocprop,
 pp.proposal_type AS proptype, 
 concat('/internal/proposal/', pp.id) AS propurl,
 pp.activity,pp.shapefile_geom AS geometry from disturbance_proposal pp LEFT JOIN disturbance_approval ap 

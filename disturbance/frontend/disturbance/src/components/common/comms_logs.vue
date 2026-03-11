@@ -76,6 +76,7 @@ export default {
                     processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
+                serverSide: true,
                 deferRender: true,
                 autowidth: true,
                 order: [[3, 'desc']], // order the non-formatted date as a hidden column
@@ -119,6 +120,7 @@ export default {
                     processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
+                serverSide: true,
                 deferRender: true,
                 autowidth: true,
                 order: [[8, 'desc']], // order the non-formatted date as a hidden column

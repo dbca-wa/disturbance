@@ -37,7 +37,6 @@ export default {
     name: 'ApprovalHistoryModal',
     props: {
         approval_id: {
-            type: Number,
             required: true,
         },
     },
