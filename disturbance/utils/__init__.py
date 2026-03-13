@@ -155,7 +155,9 @@ def search_compliance(compliance, searchWords):
                     'applicant': name,
                     'text': c.text,
                     }
-                qs.append(res)
+                # qs.append(res)
+                # returning the first match only, since the text can be long and we want to avoid duplicates in the search result
+                return [res]
         except:
             raise
     if c.requirement:
@@ -172,7 +174,9 @@ def search_compliance(compliance, searchWords):
                     'applicant': name,
                     'text': c.requirement.requirement,
                     }
-                qs.append(res)
+                # qs.append(res)
+                # returning the first match only, since the requirement text can be long and we want to avoid duplicates in the search result
+                return [res]
         except:
             raise
     return qs

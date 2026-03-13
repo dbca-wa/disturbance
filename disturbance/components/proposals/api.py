@@ -2093,20 +2093,33 @@ class AmendmentRequestReasonChoicesView(views.APIView):
                 choices_list.append({'key': c.id,'value': c.reason})
         return Response(choices_list)
 
-
 class SearchKeywordsView(views.APIView):
     renderer_classes = [JSONRenderer,]
-    def post(self,request, format=None):
+
+    def get(self,request, format=None):
         qs = []
-        searchWords = request.data.get('searchKeywords')
-        searchProposal = request.data.get('searchProposal')
-        searchApproval = request.data.get('searchApproval')
-        searchCompliance = request.data.get('searchCompliance')
+        searchWords = request.GET.getlist('searchKeywords[]')
+        searchProposal = request.GET.get('searchProposal')
+        searchApproval = request.GET.get('searchApproval')
+        searchCompliance = request.GET.get('searchCompliance')
+        
+        draw = request.GET.get('draw', 1)
+        start = int(request.GET.get('start', 0))
+        length = int(request.GET.get('length', 10))
+
         if searchWords:
-            qs= searchKeyWords(searchWords, searchProposal, searchApproval, searchCompliance)
-        #queryset = list(set(qs))
-        serializer = SearchKeywordSerializer(qs, many=True)
-        return Response(serializer.data)
+            pass
+        else:
+            searchWords = ''
+        res= searchKeyWords(searchWords, searchProposal, searchApproval, searchCompliance,True,start,length)
+
+        # serializer = SearchKeywordSerializer(res['data'], many=True)
+        return Response({
+                'draw': draw,
+                'recordsTotal': res['total_count'],
+                'recordsFiltered': res['filtered_count'],
+                'data': res['data']
+            })
 
 
 class SearchReferenceView(views.APIView):
