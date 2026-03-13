@@ -14,7 +14,9 @@
                             <div class="card-body py-2">
                                 <div class="row form-group">
                                     <div class="col-sm-12">
-                                    {{message}}
+                                        <div class="alert alert-info mb-3" role="alert">
+                                            <span id="report_email_message">{{ message|default:'Proposals data export shall be emailed to jason.moore@dbca.wa.gov.au when ready.' }}</span>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row form-group">
@@ -248,6 +250,14 @@
                 report_form.setAttribute("style","display: None");
             });
             document.getElementById(document.getElementById("report_select").value).setAttribute("style","display: block");
+            updateReportEmailMessage();
+        }
+
+        function updateReportEmailMessage() {
+            var reportSelect = document.getElementById('report_select');
+            var selectedText = reportSelect.options[reportSelect.selectedIndex].text;
+            var message = document.getElementById('report_email_message');
+            message.textContent = selectedText + ' data export shall be emailed to jason.moore@dbca.wa.gov.au when ready.';
         }
     </script>
 {% endblock %}
