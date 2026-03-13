@@ -2947,20 +2947,22 @@ def clone_proposal_with_status_reset(proposal):
                 raise
 
 
-def searchKeyWords(searchWords, searchProposal, searchApproval, searchCompliance, is_internal= True):
+def searchKeyWords(searchWords, searchProposal, searchApproval, searchCompliance, is_internal= True,start=0,length=10):
     from disturbance.utils import search, search_approval, search_compliance
     from disturbance.components.approvals.models import Approval
     from disturbance.components.compliances.models import Compliance
     qs = []
-    if is_internal:
-        proposal_list = Proposal.objects.filter(application_type__name='Disturbance').exclude(processing_status__in=[Proposal.PROCESSING_STATUS_DISCARDED, Proposal.PROCESSING_STATUS_DRAFT])
-        approval_list = Approval.objects.all().order_by('lodgement_number', '-issue_date').distinct('lodgement_number')
-        compliance_list = Compliance.objects.all()
 
-        #print(proposal_list.count()+approval_list.count()+compliance_list.count())
+    search_list_filtered_count=0
+    search_list_count=0
+    filter_regex = ""
+
+    if is_internal:
+        proposal_list = Proposal.objects.none()
+        approval_list = Approval.objects.none()
+        compliance_list = Compliance.objects.none()
 
     if searchWords:
-
         search_words_regex = "(?:"
         for i in range(0,len(searchWords)):
             search_words_regex = search_words_regex + searchWords[i]
@@ -2971,9 +2973,20 @@ def searchKeyWords(searchWords, searchProposal, searchApproval, searchCompliance
 
         filter_regex =  r".*\".*\":\s\"(\\\\\"|[^\"])*"+search_words_regex+"(\\\\\"|[^\"])*\".*"
         #extract_regex = "(?i)\'*\':\s\'(?:\\\\\'|[^\'])*"+search_words_regex+"(?:\\\\\'|[^\'])*\'" #attempted to further optimise but additional regex had a negligable impact at the cost of the data key
-        if searchProposal:
-            proposal_list = proposal_list.filter(data__iregex=filter_regex)
-            for p in proposal_list:
+        
+    if searchProposal == "true":
+        if searchWords:
+            proposal_list = Proposal.objects.filter(application_type__name='Disturbance',data__iregex=filter_regex).exclude(processing_status__in=[Proposal.PROCESSING_STATUS_DISCARDED, Proposal.PROCESSING_STATUS_DRAFT])[start:start+length]
+            search_list_filtered_count = Proposal.objects.filter(application_type__name='Disturbance',data__iregex=filter_regex).exclude(processing_status__in=[Proposal.PROCESSING_STATUS_DISCARDED, Proposal.PROCESSING_STATUS_DRAFT]).count()
+            search_list_count = Proposal.objects.filter(application_type__name='Disturbance').exclude(processing_status__in=[Proposal.PROCESSING_STATUS_DISCARDED, Proposal.PROCESSING_STATUS_DRAFT]).count()
+        else:
+            proposal_list=[]
+            search_list_filtered_count=0
+            search_list_count=0
+
+        paginator = Paginator(proposal_list, settings.QS_PAGINATOR_SIZE) # chunks
+        for page_num in paginator.page_range:
+            for p in paginator.page(page_num).object_list:
                 name = ""
                 if p.applicant:
                     name = p.applicant.name
@@ -2996,7 +3009,7 @@ def searchKeyWords(searchWords, searchProposal, searchApproval, searchCompliance
                         if results:
                             for r in results:
                                 for key, value in r.items():
-                                    final_results.update({'key': key, 'value': value})                           
+                                    final_results.update({'key': key, 'value': value})
                             res = {
                                 'number': p.lodgement_number,
                                 'id': p.id,
@@ -3007,24 +3020,44 @@ def searchKeyWords(searchWords, searchProposal, searchApproval, searchCompliance
                             qs.append(res)
                     except:
                         raise
-        if searchApproval:
-            approval_list = approval_list.filter(Q(surrender_details__iregex=filter_regex) | Q(suspension_details__iregex=filter_regex) | Q(cancellation_details__iregex=search_words_regex))
-            for a in approval_list:
-                try:
-                    results = search_approval(a, searchWords)
-                    qs.extend(results)
-                except:
-                    raise
-        if searchCompliance:
-            compliance_list = compliance_list.filter(Q(text__iregex=search_words_regex) | Q(requirement__free_requirement__iregex=search_words_regex) | Q(requirement__standard_requirement__text__iregex=search_words_regex))
-            for c in compliance_list:
-                try:
-                    results = search_compliance(c, searchWords)
-                    qs.extend(results)
-                except:
-                    raise
-    #print(len(qs))
-    return qs
+    if searchApproval == "true":
+        # approval_list = Approval.objects.filter(Q(surrender_details__iregex=filter_regex) | Q(suspension_details__iregex=filter_regex) | Q(cancellation_details__iregex=search_words_regex)).order_by('lodgement_number', '-issue_date').distinct('lodgement_number')
+
+        if searchWords:
+            approval_list = Approval.objects.filter(Q(surrender_details__iregex=filter_regex) | Q(suspension_details__iregex=filter_regex) | Q(cancellation_details__iregex=search_words_regex)).order_by('lodgement_number', '-issue_date').distinct('lodgement_number')[start:start+length]
+            search_list_filtered_count += Approval.objects.filter(Q(surrender_details__iregex=filter_regex) | Q(suspension_details__iregex=filter_regex) | Q(cancellation_details__iregex=search_words_regex)).order_by('lodgement_number', '-issue_date').distinct('lodgement_number').count()
+            search_list_count += Approval.objects.all().order_by('lodgement_number', '-issue_date').distinct('lodgement_number').count()
+        else:
+            approval_list=[]
+            search_list_filtered_count=0
+            search_list_count=0
+        
+        for a in approval_list:
+            try:
+                results = search_approval(a, searchWords)
+                qs.extend(results)
+            except:
+                raise
+    if searchCompliance == "true":
+        # compliance_list = Compliance.objects.filter(Q(text__iregex=search_words_regex) | Q(requirement__free_requirement__iregex=search_words_regex) | Q(requirement__standard_requirement__text__iregex=search_words_regex))
+
+        if searchWords:
+            compliance_list = Compliance.objects.filter(Q(text__iregex=search_words_regex) | Q(requirement__free_requirement__iregex=search_words_regex) | Q(requirement__standard_requirement__text__iregex=search_words_regex)).order_by('lodgement_number', '-lodgement_date').distinct('lodgement_number')[start:start+length]
+            search_list_filtered_count += Compliance.objects.filter(Q(text__iregex=search_words_regex) | Q(requirement__free_requirement__iregex=search_words_regex) | Q(requirement__standard_requirement__text__iregex=search_words_regex)).order_by('lodgement_number', '-lodgement_date').distinct('lodgement_number').count()
+            search_list_count += Compliance.objects.all().order_by('lodgement_number', '-lodgement_date').distinct('lodgement_number').count()
+        else:
+            compliance_list=[]
+            search_list_filtered_count=0
+            search_list_count=0
+        for c in compliance_list:
+            try:
+                results = search_compliance(c, searchWords)
+                qs.extend(results)
+            except:
+                raise
+
+    res={"data": qs, "total_count": search_list_count, "filtered_count": search_list_filtered_count}
+    return res
 
 def search_reference(reference_number):
     from disturbance.components.approvals.models import Approval

@@ -205,6 +205,9 @@ export default {
               processing: constants.DATATABLE_PROCESSING_HTML,
           },
           responsive: true,
+          serverSide: true,
+          searching: false,
+          ordering: false,
           /*ajax: {
               "url": 'api/empty_list',
               "dataSrc": ''
@@ -214,6 +217,19 @@ export default {
               { responsivePriority: 1, targets: 0 }, // First visible column has top priority (e.g. proposal_number
               { responsivePriority: 2, targets: -1 }, // If the actions is the last entry in columns then this will make it 2nd top priority soo as long as the screen is a decent size it will always be shown
           ],
+          ajax: {
+                    "url": '/api/search_keywords.json',
+                    "dataSrc": 'data',
+                    // type: 'POST',
+                    contentType: 'application/json',
+                    data: function (d){
+                        d.searchKeywords = vm.searchKeywords;
+                        d.searchProposal = vm.searchProposal;
+                        d.searchApproval = vm.searchApproval;
+                        d.searchCompliance = vm.searchCompliance;
+                        d.is_internal = true;
+                    },
+                },
           columns: [
               {data: "number"},
               {data:"type"},
@@ -385,39 +401,44 @@ export default {
           vm.$refs.proposal_datatable.vmDataTable.draw(); 
           $('#loadingSpinner').hide();      
         },
-
         search: function() {
           let vm = this;
-          if(this.searchKeywords.length > 0)
-          {
-            vm.searching=true;
-            fetch('/api/search_keywords.json',{
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                searchKeywords: vm.searchKeywords,
-                searchProposal: vm.searchProposal,
-                searchApproval: vm.searchApproval,
-                searchCompliance: vm.searchCompliance,
-                is_internal: true,
-              })
-            }).then(async (res) => {
-              if (!res.ok) {
-                  throw new Error(`HTTP error! Status: ${res.status}`);
-              }
-              vm.results = await res.json();
-              vm.$refs.proposal_datatable.vmDataTable.clear()
-              vm.$refs.proposal_datatable.vmDataTable.rows.add(vm.results);
-              vm.$refs.proposal_datatable.vmDataTable.draw();
-              vm.searching=false;
-            }).catch(err => {
-              console.log(err);
-              vm.searching=false;
-            });
-          }
+          vm.$refs.proposal_datatable.vmDataTable.draw(); 
         },
+        // search: function() {
+        //   window.alert($("#dt-length-0").val());
+        //   let vm = this;
+        //   if(this.searchKeywords.length > 0)
+        //   {
+        //     vm.searching=true;
+        //     fetch('/api/search_keywords.json',{
+        //       method: 'POST',
+        //       headers: {
+        //         'Content-Type': 'application/json'
+        //       },
+        //       body: JSON.stringify({
+        //         searchKeywords: vm.searchKeywords,
+        //         searchProposal: vm.searchProposal,
+        //         searchApproval: vm.searchApproval,
+        //         searchCompliance: vm.searchCompliance,
+        //         is_internal: true,
+
+        //       })
+        //     }).then(async (res) => {
+        //       if (!res.ok) {
+        //           throw new Error(`HTTP error! Status: ${res.status}`);
+        //       }
+        //       vm.results = await res.json();
+        //       vm.$refs.proposal_datatable.vmDataTable.clear()
+        //       vm.$refs.proposal_datatable.vmDataTable.rows.add(vm.results);
+        //       vm.$refs.proposal_datatable.vmDataTable.draw();
+        //       vm.searching=false;
+        //     }).catch(err => {
+        //       console.log(err);
+        //       vm.searching=false;
+        //     });
+        //   }
+        // },
    
 
     search_reference: function() {
@@ -434,7 +455,8 @@ export default {
               })
             }).then(async (res) => {
               if (!res.ok) {
-                  throw new Error(`HTTP error! Status: ${res.status}`);
+                    let errorString = helpers.formatFetchError(await res.json());
+                    throw new Error(errorString);
               }
               const responseBody = await res.json();
               console.log(responseBody);
@@ -445,7 +467,7 @@ export default {
               console.log(error);
               vm.errors = true;
               // vm.errorString = helpers.apiVueResourceError(error);
-              vm.errorString = error;
+                vm.errorString = error && error.message ? error.message : 'Reference search failed';
             });
           }
 

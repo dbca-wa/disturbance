@@ -551,8 +551,10 @@ export default {
             vm.api_sections=[];
             vm.activity_matrix=[];
             vm.selected_application_name = this.searchList(proposal_type_id, vm.proposal_types).name;
-            vm.getSelectedAppActivityMatrix(vm.selected_application_name);
-            vm.api_sections = this.searchList(proposal_type_id, vm.proposal_types).sections;
+            if(vm.selected_application_name){
+              vm.getSelectedAppActivityMatrix(vm.selected_application_name);
+              vm.api_sections = this.searchList(proposal_type_id, vm.proposal_types).sections;
+            }
             if (vm.api_sections.length > 0) {
                 for (var i = 0; i < vm.api_sections.length; i++) {
                         this.sections.push( {text: vm.api_sections[i].section_label, value: vm.api_sections[i].section_label, questions: vm.api_sections[i].section_questions} );
