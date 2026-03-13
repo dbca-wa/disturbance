@@ -230,7 +230,8 @@ export default {
                 //   }
                 // }
                 'render': function (value, type) {
-                            value= value.value? value.vale : value;
+                            // text can either be a string or an object with a key:value property, depending on the search result type
+                            value= value.value? value.value : value;
                             var ellipsis = '...',
                                 truncated = _.truncate(value, {
                                     length: 25,

@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.utils.html import strip_tags
 from django import forms
 from django_summernote.widgets import SummernoteWidget
+from ledger.accounts.models import EmailUser
 
 from disturbance.components.main.models import MapLayer, MapColumn, DASMapLayer, TaskMonitor, JobQueue, Notice
 from disturbance.settings import KB_SERVER_URL
@@ -80,7 +81,24 @@ class TaskMonitorAdmin(admin.ModelAdmin):
 
 @admin.register(JobQueue)
 class JobQueueAdmin(admin.ModelAdmin):
-    pass
+    list_display = [
+        'job_cmd',
+        'user_name',
+        'status',
+        'processed_dt',
+        'created',
+    ]
+
+    def user_name(self, obj):
+        if not obj.user:
+            return ''
+
+        user = EmailUser.objects.filter(id=obj.user).first()
+        if not user:
+            return ''
+
+        return user.get_full_name() or user.email or str(user)
+    # user_name.short_description = 'User'
 
 
 class NoticeForm(forms.ModelForm):
