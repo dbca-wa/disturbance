@@ -672,6 +672,7 @@ export default {
                     },
                     { 
                         data: "masterlist_question.question",
+                        name: "question__question",
                         width: "40%",
                         'render': function (value, type) {
                             //return helpers.dtPopover(value, 50);
