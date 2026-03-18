@@ -2,7 +2,7 @@
     <!-- minor changes from bootstrap-modal.vue to allow multiple modals on same calling component -->
     <div v-show="show" :transition="transition" :showModal="showModal" modal_id="modal_id">
         <!--{{show}}-->
-        <div class="modal" @click.self="clickMask" data-bs-keyboard="false" data-bs-backdrop="static">
+        <div class="modal" data-bs-keyboard="false" data-bs-backdrop="static">
             <div class="modal-dialog" :class="modalClass" role="document">
                 <div class="modal-content">
                     <!--Header-->
@@ -36,7 +36,7 @@
             </div>
         </div>
 
-        <div class="modal-backdrop in"></div>
+        <div class="modal-backdrop show"></div>
     </div>
 </template>
 
@@ -165,11 +165,11 @@
                 this.$emit('cancel');
                 this.$parent.close(this.modal_id);
             },
-            clickMask () {
-                if (!this.force) {
-                    this.cancel();
-                }
-            }
+            // clickMask () {
+            //     if (!this.force) {
+            //         this.cancel();
+            //     }
+            // }
         }
      };
 </script>
