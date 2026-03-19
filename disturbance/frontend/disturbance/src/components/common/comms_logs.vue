@@ -1,3 +1,4 @@
+<!-- this component is used for organisation view comms log only as there is some conflict of datatables that breaks the layout in comms_log.vue -->
 <template id="comms_logs">
     <div class="">
         <div class="card mb-3">
@@ -87,7 +88,13 @@ export default {
                 processing: true,
                 ajax: {
                     url: vm.logs_url,
-                    dataSrc: '',
+                    dataSrc: function (json) {
+                        if (Array.isArray(json)) return json;
+                        if (json && Array.isArray(json.data)) return json.data;
+                        if (json && Array.isArray(json.results)) return json.results;
+                        return [];
+                    },
+
                 },
                 columns: [
                     {
@@ -131,7 +138,13 @@ export default {
                     "<'row'<'col-sm-5'i><'col-sm-7'p>>",
                 ajax: {
                     url: vm.comms_url,
-                    dataSrc: '',
+                    dataSrc: function (json) {
+                        if (Array.isArray(json)) return json;
+                        if (json && Array.isArray(json.data)) return json.data;
+                        if (json && Array.isArray(json.results)) return json.results;
+                        return [];
+                    },
+
                 },
                 columns: [
                     {
