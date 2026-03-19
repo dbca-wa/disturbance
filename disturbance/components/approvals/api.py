@@ -412,9 +412,46 @@ class ApprovalViewSet(viewsets.ModelViewSet):
     def action_log(self, request, *args, **kwargs):
         try:
             instance = self.get_object()
-            qs = instance.action_logs.all()
-            serializer = ApprovalUserActionSerializer(qs,many=True)
-            return Response(serializer.data)
+            queryset = instance.action_logs.all()
+
+            draw = request.GET.get('draw', 1)
+            start = int(request.GET.get('start', 0))
+            length = int(request.GET.get('length', 10))
+            search_value = request.GET.get('search[value]', '')
+
+            records_total = queryset.count()
+
+            if search_value:
+                queryset = queryset.filter(
+                    Q(what__icontains=search_value)
+                    | Q(who__first_name__icontains=search_value)
+                    | Q(who__last_name__icontains=search_value)
+                    | Q(who__email__icontains=search_value)
+                )
+
+            records_filtered = queryset.count()
+
+            order_column_index = request.GET.get('order[0][column]', 3)
+            order_dir = request.GET.get('order[0][dir]', 'desc')
+            order_columns = {
+                0: 'who__first_name',
+                1: 'what',
+                2: 'when',
+            }
+            order_field = order_columns.get(int(order_column_index), 'when')
+            if order_dir == 'desc':
+                order_field = f'-{order_field}'
+            queryset = queryset.order_by(order_field)
+
+            queryset = queryset[start:start + length]
+
+            serializer = ApprovalUserActionSerializer(queryset,many=True)
+            return Response({
+                'draw': draw,
+                'recordsTotal': records_total,
+                'recordsFiltered': records_filtered,
+                'data': serializer.data
+            })
         except serializers.ValidationError:
             print(traceback.print_exc())
             raise
@@ -429,9 +466,51 @@ class ApprovalViewSet(viewsets.ModelViewSet):
     def comms_log(self, request, *args, **kwargs):
         try:
             instance = self.get_object()
-            qs = instance.comms_logs.all()
-            serializer = ApprovalLogEntrySerializer(qs,many=True)
-            return Response(serializer.data)
+            queryset = instance.comms_logs.all()
+
+            draw = request.GET.get('draw', 1)
+            start = int(request.GET.get('start', 0))
+            length = int(request.GET.get('length', 10))
+            search_value = request.GET.get('search[value]', '')
+
+            records_total = queryset.count()
+
+            if search_value:
+                queryset = queryset.filter(
+                    Q(type__icontains=search_value)
+                    | Q(to__icontains=search_value)
+                    | Q(cc__icontains=search_value)
+                    | Q(fromm__icontains=search_value)
+                    | Q(subject__icontains=search_value)
+                    | Q(text__icontains=search_value)
+                )
+
+            records_filtered = queryset.count()
+
+            order_column_index = request.GET.get('order[0][column]', 8)
+            order_dir = request.GET.get('order[0][dir]', 'desc')
+            order_columns = {
+                0: 'created',
+                1: 'type',
+                2: 'to',
+                3: 'cc',
+                4: 'fromm',
+                5: 'subject',
+                6: 'text',
+            }
+            order_field = order_columns.get(int(order_column_index), 'created')
+            if order_dir == 'desc':
+                order_field = f'-{order_field}'
+            queryset = queryset.order_by(order_field)
+
+            queryset = queryset[start:start + length]
+            serializer = ApprovalLogEntrySerializer(queryset,many=True)
+            return Response({
+                'draw': draw,
+                'recordsTotal': records_total,
+                'recordsFiltered': records_filtered,
+                'data': serializer.data
+            })
         except serializers.ValidationError:
             print(traceback.print_exc())
             raise
