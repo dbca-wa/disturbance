@@ -89,6 +89,35 @@ data: function() {
             });
             vm.isRefreshing=false;        
         },
+        loadExternalProposalForm: function(proposal){
+            let parent = this.$parent;
+            while (parent) {
+                if (typeof parent.refreshFromResponseProposal === 'function') {
+                    parent.refreshFromResponseProposal(proposal);
+                    return true;
+                }
+                parent = parent.$parent;
+            }
+            return false;
+        },
+        reloadExternalProposalFormIfError: async function(){
+            try {
+                const response = await fetch(`/api/proposal/${this.proposal_id}.json`, {
+                    credentials: 'same-origin'
+                });
+                if (!response.ok) {
+                    window.location.reload();
+                    return;
+                }
+                const proposal = await response.json();
+                if (!this.loadExternalProposalForm(proposal)) {
+                    window.location.reload();
+                }
+            } catch (error) {
+                console.error('Error reloading proposal:', error);
+                window.location.reload();
+            }
+        },
         refresh: async function(){
             const vm = this;
             const mlq_data = {
@@ -111,7 +140,17 @@ data: function() {
                 );
 
                 if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
+                    let errorMessage = `HTTP error! Status: ${response.status}`;
+                    try {
+                        const errorData = await response.json();
+                        if (errorData.errors) {
+                            errorMessage = errorData.errors;
+                        }
+                    } catch (error) {
+                        console.error('Error parsing error response:', error);
+                        // If parsing fails, use default message
+                    }
+                    throw new Error(errorMessage);
                 }
 
                 const responseData = await response.json();
@@ -147,11 +186,15 @@ data: function() {
             } catch (error) {
                 swal.fire({
                     title:'Error',
-                    text:error,
+                    text: error.message || error,
                     icon:'error',
                     customClass: {
                         confirmButton: 'btn btn-primary',
                     },
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        vm.reloadExternalProposalFormIfError();
+                    }
                 });
             } finally {
                 vm.isRefreshing = false;
