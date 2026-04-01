@@ -89,6 +89,26 @@ data: function() {
             });
             vm.isRefreshing=false;        
         },
+        loadExternalProposalForm: function(proposal){
+            let parent = this.$parent;
+            while (parent) {
+                if (typeof parent.refreshFromResponseProposal === 'function') {
+                    parent.refreshFromResponseProposal(proposal);
+                    return true;
+                }
+                parent = parent.$parent;
+            }
+            return false;
+        },
+        reloadExternalProposalFormIfError: function(){
+            this.$http.get(`/api/proposal/${this.proposal_id}.json`).then((response) => {
+                if (!this.loadExternalProposalForm(response.body)) {
+                    window.location.reload();
+                }
+            }, () => {
+                window.location.reload();
+            });
+        },
         refresh: async function(){
             const vm = this;
             const mlq_data = {
@@ -152,6 +172,10 @@ data: function() {
                     customClass: {
                         confirmButton: 'btn btn-primary',
                     },
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        vm.reloadExternalProposalFormIfError();
+                    }
                 });
             } finally {
                 vm.isRefreshing = false;
