@@ -26,6 +26,7 @@ from django.core.exceptions import ValidationError
 from django.db.models import JSONField
 from django.utils import timezone
 from django.core.paginator import Paginator
+from django.core.serializers.json import DjangoJSONEncoder
 
 from dirtyfields import DirtyFieldsMixin
 from reversion.models import Version
@@ -3193,6 +3194,8 @@ def get_search_geojson(proposal_lodgement_numbers,request):
                 },
                 'features': combined_features
             }
+            # Normalize pandas/datetime values (for example Timestamp) to JSON-safe values.
+            combined_geojson = json.loads(json.dumps(combined_geojson, cls=DjangoJSONEncoder))
         return combined_geojson
     except:
         raise
