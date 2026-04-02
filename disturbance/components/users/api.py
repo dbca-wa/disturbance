@@ -103,9 +103,23 @@ class UserViewSet(viewsets.ModelViewSet):
             #        many=True
             #        )
             #return Response(serializer.data)
-            data = self.get_queryset().filter(is_staff=True). \
-                filter(Q(first_name__icontains=search_term) | Q(last_name__icontains=search_term)). \
-                values('email', 'first_name', 'last_name')[:10]
+            # data = self.get_queryset().filter(is_staff=True). \
+            #     filter(Q(first_name__icontains=search_term) | Q(last_name__icontains=search_term) | Q(full_name__icontains=search_term)). \
+            #     values('email', 'first_name', 'last_name')[:10]
+             # Allow for search of first name, last name and concatenation of both
+            department_users = EmailUser.objects.annotate(
+                search_term=Concat(
+                    "first_name",
+                    Value(" "),
+                    "last_name",
+                    Value(" "),
+                    "email",
+                    output_field=CharField(),
+                )
+            ).filter(is_staff=True)
+            data = department_users.filter(search_term__icontains=search_term).values(
+                "email", "first_name", "last_name"
+            )[:10]
             data_transform = [{'id': person['email'], 'text': person['first_name'] + ' ' + person['last_name']} for person in data]
             return Response({"results": data_transform})
         except serializers.ValidationError:
