@@ -3098,8 +3098,7 @@ def search_sections(proposal_type_id, section_label,question_id,option_label,is_
             raise ValidationError('Some of the mandatory fields are missing')
         proposal_type=ProposalType.objects.get(id=proposal_type_id)
         proposal_type_name=proposal_type.name
-        # qs = Proposal.objects.filter(application_type__name=proposal_type_name, data__isnull=False).exclude(processing_status__in=[Proposal.PROCESSING_STATUS_DISCARDED, Proposal.PROCESSING_STATUS_DRAFT])
-        qs = Proposal.objects.filter(application_type__name=proposal_type_name, data__isnull=False).exclude(processing_status__in=[Proposal.PROCESSING_STATUS_DISCARDED])
+        qs = Proposal.objects.filter(application_type__name=proposal_type_name, data__isnull=False).exclude(processing_status__in=[Proposal.PROCESSING_STATUS_DISCARDED, Proposal.PROCESSING_STATUS_DRAFT])
 
         question=MasterlistQuestion.objects.get(id=question_id)
         filter_conditions={}
