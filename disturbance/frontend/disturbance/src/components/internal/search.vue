@@ -71,6 +71,9 @@
           <FormSection :form-collapse="false" label="Search Keywords" Index="search_keywords">
             <div class="row">
               <div class="col-lg-12">
+                  <div class="alert alert-info mb-3" role="alert">
+                      <span id="report_email_message">This search returns records by checking Proposal data, Approval details related to Surrender, Suspension, Cancellation and Compliance requirements text.</span>
+                  </div>
                   <div class="form-group">
                     <label for="" class="col-form-label col-lg-12">Filter</label>
                     <div class="form-check form-check-inline col-md-3">
