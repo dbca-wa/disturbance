@@ -3098,7 +3098,8 @@ def search_sections(proposal_type_id, section_label,question_id,option_label,is_
             raise ValidationError('Some of the mandatory fields are missing')
         proposal_type=ProposalType.objects.get(id=proposal_type_id)
         proposal_type_name=proposal_type.name
-        qs = Proposal.objects.filter(application_type__name=proposal_type_name, data__isnull=False).exclude(processing_status__in=[Proposal.PROCESSING_STATUS_DISCARDED, Proposal.PROCESSING_STATUS_DRAFT])
+        # qs = Proposal.objects.filter(application_type__name=proposal_type_name, data__isnull=False).exclude(processing_status__in=[Proposal.PROCESSING_STATUS_DISCARDED, Proposal.PROCESSING_STATUS_DRAFT])
+        qs = Proposal.objects.filter(application_type__name=proposal_type_name, data__isnull=False).exclude(processing_status__in=[Proposal.PROCESSING_STATUS_DISCARDED])
 
         question=MasterlistQuestion.objects.get(id=question_id)
         filter_conditions={}
@@ -3176,7 +3177,8 @@ def get_search_geojson(proposal_lodgement_numbers,request):
                 if proposal.shapefile_json:
                     gpd_shp=gpd.read_file(json.dumps(proposal.shapefile_json))
                     shp_transform=gpd_shp.to_crs(crs=4326)
-                    shp_json=shp_transform.to_json()
+                    # to_json returns a string in some versions of geopandas and a dict in others - this code handles both cases eg. in case to convert non-serializable values like pandas Timestamp.
+                    shp_json=shp_transform.to_json(default=str)
                     if type(shp_json)==str:
                         shp_json=json.loads(shp_json)
                     else:
@@ -3194,8 +3196,6 @@ def get_search_geojson(proposal_lodgement_numbers,request):
                 },
                 'features': combined_features
             }
-            # Normalize pandas/datetime values (for example Timestamp) to JSON-safe values.
-            combined_geojson = json.loads(json.dumps(combined_geojson, cls=DjangoJSONEncoder))
         return combined_geojson
     except:
         raise
