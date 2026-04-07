@@ -3195,6 +3195,8 @@ def get_search_geojson(proposal_lodgement_numbers,request):
                 },
                 'features': combined_features
             }
+            # Normalize pandas/datetime values (for example Timestamp) to JSON-safe values.
+            combined_geojson = json.loads(json.dumps(combined_geojson, cls=DjangoJSONEncoder))
         return combined_geojson
     except:
         raise
