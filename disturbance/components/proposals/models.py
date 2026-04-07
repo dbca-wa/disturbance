@@ -2923,7 +2923,7 @@ def clone_proposal_with_status_reset(proposal):
                     proposal_map_document.proposal = proposal
                     proposal_map_document.id = None
                     # proposal_document._file.name = u'proposals/{}/documents/{}'.format(proposal.id, proposal_document.name)
-                    proposal_map_document._file.name = u'proposals/{}/documents/map_docs/{}'.format(proposal.id, proposal_document.filename)
+                    proposal_map_document._file.name = u'proposals/{}/documents/map_docs/{}'.format(proposal.id, proposal_map_document.filename)
                     proposal_map_document.input_name = u'proposal_{}_map_doc'.format(proposal.id)
                     proposal_map_document.can_delete = True
                     proposal_map_document.save()
@@ -2938,8 +2938,20 @@ def clone_proposal_with_status_reset(proposal):
                     shutil.rmtree(dest_dir)
 
                 # Copy the directory
+                # if os.path.exists(source_dir):
+                #     shutil.copytree(source_dir, dest_dir)
+                
+                 # Copy files one by one (content only, no metadata) to avoid permission issues
                 if os.path.exists(source_dir):
-                    shutil.copytree(source_dir, dest_dir)
+                    for root, dirs, files in os.walk(source_dir):
+                        rel_path = os.path.relpath(root, source_dir)
+                        target_root = os.path.join(dest_dir, rel_path) if rel_path != '.' else dest_dir
+                        os.makedirs(target_root, exist_ok=True)
+                        for file_name in files:
+                            src_file = os.path.join(root, file_name)
+                            dst_file = os.path.join(target_root, file_name)
+                            shutil.copyfile(src_file, dst_file)
+                
                 else:
                     os.makedirs(dest_dir)
 
@@ -3195,6 +3207,8 @@ def get_search_geojson(proposal_lodgement_numbers,request):
                 },
                 'features': combined_features
             }
+            # Normalize pandas/datetime values (for example Timestamp) to JSON-safe values.
+            combined_geojson = json.loads(json.dumps(combined_geojson, cls=DjangoJSONEncoder))
         return combined_geojson
     except:
         raise

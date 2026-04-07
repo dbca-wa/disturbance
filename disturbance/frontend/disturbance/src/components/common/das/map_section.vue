@@ -185,9 +185,9 @@
                  if(this.is_external && this.proposal && !this.proposal.readonly){
                     return false;
                 }
-                if(this.is_internal && this.proposal && this.proposal.draft_assessor_mode){
-                    return false;
-                }
+                //if(this.is_internal && this.proposal && this.proposal.draft_assessor_mode){
+                //    return false;
+                //}
                 return true;
             },
             validating: function(){
@@ -206,9 +206,9 @@
                 if(this.is_external && this.proposal && !this.proposal.readonly && this.proposal.shapefile_json){
                     return false;
                 }
-                if(this.is_internal && this.proposal && this.proposal.draft_assessor_mode && this.proposal.shapefile_json){
-                    return false;
-                }
+                //if(this.is_internal && this.proposal && this.proposal.draft_assessor_mode && this.proposal.shapefile_json){
+                //    return false;
+                //}
                 return true;
             },
             prefill_button_text: function(){
