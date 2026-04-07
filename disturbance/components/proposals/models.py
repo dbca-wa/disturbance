@@ -2938,8 +2938,20 @@ def clone_proposal_with_status_reset(proposal):
                     shutil.rmtree(dest_dir)
 
                 # Copy the directory
+                # if os.path.exists(source_dir):
+                #     shutil.copytree(source_dir, dest_dir)
+                
+                 # Copy files one by one (content only, no metadata) to avoid permission issues
                 if os.path.exists(source_dir):
-                    shutil.copytree(source_dir, dest_dir)
+                    for root, dirs, files in os.walk(source_dir):
+                        rel_path = os.path.relpath(root, source_dir)
+                        target_root = os.path.join(dest_dir, rel_path) if rel_path != '.' else dest_dir
+                        os.makedirs(target_root, exist_ok=True)
+                        for file_name in files:
+                            src_file = os.path.join(root, file_name)
+                            dst_file = os.path.join(target_root, file_name)
+                            shutil.copyfile(src_file, dst_file)
+                
                 else:
                     os.makedirs(dest_dir)
 
