@@ -1173,7 +1173,7 @@
                                 console.log('samefeature', sameFeature) 
                                 if(sameFeature){
                                         //vm.proposalClusterLayer.setStyle(zoomedInStyle);
-                                        vm.showPopupforSameFeatures(features)
+                                    vm.showPopupforSameFeatures(features, evt.coordinate)
                                         //vm.showPopup(features[0])
                                 }
                                 else{
@@ -1183,7 +1183,7 @@
                                     
                                     // If we've reached max zoom or zoom level 18, show all features instead of zooming
                                     if (currentZoomLevel >= Math.min(maxZoom, 18)) {
-                                        vm.showPopupforSameFeatures(features)
+                                        vm.showPopupforSameFeatures(features, evt.coordinate)
                                     } else {
                                         let geometry = feature.getGeometry();
                                         let coordinates = geometry.getCoordinates();
@@ -1427,7 +1427,7 @@
                     this.overlay.setPosition(coord);
                 }
             },
-            showPopupforSameFeatures: function(features){
+            showPopupforSameFeatures: function(features, popupCoord=null){
                 // let unique_id = uuidv4()
                 // let proposal = feature.getProperties().proposal;
                 // console.log('selected proposal', proposal);
@@ -1489,19 +1489,22 @@
                                 proposal_rows+
                               '</tbody>' +
                             '</table>'
-                        let geometry = features[0].getGeometry();
-                        let coord = geometry.getCoordinates();
-                        let type = features[0].getGeometry().getType();
-                        if (type === 'Polygon') {
-                            coord= features[0].getGeometry().getInteriorPoint();
-                        } else if (type === 'LineString') {
-                            coord= features[0].getGeometry().getCoordinateAt(0.5);
-                        } else if (type === 'Point') {
-                            coord= features[0].getGeometry();
-                        } else if (type === 'MultiPolygon') {
-                            coord= new Point(getCenter(features[0].getGeometry().getExtent()), 'XY');
+                        let coord = popupCoord;
+                        if (!coord) {
+                            let geometry = features[0].getGeometry();
+                            coord = geometry.getCoordinates();
+                            let type = features[0].getGeometry().getType();
+                            if (type === 'Polygon') {
+                                coord = features[0].getGeometry().getInteriorPoint();
+                            } else if (type === 'LineString') {
+                                coord = features[0].getGeometry().getCoordinateAt(0.5);
+                            } else if (type === 'Point') {
+                                coord = features[0].getGeometry();
+                            } else if (type === 'MultiPolygon') {
+                                coord = new Point(getCenter(features[0].getGeometry().getExtent()), 'XY');
+                            }
+                            coord = coord.getCoordinates();
                         }
-                        coord=coord.getCoordinates();
                         let content = '<div style="padding: 0.25em;">' +
                                         '<div style="background: darkgray; color: white; text-align: center; padding: 0.5em;" class="align-middle">' +' Proposal: '+ '</div>' +
                                         a_table +
