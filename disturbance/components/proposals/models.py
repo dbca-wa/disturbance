@@ -2923,7 +2923,7 @@ def clone_proposal_with_status_reset(proposal):
                     proposal_map_document.proposal = proposal
                     proposal_map_document.id = None
                     # proposal_document._file.name = u'proposals/{}/documents/{}'.format(proposal.id, proposal_document.name)
-                    proposal_map_document._file.name = u'proposals/{}/documents/map_docs/{}'.format(proposal.id, proposal_document.filename)
+                    proposal_map_document._file.name = u'proposals/{}/documents/map_docs/{}'.format(proposal.id, proposal_map_document.filename)
                     proposal_map_document.input_name = u'proposal_{}_map_doc'.format(proposal.id)
                     proposal_map_document.can_delete = True
                     proposal_map_document.save()
