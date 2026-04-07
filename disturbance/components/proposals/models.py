@@ -2941,7 +2941,7 @@ def clone_proposal_with_status_reset(proposal):
                 # if os.path.exists(source_dir):
                 #     shutil.copytree(source_dir, dest_dir)
                 
-                 # Copy files one by one (content only, no metadata) to avoid permission issues
+                # Copy files one by one (content only, no metadata) to avoid permission issues
                 if os.path.exists(source_dir):
                     for root, dirs, files in os.walk(source_dir):
                         rel_path = os.path.relpath(root, source_dir)
