@@ -5,7 +5,7 @@ import base64
 import geojson
 from six.moves.urllib.parse import urlparse
 from wsgiref.util import FileWrapper
-from django.db.models import Q, Min
+from django.db.models import Q, Min, CharField, Func, Value
 from django.db import transaction
 from django.http import HttpResponse
 from django.core.files.base import ContentFile
@@ -641,9 +641,36 @@ class ApprovalDocumentPaginatedViewSet(viewsets.ModelViewSet):
             except Approval.DoesNotExist:
                 qs = qs.none()
 
-        qs = qs.order_by("-uploaded_date")
+        search_value = request.GET.get('search[value]', '').strip()
+        if search_value:
+            qs = qs.annotate(
+                uploaded_date_formatted=Func(
+                    'uploaded_date',
+                    Value('DD/MM/YYYY'),
+                    function='to_char',
+                    output_field=CharField(),
+                )
+            )
+            search_query = (
+                Q(name__icontains=search_value)
+                | Q(_file__icontains=search_value)
+                | Q(uploaded_date_formatted__icontains=search_value)
+            )
+            qs = qs.filter(search_query)
 
-        self.paginator.page_size = qs.count()
+        order_column_index = request.GET.get('order[0][column]')
+        order_direction = request.GET.get('order[0][dir]', 'desc')
+        order_column_key = None
+        if order_column_index is not None:
+            order_column_key = request.GET.get(f'columns[{order_column_index}][data]')
+        order_field_map = {
+            'history_date': 'uploaded_date',
+        }
+        order_field = order_field_map.get(order_column_key, 'uploaded_date')
+        if order_direction == 'desc':
+            order_field = f'-{order_field}'
+        qs = qs.order_by(order_field)
+
         result_page = self.paginator.paginate_queryset(qs, request)
         serializer = ApprovalDocumentHistorySerializer(result_page, context={
             'request': request,

@@ -75,7 +75,7 @@ export default {
             return title;
         },
         dtOptionsApprovalHistory: function () {
-            //let vm = this;
+            let vm = this;
             let columns = [
                     { data:"history_date" },
                     { data:"history_date" },
@@ -99,11 +99,11 @@ export default {
                 serverSide: true,
                 ajax: {
                     url:
-                        api_endpoints.lookup_history_approvals(this.approval_id) +
+                        api_endpoints.lookup_history_approvals(vm.approval_id) +
                         '?format=datatables',
                     dataSrc: 'data',
                     data: function (d) {
-                        d.approval_id = this.approval_id;
+                        d.approval_id = vm.approval_id;
                     },
                 },
                 buttons: [],
