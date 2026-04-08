@@ -44,7 +44,7 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="">Status</label>
+                            <label for="">Status </label>
                             <select class="form-select" v-model="filterProposalStatus">
                                 <option value="All">All</option>
                                 <option v-for="s in proposal_status" :value="s.value" :key="s.value">{{s.name}}</option>
@@ -53,7 +53,7 @@
                     </div>
                 </div>
                 <div class="row mb-1">
-                    <div class="col-md-3">
+                    <div class="col-md-3" v-if="!organisation_id">
                         <div class="form-group">
                             <label for="">Proponent</label>
                             <select class="form-select" v-model="filterProposalApplicant">
@@ -153,6 +153,10 @@ export default {
         url:{
             type: String,
             required: true
+        },
+        organisation_id: {
+            type: Number,
+            required: false,
         },
     },
     data() {

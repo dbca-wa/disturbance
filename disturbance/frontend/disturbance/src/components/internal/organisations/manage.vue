@@ -199,7 +199,7 @@
                 </div> 
                 <div :id="oTab" class="tab-pane fade" role="tabpanel" aria-labelledby="pills-other-tab">
                     <FormSection :form-collapse="false" label="Proposals" Index="proposals">
-                        <ProposalDashTable ref="proposals_table" level='internal' :url='proposals_url'/>
+                        <ProposalDashTable ref="proposals_table" level='internal' :url='proposals_url' :organisation_id='org.id'/>
                     </FormSection>
                     <FormSection :form-collapse="false" label="Approvals" Index="approvals">
                         <ApprovalDashTable ref="approvals_table" level='internal' :url='approvals_url'/>
