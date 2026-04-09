@@ -334,13 +334,23 @@ export default {
                             }
                         }).then(async (response) => {
                             if (!response.ok) {
-                                throw new Error(`Delete Error: ${response.status}`);
+                                const errorData = await response.json();
+                                const errorMsg = errorData.detail || errorData[0] || `Delete Error: ${response.status}`;
+                                throw new Error(errorMsg);
                             }
 
                             self.$refs.schema_purpose_table.vmDataTable.ajax.reload();
 
                         }).catch((error) => {
                             console.log(error);
+                            swal.fire({
+                            title:'Delete Schema ProposalType Section Error',
+                            text:error.message,
+                            icon:'error',
+                            customClass: {
+                                confirmButton: 'btn btn-primary',
+                            },
+                })
                         });
     
                     }

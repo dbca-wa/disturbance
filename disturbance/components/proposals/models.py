@@ -3573,7 +3573,7 @@ class SectionQuestion(models.Model):
                  ('isRepeatable', 'isRepeatable'),
                  ('isTitleColumnForDashboard', 'isTitleColumnForDashboard'),
                 )
-    section=models.ForeignKey(ProposalTypeSection, related_name='section_questions', on_delete=models.CASCADE )
+    section=models.ForeignKey(ProposalTypeSection, related_name='section_questions', on_delete=models.PROTECT )
     question=models.ForeignKey(MasterlistQuestion, related_name='question_sections',on_delete=models.CASCADE )
     parent_question = ChainedForeignKey(
         'disturbance.MasterlistQuestion',
