@@ -3068,6 +3068,7 @@ class SchemaProposalTypeViewSet(viewsets.ModelViewSet):
         Delete Licence ProposalType Section record.
         '''
         try:
+            from django.db.models.deletion import ProtectedError
             instance = self.get_object()
 
             with transaction.atomic():
@@ -3078,6 +3079,11 @@ class SchemaProposalTypeViewSet(viewsets.ModelViewSet):
                 {'proposal_type_id': instance.id},
                 status=status.HTTP_200_OK
             )
+
+        except ProtectedError as pe:
+            error_msg = 'Cannot delete this section because it has linked questions. Please delete the questions first.'
+            logger.warning('{0} {1}'.format('delete_proposal_type()', error_msg))
+            raise serializers.ValidationError(error_msg)
 
         except serializers.ValidationError as ve:
             log = '{0} {1}'.format('delete_proposal_type()', ve)

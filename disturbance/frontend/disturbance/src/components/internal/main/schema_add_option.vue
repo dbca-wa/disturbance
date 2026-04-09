@@ -11,7 +11,7 @@
                         <div class="col-md-3 mb-3" v-if="canAddMore">
                             <textarea class="form-control" v-model="a.label"></textarea>
                         </div>
-                        <div class="col-md-3" v-else>
+                        <div class="col-md-6" v-else>
                             <label>{{a.label}}</label>
                         </div>
                         <div class="col-md-6 mb-3" v-if="canAddMore">

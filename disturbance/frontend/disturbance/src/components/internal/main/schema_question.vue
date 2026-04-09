@@ -504,12 +504,17 @@ export default {
             let show = this.masterlist.filter( m => {
                 return m.id == selected_id && ['checkbox','radiobuttons'].includes(m.answer_type)
             })[0]
+            // if (show && this.isNewEntry){
+            //     let newOption = Object.assign(show)
+            //     this.addedOptions.push(newOption);
+            //     this.addedOptions = show.options;
+            // }
             if (show && this.isNewEntry){
-                let newOption = Object.assign(show)
-                this.addedOptions.push(newOption);
-                this.addedOptions = show.options;
+                this.addedOptions = Array.isArray(show.options)
+                    ? show.options.map(option => Object.assign({}, option))
+                    : [];
             }
-
+           
             this.showOptions = show ? true : false
         },
         saveQuestion: async function() {
