@@ -3574,7 +3574,7 @@ class SectionQuestion(models.Model):
                  ('isTitleColumnForDashboard', 'isTitleColumnForDashboard'),
                 )
     section=models.ForeignKey(ProposalTypeSection, related_name='section_questions', on_delete=models.PROTECT )
-    question=models.ForeignKey(MasterlistQuestion, related_name='question_sections',on_delete=models.CASCADE )
+    question=models.ForeignKey(MasterlistQuestion, related_name='question_sections',on_delete=models.PROTECT )
     parent_question = ChainedForeignKey(
         'disturbance.MasterlistQuestion',
         chained_field='section',
@@ -3720,7 +3720,7 @@ class SectionQuestion(models.Model):
 
 class SpatialQueryQuestion(RevisionedMixin):
                         
-    question = models.ForeignKey(MasterlistQuestion, related_name='questions', on_delete=models.CASCADE )
+    question = models.ForeignKey(MasterlistQuestion, related_name='questions', on_delete=models.PROTECT )
     answer_mlq = models.ForeignKey(QuestionOption, related_name='question_options', on_delete=models.CASCADE , blank=True, null=True)
     group = models.ForeignKey(CddpQuestionGroup, related_name='groups', on_delete=models.CASCADE)
     other_data = JSONField('Additional/Misc Data', blank=True, null=True)

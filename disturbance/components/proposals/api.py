@@ -2435,6 +2435,7 @@ class SchemaMasterlistViewSet(viewsets.ModelViewSet):
         Delete Masterlist record.
         '''
         try:
+            from django.db.models.deletion import ProtectedError
             instance = self.get_object()
 
             with transaction.atomic():
@@ -2445,6 +2446,11 @@ class SchemaMasterlistViewSet(viewsets.ModelViewSet):
                 {'masterlist_id': instance.id},
                 status=status.HTTP_200_OK
             )
+
+        except ProtectedError as pe:
+            error_msg = 'Cannot delete this masterlist question because it is linked to schema questions or spatial query questions.'
+            logger.warning('{0} {1}'.format('delete_masterlist()', error_msg))
+            raise serializers.ValidationError(error_msg)
 
         except serializers.ValidationError as ve:
             log = '{0} {1}'.format('save_masterlist()', ve)

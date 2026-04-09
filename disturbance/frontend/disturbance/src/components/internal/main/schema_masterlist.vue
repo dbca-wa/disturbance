@@ -480,16 +480,18 @@ export default {
                         })
                         .then(async (response) => {
                             if (!response.ok) {
-                                throw new Error(`HTTP error! Status: ${response.status}`);
+                                const errorData = await response.json();
+                                const errorMsg = errorData.detail || errorData[0] || `Delete Error: ${response.status}`;
+                                throw new Error(errorMsg);
                             }
                             self.$refs.schema_masterlist_table.vmDataTable.ajax.reload(
                                 helpers.enablePopovers,
                                 false
                             );
-                        }, (error) => {
+                        }).catch((error) => {
                             swal.fire({
                                 title:'Delete Error',
-                                text:error,
+                                text:error.message,
                                 icon:'error',
                                 customClass: {
                                     confirmButton: 'btn btn-primary',
