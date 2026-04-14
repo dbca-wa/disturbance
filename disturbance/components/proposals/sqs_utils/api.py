@@ -639,6 +639,66 @@ class ProposalSqsViewSet(viewsets.ModelViewSet):
                 f'expired masterlist questions (id, question): {sorted(expired_masterlist_questions)}.'
             )
 
+    def _cleanup_layer_data_for_refresh_question(self, proposal, mlq_label, schema_name, version_comment):
+        """
+        Remove cached layer_data rows tied to a refresh question for any widget type.
+        Uses the explicit schema_name when provided and also attempts to resolve all
+        nested schema names from the schema label (eg checkbox children).
+        """
+        if not isinstance(proposal.layer_data, list) or len(proposal.layer_data) == 0:
+            return []
+
+        def _collect_schema_names(schema_items):
+            names = set()
+
+            def _walk(node):
+                if isinstance(node, list):
+                    for child in node:
+                        _walk(child)
+                    return
+
+                if isinstance(node, dict):
+                    if node.get('name'):
+                        names.add(node.get('name'))
+                    if node.get('children'):
+                        _walk(node.get('children'))
+
+            _walk(schema_items)
+            return names
+
+        schema_names_to_clear = set()
+        if schema_name:
+            schema_names_to_clear.add(schema_name)
+
+        refresh_schema, found_refresh_schema = search_label(proposal.schema, mlq_label)
+        if found_refresh_schema:
+            schema_names_to_clear.update(_collect_schema_names(refresh_schema))
+
+        if not schema_names_to_clear:
+            logger.info(
+                f'Refresh cleanup skipped for proposal {proposal.lodgement_number}: '
+                f'no schema names resolved for label "{mlq_label}" and name "{schema_name}".'
+            )
+            return []
+
+        removed_rows = [
+            layer for layer in proposal.layer_data
+            if isinstance(layer, dict) and layer.get('name') in schema_names_to_clear
+        ]
+        if not removed_rows:
+            return []
+        proposal.layer_data = [
+            layer for layer in proposal.layer_data
+            if not (isinstance(layer, dict) and layer.get('name') in schema_names_to_clear)
+        ]
+        proposal.save(update_fields=['layer_data'], version_comment=version_comment)
+        logger.info(
+            f'Refresh cleanup removed cached layer_data for proposal {proposal.lodgement_number}, '
+            f'question label "{mlq_label}", schema names: {sorted(schema_names_to_clear)}, '
+            f'removed rows: {removed_rows}.'
+        )
+        return removed_rows
+
     @action(methods=['POST',], detail=True)
     @api_exception_handler
     def refresh(self, request, *args, **kwargs):
@@ -668,6 +728,16 @@ class ProposalSqsViewSet(viewsets.ModelViewSet):
         schema = proposal.schema
 
         geojson=proposal.shapefile_json
+        
+        # we are now clearing all the existing any layer_data for the question on every REFRESH_SINGLE for all answer_type(including checkbox,multi-select)
+        if schema_name and mlq_label:
+            self._cleanup_layer_data_for_refresh_question(
+                proposal=proposal,
+                mlq_label=mlq_label,
+                schema_name=schema_name,
+                version_comment='Remove stale layer data for missing CDDP question before refresh',
+            )
+
         # serialize masterlist question
         masterlist_question_qs = SpatialQueryQuestion.objects.filter(question__question=mlq_label)
         #masterlist_question_qs = SpatialQueryQuestion.current_layers.filter(question__question=mlq_label)
@@ -683,14 +753,15 @@ class ProposalSqsViewSet(viewsets.ModelViewSet):
 #                status=status.HTTP_400_BAD_REQUEST
 #            )
         #delete the previously filled layer data for this question(checkbox)from the proposal before queuing a refresh, as there are no longer any valid layers associated with this question
-        mlq_type = masterlist_question_qs[0].question.answer_type
-        if mlq_type in ['checkbox']:
-            self._cleanup_expired_layer_data_for_checkbox(
-                proposal=proposal,
-                mlq_label=mlq_label,
-                schema_name=schema_name,
-                masterlist_question_qs=masterlist_question_qs,
-            )
+        # _cleanup_expired_layer_data_for_checkbox() has been commented out as we are now clearing all the existing any layer_data for the question on every REFRESH_SINGLE above
+        # mlq_type = masterlist_question_qs[0].question.answer_type
+        # if mlq_type in ['checkbox']:
+        #     self._cleanup_expired_layer_data_for_checkbox(
+        #         proposal=proposal,
+        #         mlq_label=mlq_label,
+        #         schema_name=schema_name,
+        #         masterlist_question_qs=masterlist_question_qs,
+        #     )
 
         serializer = DTSpatialQueryQuestionSerializer(masterlist_question_qs, context={'data': request.data, 'filter_expired': True}, many=True)
         rendered = JSONRenderer().render(serializer.data).decode('utf-8')
@@ -702,8 +773,9 @@ class ProposalSqsViewSet(viewsets.ModelViewSet):
         if len(masterlist_question_json) == 0:
             
             #delete the previously filled layer data for this question from the proposal before queuing a refresh, as there are no longer any valid layers associated with this question
-            proposal.layer_data = [layer for layer in proposal.layer_data if layer.get('name') != schema_name] if proposal.layer_data else None
-            proposal.save(update_fields=['layer_data'], version_comment='Remove layer data for expired layer configuration before refresh')
+            # has been commented out as we are now clearing all the existing any layer_data for the question on every REFRESH_SINGLE above
+            # proposal.layer_data = [layer for layer in proposal.layer_data if layer.get('name') != schema_name] if proposal.layer_data else None
+            # proposal.save(update_fields=['layer_data'], version_comment='Remove layer data for expired layer configuration before refresh')
 
             question = masterlist_question_qs[0].question.question
             #question = masterlist_question_json[0]['masterlist_question']['question']
