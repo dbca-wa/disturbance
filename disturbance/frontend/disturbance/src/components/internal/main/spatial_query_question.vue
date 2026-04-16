@@ -1174,20 +1174,27 @@ export default {
                     }
                 }).then(async (response) => {
                     if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
+                        throw new Error(await helpers.parseApiError(response));
                     }
                     const response_data = await response.json();
                     self.$refs.spatial_query_question_table.vmDataTable.ajax.reload();
-                    self.spatialquerylayer.spatial_query_question_id = response_data.data.id // to allow adding layers immediately from same modal
-                    self.spatialquery.id = response_data.data.id // to allow adding layers immediately from same modal
+                    self.spatialquerylayer.spatial_query_question_id = response_data.id // to allow adding layers immediately from same modal
+                    self.spatialquery.id = response_data.id // to allow adding layers immediately from same modal
                     //self.close();
                 }).catch((error) => {
                     console.log('Error: ' + JSON.stringify(error))
                     swal.fire({
                         title: 'Save Error',
-                        html: error.errors,
+                        html: error.message,
+                        target: document.body,
                         // helpers.apiVueResourceError(error),
                         icon: 'error',
+                        didOpen: () => {
+                            const container = document.querySelector('.swal2-container');
+                            if (container) {
+                                container.style.setProperty('z-index', '30000', 'important');
+                            }
+                        },
                         customClass: {
                             confirmButton: 'btn btn-primary',
                         },
@@ -1207,7 +1214,7 @@ export default {
                     }
                 }).then(async (response) => {
                     if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
+                        throw new Error(await helpers.parseApiError(response));
                     }
                     self.$refs.spatial_query_question_table.vmDataTable.ajax.reload();
                     //self.close();
@@ -1215,8 +1222,15 @@ export default {
                     console.log('Error: ' + JSON.stringify(error))
                     swal.fire({
                         title:'Save Error',
-                        text:error,
+                        html:error.message,
+                        target: document.body,
                         icon:'error',
+                        didOpen: () => {
+                            const container = document.querySelector('.swal2-container');
+                            if (container) {
+                                container.style.setProperty('z-index', '30000', 'important');
+                            }
+                        },
                         customClass: {
                             confirmButton: 'btn btn-primary',
                         },
@@ -1718,7 +1732,7 @@ export default {
             if (!this.spatialquerylayer.operator) { this.missing_fields.push({'label':'Operator field is required'}); }
             if (!this.spatialquerylayer.buffer) { this.spatialquerylayer.buffer=0 }
 
-	    if (!this.spatialquerylayer.proponent_items[0]['answer'] && ['text', 'text_area'].includes(this.spatialquery.answer_type)) { 
+	    if (!this.spatialquerylayer.proponent_items?.[0]?.['answer'] && ['text', 'text_area'].includes(this.spatialquery.answer_type)) { 
                 this.missing_fields.push({'label':'Answer (Proponent Section) field is required'}); 
             }
 
@@ -2032,9 +2046,16 @@ export default {
                 swal.fire({
                     title: "Delete Spatialquery Layer",
                     text: "Are you sure you want to delete?",
-                    type: "question",
+                    icon: "question",
+                    target: document.body,
                     showCancelButton: true,
                     confirmButtonText: 'Accept',
+                    didOpen: () => {
+                        const container = document.querySelector('.swal2-container');
+                        if (container) {
+                            container.style.setProperty('z-index', '30000', 'important');
+                        }
+                    },
                     customClass: {
                         confirmButton: 'btn btn-primary',
                         cancelButton: 'btn btn-secondary',

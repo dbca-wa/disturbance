@@ -32,6 +32,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'datatables.net-bs5';
 import 'datatables.net-buttons-bs5';
 import 'datatables.net-responsive-bs5';
+import 'datatables.net-fixedcolumns-bs5';
 import 'datatables.net-buttons/js/dataTables.buttons.js';
 import 'datatables.net-buttons/js/buttons.html5.js';
 
@@ -41,6 +42,7 @@ import 'select2/dist/css/select2.min.css';
 import 'select2-bootstrap-5-theme/dist/select2-bootstrap-5-theme.min.css';
 import '@/../node_modules/datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import '@/../node_modules/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css';
+import '@/../node_modules/datatables.net-fixedcolumns-bs5/css/fixedColumns.bootstrap5.min.css';
 import 'summernote/dist/summernote';
 import 'summernote/dist/summernote.min.css';
 import 'summernote/dist/summernote-lite.min.css';

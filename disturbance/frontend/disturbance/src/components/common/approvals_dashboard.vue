@@ -534,7 +534,12 @@ export default {
                 language: {
                     processing: constants.DATATABLE_PROCESSING_HTML,
                 },
-                responsive: true,
+                responsive: false,
+                scrollX: true,
+                fixedColumns: {
+                    leftColumns: 1,
+                    end: 1
+                },
                 serverSide: true,
                 lengthMenu: [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
                 order: [
