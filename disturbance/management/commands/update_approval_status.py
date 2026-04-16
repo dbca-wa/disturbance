@@ -32,7 +32,9 @@ class Command(BaseCommand):
         updates = []
         today = timezone.localtime(timezone.now()).date()
         logger.info('Running command {}'.format(__name__))
-        for a in Approval.objects.filter(status=Approval.STATUS_CURRENT):
+        apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
+        approval_qs = Approval.objects.filter(status=Approval.STATUS_CURRENT).exclude(current_proposal__application_type__name__in=apiary_proposal_types)
+        for a in approval_qs:
             if a.suspension_details and a.set_to_suspend:
                 from_date = datetime.datetime.strptime(a.suspension_details['from_date'],'%d/%m/%Y')
                 from_date = from_date.date()                

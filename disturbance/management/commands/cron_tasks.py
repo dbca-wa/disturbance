@@ -30,8 +30,8 @@ class Command(BaseCommand):
         subprocess.call('python manage_ds.py approval_renewal_notices' + stdout_redirect, shell=True) 
         subprocess.call('python manage_ds.py send_assessment_reminder' + stdout_redirect, shell=True)
         subprocess.call('python manage_ds.py weekly_assessment_reminder' + stdout_redirect, shell=True)
-        subprocess.call('python manage_ds.py send_annual_rental_fee_invoice' + stdout_redirect, shell=True)
-        subprocess.call('python manage_ds.py save_apiary_sites' + stdout_redirect, shell=True)
+        # subprocess.call('python manage_ds.py send_annual_rental_fee_invoice' + stdout_redirect, shell=True)
+        # subprocess.call('python manage_ds.py save_apiary_sites' + stdout_redirect, shell=True)
         subprocess.call('python manage_ds.py clear_old_files' + stdout_redirect, shell=True)
 
         # TaskMonitor jobs

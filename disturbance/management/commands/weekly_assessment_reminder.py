@@ -40,7 +40,8 @@ class Command(BaseCommand):
             assessment_reminder_days=int(assessment_reminder_days)
         else:
             assessment_reminder_days= settings.ASSESSMENT_REMINDER_DAYS
-        qs=Proposal.objects.filter(**weekly_reminder_conditions)
+        apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
+        qs=Proposal.objects.filter(**weekly_reminder_conditions).exclude(application_type__name__in=apiary_proposal_types)
         for proposal in qs:
             compare_date=None
             if proposal.lodgement_date:
