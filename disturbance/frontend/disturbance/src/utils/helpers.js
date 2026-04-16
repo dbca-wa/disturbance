@@ -273,4 +273,17 @@ export default{
         }
         return errorText;
     },
+    parseApiError: async function(response){
+        const raw = await response.text();
+        if (!raw) {
+            return `HTTP error! Status: ${response.status}`;
+        }
+
+        try {
+            const payload = JSON.parse(raw);
+            return payload?.errors || payload?.detail || raw;
+        } catch {
+            return raw;
+        }
+    },
 };

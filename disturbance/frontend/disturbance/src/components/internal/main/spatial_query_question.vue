@@ -1174,7 +1174,7 @@ export default {
                     }
                 }).then(async (response) => {
                     if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
+                        throw new Error(await helpers.parseApiError(response));
                     }
                     const response_data = await response.json();
                     self.$refs.spatial_query_question_table.vmDataTable.ajax.reload();
@@ -1185,9 +1185,16 @@ export default {
                     console.log('Error: ' + JSON.stringify(error))
                     swal.fire({
                         title: 'Save Error',
-                        html: error.errors,
+                        html: error.message,
+                        target: document.body,
                         // helpers.apiVueResourceError(error),
                         icon: 'error',
+                        didOpen: () => {
+                            const container = document.querySelector('.swal2-container');
+                            if (container) {
+                                container.style.setProperty('z-index', '30000', 'important');
+                            }
+                        },
                         customClass: {
                             confirmButton: 'btn btn-primary',
                         },
@@ -1207,7 +1214,7 @@ export default {
                     }
                 }).then(async (response) => {
                     if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
+                        throw new Error(await helpers.parseApiError(response));
                     }
                     self.$refs.spatial_query_question_table.vmDataTable.ajax.reload();
                     //self.close();
@@ -1215,8 +1222,15 @@ export default {
                     console.log('Error: ' + JSON.stringify(error))
                     swal.fire({
                         title:'Save Error',
-                        text:error,
+                        html:error.message,
+                        target: document.body,
                         icon:'error',
+                        didOpen: () => {
+                            const container = document.querySelector('.swal2-container');
+                            if (container) {
+                                container.style.setProperty('z-index', '30000', 'important');
+                            }
+                        },
                         customClass: {
                             confirmButton: 'btn btn-primary',
                         },
