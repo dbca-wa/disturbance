@@ -2695,7 +2695,7 @@ class SchemaQuestionViewSet(viewsets.ModelViewSet):
             proposal_type_id = request.query_params.get('proposal_type_id', 0)
             sections = ProposalTypeSection.objects.filter(
                 proposal_type_id=int(proposal_type_id)
-            )
+            ).order_by('index')
             names = [
                 {
                     'label': s.section_label, 'value': s.id

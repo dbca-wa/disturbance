@@ -33,7 +33,9 @@ class Command(BaseCommand):
         }
 
         logger.info('Running command {}'.format(__name__))
-        for a in Approval.objects.filter(**renewal_conditions):
+        apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
+        approval_qs = Approval.objects.filter(**renewal_conditions).exclude(current_proposal__application_type__name__in=apiary_proposal_types)
+        for a in approval_qs:
             if a.status == Approval.STATUS_CURRENT or a.status == Approval.STATUS_SUSPENDED:
                 try:
                     a.generate_renewal_doc()

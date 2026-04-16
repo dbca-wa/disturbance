@@ -26,7 +26,8 @@ class Command(BaseCommand):
         errors = []
         updates = []
         logger.info('Running command {}'.format(__name__))
-        for c in Compliance.objects.filter(processing_status = 'future'):
+        apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
+        for c in Compliance.objects.filter(processing_status = 'future').exclude(proposal__application_type__name__in=apiary_proposal_types):
             #if(c.due_date<= compare_date<= c.approval.expiry_date) and c.approval.status=='current':
             if(c.due_date<= compare_date) and (c.due_date<= c.approval.expiry_date) and c.approval.status=='current':
                 try:

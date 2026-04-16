@@ -23,13 +23,15 @@ class Command(BaseCommand):
         updates = []
         today = timezone.localtime(timezone.now()).date()
         logger.info('Running command {}'.format(__name__))
-        for c in Compliance.objects.filter(processing_status = 'due'):
+        apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
+        due_compliances = Compliance.objects.filter(processing_status = 'due').exclude(proposal__application_type__name__in=apiary_proposal_types)
+        for c in due_compliances:
             try:
                 c.send_reminder(user)
                 c.save()
                 updates.append(c.lodgement_number)
             except Exception as e:
-                err_msg = 'Error sending Reminder Compliance'.format(c.lodgement_number)
+                err_msg = 'Error sending Reminder Compliance {}'.format(c.lodgement_number)
                 logger.error('{}\n{}'.format(err_msg, str(e)))
                 errors.append(err_msg)
 
