@@ -2032,9 +2032,16 @@ export default {
                 swal.fire({
                     title: "Delete Spatialquery Layer",
                     text: "Are you sure you want to delete?",
-                    type: "question",
+                    icon: "question",
+                    target: document.body,
                     showCancelButton: true,
                     confirmButtonText: 'Accept',
+                    didOpen: () => {
+                        const container = document.querySelector('.swal2-container');
+                        if (container) {
+                            container.style.setProperty('z-index', '30000', 'important');
+                        }
+                    },
                     customClass: {
                         confirmButton: 'btn btn-primary',
                         cancelButton: 'btn btn-secondary',
