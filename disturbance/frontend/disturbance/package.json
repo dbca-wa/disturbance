@@ -27,7 +27,7 @@
     "datatables.net-responsive-bs5": "^3.0.6",
     "file-saver": "^2.0.5",
     "font-awesome": "^4.7.0",
-    "jquery": "^3.7.1",
+    "jquery": "^4.0.0",
     "jquery-validation": "^1.21.0",
     "jquery.easing": "^1.4.1",
     "jszip": "^3.10.1",
@@ -43,17 +43,17 @@
     "summernote": "^0.9.1",
     "sweetalert2": "11.4.8",
     "uuid": "^13.0.0",
-    "vite": "^7.1.3",
+    "vite": "^8.0.8",
     "vite-plugin-eslint2": "^5.0.4",
     "vite-plugin-static-copy": "^3.1.2",
     "vite-svg-loader": "^5.1.0",
     "vue": "^3.5.17",
-    "vue-router": "^4.5.1"
+    "vue-router": "^5.0.4"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.28.0",
     "@babel/plugin-transform-runtime": "^7.28.3",
-    "@types/jquery": "^3.5.33",
+    "@types/jquery": "^4.0.0",
     "@types/select2": "^4.0.63",
     "@vitejs/plugin-vue-jsx": "^5.1.1",
     "@vue/babel-plugin-jsx": "^1.5.0",
@@ -67,7 +67,7 @@
     "prettier": "^3.6.2"
   },
   "engines": {
-    "node": ">= 22.19.0",
+    "node": ">= 24.14.1",
     "npm": ">= 10.8.2"
   },
   "browserslist": [
