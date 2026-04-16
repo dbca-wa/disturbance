@@ -1178,8 +1178,8 @@ export default {
                     }
                     const response_data = await response.json();
                     self.$refs.spatial_query_question_table.vmDataTable.ajax.reload();
-                    self.spatialquerylayer.spatial_query_question_id = response_data.data.id // to allow adding layers immediately from same modal
-                    self.spatialquery.id = response_data.data.id // to allow adding layers immediately from same modal
+                    self.spatialquerylayer.spatial_query_question_id = response_data.id // to allow adding layers immediately from same modal
+                    self.spatialquery.id = response_data.id // to allow adding layers immediately from same modal
                     //self.close();
                 }).catch((error) => {
                     console.log('Error: ' + JSON.stringify(error))
@@ -1718,7 +1718,7 @@ export default {
             if (!this.spatialquerylayer.operator) { this.missing_fields.push({'label':'Operator field is required'}); }
             if (!this.spatialquerylayer.buffer) { this.spatialquerylayer.buffer=0 }
 
-	    if (!this.spatialquerylayer.proponent_items[0]['answer'] && ['text', 'text_area'].includes(this.spatialquery.answer_type)) { 
+	    if (!this.spatialquerylayer.proponent_items?.[0]?.['answer'] && ['text', 'text_area'].includes(this.spatialquery.answer_type)) { 
                 this.missing_fields.push({'label':'Answer (Proponent Section) field is required'}); 
             }
 
