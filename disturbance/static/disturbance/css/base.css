@@ -275,3 +275,9 @@ label {
   display: none;
  }
 }
+
+table.dataTable.table-bordered th,
+table.dataTable.table-bordered td {
+    border-right-width: 1px !important;
+    border-top-width: 1px !important;
+}
