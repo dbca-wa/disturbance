@@ -652,11 +652,12 @@ class ProposalSqsViewSet(viewsets.ModelViewSet):
             names = set()
 
             def _walk(node):
+                # If node is a list, walk through each item
                 if isinstance(node, list):
                     for child in node:
                         _walk(child)
                     return
-
+                # If node is a dictionary, check for name and children
                 if isinstance(node, dict):
                     if node.get('name'):
                         names.add(node.get('name'))
