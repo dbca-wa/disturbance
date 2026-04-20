@@ -826,19 +826,33 @@ export default {
             });
     },
     */
-    beforeRouteUpdate: function(to, from, next) {
-          fetch(`/api/proposal/${to.params.proposal_id}/referall_proposal.json`)
-          .then(async (res) => {
-            if (!res.ok) { return res.json().then(err => { throw err }); }
-            const data = await res.json();
-              next(vm => {
+    beforeRouteUpdate: async function(to) {
+        //   fetch(`/api/proposal/${to.params.proposal_id}/referall_proposal.json`)
+        //   .then(async (res) => {
+        //     if (!res.ok) { return res.json().then(err => { throw err }); }
+        //     const data = await res.json();
+        //       next(vm => {
+        //         vm.referral = data;
+        //         vm.referral.proposal.applicant.address = vm.referral.proposal.applicant.address != null ? vm.referral.proposal.applicant.address : {};
+        //       });
+        //     })
+        //     .catch(err => {
+        //       console.log(err);
+        //     });
+        // return a callback from beforeRouteEnter instead of calling next(vm => ...) as it's deprecated.
+        try {
+            const response = await fetch(`/api/proposal/${to.params.proposal_id}/referall_proposal.json`);
+            if (!response.ok) {
+                return response.json().then(err => { throw err });
+            }
+            const data = await response.json();
+            return (vm) => {
                 vm.referral = data;
                 vm.referral.proposal.applicant.address = vm.referral.proposal.applicant.address != null ? vm.referral.proposal.applicant.address : {};
-              });
-            })
-            .catch(err => {
-              console.log(err);
-            });
+            };
+        } catch (err) {
+            console.log(err);
+        }
     }
 }
 </script>

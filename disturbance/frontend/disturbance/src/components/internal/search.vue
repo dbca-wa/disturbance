@@ -314,15 +314,24 @@ export default {
         alert,
         FormSection,
     },
-    beforeRouteEnter:function(to,from,next){
-        utils.fetchOrganisations().then((response)=>{
-            next(vm => {
-                vm.organisations = response;
-            });
-        },
-        (error) =>{
-            console.log(error);
-        });
+    beforeRouteEnter:async function(){
+        // utils.fetchOrganisations().then((response)=>{
+        //     next(vm => {
+        //         vm.organisations = response;
+        //     });
+        // },
+        // (error) =>{
+        //     console.log(error);
+        // });
+        // return a callback from beforeRouteEnter instead of calling next(vm => ...) as it's deprecated.
+        try {
+            const data = await utils.fetchOrganisations();
+            return (vm) => {
+                vm.organisations = data;   
+            };
+        } catch (err) {
+            console.log(err);
+        }
     },
     computed: {
         showError: function() {

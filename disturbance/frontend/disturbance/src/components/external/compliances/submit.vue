@@ -56,21 +56,39 @@ export default {
     let vm = this;
     vm.form = document.forms.new_compliance;
   },
-  beforeRouteEnter: function(to, from, next) {
-    next(vm => {
-        // vm.compliance = to.params.compliance;
-        if (!window.history.state.compliance) {
-            this.$router.push({
+// Legacy (kept as reference):
+// beforeRouteEnter: function(to, from, next) {
+//   next(vm => {
+//       // vm.compliance = to.params.compliance;
+//       if (!window.history.state.compliance) {
+//           this.$router.push({
+//               name: 'external-proposals-dash',
+//           });
+//           return;
+//       }
+//       Object.assign(
+//           vm.compliance,
+//           JSON.parse(window.history.state.compliance)
+//       );
+//   })
+// },
+// Preferred Vue Router 4 pattern: return a redirect object or vm callback.
+    beforeRouteEnter: function() {
+        const complianceState = window.history.state && window.history.state.compliance;
+        if (!complianceState) {
+            // Redirect when compliance data is missing from browser history state.
+            return {
                 name: 'external-proposals-dash',
-            });
-            return;
+            };
         }
-        Object.assign(
-            vm.compliance,
-            JSON.parse(window.history.state.compliance)
-        );
-    })
-  },
+        return (vm) => {
+            // vm.compliance = to.params.compliance;
+            Object.assign(
+                vm.compliance,
+                JSON.parse(complianceState)
+            );
+        };
+    },
 }
 </script>
 
