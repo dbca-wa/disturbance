@@ -850,23 +850,34 @@ export default {
     vm.fetchGlobalSettings();
     vm.form = document.forms.new_proposal;
   },
-  beforeRouteEnter: function(to, from, next) {
-
-    let initialisers = [
-        utils.fetchProfile(),
-
-        //utils.fetchProposal(to.params.proposal_id)
-    ]
-    next(vm => {
-        vm.loading.push('fetching profile')
-        Promise.all(initialisers).then(data => {
-            vm.profile = data[0];
-            //vm.proposal = data[1];
-            vm.loading.splice('fetching profile', 1)
-        })
-    })
-
-  },
+    // beforeRouteEnter: function(to, from, next) {
+    //
+    //   let initialisers = [
+    //       utils.fetchProfile(),
+    //
+    //       //utils.fetchProposal(to.params.proposal_id)
+    //   ]
+    //   next(vm => {
+    //       vm.loading.push('fetching profile')
+    //       Promise.all(initialisers).then(data => {
+    //           vm.profile = data[0];
+    //           //vm.proposal = data[1];
+    //           vm.loading.splice('fetching profile', 1)
+    //       })
+    //   })
+    //
+    // },
+    // return a callback from beforeRouteEnter instead of calling next(vm => ...) as it's deprecated.
+    beforeRouteEnter: async function() {
+        try {
+            const profile = await utils.fetchProfile();
+            return (vm) => {
+                vm.profile = profile;   
+            };
+        } catch (err) {
+            console.log(err);
+        }
+    },
     created: function() {
         // retrieve template group
         fetch('/template_group',{emulateJSON:true}).then(

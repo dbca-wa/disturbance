@@ -352,14 +352,40 @@ export default {
     vm.addFormValidations();     
   },
 
- beforeRouteEnter: function(to, from, next){
-    fetch(helpers.add_endpoint_json(api_endpoints.compliances,to.params.compliance_id)).then(
-        async (response) => {
+ beforeRouteEnter: async function(to){
+    // fetch(helpers.add_endpoint_json(api_endpoints.compliances,to.params.compliance_id)).then(
+    //     async (response) => {
+    //         if (!response.ok) {
+    //             return response.json().then(err => { throw err });
+    //         }
+    //         let compliance_data = await response.json();
+    //         next(vm => {
+    //             vm.compliance = compliance_data;
+    //             if ( vm.compliance.customer_status == "Under Review" || vm.compliance.customer_status == "Approved" ) { vm.isFinalised = true }
+    //             if (vm.compliance && vm.compliance.documents){ vm.hasDocuments = true}
+
+    //             fetch(helpers.add_endpoint_json(api_endpoints.compliances,to.params.compliance_id+'/amendment_request')).then(
+    //                 async (res) => { 
+    //                     if (!res.ok) {
+    //                         return res.json().then(err => { throw err });
+    //                     }    
+    //                     let amend_data = await res.json();                
+    //                     vm.setAmendmentData(amend_data);                  
+    //                 }).catch(err => {
+    //                         console.log(err);
+    //                 });
+    //         })
+    //     }).catch((error) => {
+    //         console.log(error);
+    //     });
+    // return a callback from beforeRouteEnter instead of calling next(vm => ...) as it's deprecated.
+    try {
+            const response = await fetch(helpers.add_endpoint_json(api_endpoints.compliances,to.params.compliance_id));
             if (!response.ok) {
                 return response.json().then(err => { throw err });
             }
-            let compliance_data = await response.json();
-            next(vm => {
+            const compliance_data = await response.json();
+            return (vm) => {
                 vm.compliance = compliance_data;
                 if ( vm.compliance.customer_status == "Under Review" || vm.compliance.customer_status == "Approved" ) { vm.isFinalised = true }
                 if (vm.compliance && vm.compliance.documents){ vm.hasDocuments = true}
@@ -374,10 +400,10 @@ export default {
                     }).catch(err => {
                             console.log(err);
                     });
-            })
-        }).catch((error) => {
-            console.log(error);
-        });
+            };
+        } catch (err) {
+            console.log(err);
+        }
   }
 }
 

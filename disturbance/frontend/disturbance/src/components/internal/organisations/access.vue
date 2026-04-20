@@ -298,16 +298,29 @@ export default {
     }
   },
   watch: {},
-  beforeRouteEnter: function(to, from, next){
-    fetch(helpers.add_endpoint_json(api_endpoints.organisation_requests,to.params.access_id)).then(async (response) => {
-        if (!response.ok) { return response.json().then(err => { throw err }); }
-        let data = await response.json();
-        next(vm => {
+  beforeRouteEnter: async function(to){
+    // fetch(helpers.add_endpoint_json(api_endpoints.organisation_requests,to.params.access_id)).then(async (response) => {
+    //     if (!response.ok) { return response.json().then(err => { throw err }); }
+    //     let data = await response.json();
+    //     next(vm => {
+    //         vm.access = data;
+    //     })
+    // }).catch((error) => {
+    //     console.log(error);
+    // })
+    // return a callback from beforeRouteEnter instead of calling next(vm => ...) as it's deprecated.
+    try {
+        const response = await fetch(helpers.add_endpoint_json(api_endpoints.organisation_requests,to.params.access_id));
+        if (!response.ok) {
+            return response.json().then(err => { throw err });
+        }
+        const data = await response.json();
+        return (vm) => {
             vm.access = data;
-        })
-    }).catch((error) => {
-        console.log(error);
-    })
+        };
+    } catch (err) {
+        console.log(err);
+    }
   },
   components: {
     CommsLogs,

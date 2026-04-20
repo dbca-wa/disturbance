@@ -36,21 +36,36 @@ export default {
     },
     mounted: function () {
     },
-    beforeRouteEnter: function(to, from, next) {
-        fetch(`/api/approvals/${to.params.approval_id}/approval_wrapper.json`).then(
-            async (res) => {
-                if (!res.ok) {
-                    return res.json().then(err => { throw err });
-                }
-                let data = await res.json();
-                next(vm => {
-                    console.log(data)
-                    vm.approvalId = data.id;
-                    //   vm.apiaryApproval = res.body.apiary_approval;
-                });
-            }).catch(err => {
-              console.log(err);
-            });
+    beforeRouteEnter: async function(to) {
+        // fetch(`/api/approvals/${to.params.approval_id}/approval_wrapper.json`).then(
+        //     async (res) => {
+        //         if (!res.ok) {
+        //             return res.json().then(err => { throw err });
+        //         }
+        //         let data = await res.json();
+        //         next(vm => {
+        //             console.log(data)
+        //             vm.approvalId = data.id;
+        //             //   vm.apiaryApproval = res.body.apiary_approval;
+        //         });
+        //     }).catch(err => {
+        //       console.log(err);
+        //     });
+        // return a callback from beforeRouteEnter instead of calling next(vm => ...) as it's deprecated.
+        try {
+            const response = await fetch(`/api/approvals/${to.params.approval_id}/approval_wrapper.json`);
+            if (!response.ok) {
+                return response.json().then(err => { throw err });
+            }
+            const data = await response.json();
+            return (vm) => {
+                console.log(data)
+                vm.approvalId = data.id;
+                //   vm.apiaryApproval = res.body.apiary_approval;
+            };
+        } catch (err) {
+            console.log(err);
+        }
     },
 }
 </script>

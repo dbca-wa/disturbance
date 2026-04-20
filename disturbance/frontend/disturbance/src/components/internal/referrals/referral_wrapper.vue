@@ -32,19 +32,33 @@ export default {
     },
     mounted: function () {
     },
-    beforeRouteEnter: function(to, from, next) {
-          fetch(`/api/referrals/${to.params.referral_id}/referral_wrapper.json`)
-          .then(async (res) => {
-            if (!res.ok) { return res.json().then(err => { throw err }); }
-            const data = await res.json();
-          //fetch(helpers.add_endpoint_json(api_endpoints.referrals,to.params.referral_id)).then(res => {
-              next(vm => {
-                  vm.referralId = data.id;
+    beforeRouteEnter: async function(to) {
+        //   fetch(`/api/referrals/${to.params.referral_id}/referral_wrapper.json`)
+        //   .then(async (res) => {
+        //     if (!res.ok) { return res.json().then(err => { throw err }); }
+        //     const data = await res.json();
+        //   //fetch(helpers.add_endpoint_json(api_endpoints.referrals,to.params.referral_id)).then(res => {
+        //       next(vm => {
+        //           vm.referralId = data.id;
+        //         //   vm.apiaryReferral = res.body.apiary_referral_exists;
+        //       });
+        //     }).catch(err => {
+        //       console.log(err);
+        //     });
+        // return a callback from beforeRouteEnter instead of calling next(vm => ...) as it's deprecated.
+        try {
+            const response = await fetch(`/api/referrals/${to.params.referral_id}/referral_wrapper.json`);
+            if (!response.ok) {
+                return response.json().then(err => { throw err });
+            }
+            const data = await response.json();
+            return (vm) => {
+                 vm.referralId = data.id;
                 //   vm.apiaryReferral = res.body.apiary_referral_exists;
-              });
-            }).catch(err => {
-              console.log(err);
-            });
+            };
+        } catch (err) {
+            console.log(err);
+        }
     },
 
 }

@@ -956,24 +956,42 @@ export default {
 
         },
     },
-    beforeRouteEnter: function(to,from,next){
-        fetch(api_endpoints.profile)
-        .then(async (response) => {
-            if (!response.ok) { return response.json().then(err => { throw err }); }
-            const data = await response.json();
-            if (data.address_details && data.personal_details && data.contact_details && to.name == 'first-time'){
-                window.location.href='/';
-            }
-            else{
-                next(vm => {
-                    vm.profile = data;
-                    if (vm.profile.residential_address == null){ vm.profile.residential_address = {}; }
-                    if ( vm.profile.disturbance_organisations && vm.profile.disturbance_organisations.length > 0 ) { vm.managesOrg = 'Yes' }
-                });
-            }
-        }).catch((error) => {
-            console.log(error);
-        })
+    beforeRouteEnter: async function(to){
+        // fetch(api_endpoints.profile)
+        // .then(async (response) => {
+        //     if (!response.ok) { return response.json().then(err => { throw err }); }
+        //     const data = await response.json();
+        //     if (data.address_details && data.personal_details && data.contact_details && to.name == 'first-time'){
+        //         window.location.href='/';
+        //     }
+        //     else{
+        //         next(vm => {
+        //             vm.profile = data;
+        //             if (vm.profile.residential_address == null){ vm.profile.residential_address = {}; }
+        //             if ( vm.profile.disturbance_organisations && vm.profile.disturbance_organisations.length > 0 ) { vm.managesOrg = 'Yes' }
+        //         });
+        //     }
+        // }).catch((error) => {
+        //     console.log(error);
+        // })
+        // return a callback from beforeRouteEnter instead of calling next(vm => ...) as it's deprecated.
+        return fetch(api_endpoints.profile)
+            .then(async (response) => {
+                if (!response.ok) { return response.json().then(err => { throw err }); }
+                const data = await response.json();
+                if (data.address_details && data.personal_details && data.contact_details && to.name == 'first-time'){
+                    window.location.href='/';
+                }
+                else{
+                    return (vm) => {
+                        vm.profile = data;
+                        if (vm.profile.residential_address == null){ vm.profile.residential_address = {}; }
+                        if ( vm.profile.disturbance_organisations && vm.profile.disturbance_organisations.length > 0 ) { vm.managesOrg = 'Yes' }
+                    };
+                }
+            }).catch((error) => {
+                console.log(error);
+            })
     },
     mounted: function(){
         this.fetchCountries();

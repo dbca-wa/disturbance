@@ -325,30 +325,48 @@ export default {
           return this.loading.length == 0;
         }
     },
-    beforeRouteEnter: function(to, from, next){
+    beforeRouteEnter: async function(to,){
         let initialisers = [
             utils.fetchCountries(),
             utils.fetchOrganisation(to.params.org_id)
         ]
-        Promise.all(initialisers).then(data => {
-            next(vm => {
+        // Promise.all(initialisers).then(data => {
+        //     next(vm => {
+        //         vm.countries = data[0];
+        //         vm.org = data[1];
+        //         vm.org.address = vm.org.address != null ? vm.org.address : {};
+        //         vm.org.pins = vm.org.pins != null ? vm.org.pins : {};
+        //     });
+        // });
+        // return a callback from beforeRouteEnter instead of calling next(vm => ...) as it's deprecated.
+        return Promise.all(initialisers).then(data => {
+            return (vm) => {
                 vm.countries = data[0];
                 vm.org = data[1];
                 vm.org.address = vm.org.address != null ? vm.org.address : {};
                 vm.org.pins = vm.org.pins != null ? vm.org.pins : {};
-            });
+            };
         });
     },
-    beforeRouteUpdate: function(to, from, next){
+    beforeRouteUpdate: async function(to){
         let initialisers = [
             utils.fetchOrganisation(to.params.org_id)
         ]
-        Promise.all(initialisers).then(data => {
-            next(vm => {
+        // Promise.all(initialisers).then(data => {
+        //     next(vm => {
+        //         vm.org = data[0];
+        //         vm.org.address = vm.org.address != null ? vm.org.address : {};
+        //         vm.org.pins = vm.org.pins != null ? vm.org.pins : {};
+        //     });
+        // });
+        // return a callback from beforeRouteEnter instead of calling next(vm => ...) as it's deprecated.
+        return Promise.all(initialisers).then(data => {
+            return (vm) => {
                 vm.org = data[0];
                 vm.org.address = vm.org.address != null ? vm.org.address : {};
                 vm.org.pins = vm.org.pins != null ? vm.org.pins : {};
-            });
+             
+            };
         });
     },
     methods: {

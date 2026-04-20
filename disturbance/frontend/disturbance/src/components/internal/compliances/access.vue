@@ -134,18 +134,32 @@ export default {
     }
   },
   watch: {},
-  beforeRouteEnter: function(to, from, next){
-    fetch(helpers.add_endpoint_json(api_endpoints.compliances,to.params.compliance_id)).then(
-        async (response) => {
-            if (!response.ok) { return response.json().then(err => { throw err }); }
-            let data = await response.json();
-            next(vm => {
-                vm.compliance = data;
-                vm.members = vm.compliance.allowed_assessors
-            })
-        }).catch((error) => {
-            console.log(error);
-        });
+  beforeRouteEnter: async function(to,){
+    // fetch(helpers.add_endpoint_json(api_endpoints.compliances,to.params.compliance_id)).then(
+    //     async (response) => {
+    //         if (!response.ok) { return response.json().then(err => { throw err }); }
+    //         let data = await response.json();
+    //         next(vm => {
+    //             vm.compliance = data;
+    //             vm.members = vm.compliance.allowed_assessors
+    //         })
+    //     }).catch((error) => {
+    //         console.log(error);
+    //     });
+    // return a callback from beforeRouteEnter instead of calling next(vm => ...) as it's deprecated.
+    try {
+        const response = await fetch(helpers.add_endpoint_json(api_endpoints.compliances,to.params.compliance_id));
+        if (!response.ok) {
+            return response.json().then(err => { throw err });
+        }
+        const data = await response.json();
+        return (vm) => {
+            vm.compliance = data;
+            vm.members = vm.compliance.allowed_assessors
+        };
+    } catch (err) {
+        console.log(err);
+    }
   },
   components: {
     CommsLogs,
