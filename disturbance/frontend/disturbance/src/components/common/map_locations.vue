@@ -171,8 +171,10 @@ export default {
 
     return {
         // AT the moment (specify the path) this works but not ideal, need to find a way to load images from assets folder
-        satelliteIconUrl: '/static/disturbance_vue/src/satellite_icon.jpg',
-        mapIconUrl: '/static/disturbance_vue/src/map_icon.png',
+        // satelliteIconUrl: '/static/disturbance_vue/src/satellite_icon.jpg',
+        // mapIconUrl: '/static/disturbance_vue/src/map_icon.png',
+        satelliteIconUrl: new URL('../../assets/satellite_icon.jpg', import.meta.url).href,
+        mapIconUrl: new URL('../../assets/map_icon.png', import.meta.url).href,
        // marker_lng: vm.marker_longitude,
        // marker_lat: vm.marker_latitude,
         mapboxAccessToken: null,
