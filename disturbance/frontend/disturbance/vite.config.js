@@ -44,18 +44,42 @@ export default defineConfig(() => {
                 // Probably a better way but I couldn't figure it out
                 targets: [
                     // Copy the non-svgs to src but leave the svgs in assets
+                    // rename.stripBase: true strips the source directory
+                    // components so files land at dest/<filename> (matching
+                    // the hardcoded /static/boranga_vue/src/ URL in CSS).
+                    // Required because vite-plugin-static-copy v4 preserves
+                    // directory structure by default (v3 used only basename).
+                    
                     // { src: 'src/assets/*.gif', dest: 'src' },
-                    { src: 'src/assets/*.jpg', dest: 'src' },
-                    { src: 'src/assets/*.json', dest: 'src' },
-                    { src: 'src/assets/*.png', dest: 'src' },
-                    { src: 'src/assets/*.gif', dest: 'src' },
+                    // {
+                    //     src: 'src/assets/*.jpg',
+                    //     dest: 'src',
+                    //     rename: { stripBase: true },
+                    // },
+                    // {
+                    //     src: 'src/assets/*.json',
+                    //     dest: 'src',
+                    //     rename: { stripBase: true },
+                    // },
+                    // {
+                    //     src: 'src/assets/*.png',
+                    //     dest: 'src',
+                    //     rename: { stripBase: true },
+                    // },
+                    {
+                        src: 'src/assets/*.gif',
+                        dest: 'src',
+                        rename: { stripBase: true },
+                    },
                     {
                         src: 'node_modules/font-awesome/fonts',
                         dest: 'node_modules/font-awesome',
+                        rename: { stripBase: 2 },
                     },
                     {
                         src: 'node_modules/summernote/dist/font',
                         dest: 'node_modules/summernote/dist',
+                        rename: { stripBase: 3 },
                     },
                 ],
             }),

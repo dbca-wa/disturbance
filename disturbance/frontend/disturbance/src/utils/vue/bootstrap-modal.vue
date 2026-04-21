@@ -188,6 +188,7 @@
         border-top-right-radius: 0.3rem;
         background-color: #226fbb;
         color: #fff;
+        /* background: #3580ca url('../../assets/parks-bg-banner.gif') */
         background: #3580ca url('/static/disturbance_vue/src/parks-bg-banner.gif')
             repeat-x center bottom;
     }
