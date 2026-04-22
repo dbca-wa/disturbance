@@ -306,8 +306,18 @@ class ApprovalViewSet(viewsets.ModelViewSet):
     @action(methods=['GET',], detail=False)
     def filter_list(self, request, *args, **kwargs):
         """ Used by the external dashboard filters """
-        region_qs =  self.get_queryset().filter(current_proposal__region__isnull=False).values_list('current_proposal__region__name', flat=True).distinct()
-        activity_qs =  self.get_queryset().filter(current_proposal__activity__isnull=False).values_list('current_proposal__activity', flat=True).distinct()
+        qs=self.get_queryset()
+        
+        apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
+        qs = qs.exclude(
+                    current_proposal__application_type__name__in=apiary_proposal_types
+                )
+        organisation_id = request.query_params.get('organisation_id')
+        if organisation_id:
+            qs = qs.filter(current_proposal__applicant_id=organisation_id)
+        organisation_id = request.query_params.get('organisation_id')
+        region_qs =  qs.filter(current_proposal__region__isnull=False).values_list('current_proposal__region__name', flat=True).distinct()
+        activity_qs =  qs.filter(current_proposal__activity__isnull=False).values_list('current_proposal__activity', flat=True).distinct()
         data = dict(
             regions=region_qs,
             activities=activity_qs,

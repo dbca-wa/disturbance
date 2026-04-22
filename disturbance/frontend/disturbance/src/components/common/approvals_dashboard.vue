@@ -126,7 +126,11 @@ export default {
         url:{
             type: String,
             required: true
-        }
+        },
+        organisation_id: {
+            type: Number,
+            required: false,
+        },
     },
     data() {
         // let vm = this;
@@ -234,6 +238,17 @@ export default {
         dateRangeIdentifierForReloadProposalTable: function(){
             this.$refs.proposal_datatable.vmDataTable.draw();
         },
+        organisation_id: {
+            immediate: true,
+            handler(val) {
+                if (val) {
+                    this.fetchFilterLists();
+                } else {
+                    // optional: fetch unfiltered lists if needed in other contexts
+                    this.fetchFilterLists();
+                }
+            }
+        }
     },
     computed: {
         filterProposalExpiryFrom: {
@@ -634,8 +649,12 @@ export default {
 
         fetchFilterLists: function(){
             let vm = this;
+            let url = api_endpoints.filter_list_approvals;
+            if (vm.organisation_id) {
+                url += `?organisation_id=${encodeURIComponent(vm.organisation_id)}`;
+            }
 
-            fetch(api_endpoints.filter_list_approvals).then(
+            fetch(url).then(
                 async (response) => {
                     
                     if (!response.ok) { return response.json().then(err => { throw err }); }
@@ -1125,7 +1144,7 @@ export default {
 
     },
     mounted: function(){
-		this.fetchFilterLists();
+		// this.fetchFilterLists();
         this.fetchProfile();
         $( 'a[data-toggle="collapse"]' ).on( 'click', function () {
             var chev = $( this ).children()[ 0 ];
