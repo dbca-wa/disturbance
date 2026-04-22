@@ -202,10 +202,10 @@
                         <ProposalDashTable ref="proposals_table" level='internal' :url='proposals_url' :organisation_id='org.id'/>
                     </FormSection>
                     <FormSection :form-collapse="false" label="Approvals" Index="approvals">
-                        <ApprovalDashTable ref="approvals_table" level='internal' :url='approvals_url'/>
+                        <ApprovalDashTable ref="approvals_table" level='internal' :url='approvals_url' :organisation_id='org.id'/>
                     </FormSection>
                     <FormSection :form-collapse="false" label="Compliances with requirements" Index="compliances">
-                        <ComplianceDashTable ref="compliances_table" level='internal' :url='compliances_url'/>
+                        <ComplianceDashTable ref="compliances_table" level='internal' :url='compliances_url' :organisation_id='org.id'/>
                     </FormSection>
                 </div>
             </div>
@@ -256,9 +256,9 @@ export default {
             //approvals_url: api_endpoints.approvals+'?org_id='+vm.$route.params.org_id,
             //compliances_url: api_endpoints.compliances+'?org_id='+vm.$route.params.org_id,
 
-            proposals_url:   api_endpoints.proposals_paginated_external+'&org_id='+vm.$route.params.org_id,
-            approvals_url:   api_endpoints.approvals_paginated_external+'&org_id='+vm.$route.params.org_id,
-            compliances_url: api_endpoints.compliances_paginated_external+'&org_id='+vm.$route.params.org_id,
+            proposals_url:   api_endpoints.proposals_paginated_internal+'&org_id='+vm.$route.params.org_id,
+            approvals_url:   api_endpoints.approvals_paginated_internal+'&org_id='+vm.$route.params.org_id,
+            compliances_url: api_endpoints.compliances_paginated_internal+'&org_id='+vm.$route.params.org_id,
 
             contacts_options:{
                 language: {

@@ -655,17 +655,20 @@ class ProposalViewSet(viewsets.ModelViewSet):
     def filter_list(self, request, *args, **kwargs):
         """ Used by the internal/external dashboard filters """
         template_group = get_template_group(request)
+        organisation_id = request.query_params.get('organisation_id')
         region_qs = []
         activity_qs = []
         application_type_qs = []
         applicant_qs = []
-
+        # import ipdb; ipdb.set_trace()
         if template_group == 'das':
+            qs = self.get_queryset()
             apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
-            qs = self.get_queryset().exclude(
+            qs = qs.exclude(
                         application_type__name__in=apiary_proposal_types
                     )
-            qs = self.get_queryset()
+            if organisation_id:
+                qs = qs.filter(applicant_id=organisation_id)
             region_qs =  qs.filter(region__isnull=False).values_list('region__name', flat=True).distinct()
             district_qs =  qs.filter(district__isnull=False).values_list('district__name', flat=True).distinct()
             submitter_qs = qs.filter(submitter__isnull=False).distinct(
