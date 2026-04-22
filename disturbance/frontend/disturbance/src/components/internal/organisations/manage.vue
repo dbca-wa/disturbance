@@ -199,13 +199,13 @@
                 </div> 
                 <div :id="oTab" class="tab-pane fade" role="tabpanel" aria-labelledby="pills-other-tab">
                     <FormSection :form-collapse="false" label="Proposals" Index="proposals">
-                        <ProposalDashTable ref="proposals_table" level='internal' :url='proposals_url' :organisation_id='org.id'/>
+                        <ProposalDashTable ref="proposals_table" level='internal' :url='proposals_url' :organisation_id='Number($route.params.org_id)'/>
                     </FormSection>
                     <FormSection :form-collapse="false" label="Approvals" Index="approvals">
-                        <ApprovalDashTable ref="approvals_table" level='internal' :url='approvals_url' :organisation_id='org.id'/>
+                        <ApprovalDashTable ref="approvals_table" level='internal' :url='approvals_url' :organisation_id='Number($route.params.org_id)'/>
                     </FormSection>
                     <FormSection :form-collapse="false" label="Compliances with requirements" Index="compliances">
-                        <ComplianceDashTable ref="compliances_table" level='internal' :url='compliances_url' :organisation_id='org.id'/>
+                        <ComplianceDashTable ref="compliances_table" level='internal' :url='compliances_url' :organisation_id='Number($route.params.org_id)'/>
                     </FormSection>
                 </div>
             </div>
