@@ -1774,9 +1774,14 @@ export default {
     margin:0 0 0 -15px;
 }
 @media print { 
-.noPrint { 
-  display: none;
- }
+    .noPrint { 
+        display: none;
+    }
+    #internalProposal {
+        /* display: block !important;
+        clear: both !important; */
+        margin-top: 120px !important;
+    }
 } 
 
 </style>
