@@ -10,11 +10,11 @@
             </div>
         </template>
         <div class="row">
-            <form :action="proposal_form_url" method="post" name="new_proposal" enctype="multipart/form-data">
+            <form :action="proposal_form_url" method="post" id="external_proposal" name="new_proposal" enctype="multipart/form-data">
                 <div v-if="!proposal_readonly">
                     <div v-if="!proposal.apiary_group_application_type && !proposal.shapefile_json">
                         <!-- <div class="col-lg-12 alert alert-danger" > -->
-                            <alert type="danger"><strong>Your Proposal is currently missing a shapefile. Please upload a shapefile, validate and prefill the Proposal</strong></alert>
+                            <alert type="danger" class="noPrint"><strong>Your Proposal is currently missing a shapefile. Please upload a shapefile, validate and prefill the Proposal</strong></alert>
                         <!-- </div> -->
                     </div>
                 <div v-if="hasAmendmentRequest" class="row" style="color:red;">
@@ -910,9 +910,14 @@ export default {
     z-index: 2000;
 }
 @media print { 
-.noPrint { 
-  display: none;
- }
+    .noPrint { 
+    display: none;
+    }
+    #external_proposal {
+    /* display: block !important;
+    clear: both !important; */
+    margin-top: 120px !important;
+    }
 } 
 
 .swal2-container {
