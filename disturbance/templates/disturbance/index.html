@@ -6,7 +6,8 @@
 
 
 {% block extra_css %}
-    <link type="text/css" href="{% static 'wl/css/index.css' %}" rel="stylesheet">
+    <!-- <link type="text/css" href="{% static 'wl/css/index.css' %}" rel="stylesheet"> -->
+     {{block.super}}
 {% endblock %}
 
 {% block menu_items_left_brand %}
@@ -32,7 +33,7 @@
                 {% if not request.user.is_authenticated %}
                     {% dept_name as department_name %}
                     <div class="card">
-                        <div class="card-header">
+                        <div class="card-header fw-bold">
                             Access to {{ DISPLAYED_SYSTEM_NAME }}
                         </div>
                         <div class="card-body">
