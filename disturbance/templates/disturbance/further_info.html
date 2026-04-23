@@ -1,14 +1,17 @@
 {% extends 'disturbance/base.html' %}
 
 {% load static %}
-
+{% load utils %}
 {% block extra_css %}
     <link type="text/css" href="{% static 'wl/css/index.css' %}" rel="stylesheet">
 {% endblock %}
 
-{% block left_menu_items %}
-    <li><a  href="{% url 'ds_contact' %}">Contact Us</a></li>
-    <li><a  href="{% url 'ds_further_info' %}">Further Information</a></li>
+{% block menu_items_left_brand %}
+    {{ block.super }}
+    <div class="navbar-nav">
+        <div class="nav-item"><a  class="nav-link" href="{% url 'ds_contact' %}">Contact Us</a></div>
+        <div class="nav-item"><a  class="nav-link" href="{% url 'ds_further_info' %}">Further Information</a></div>
+    </div>
 {% endblock %}
 
 {% block messages %}
@@ -21,7 +24,7 @@
                 <h2>
                     Further Information
                 </h2>
-                <p>For further information, please email <b>{{ support_email }}</b>.</p>
+                <p>For further information, please email <b>{% support_email %}</b>.</p>
             </div>
         </div>
     </div>
