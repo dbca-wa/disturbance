@@ -160,7 +160,12 @@ export default {
                 language: {
                     processing: constants.DATATABLE_PROCESSING_HTML,
                 },
-                responsive: true,
+                responsive: false, // false as applying scrolX instead to manage responsiveness and column visibility
+                scrollX: true,
+                fixedColumns: {
+                    leftColumns: 1,
+                    end: 1
+                },
                 serverSide: true,
                 lengthMenu: [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
                 order: [
@@ -270,13 +275,16 @@ export default {
                     },
                     {
                         data: "assigned_officer",
-                        name: "assigned_officer",
+                        // name: "assigned_officer",
+                        name: "proposal__assigned_officer__first_name",
+                        /*
                         mRender:function (data) {
                             if (data) {
                                 return `${data.first_name} ${data.last_name}`;
                             }
                             return ''
                         },
+                        */
                         visible: false,
                         searchable: false,
                         defaultContent: '',
@@ -287,7 +295,6 @@ export default {
                             return data != '' && data != null ? moment(data).format(vm.dateFormat): '';
                         },
                         name: "proposal__lodgement_date",
-                        orderable: false,
                         defaultContent: '',
                     },
                     {
@@ -320,7 +327,8 @@ export default {
                     //let regionColumn = vm.$refs.proposal_datatable.vmDataTable.columns(1);
                     let regionColumn = vm.$refs.proposal_datatable.vmDataTable.column('region:name');
                     let titleColumn = vm.$refs.proposal_datatable.vmDataTable.column('proposal__title:name');
-                    let assignedOfficerColumn = vm.$refs.proposal_datatable.vmDataTable.column('assigned_officer:name');
+                    // let assignedOfficerColumn = vm.$refs.proposal_datatable.vmDataTable.column('assigned_officer:name');
+                    let assignedOfficerColumn = vm.$refs.proposal_datatable.vmDataTable.column('proposal__assigned_officer__first_name:name');
                     // if (vm.dasTemplateGroup) {
                     //     regionColumn.visible(true);
                     //     titleColumn.visible(true);
