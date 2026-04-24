@@ -549,7 +549,7 @@ export default {
                 language: {
                     processing: constants.DATATABLE_PROCESSING_HTML,
                 },
-                responsive: false,
+                responsive: false, // false as applying scrolX instead to manage responsiveness and column visibility
                 scrollX: true,
                 fixedColumns: {
                     leftColumns: 1,
