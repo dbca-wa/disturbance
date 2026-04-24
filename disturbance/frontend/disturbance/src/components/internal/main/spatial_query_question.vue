@@ -244,16 +244,29 @@
                         <div class="row">
                             <div class="col-md-1"></div>
                             <div class="col-md-10">
-                            <select class="form-select" ref="select_layer" name="select-layer" v-model="spatialquerylayer.layer">
-                                <option v-for="layer in spatialquery_selects.das_map_layers" :value="layer" :key="layer.id">{{layer.display_name}}</option>
-                            </select>     
+                                <!--
+                                <select class="form-select" ref="select_layer" name="select-layer" v-model="spatialquerylayer.layer">
+                                        <option v-for="layer in spatialquery_selects.das_map_layers" :value="layer" :key="layer.id">{{layer.display_name}}</option>
+                                </select>
+                                <span v-if="spatialquerylayer.layer">
+                                    <a @click="check_sqs_layer_form" href="#"><i class="fa fa-lg fa-info-circle" style="color: blue;" title="Check/Update/Create Layer in SQS">&nbsp;</i></a>
+                                </span>
+                                <span v-else>
+                                    <i class="fa fa-lg fa-info-circle" style="color: grey;" title="Must select Layer name">&nbsp;</i>
+                                </span>
+                                -->
+                                <div class="layer-select-with-icon mb-3">
+                                    <select class="form-select" ref="select_layer" name="select-layer" v-model="spatialquerylayer.layer">
+                                        <option v-for="layer in spatialquery_selects.das_map_layers" :value="layer" :key="layer.id">{{layer.display_name}}</option>
+                                    </select>
+                                    <span class="layer-select-icon" v-if="spatialquerylayer.layer">
+                                        <a @click="check_sqs_layer_form" href="#"><i class="fa fa-lg fa-info-circle" style="color: blue;" title="Check/Update/Create Layer in SQS">&nbsp;</i></a>
+                                    </span>
+                                    <span class="layer-select-icon" v-else>
+                                        <i class="fa fa-lg fa-info-circle" style="color: grey;" title="Must select Layer name">&nbsp;</i>
+                                    </span>
+                                </div>
                             </div>
-                            <span v-if="spatialquerylayer.layer">
-                            <a @click="check_sqs_layer_form" href="#"><i class="fa fa-lg fa-info-circle" style="color: blue;" title="Check/Update/Create Layer in SQS">&nbsp;</i></a>
-                            </span>
-                            <span v-else>
-                            <i class="fa fa-lg fa-info-circle" style="color: grey;" title="Must select Layer name">&nbsp;</i>
-                            </span>
                         </div>
                         </div>
 
@@ -2309,6 +2322,17 @@ hr {
 
 .vl {
   height: 30px;
+}
+
+.layer-select-with-icon {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.layer-select-icon {
+    display: inline-flex;
+    align-items: center;
 }
 
 </style>
