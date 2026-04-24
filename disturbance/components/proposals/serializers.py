@@ -684,7 +684,10 @@ class DTReferralSerializer(serializers.ModelSerializer):
         return EmailUserSerializer(obj.proposal.submitter).data
 
     def get_assigned_officer(self,obj):
-        pass
+        # pass
+        if obj.proposal.assigned_officer:
+            return obj.proposal.assigned_officer.get_full_name()
+        return ''
 
     def get_relevant_applicant_name(self,obj):
         return obj.proposal.relevant_applicant_name

@@ -16,6 +16,10 @@ export default {
   },
   emits: ['update:modelValue'],
   mounted() {
+    if (typeof $.now !== 'function') {
+      $.now = Date.now;
+    }
+
     $(this.$refs.editor).summernote({
       height: 200,
       toolbar: [
