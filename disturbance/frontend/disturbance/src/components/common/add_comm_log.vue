@@ -238,6 +238,7 @@ export default {
         },
         addFormValidations: function() {
             let vm = this;
+            // Configure jQuery Validate for required comms fields.
             vm.validation_form = $(vm.form).validate({
                 rules: {
                     to:"required",
@@ -248,24 +249,34 @@ export default {
                 },
                 messages: {
                 },
-                showErrors: function(errorMap, errorList) {
-                    $.each(this.validElements(), function(index, element) {
-                        var $element = $(element);
-                        $element.attr("data-original-title", "").parents('.form-group').removeClass('has-error');
-                    });
-                    // destroy tooltips on valid elements
-                    $("." + this.settings.validClass).tooltip("destroy");
-                    // add or update tooltips
-                    for (var i = 0; i < errorList.length; i++) {
-                        var error = errorList[i];
-                        $(error.element)
-                            .tooltip({
-                                trigger: "focus"
-                            })
-                            .attr("data-original-title", error.message)
-                            .parents('.form-group').addClass('has-error');
-                    }
-                }
+                errorClass: 'is-invalid',
+                errorElement: 'div',
+                errorPlacement: function(error) {
+                    error.addClass('invalid-feedback');
+                    // element.parent().append(error);
+                },
+                highlight: function(element) {
+                    $(element).addClass('is-invalid');
+                },
+                // Previous tooltip-based validation rendering kept for reference.
+                // showErrors: function(errorMap, errorList) {
+                //     $.each(this.validElements(), function(index, element) {
+                //         var $element = $(element);
+                //         $element.attr("data-original-title", "").parents('.form-group').removeClass('has-error');
+                //     });
+                //     // Destroy tooltips on valid elements.
+                //     $("." + this.settings.validClass).tooltip("destroy");
+                //     // Add or update tooltips on invalid elements.
+                //     for (var i = 0; i < errorList.length; i++) {
+                //         var error = errorList[i];
+                //         $(error.element)
+                //             .tooltip({
+                //                 trigger: "focus"
+                //             })
+                //             .attr("data-original-title", error.message)
+                //             .parents('.form-group').addClass('has-error');
+                //     }
+                // }
             });
        },
    },

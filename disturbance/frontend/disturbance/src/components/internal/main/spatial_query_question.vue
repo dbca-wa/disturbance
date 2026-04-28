@@ -521,7 +521,7 @@
                         </div>
                     </form>
                     <br>
-                    <textarea id="output" cols="100" rows="35" v-model="sqs_response"></textarea>
+                    <textarea id="output" class="form-control sqs-output-textarea" rows="35" v-model="sqs_response"></textarea>
                 </div>
             </div>
             <template #footer>
@@ -532,7 +532,7 @@
 
         <modal :showModal="showLayerAttrsModal" modal_id="showLayerAttrsModal-id" transition="modal fade" @ok="ok()" title="Layer Attributes" :force="true">
         <div class="container-fluid">
-          <textarea id="output" cols="100" rows="35" v-model="sqs_attrs_response"></textarea>
+          <textarea id="output" class="form-control sqs-output-textarea" rows="35" v-model="sqs_attrs_response"></textarea>
         </div> 
         <template #footer>
             <button type="button" class="btn btn-primary" @click="showLayerAttrsModal=false">Close</button>
@@ -542,7 +542,7 @@
 
         <modal :showModal="showLayerAttrValuesModal" modal_id="showLayerAttrValuesModal-id" transition="modal fade" @ok="ok()" title="Layer Attribute Values" :force="true">
             <div class="container-fluid">
-            <textarea id="output" cols="100" rows="35" v-model="sqs_attr_vals_response"></textarea>
+            <textarea id="output" class="form-control sqs-output-textarea" rows="35" v-model="sqs_attr_vals_response"></textarea>
             </div> 
             <template #footer>
                 <button type="button" class="btn btn-primary" @click="showLayerAttrValuesModal=false">Close</button>
@@ -2422,6 +2422,12 @@ hr {
 .layer-select-icon {
     display: inline-flex;
     align-items: center;
+}
+
+.sqs-output-textarea {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 </style>
