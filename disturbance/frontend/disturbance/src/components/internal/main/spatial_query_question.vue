@@ -1154,6 +1154,13 @@ export default {
                     title:'Error',
                     text:error,
                     icon:'error',
+                    target: document.body,
+                    didOpen: () => {
+                        const container = document.querySelector('.swal2-container');
+                        if (container) {
+                            container.style.setProperty('z-index', '30000', 'important');
+                        }
+                    },
                     customClass: {
                         confirmButton: 'btn btn-primary',
                     },
@@ -1279,6 +1286,13 @@ export default {
                         title:'Layer Limit Reached',
                         text:'Max number of Layers per Question: ' + env['max_layers_per_sqq'],
                         icon:'warning',
+                        target: document.body,
+                        didOpen: () => {
+                            const container = document.querySelector('.swal2-container');
+                            if (container) {
+                                container.style.setProperty('z-index', '30000', 'important');
+                            }
+                        },
                         customClass: {
                             confirmButton: 'btn btn-primary',
                         },
@@ -1316,6 +1330,13 @@ export default {
                         // helpers.apiVueResourceError(error),
                         text:error,
                         icon:'error',
+                        target: document.body,
+                        didOpen: () => {
+                            const container = document.querySelector('.swal2-container');
+                            if (container) {
+                                container.style.setProperty('z-index', '30000', 'important');
+                            }
+                        },
                         customClass: {
                             confirmButton: 'btn btn-primary',
                         },
@@ -1360,6 +1381,13 @@ export default {
                         title:'Save Error',
                         text:error,
                         icon:'error',
+                        target: document.body,
+                        didOpen: () => {
+                            const container = document.querySelector('.swal2-container');
+                            if (container) {
+                                container.style.setProperty('z-index', '30000', 'important');
+                            }
+                        },
                         customClass: {
                             confirmButton: 'btn btn-primary',
                         },
@@ -1437,6 +1465,13 @@ export default {
                     // helpers.apiVueResourceError(error),
                     text:error,
                     icon:'error',
+                    target: document.body,
+                    didOpen: () => {
+                        const container = document.querySelector('.swal2-container');
+                        if (container) {
+                            container.style.setProperty('z-index', '30000', 'important');
+                        }
+                    },
                     customClass: {
                         confirmButton: 'btn btn-primary',
                     },
@@ -1505,16 +1540,21 @@ export default {
                 console.log('Error: ' + JSON.stringify(error))
                 self.requesting = false;
                 self.show_spinner = false;
-                swal.fire(
-                    'Error',
-                    helpers.apiVueResourceError(error),
-                    'error',
-                    {
-                        customClass: {
-                            confirmButton: 'btn btn-primary',
-                        },
-                    }
-                )
+                swal.fire({
+                    title: 'Error',
+                    text: helpers.apiVueResourceError(error),
+                    icon: 'error',
+                    target: document.body,
+                    didOpen: () => {
+                        const container = document.querySelector('.swal2-container');
+                        if (container) {
+                            container.style.setProperty('z-index', '30000', 'important');
+                        }
+                    },
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                })
             });
         },
 
@@ -1530,6 +1570,13 @@ export default {
                 showCancelButton: true,
                 confirmButtonText: 'OK',
                 input: 'radio',
+                target: document.body,
+                didOpen: () => {
+                    const container = document.querySelector('.swal2-container');
+                    if (container) {
+                        container.style.setProperty('z-index', '40000', 'important');
+                    }
+                },
                 inputOptions: {
                     'check_layer':  'Check Layer Exists on SQS',
                     'reload_layer': 'Create/Update Layer in SQS',
@@ -1546,18 +1593,25 @@ export default {
                             title:'Please select an option',
                             text:null,
                             icon:'warning',
+                            target: document.body,
+                            didOpen: () => {
+                                const container = document.querySelector('.swal2-container');
+                                if (container) {
+                                    container.style.setProperty('z-index', '30000', 'important');
+                                }
+                            },
                             customClass: {
                                 confirmButton: 'btn btn-primary',
                             },
                         });
                         return;
                     }
-                    if (result=='check_layer') {
+                    if (result.value==='check_layer') {
                         let url = helpers.add_endpoint_json(api_endpoints.spatial_query, self.spatialquerylayer.layer.layer_name+'/check_sqs_layer');
                         self.check_sqs_layer(url)
 
                     }
-                    else if (result=='reload_layer') {
+                    else if (result.value==='reload_layer') {
                         let url = helpers.add_endpoint_json(api_endpoints.spatial_query, self.spatialquerylayer.layer.layer_name + '/create_or_update_sqs_layer');
                         self.create_or_update_sqs_layer(url, data)
 
@@ -1580,6 +1634,13 @@ export default {
                     title:'Layer Exists in SQS!',
                     text:data.message,
                     icon:'success',
+                    target: document.body,
+                    didOpen: () => {
+                        const container = document.querySelector('.swal2-container');
+                        if (container) {
+                            container.style.setProperty('z-index', '30000', 'important');
+                        }
+                    },
                     customClass: {
                         confirmButton: 'btn btn-primary',
                     },
@@ -1590,6 +1651,13 @@ export default {
                     title:'Layer Check Error',
                     text:error,
                     icon:'error',
+                    target: document.body,
+                    didOpen: () => {
+                        const container = document.querySelector('.swal2-container');
+                        if (container) {
+                            container.style.setProperty('z-index', '30000', 'important');
+                        }
+                    },
                     customClass: {
                         confirmButton: 'btn btn-primary',
                     },
@@ -1617,6 +1685,13 @@ export default {
                     title:'Create/Update SQS Layer!',
                     text:data.message,
                     icon:'success',
+                    target: document.body,
+                    didOpen: () => {
+                        const container = document.querySelector('.swal2-container');
+                        if (container) {
+                            container.style.setProperty('z-index', '30000', 'important');
+                        }
+                    },
                     customClass: {
                         confirmButton: 'btn btn-primary',
                     },
@@ -1629,6 +1704,13 @@ export default {
                     icon:'error',
                     customClass: {
                         confirmButton: 'btn btn-primary',
+                    },
+                    target: document.body,
+                    didOpen: () => {
+                        const container = document.querySelector('.swal2-container');
+                        if (container) {
+                            container.style.setProperty('z-index', '30000', 'important');
+                        }
                     },
                 });
                 self.show_spinner = false;
@@ -2039,6 +2121,13 @@ export default {
                                 title:'Delete Error',
                                 text:error,
                                 icon:'error',
+                                target: document.body,
+                                didOpen: () => {
+                                    const container = document.querySelector('.swal2-container');
+                                    if (container) {
+                                        container.style.setProperty('z-index', '30000', 'important');
+                                    }
+                                },
                                 customClass: {
                                     confirmButton: 'btn btn-primary',
                                 },
