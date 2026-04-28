@@ -23,10 +23,16 @@ export default {
     $(this.$refs.editor).summernote({
       height: 200,
       toolbar: [
-        ['style', ['bold', 'italic', 'style']],
-        ['para', ['ul', 'ol']],
-        ['table', ['table']],
-        ['view', ['codeview']]
+        ['history', ['undo', 'redo']],
+        ['style', ['style']],
+        ['font', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+        ['fontname', ['fontname']],
+        ['fontsize', ['fontsize']],
+        ['color', ['color']],
+        ['para', ['ul', 'ol', 'paragraph']],
+        ['height', ['height']],
+        ['insert', ['link', 'picture', 'table', 'hr']],
+        ['view', ['fullscreen', 'codeview', 'help']]
       ],
       callbacks: {
         onChange: (content) => {
@@ -52,3 +58,14 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.summernote-wrapper :deep(.note-editor.note-frame.fullscreen) {
+  background-color: #fff !important;
+}
+
+.summernote-wrapper :deep(.note-editor.note-frame.fullscreen .note-editing-area),
+.summernote-wrapper :deep(.note-editor.note-frame.fullscreen .note-editable) {
+  background-color: #fff !important;
+}
+</style>
