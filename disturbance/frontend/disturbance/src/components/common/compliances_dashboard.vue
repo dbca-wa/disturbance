@@ -467,7 +467,7 @@ export default {
                     end: 1
                 },
                 serverSide: true,
-                lengthMenu: [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
+                lengthMenu: [ [10, 25, 50, 100], [10, 25, 50, 100] ],
                 ajax: {
                     "url": vm.url,
                     "dataSrc": 'data',
