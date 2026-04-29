@@ -515,7 +515,10 @@ def getPrivateFile(request):
             mimetypes.types_map.update({'.shp': 'x-gis/x-shapefile'})
             mimetypes.types_map.update({'.shx': 'x-gis/x-shapefile'})
             mimetypes.types_map.update({'.dbf': 'application/x-dbf'})
-            return HttpResponse(the_data, content_type=mimetypes.types_map['.'+str(extension.lower())])
+            mimetypes.types_map.update({'.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'})
+            guessed_type, _ = mimetypes.guess_type(full_file_path)
+            content_type = guessed_type or mimetypes.types_map.get('.' + str(extension.lower()), 'application/octet-stream')
+            return HttpResponse(the_data, content_type=content_type)
        
     return HttpResponse()
 
