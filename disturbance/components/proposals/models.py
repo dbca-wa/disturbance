@@ -3536,6 +3536,7 @@ class ProposalTypeSection(models.Model):
     section_label = models.CharField(max_length=100)
     index = models.IntegerField(blank=True, default=0)
     proposal_type=models.ForeignKey(ProposalType, related_name='sections', on_delete=models.CASCADE )
+    add_to_search_select=models.BooleanField(default=False)
     
 
     class Meta:

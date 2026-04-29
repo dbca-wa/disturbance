@@ -276,8 +276,8 @@ class MasterlistQuestionAdmin(admin.ModelAdmin):
 
 @admin.register(models.ProposalTypeSection)
 class ProposalTypeSectionAdmin(admin.ModelAdmin):
-    list_display = ['proposal_type', 'index', 'section_label',]
-    fields = ('section_label','index', 'proposal_type')
+    list_display = ['proposal_type', 'index', 'section_label', 'add_to_search_select']
+    fields = ('section_label','index', 'proposal_type', 'add_to_search_select')
    
 @admin.register(models.SectionQuestion)
 class SectionQuestionAdmin(admin.ModelAdmin):
