@@ -2237,7 +2237,8 @@ class SearchProposalTypeViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ProposalType.objects.filter(id__in=proposal_type_ids).prefetch_related(
         Prefetch(
             'sections',
-            queryset=ProposalTypeSection.objects.order_by('index')
+            # queryset=ProposalTypeSection.objects.order_by('index')
+            queryset=ProposalTypeSection.objects.filter(add_to_search_select=True).order_by('index')
         )
     )
 
