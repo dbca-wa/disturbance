@@ -288,6 +288,7 @@ class Approval(RevisionedMixin):
         self.current_proposal.save(version_comment='Created Approval PDF: {}'.format(self.licence_document.name))
 
     def generate_renewal_doc(self):
+        from disturbance.components.approvals.pdf import create_renewal_doc
         self.renewal_document = create_renewal_doc(self,self.current_proposal)
         self.save(version_comment='Created Approval PDF: {}'.format(self.renewal_document.name))
         self.current_proposal.save(version_comment='Created Approval PDF: {}'.format(self.renewal_document.name))
