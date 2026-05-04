@@ -1287,6 +1287,17 @@ export default {
 
         //if approver is pushing back proposal to Assessor then navigate the approver back to dashboard page
         if(vm.proposal.processing_status == 'With Approver' && (status == 'with_assessor_requirements' || status=='with_assessor')) {
+            if ((vm.approver_comment || '').trim() == '') {
+                swal.fire({
+                    title: 'Error',
+                    text: 'Please add Approver Comment before sending back to Assessor',
+                    icon: 'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                });
+                return;
+            }
             let data = {
                 status: status,
                 approver_comment: vm.approver_comment

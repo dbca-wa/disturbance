@@ -33,7 +33,7 @@ django-reset-migrations==0.4.0
 # django-ckeditor is to be kept so as to not complain for old migration files for upgrading to django-ckeditor-5 and just pass the check
 # not used anywhere
 django-ckeditor==6.7.2
-django-ckeditor-5==0.2.18
+django-ckeditor-5==0.2.20
 djangorestframework-datatables==0.7.2
 django-confy==1.0.4
 xlwt==1.3.0
