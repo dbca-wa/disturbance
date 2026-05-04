@@ -18,7 +18,7 @@
                                     </div>
                                     <div class="col-sm-9">
                                         <div class="input-group date" ref="start_date" style="width: 70%;">
-                                            <input type="date" class="form-control" name="start_date" placeholder="DD/MM/YYYY" v-model="approval.start_date" :min="today">
+                                            <input type="date" class="form-control" name="start_date" placeholder="DD/MM/YYYY" v-model="approval.start_date" :max="approval.expiry_date">
                                             <!-- <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
                                             </span> -->
