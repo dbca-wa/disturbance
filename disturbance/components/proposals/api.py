@@ -3239,6 +3239,7 @@ class DASMapFilterViewSet(viewsets.ReadOnlyModelViewSet):
     @action(methods=['GET',], detail=False)
     def filter_list(self, request, *args, **kwargs):
         """ Used by the internal/external dashboard filters """
+        region_id = request.GET.get('region_id')
         template_group = get_template_group(request)
         region_qs = []
         activity_qs = []
@@ -3255,6 +3256,9 @@ class DASMapFilterViewSet(viewsets.ReadOnlyModelViewSet):
                         'applicant_id').values_list('applicant_id','applicant__organisation__name',)
 
         application_type_qs =  qs.filter(application_type__isnull=False, application_type__visible=True).values_list('application_type__name', flat=True).distinct()
+        # fetch region specific activities 
+        if region_id:
+            qs = qs.filter(region__id=region_id)
         activity_qs =  qs.filter(activity__isnull=False).values_list('activity', flat=True).distinct()
         submitters = [dict(email=i[2], search_term='{} {} ({})'.format(i[0], i[1], i[2])) for i in submitter_qs]
         applicants = [dict(id=i[0], search_term='{}'.format(i[1])) for i in applicant_qs]
