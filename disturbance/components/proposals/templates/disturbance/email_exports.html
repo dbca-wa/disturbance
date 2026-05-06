@@ -89,9 +89,6 @@
                                         <div class="col-sm-6">
                                         <select class="proposal_field form-select" id="proposal_status_options" name="status">
                                             <option value="all">All</option>
-                                            {% for i in proposal_status_options %}
-                                                <option value="{{i.code}}">{{i.description}}</option>
-                                            {% endfor %}
                                         </select>
                                         </div>
                                     </div>
@@ -219,6 +216,31 @@
     </div>
     
     <script>
+        const internal_status = [
+            {value: 'draft', name: 'Draft'},
+            {value: 'with_assessor', name: 'With Assessor'},
+            {value: 'with_referral', name: 'With Referral'},
+            {value: 'with_assessor_requirements', name: 'With Assessor (Requirements)'},
+            {value: 'with_approver', name: 'With Approver'},
+            {value: 'approved', name: 'Approved'},
+            {value: 'declined', name: 'Declined'},
+            {value: 'discarded', name: 'Discarded'},
+        ];
+
+        function populateProposalStatus() {
+            var proposalStatusSelect = document.getElementById('proposal_status_options');
+            if (!proposalStatusSelect) {
+                return;
+            }
+
+            internal_status.forEach(function(status) {
+                var option = document.createElement('option');
+                option.value = status.value;
+                option.text = status.name;
+                proposalStatusSelect.appendChild(option);
+            });
+        }
+
         function getFilters(form_id) {
             var field_class = form_id.replace("_report","_field");
             var fields = document.getElementsByClassName(field_class);
@@ -259,5 +281,7 @@
             var message = document.getElementById('report_email_message');
             message.textContent = selectedText + ' data export shall be emailed to jason.moore@dbca.wa.gov.au when ready.';
         }
+
+        populateProposalStatus();
     </script>
 {% endblock %}
