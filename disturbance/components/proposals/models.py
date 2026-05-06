@@ -803,7 +803,8 @@ class Proposal(DirtyFieldsMixin, RevisionedMixin):
 
     @classmethod
     def application_type_dict(cls):
-        application_types=Proposal.objects.filter(region__isnull=False,application_type__isnull=False).distinct('application_type__id').values_list('application_type__id','application_type__name')
+        apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
+        application_types=Proposal.objects.filter(application_type__isnull=False, application_type__visible=True).exclude(application_type__name__in=apiary_proposal_types).distinct('application_type__id').values_list('application_type__id','application_type__name')
         type_list = [dict(code=i[0], description=i[1]) for i in application_types]
         return type_list
 
