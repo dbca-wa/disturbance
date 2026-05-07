@@ -621,9 +621,7 @@ export default {
                             },
                             body: JSON.stringify(vm.contact_user)
                         }).then(async (response) => {
-                            if (!response.ok) {
-                                throw new Error(`Contact Accept failed: ${response.status}`);
-                            }
+                            if (!response.ok) { return response.json().then(err => { throw err }); }
                             swal.fire({
                                 title: 'Contact Accept',
                                 text: 'You have successfully accepted ' + name + '.',
@@ -639,8 +637,9 @@ export default {
                             });
                         }).catch((error) => {
                             swal.fire({
-                                title:'Contact Accept',
-                                text:'There was an error accepting ' + name + '.',
+                                title:'Contact Accept Error',
+                                // text:'There was an error accepting ' + name + '.',
+                                text:helpers.formatFetchError(error),
                                 icon:'error',
                                 customClass: {
                                     confirmButton: 'btn btn-primary',
@@ -685,9 +684,10 @@ export default {
                             },
                             body: JSON.stringify(vm.contact_user)
                         }).then(async (response) => {
-                            if (!response.ok) {
-                                throw new Error(`Contact Accept (Previously Declined) failed: ${response.status}`);
-                            }
+                            // if (!response.ok) {
+                            //     throw new Error(`Contact Accept (Previously Declined) failed: ${response.status}`);
+                            // }
+                            if (!response.ok) { return response.json().then(err => { throw err }); }
                             swal.fire({
                                 title: 'Contact Accept (Previously Declined)',
                                 text: 'You have successfully accepted ' + name + '.',
@@ -706,7 +706,8 @@ export default {
                         }).catch((error) => {
                             swal.fire({
                                 title:'Contact Accept (Previously Declined)',
-                                text:'There was an error accepting ' + name + '.',
+                                // text:'There was an error accepting ' + name + '.',
+                                text:helpers.formatFetchError(error),
                                 icon:'error',
                                 customClass: {
                                     confirmButton: 'btn btn-primary',
