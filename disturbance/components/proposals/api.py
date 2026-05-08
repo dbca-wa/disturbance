@@ -2226,23 +2226,45 @@ class SearchReferenceView(views.APIView):
 
 
 class ProposalTypeSectionViewSet(viewsets.ReadOnlyModelViewSet):
-    latest_proposal_types=[p.id for p in ProposalType.objects.all() if p.latest ]
-    queryset = ProposalTypeSection.objects.filter(proposal_type_id__in=latest_proposal_types).order_by('id')
-    #queryset = ProposalTypeSection.objects.all().order_by('id')
+    # Legacy (causes import-time DB query and can break migrations when schema changes(model changes)):
+    # latest_proposal_types=[p.id for p in ProposalType.objects.all() if p.latest ]
+    # queryset = ProposalTypeSection.objects.filter(proposal_type_id__in=latest_proposal_types).order_by('id')
     serializer_class = ProposalTypeSectionSerializer
 
-class SearchProposalTypeViewSet(viewsets.ReadOnlyModelViewSet):
-    #Only select Proposal Types which has Sections linked to them
-    proposal_type_ids= ProposalTypeSection.objects.all().values_list('proposal_type_id', flat=True).distinct()
-    queryset = ProposalType.objects.filter(id__in=proposal_type_ids).prefetch_related(
-        Prefetch(
-            'sections',
-            # queryset=ProposalTypeSection.objects.order_by('index')
-            queryset=ProposalTypeSection.objects.filter(add_to_search_select=True).order_by('index')
-        )
-    )
+    def get_queryset(self):
+        latest_proposal_types = [p.id for p in ProposalType.objects.all() if p.latest]
+        return ProposalTypeSection.objects.filter(
+            proposal_type_id__in=latest_proposal_types
+        ).order_by('id')
 
+
+class SearchProposalTypeViewSet(viewsets.ReadOnlyModelViewSet):
+    # Legacy (causes import-time DB query and can break migrations when schema changes):
+    #Only select Proposal Types which has Sections linked to them
+    # proposal_type_ids= ProposalTypeSection.objects.all().values_list('proposal_type_id', flat=True).distinct()
+    # queryset = ProposalType.objects.filter(id__in=proposal_type_ids).prefetch_related(
+    #     Prefetch(
+    #         'sections',
+    #         # queryset=ProposalTypeSection.objects.order_by('index')
+    #         queryset=ProposalTypeSection.objects.filter(add_to_search_select=True).order_by('index')
+    #     )
+    # )
+
+    queryset = ProposalType.objects.none()
     serializer_class = SearchProposalTypeSerializer
+
+    def get_queryset(self):
+        # Only select Proposal Types which has Sections linked to them.
+        proposal_type_ids = ProposalTypeSection.objects.all().values_list(
+            'proposal_type_id', flat=True
+        ).distinct()
+        return ProposalType.objects.filter(id__in=proposal_type_ids).prefetch_related(
+            Prefetch(
+                'sections',
+                # queryset=ProposalTypeSection.objects.order_by('index')
+                queryset=ProposalTypeSection.objects.filter(add_to_search_select=True).order_by('index')
+            )
+        )
 
 class SearchSectionsView(views.APIView):
     renderer_classes = [JSONRenderer,]
@@ -3008,7 +3030,7 @@ class SchemaProposalTypeViewSet(viewsets.ModelViewSet):
         '''
         try:
 
-            sections = ProposalType.objects.all()
+            sections = ProposalType.objects.filter(add_to_proposal_type_section_list=True)
             proposal_types = [
                 {
                     'label': s.name_with_version,
