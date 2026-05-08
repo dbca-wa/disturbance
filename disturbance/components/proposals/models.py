@@ -106,6 +106,7 @@ class ProposalType(models.Model):
     schema = JSONField()
     replaced_by = models.ForeignKey('self', on_delete=models.CASCADE , blank=True, null=True)
     version = models.SmallIntegerField(default=1, blank=False, null=False)
+    add_to_proposal_type_section_list = models.BooleanField(default=False)
     # domain_used = models.CharField(max_length=40, choices=DOMAIN_USED_CHOICES, default=DOMAIN_USED_CHOICES[0][0])
 
     def __str__(self):
