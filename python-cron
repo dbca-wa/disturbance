@@ -1,4 +1,4 @@
-0 2 * * *      cd /app && python manage_ds.py cron_tasks >> logs/run_cron_tasks.log 2>&1
+0 7 * * *      cd /app && python manage_ds.py cron_tasks >> logs/run_cron_tasks.log 2>&1
 10 4 * * *     cd /app && python manage_ds.py runcrons >> logs/runcrons.log 2>&1
 # poll_sqs_tasks - run at 1,6,11,16, ... mins past 0
 */5 * * * * python manage_ds.py run_queue_job >> logs/run_cron_tasks.log 2>&1
