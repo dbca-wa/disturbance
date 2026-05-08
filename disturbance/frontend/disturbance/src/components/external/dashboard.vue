@@ -101,7 +101,8 @@ export default {
                     Here you can access your existing approvals, view any proposals in progress, lodge new
                     proposals or submit information required to comply with requirements listed on your approval.<p/><p/>
                     For more information and FAQ's please visit <a href="https://www.dbca.wa.gov.au/licences-and-permits/online-disturbance-approval-system" target="_blank">Online Disturbance Approval System</a> for all external users 
-                    and <br> <a href="https://dpaw.sharepoint.com/Divisions/pws/cem/SitePages/Disturbance-Approval-System-%28DAS%29.aspx" target="_blank">Disturbance Approval System (DAS)</a> for all internal users or you can email das@dbca.wa.gov.au.`
+                    and <br> <a href="https://dpaw.sharepoint.com/Divisions/pws/cem/SitePages/Disturbance-Approval-System-%28DAS%29.aspx" target="_blank">Disturbance Approval System (DAS)</a> for all internal users. <br>
+                    Alternatively, please email the DAS inbox das@dbca.wa.gov.au. `
             }
             return welcomeText;
         },

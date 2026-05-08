@@ -1,5 +1,5 @@
 #* * * * * root eval $(grep -v '^#' /etc/.cronenv | xargs -d "\n" -I {} echo export \"{}\" ) && cd /app && python manage_ds.py system_maintenance_check > /dev/null 2>&1
-0 2 * * * root eval $(grep -v '^#' /etc/.cronenv | xargs -d "\n" -I {} echo export \"{}\" ) && cd /app && python manage_ds.py cron_tasks >> logs/run_cron_tasks.log 2>&1
+0 7 * * * root eval $(grep -v '^#' /etc/.cronenv | xargs -d "\n" -I {} echo export \"{}\" ) && cd /app && python manage_ds.py cron_tasks >> logs/run_cron_tasks.log 2>&1
 10 4 * * * root eval $(grep -v '^#' /etc/.cronenv | xargs -d "\n" -I {} echo export \"{}\" ) && cd /app && python manage_ds.py runcrons >> logs/runcrons.log 2>&1
 # poll_sqs_tasks - run at 1,6,11,16, ... mins past 0
 1-59/5 * * * * root eval $(grep -v '^#' /etc/.cronenv | xargs -d "\n" -I {} echo export \"{}\" ) && cd /app && python manage_ds.py poll_sqs_tasks >> logs/poll_sqs_tasks.log 2>&1

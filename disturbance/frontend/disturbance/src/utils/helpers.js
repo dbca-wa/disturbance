@@ -153,7 +153,7 @@ export default{
     var res = string.split( ".json" )
     return res[ 0 ] + '/' + addition + '.json';
   },
-  dtPopover(value, truncate_length = 30, trigger = 'hover') {
+    dtPopover(value, truncate_length = 30, trigger = 'click') {
         const ellipsis = '...';
         const raw = value == null ? '' : String(value);
         const truncated = this.truncate(raw, {
