@@ -76,6 +76,49 @@
  <BR>
 {% endblock menu_spacer %}
 
+{% block main_header %}
+  <!-- Screen version -->
+  <div class='parks_bg_banner d-print-none'>
+    <div class='container'>
+      <div class="" style='background-color: FFF;  z-index: 2;'>
+        <div style='padding: 20px;'>
+          <div class="row">
+            <div class="col-lg-3">
+              <h1 id="site-title" class="site-logo">
+                <a href="{% url 'home'%}" >
+                  <img src="/static/img/logo-park-stay-trunc.gif" alt="{{ template_title }}  - Department of Biodiversity, Conservation and Attractions" class="img-responsive"/>
+                </a>
+              </h1>
+            </div>
+            <div class="col-lg-9">
+              <h1 id="site-title hide-sm" class="site-logo" style="color: white; text-align: left">
+                {{ template_title }}
+              </h1>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Print version only -->
+  <div class='parks_bg_banner d-none d-print-block'>
+    <div class='container'>
+      <div style='padding: 10px;'>
+        <table style="width:100%; border-collapse: collapse;">
+          <tr>
+            <td style="width: 300px; vertical-align: middle; padding-right: 20px;">
+              <img src="/static/img/logo-park-stay-trunc.gif" alt="{{ template_title }} - Department of Biodiversity, Conservation and Attractions" style="max-width: 280px; height: auto;"/>
+            </td>
+            <td style="vertical-align: middle;">
+              <span style="color: white; font-size: 2.2em; font-weight: bold; word-break: break-word;">{{ template_title }}</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock main_header %}
+
 {% block messages %}
     <div class="container">
         <div class="row">
