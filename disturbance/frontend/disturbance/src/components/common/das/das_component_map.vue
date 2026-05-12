@@ -924,4 +924,11 @@
         width: 100%;
         height: 500px;
     }
+    @media print {
+        :deep(.ol-layer canvas) {
+            width: 100% !important;
+            max-width: none !important;
+            overflow: visible !important;
+        }
+    }
 </style>

@@ -914,9 +914,15 @@ export default {
     display: none;
     }
     #external_proposal {
-    /* display: block !important;
-    clear: both !important; */
-    margin-top: 120px !important;
+    margin-top: 50px !important;
+    overflow: visible !important;
+    }
+    #external_proposal .container,
+    #external_proposal .container-fluid,
+    #external_proposal .row,
+    #external_proposal [class*='col-'] {
+    width: 100% !important;
+    max-width: none !important;
     }
 } 
 

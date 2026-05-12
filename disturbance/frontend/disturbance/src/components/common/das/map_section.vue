@@ -4,7 +4,8 @@
         </div>
         <div :class="das_sections_classname">
             <FormSection :formCollapse="false" label="Map" Index="1">
-                <div class="row col-sm-12">
+                <!-- <div class="row col-sm-12"> -->
+                <div class="row">
                     <ComponentMap
                         ref="component_map"
                         :is_internal="is_internal"

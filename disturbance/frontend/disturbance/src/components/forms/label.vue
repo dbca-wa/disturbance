@@ -1,5 +1,5 @@
 <template lang="html">
-    <div class="form-group">
+    <div class="form-group mb-3">
         <label :id="id" for="label" v-html="value"></label>
     </div>
 </template>

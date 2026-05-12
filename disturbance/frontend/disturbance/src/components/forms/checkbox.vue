@@ -2,7 +2,7 @@
     <div>
         <div class="form-group">
             <div class="checkbox">
-                <label :id="id">
+                <label :id="id" style="font-weight:normal !important">
                 <input :onclick="isClickable" ref="Checkbox" :name="name" type="checkbox" :class="group" data-parsley-required :data-conditions="options" @change="handleChange" :checked="isChecked" :required="isRequired"/>
                 <!--{{ label }}<span v-if="assessorMode && layer_value" style="color:blue" class="tab">{{layer_name }}</span>-->
                 {{ label }}<span v-if="layer_value" style="color:blue" class="tab">{{layer_name }}</span>
@@ -86,5 +86,6 @@ export default {
     .tab {
       display: inline-block;
       margin-left: 4em;
+      font-weight: normal !important;
     }
 </style>
