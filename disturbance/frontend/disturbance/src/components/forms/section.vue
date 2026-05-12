@@ -113,6 +113,11 @@ export default {
     visibility: visible !important;
     height: auto !important;
   }
+
+  .show_hide_switch .chevron-toggle {
+    display: none !important;
+  }
+
 }
 .section-wrapper {
     margin-bottom: 20px;
