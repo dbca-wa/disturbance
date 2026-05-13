@@ -24,7 +24,15 @@
                 <h2>
                     Further Information
                 </h2>
-                <p>For further information, please email <b>{% support_email %}</b>.</p>
+                <!-- <p>For further information, please email <b>{% support_email %}</b>.</p> -->
+                <p>
+                    For further information and FAQ's please visit
+                    <a href="{{ DJANGO_SETTINGS.EXTERNAL_DAS_INFO_URL }}">Online Disturbance Approval System</a>
+                    for all external users and
+                    <a href="{{ DJANGO_SETTINGS.INTERNAL_DAS_INFO_URL }}">Disturbance Approval System (DAS)</a>
+                    for all internal users. Alternatively, please email the DAS inbox
+                    <a href="mailto:{% support_email %}">{% support_email %}</a>.
+                </p>
             </div>
         </div>
     </div>

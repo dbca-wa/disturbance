@@ -97,12 +97,14 @@ export default {
         welcomeMessage: function() {
             let welcomeText = ``;
             if (this.dasTemplateGroup) {
+                const external_das_info = (env && env['external_das_info_url']) || 'https://www.dbca.wa.gov.au/licences-and-permits/online-disturbance-approval-system';
+                const internal_das_info = (env && env['internal_das_info_url']) || 'https://dpaw.sharepoint.com/Divisions/pws/cem/SitePages/Disturbance-Approval-System-%28DAS%29.aspx';
+                const das_support_email = (env && env['support_email']) || 'das@dbca.wa.gov.au';
                 welcomeText = `Welcome to the ${this.dasSystemName} online system dashboard.<p/><p/>
                     Here you can access your existing approvals, view any proposals in progress, lodge new
                     proposals or submit information required to comply with requirements listed on your approval.<p/><p/>
-                    For more information and FAQ's please visit <a href="https://www.dbca.wa.gov.au/licences-and-permits/online-disturbance-approval-system" target="_blank">Online Disturbance Approval System</a> for all external users 
-                    and <br> <a href="https://dpaw.sharepoint.com/Divisions/pws/cem/SitePages/Disturbance-Approval-System-%28DAS%29.aspx" target="_blank">Disturbance Approval System (DAS)</a> for all internal users. <br>
-                    Alternatively, please email the DAS inbox das@dbca.wa.gov.au. `
+                    For further information and FAQ's please visit <a href="${external_das_info}" target="_blank">Online Disturbance Approval System</a> for all external users
+                    and <a href="${internal_das_info}" target="_blank">Disturbance Approval System (DAS)</a> for all internal users or you can email <a href="mailto:${das_support_email}">${das_support_email}</a>.`
             }
             return welcomeText;
         },
