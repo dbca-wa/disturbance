@@ -468,6 +468,10 @@ class Approval(RevisionedMixin):
         self.log_user_action(ApprovalUserAction.ACTION_APPROVAL_PDF_VIEW.format(self.lodgement_number), request)
         return self
 
+    def internal_view_log(self,request):
+        self.log_user_action(ApprovalUserAction.ACTION_VIEW_APPROVAL.format(self.lodgement_number), request)
+        return self
+
 class PreviewTempApproval(Approval):
     class Meta:
         app_label = 'disturbance'
@@ -507,6 +511,7 @@ class ApprovalUserAction(UserAction):
     ACTION_AMEND_APPROVAL = "Create amendment Proposal for approval {}"
     ACTION_APPROVAL_PDF_VIEW ="View approval PDF for approval {}"
     ACTION_UPDATE_NO_CHARGE_DATE_UNTIL = "'Do not charge annual site fee until' date updated to {} for approval {}"
+    ACTION_VIEW_APPROVAL = "View approval {}"
 
     class Meta:
         app_label = 'disturbance'
