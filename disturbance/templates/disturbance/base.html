@@ -44,7 +44,10 @@
             "kb_server_url": "{{ KB_SERVER_URL }}",
             "sqs_apiurl": "{{ SQS_APIURL }}",
             "show_das_map": "{{ SHOW_DAS_MAP }}",
-            "max_layers_per_sqq": "{{ MAX_LAYERS_PER_SQQ }}"
+            "max_layers_per_sqq": "{{ MAX_LAYERS_PER_SQQ }}",
+            "external_das_info_url": "{{ DJANGO_SETTINGS.EXTERNAL_DAS_INFO_URL }}",
+            "internal_das_info_url": "{{ DJANGO_SETTINGS.INTERNAL_DAS_INFO_URL }}",
+            "support_email": "{{ SUPPORT_EMAIL }}"
         }
     </script>
     {% vite_asset vue3_entry_script %}

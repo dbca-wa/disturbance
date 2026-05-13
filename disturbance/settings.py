@@ -196,6 +196,8 @@ if SITE_RANCHER_CLUSTER:
     SITE_SUBDOMAIN_INTERNAL_SUFFIX += "-" + SITE_RANCHER_CLUSTER
 
 SUPPORT_EMAIL = env('SUPPORT_EMAIL', SYSTEM_NAME_SHORT.lower() + '@' + SITE_DOMAIN).lower()
+EXTERNAL_DAS_INFO_URL = env('EXTERNAL_DAS_INFO_URL', 'https://www.dbca.wa.gov.au/licences-and-permits/online-disturbance-approval-system')
+INTERNAL_DAS_INFO_URL = env('INTERNAL_DAS_INFO_URL', 'https://dpaw.sharepoint.com/Divisions/pws/cem/SitePages/Disturbance-Approval-System-%28DAS%29.aspx')
 APIARY_SUPPORT_EMAIL = env('APIARY_SUPPORT_EMAIL', SUPPORT_EMAIL).lower()
 DEP_URL = env('DEP_URL','www.' + SITE_DOMAIN)
 DEP_PHONE = env('DEP_PHONE','(08) 9219 9000')

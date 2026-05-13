@@ -333,7 +333,7 @@ class ApprovalViewSet(viewsets.ModelViewSet):
     @action(methods=['GET',], detail=True)
     def approval_wrapper(self, request, *args, **kwargs):
         instance = self.get_object()
-        #instance.internal_view_log(request)
+        instance.internal_view_log(request)
         #serializer = InternalProposalSerializer(instance,context={'request':request})
         serializer_class = ApprovalWrapperSerializer #self.internal_serializer_class()
         #serializer = serializer_class(instance,context={'request':request})
