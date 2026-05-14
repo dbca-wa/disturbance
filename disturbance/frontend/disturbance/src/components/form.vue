@@ -9,6 +9,18 @@
         position: fixed;
         top:56px;
     }
+    
+    @media print {
+        @page {
+            margin: 0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+        }
+    }
+
 </style>
 
 <script lang="jsx">
