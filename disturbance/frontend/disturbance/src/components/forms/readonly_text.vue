@@ -26,13 +26,13 @@ export default {
             localValue: this.value || '',
         }
     },
-    methods: { 
+    methods: {
         onInput(event) {
             this.localValue = event.target.value;
             this.$emit('input', event.target.value);
-        },       
+        },
         // adjustTextareaHeight() {
-        //     this.isPrinting = true;                
+        //     this.isPrinting = true;
         // },
         // revertTextareaStyleAfterPrinting() {
         //     this.isPrinting = false;
@@ -46,7 +46,7 @@ export default {
 </script>
 
 <style lang="css">
-    @media print { 
+    @media print {
         .print-text-value {
             display: block !important;
             white-space: pre-wrap;
@@ -55,5 +55,5 @@ export default {
         .form-textarea-value {
             display: none !important;
         }
-    } 
+    }
 </style>
