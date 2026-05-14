@@ -911,19 +911,22 @@ export default {
 }
 @media print { 
     .noPrint { 
-    display: none;
+        display: none;
     }
     #external_proposal {
-    margin-top: 50px !important;
-    overflow: visible !important;
+        margin-top: 30px !important;
+        overflow: visible !important;
     }
-    #external_proposal .container,
-    #external_proposal .container-fluid,
     #external_proposal .row,
     #external_proposal [class*='col-'] {
-    width: 100% !important;
-    max-width: none !important;
+        width: 100% !important;
+        max-width: none !important;
     }
+    .container {
+        width: 100% !important;
+        max-width: none !important;
+    }
+
 } 
 
 .swal2-container {
