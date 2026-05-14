@@ -45,7 +45,7 @@
                     @input="$emit('input', $event.target.value)"
                 ></textarea>
             </div> -->
-            <div class="print-text-value col-md-9 mb-3" style="display:none;"><br>{{ localValue }}</div>
+            <div class="print-text-value mb-3" style="display:none;">{{ localValue }}</div>
             <div class="mb-3 form-textarea-value">
                 <textarea
                     :readonly="readonly"
@@ -148,6 +148,9 @@ export default {
             display: block !important;
             white-space: pre-wrap;
             word-wrap: break-word;
+            margin-top: 10px !important;
+            padding: 0 !important;
+            width: auto !important;
         }
         .form-textarea-value {
             display: none !important;
