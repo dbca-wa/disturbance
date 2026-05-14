@@ -32,7 +32,7 @@
             <!--<LayerInfo v-show="assessorMode" :layer_value="layer_val"  :assessorMode="assessorMode"/>-->
             <LayerInfo v-show="true" :layer_value="layer_val"  :assessorMode="true"/>
             <!-- <textarea :value="value" :readonly="readonly" class="form-control" rows="5" :name="name" :required="isRequired" :id="textarea_id"></textarea> -->
-            <div v-if="isPrinting" class="col-md-9"><br>{{ value }}</div>
+            <!-- <div v-if="isPrinting" class="col-md-9"><br>{{ value }}</div>
             <div v-else class="mb-3">
                 <textarea
                     :readonly="readonly"
@@ -43,6 +43,19 @@
                     :id="textarea_id"
                     :value="value"
                     @input="$emit('input', $event.target.value)"
+                ></textarea>
+            </div> -->
+            <div class="print-text-value col-md-9 mb-3" style="display:none;"><br>{{ localValue }}</div>
+            <div class="mb-3 form-textarea-value">
+                <textarea
+                    :readonly="readonly"
+                    class="form-control"
+                    rows="5"
+                    :name="name"
+                    :required="isRequired"
+                    :id="textarea_id"
+                    :value="localValue"
+                    @input="onInput"
                 ></textarea>
             </div>
         </div>
@@ -67,7 +80,8 @@ export default {
         // let vm = this;
         return {
             showingComment: false,
-            isPrinting: false,
+            // isPrinting: false, // not needed as print toggling is handled by CSS (.print-text-value / .form-textarea-value)
+            localValue: this.value || '',
         }
     },
     computed:{
@@ -91,28 +105,33 @@ export default {
         toggleComment(){
             this.showingComment = ! this.showingComment;
         },
-        
-        adjustTextareaHeight() {
-            this.isPrinting = true;
-            let textarea = document.getElementById('textarea_' + this.id);
-                textarea.dataset.originalHeight = textarea.style.height;
-                textarea.dataset.originalOverflow = textarea.style.overflow;
-                textarea.style.height = 'auto';
-                //textarea.style.height = textarea.scrollHeight + 'px';
-                textarea.style.overflow = 'hidden';
-                textarea.style.height = (textarea.scrollHeight + 15) + 'px';
+        onInput(event) {
+            this.localValue = event.target.value;
+            this.$emit('input', event.target.value);
         },
-        revertTextareaStyleAfterPrinting() {
-            this.isPrinting = false;
-            let textarea = document.getElementById('textarea_' + this.id);
-                textarea.style.height = textarea.dataset.originalHeight;
-                textarea.style.overflow = textarea.dataset.originalOverflow;
-        }
+        
+        // replaced by CSS (.print-text-value / .form-textarea-value) to print the textarea value on print
+        // adjustTextareaHeight() {
+        //     this.isPrinting = true;
+        //     let textarea = document.getElementById('textarea_' + this.id);
+        //         textarea.dataset.originalHeight = textarea.style.height;
+        //         textarea.dataset.originalOverflow = textarea.style.overflow;
+        //         textarea.style.height = 'auto';
+        //         //textarea.style.height = textarea.scrollHeight + 'px';
+        //         textarea.style.overflow = 'hidden';
+        //         textarea.style.height = (textarea.scrollHeight + 15) + 'px';
+        // },
+        // revertTextareaStyleAfterPrinting() {
+        //     this.isPrinting = false;
+        //     let textarea = document.getElementById('textarea_' + this.id);
+        //         textarea.style.height = textarea.dataset.originalHeight;
+        //         textarea.style.overflow = textarea.dataset.originalOverflow;
+        // }
 
     },
     mounted() {
-        window.addEventListener('beforeprint', this.adjustTextareaHeight);
-        window.addEventListener('afterprint', this.revertTextareaStyleAfterPrinting);
+        // window.addEventListener('beforeprint', this.adjustTextareaHeight);
+        // window.addEventListener('afterprint', this.revertTextareaStyleAfterPrinting);
     },
 }
 </script>
@@ -123,7 +142,15 @@ export default {
     }
     @media print { 
         .noPrint { 
-        display: none;
+            display: none;
+        }
+        .print-text-value {
+            display: block !important;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .form-textarea-value {
+            display: none !important;
         }
     } 
     
