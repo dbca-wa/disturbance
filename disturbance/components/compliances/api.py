@@ -352,7 +352,7 @@ class ComplianceViewSet(viewsets.ModelViewSet):
         try:
             instance = self.get_object()
             instance.assign_to(request.user,request)
-            serializer = ComplianceSerializer(instance)
+            serializer = ComplianceSerializer(instance,context={'request': request})
             return Response(serializer.data)
         except serializers.ValidationError:
             print(traceback.print_exc())
@@ -370,7 +370,7 @@ class ComplianceViewSet(viewsets.ModelViewSet):
             instance = self.get_object()
             doc=request.data.get('document')
             instance.delete_document(request, doc)
-            serializer = ComplianceSerializer(instance)
+            serializer = ComplianceSerializer(instance,context={'request': request})
             return Response(serializer.data)
         except serializers.ValidationError:
             print(traceback.print_exc())
@@ -395,7 +395,7 @@ class ComplianceViewSet(viewsets.ModelViewSet):
             except EmailUser.DoesNotExist:
                 raise serializers.ValidationError('A user with the id passed in does not exist')
             instance.assign_to(user,request)
-            serializer = ComplianceSerializer(instance)
+            serializer = ComplianceSerializer(instance,context={'request': request})
             return Response(serializer.data)
         except serializers.ValidationError:
             print(traceback.print_exc())
@@ -429,7 +429,7 @@ class ComplianceViewSet(viewsets.ModelViewSet):
         try:
             instance = self.get_object()
             instance.accept(request)
-            serializer = ComplianceSerializer(instance)
+            serializer = ComplianceSerializer(instance,context={'request': request})
             return Response(serializer.data)
         except serializers.ValidationError:
             print(traceback.print_exc())

@@ -108,6 +108,7 @@ class ComplianceSerializer(serializers.ModelSerializer):
     approval_lodgement_number = serializers.SerializerMethodField()
     proposal_lodgement_number = serializers.SerializerMethodField()
     district = serializers.CharField(source='proposal.district')
+    current_assessor = serializers.SerializerMethodField()
 
     class Meta:
         model = Compliance
@@ -136,6 +137,7 @@ class ComplianceSerializer(serializers.ModelSerializer):
             'approval_lodgement_number',
             'proposal_lodgement_number',
             'district',
+            'current_assessor',
         )
 
     def get_documents(self,obj):
@@ -156,6 +158,13 @@ class ComplianceSerializer(serializers.ModelSerializer):
         if obj.submitter:
             return obj.submitter.get_full_name()
         return None
+    
+    def get_current_assessor(self,obj):
+        return {
+            'id': self.context['request'].user.id,
+            'name': self.context['request'].user.get_full_name(),
+            'email': self.context['request'].user.email
+        }
 
 
 class SaveComplianceSerializer(serializers.ModelSerializer):
