@@ -56,7 +56,7 @@
                             </div>  
                         </div>
                     </div>
-                    <div class="card-body border-top" v-if="!canViewonly && check_assessor()">
+                    <div class="card-body border-top" v-if="!canViewonly && check_assessor() && canAction">
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="row mb-2">
@@ -173,6 +173,12 @@ export default {
     canViewonly: function(){
         return this.compliance.processing_status == 'Due' || this.compliance.processing_status == 'Future' || this.compliance.processing_status == 'Approved';
     },
+    canAction: function(){
+        if (this.compliance.processing_status == 'With Assessor'){
+            return this.compliance && this.compliance.processing_status == 'With Assessor' && (this.compliance.current_assessor.id == this.compliance.assigned_to || this.compliance.assigned_to == null )? true : false;
+        }
+        return false;
+    },
   },
   methods: {
     commaToNewline(s){
@@ -226,36 +232,40 @@ export default {
     },
     acceptCompliance: function() {
         let vm = this;
-        swal.fire({
-            title: "Accept Compliance with requirements",
-            text: "Are you sure you want to accept this compliance with requirements?",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonText: 'Accept',
-            customClass: {
-                confirmButton: 'btn btn-primary',
-                cancelButton: 'btn btn-secondary',
-            },
-        }).then((swalresult) => {
-            if(swalresult.isConfirmed){
-                fetch(helpers.add_endpoint_json(api_endpoints.compliances,(vm.compliance.id+'/accept'))).then(
-                    async (response) => {
-                        if (!response.ok) { return response.json().then(err => { throw err }); }
-                        console.log(response);
-                        vm.compliance = await response.json();
-                    }).catch((error) => {
-                        console.log(error);
-                    }
-                );
-            }
-        },(error) => {
-            console.log(error);
-        });
+        if(this.checkAssignedOfficer()){
+            swal.fire({
+                title: "Accept Compliance with requirements",
+                text: "Are you sure you want to accept this compliance with requirements?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: 'Accept',
+                customClass: {
+                    confirmButton: 'btn btn-primary',
+                    cancelButton: 'btn btn-secondary',
+                },
+            }).then((swalresult) => {
+                if(swalresult.isConfirmed){
+                    fetch(helpers.add_endpoint_json(api_endpoints.compliances,(vm.compliance.id+'/accept'))).then(
+                        async (response) => {
+                            if (!response.ok) { return response.json().then(err => { throw err }); }
+                            console.log(response);
+                            vm.compliance = await response.json();
+                        }).catch((error) => {
+                            console.log(error);
+                        }
+                    );
+                }
+            },(error) => {
+                console.log(error);
+            });
+        }
 
     },
-    amendmentRequest: function(){   
+    amendmentRequest: function(){
+        if(this.checkAssignedOfficer()){   
             this.$refs.amendment_request.amendment.compliance = this.compliance.id;                     
             this.$refs.amendment_request.isModalOpen = true;
+        }
     },
     fetchProfile: function(){
         let vm = this;
@@ -282,7 +292,26 @@ export default {
         } else {
             return false;
         }
-     },
+    },
+    checkAssignedOfficer: function() {
+        if (this.compliance.processing_status == 'With Assessor'){
+            if(this.compliance && this.compliance.assigned_to==null){
+                swal.fire({
+                    title:'Error',
+                    text:'Please assign this compliance to yourself or an officer before proceeding',
+                    icon:'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary',
+                    },
+                })
+                return false;
+            }
+            return true;
+        }
+        else{
+            return true;
+        }
+    },
   },
   mounted: function () {
     // let vm = this;
