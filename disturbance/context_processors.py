@@ -49,6 +49,7 @@ def apiary_url(request):
         'SQS_APIURL': settings.SQS_APIURL,
         'SHOW_DAS_MAP': settings.SHOW_DAS_MAP,
         'MAX_LAYERS_PER_SQQ': settings.MAX_LAYERS_PER_SQQ,
+        'privacy_policy_url': settings.PRIVACY_POLICY_URL,
         "vue3_entry_script": settings.VUE3_ENTRY_SCRIPT,
         "GIT_COMMIT_HASH": settings.GIT_COMMIT_HASH,
     }
