@@ -23,7 +23,7 @@
           </p>
           <ul>
             <li>the relevant organisation you are seeking to be linked to, for the purpose of confirming your association</li>
-            <li>the assigned assessor and approver of a proposal, to enable the proponent to be contacted and notified</li>
+            <li>the assigned DBCA assessor and approver of a proposal, to enable the proponent to be contacted and notified</li>
           </ul>
           <p>
             If you choose not to provide this information, DBCA will be unable to grant you access to DAS or link you to an organisation (including establishing a new organisation within DAS).
