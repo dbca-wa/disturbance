@@ -1,8 +1,14 @@
 # syntax = docker/dockerfile:1.7
-
+ARG IMAGE_TAG
+ARG IMAGE_NAME
 # Prepare the base environment.
 FROM ghcr.io/dbca-wa/docker-apps-dev:ubuntu_2604_base_python_node as builder_base_das
 MAINTAINER asi@dbca.wa.gov.au
+ARG IMAGE_TAG
+ARG IMAGE_NAME
+RUN echo "Building version: $IMAGE_TAG for $IMAGE_NAME"
+ENV CONTAINER_IMAGE_TAG=${IMAGE_TAG}
+ENV CONTAINER_IMAGE_NAME=${IMAGE_NAME}
 ENV DEBIAN_FRONTEND=noninteractive
 ENV DEBUG=True
 ENV TZ=Australia/Perth
