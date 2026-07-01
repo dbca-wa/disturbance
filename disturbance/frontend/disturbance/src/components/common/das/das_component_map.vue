@@ -46,6 +46,7 @@
                         </transition>
                     </div>
                 </div>
+                <div id="mouse-position" class="custom-mouse-position"></div>
             </div>
         </div>
 
@@ -798,7 +799,7 @@
     .basemap-button {
         position: absolute;
         bottom: 25px;
-        right: 10px;
+        right: 25px;
         z-index: 400;
         -moz-box-shadow: 3px 3px 3px #777;
         -webkit-box-shadow: 3px 3px 3px #777;
@@ -827,7 +828,7 @@
     .optional-layers-wrapper {
         position: absolute;
         top: 70px;
-        left: 10px;
+        left: 20px;
     }
     .optional-layers-button {
         position: relative;
@@ -924,11 +925,26 @@
         width: 100%;
         height: 500px;
     }
+    .custom-mouse-position {
+        position: absolute;
+        left: 20px;
+        bottom: 10px;
+        z-index: 450;
+        background: rgba(90, 90, 90, 0.9);
+        color: #fff;
+        padding: 4px 8px;
+        border-radius: 3px;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.2;
+        pointer-events: none;
+    }
     @media print {
         :deep(.ol-layer canvas) {
             width: 100% !important;
             max-width: none !important;
             overflow: visible !important;
+            height: 100% !important;
         }
     }
 </style>

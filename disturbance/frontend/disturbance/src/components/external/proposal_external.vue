@@ -910,25 +910,35 @@ export default {
     z-index: 2000;
 }
 @media print { 
+    html,
+    body {
+        font-size: 12px !important;
+    }
+
     .noPrint { 
         display: none;
     }
-    #external_proposal {
+    /* #external_proposal {
         margin-top: 20px !important;
         overflow: visible !important;
-    }
-    #external_proposal .row,
+    }*/
+    /* need this below css to display properly on chrome */
+    /*#external_proposal .row,
     #external_proposal [class*='col-'] {
         width: 100% !important;
         max-width: none !important;
-    }
+    } */
+     /* ------------------------- */
     .container {
         width: 100% !important;
         max-width: none !important;
     }
     @page {
-        margin-top: 70px !important;
-        margin-bottom: 70px !important;
+        margin-top: 20px !important;
+        margin-bottom: 20px !important;
+        /* set to zero, as browser default */
+        margin-right: 0px !important;
+        margin-left: 0px !important;
     }
 
 } 

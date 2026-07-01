@@ -162,6 +162,7 @@
                         </transition>
                     </div>
                 </div>
+                <div id="mouse-position" class="custom-mouse-position"></div>
             </div>
             <!--- <div class="button_row">
                 <span class="view_all_button" @click="displayAllFeatures">View All On Map</span>
@@ -1940,6 +1941,20 @@
     .map {
         width: 100%;
         height: 500px;
+    }
+    .custom-mouse-position {
+        position: absolute;
+        left: 20px;
+        bottom: 10px;
+        z-index: 450;
+        background: rgba(90, 90, 90, 0.9);
+        color: #fff;
+        padding: 4px 8px;
+        border-radius: 3px;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.2;
+        pointer-events: none;
     }
 </style>
 
