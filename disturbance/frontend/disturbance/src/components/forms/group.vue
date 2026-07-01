@@ -84,5 +84,12 @@ export default {
             padding-left: 0 !important;
             padding-right: 0 !important;
         }
+        .mb-3.pb-3 .row.collapse,
+        .mb-3.pb-3 .row.collapse > .col-12 {
+            display: block !important;
+            float: none !important;
+            width: 100% !important;
+            max-width: 100% !important;
+        }
     }
 </style>
