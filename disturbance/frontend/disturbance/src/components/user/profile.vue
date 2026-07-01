@@ -1,5 +1,6 @@
 <template>
     <div class="container" id="userInfo">
+        <PrivacyNotice />
         <div v-if="showCompletion" class="row">
             <div class="col-sm-12">
                 <div class="round-box px-3 mt-4">
@@ -301,6 +302,7 @@ import $ from 'jquery'
 import { api_endpoints, helpers } from '@/utils/hooks'
 import FormSection from '@/components/forms/section_toggle.vue';
 import alert from '@vue-utils/alert.vue'
+import PrivacyNotice from '@/components/common/privacy_notice.vue';
 export default {
     name: 'UserProfile',
     data () {
@@ -348,7 +350,8 @@ export default {
     },
     components: {
         FormSection,
-        alert
+        alert,
+        PrivacyNotice
     },
     watch: {
         // managesOrg: function() {
