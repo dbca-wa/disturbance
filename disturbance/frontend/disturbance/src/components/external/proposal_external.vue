@@ -910,10 +910,15 @@ export default {
     z-index: 2000;
 }
 @media print { 
+    html,
+    body {
+        font-size: 12px !important;
+    }
+
     .noPrint { 
         display: none;
     }
-    #external_proposal {
+    /* #external_proposal {
         margin-top: 20px !important;
         overflow: visible !important;
     }
@@ -921,14 +926,15 @@ export default {
     #external_proposal [class*='col-'] {
         width: 100% !important;
         max-width: none !important;
-    }
+    } */
     .container {
         width: 100% !important;
         max-width: none !important;
     }
     @page {
-        margin-top: 70px !important;
-        margin-bottom: 70px !important;
+        /* margin-top: 20px !important;
+        margin-bottom: 20px !important; */
+        margin: 10px !important;
     }
 
 } 
