@@ -1,5 +1,5 @@
 # Prepare the base environment.
-FROM dbcawa/disturbance:latest as builder_base_disturbancedev
+FROM ghcr.io/dbca-wa/disturbance:latest_seg as builder_base_disturbancedev
 
 RUN apt-get update
 RUN apt-get install --no-install-recommends -y npm patch
