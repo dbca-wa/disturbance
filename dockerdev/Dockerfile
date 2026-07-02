@@ -1,5 +1,5 @@
 # Prepare the base environment.
-FROM ghcr.io/dbca-wa/disturbance:latest as builder_base_disturbancedev
+FROM ghcr.io/dbca-wa/disturbance:latest_seg as builder_base_disturbancedev
 USER root
 # Temporary disabled due ubuntu mirror issues
 #RUN apt-get update
