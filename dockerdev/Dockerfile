@@ -1,9 +1,9 @@
 # Prepare the base environment.
 FROM dbcawa/disturbance:latest as builder_base_disturbancedev
-
+USER root
 RUN apt-get update
 RUN apt-get install --no-install-recommends -y npm patch
-RUN apt-get install --no-install-recommends -y libpq-dev git ssh sudo 
+RUN apt-get install --no-install-recommends -y libpq-dev git 
 RUN apt-get install --no-install-recommends -y screen
 RUN apt-get install --no-install-recommends -y virtualenv
 RUN apt-get install --no-install-recommends -y python3-dev
@@ -31,7 +31,7 @@ RUN mkdir /home/container
 RUN chown container.container /home/container
 RUN cp /root/.bashrc /home/container
 RUN cp /root/.profile /home/container
-
+USER container
 
 
 EXPOSE 8080
