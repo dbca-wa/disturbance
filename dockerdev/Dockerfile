@@ -31,7 +31,7 @@ RUN mkdir /home/container
 RUN chown container.container /home/container
 RUN cp /root/.bashrc /home/container
 RUN cp /root/.profile /home/container
-USER container
+
 
 
 EXPOSE 8080
