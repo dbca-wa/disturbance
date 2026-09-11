@@ -74,6 +74,17 @@ def is_customer(request):
     #return request.user.is_authenticated and is_email_auth_backend(request)
     return request.user.is_authenticated and not request.user.is_staff
 
+def is_org_request_assessor(request):
+    from disturbance.components.organisations.models import OrganisationAccessGroup
+    return (
+        request
+        and request.user
+        and (
+            OrganisationAccessGroup.objects.filter(members__id=request.user.id).exists()
+            or request.user.is_superuser
+        )
+    )
+
 def is_internal(request):
     return is_departmentUser(request)
 

@@ -32,6 +32,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from disturbance.components.approvals.models import (
     Approval, ApprovalUserAction, ApprovalDocument,
 )
+from disturbance.components.approvals.permissions import (
+    InternalApprovalPermission,
+)
 from disturbance.components.approvals.serializers import (
     ApprovalSerializer,
     DTApprovalSerializer,
@@ -136,7 +139,6 @@ class ApprovalFilterBackend(DatatablesFilterBackend):
 class ApprovalPaginatedViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = (ApprovalFilterBackend,)
     pagination_class = DatatablesPageNumberPagination
-    #renderer_classes = (ApprovalRenderer,)
     page_size = 10
     queryset = Approval.objects.none()
     serializer_class = ApprovalSerializer
@@ -147,7 +149,6 @@ class ApprovalPaginatedViewSet(viewsets.ReadOnlyModelViewSet):
         elif is_customer(self.request):
             user_orgs = [org.id for org in self.request.user.disturbance_organisations.all()]
             queryset =  Approval.objects.filter(Q(applicant_id__in = user_orgs)|Q(proxy_applicant_id=self.request.user.id)).exclude(status='hidden')
-            #queryset =  Approval.objects.filter(applicant_id__in = user_orgs)
             return queryset
         return Approval.objects.none()
 
@@ -156,11 +157,9 @@ class ApprovalPaginatedViewSet(viewsets.ReadOnlyModelViewSet):
             user_orgs = [org.id for org in self.request.user.disturbance_organisations.all()]
             queryset =  Approval.objects.filter(Q(applicant_id__in = user_orgs)|Q(proxy_applicant_id=self.request.user.id)).exclude(status='hidden')
             return queryset
-            #return Approval.objects.all().exclude(status='hidden')
         elif is_customer(self.request):
             user_orgs = [org.id for org in self.request.user.disturbance_organisations.all()]
             queryset =  Approval.objects.filter(Q(applicant_id__in = user_orgs)|Q(proxy_applicant_id=self.request.user.id)).exclude(status='hidden')
-            #queryset =  Approval.objects.filter(applicant_id__in = user_orgs)
             return queryset
         return Approval.objects.none()
 #    def list(self, request, *args, **kwargs):
@@ -208,8 +207,6 @@ class ApprovalPaginatedViewSet(viewsets.ReadOnlyModelViewSet):
         ids = self.get_queryset().order_by('lodgement_number', '-issue_date').distinct('lodgement_number').values_list('id', flat=True)
         template_group = get_template_group(request)
         if template_group == 'das':
-            # TODO as apiary_approval field is removed from migrations, changed the qurery
-            # qs = self.get_queryset().exclude(apiary_approval=True).filter(id__in=ids)
             apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
             qs = self.get_external_queryset().exclude(current_proposal__application_type__name__in=apiary_proposal_types).filter(id__in=ids)
         qs = self.filter_queryset(qs)
@@ -230,7 +227,12 @@ class ApprovalPaginatedViewSet(viewsets.ReadOnlyModelViewSet):
             }, many=True)
         return self.paginator.get_paginated_response(serializer.data)
     
-    @action(methods=['GET',], detail=False)
+    @action(
+        methods=['GET',],
+        detail=False,
+        permission_classes=[InternalApprovalPermission],
+    )
+    
     def approvals_internal(self, request, *args, **kwargs):
         """
         Paginated serializer for datatables - used by the internal and external dashboard (filtered by the get_queryset method)

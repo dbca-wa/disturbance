@@ -126,7 +126,7 @@ from rest_framework_datatables.renderers import DatatablesRenderer
 from disturbance.components.main.process_document import (
         process_generic_document, 
         )
-from disturbance.components.proposals.permissions import ProposalInternalUserPermission
+from disturbance.components.proposals.permissions import InternalProposalPermission
 
 
 import logging
@@ -289,50 +289,40 @@ class ProposalFilterBackend(DatatablesFilterBackend):
 
 
 class ProposalPaginatedViewSet(viewsets.ReadOnlyModelViewSet):
-    #filter_backends = (DatatablesFilterBackend,)
     filter_backends = (ProposalFilterBackend,)
     pagination_class = DatatablesPageNumberPagination
-    #renderer_classes = (ProposalRenderer,)
     queryset = Proposal.objects.none()
     serializer_class = ListProposalSerializer
     search_fields = ['lodgement_number',]
-    #serializer_class = DTProposalSerializer
     page_size = 10
 
     def get_queryset(self):
         user = self.request.user
         if is_internal(self.request): #user.is_authenticated():
-            #return Proposal.objects.all().order_by('-id')
             return Proposal.objects.exclude(processing_status='hidden')
-            #TODO will need to exclude apiary proposals
-            # return Proposal.objects.exclude(processing_status='hidden').filter(~Q(application_type__name__in=apiary_proposal_types))
         elif is_customer(self.request):
             user_orgs = [org.id for org in user.disturbance_organisations.all()]
-            #return  Proposal.objects.filter( Q(applicant_id__in = user_orgs) | Q(submitter = user) )
-            #return Proposal.objects.filter( Q(applicant_id__in = user_orgs) | Q(submitter = user) | Q(proxy_applicant = user)).order_by('-id')
             qs = Proposal.objects.exclude(processing_status='hidden').filter(Q(applicant_id__in=user_orgs) | Q(submitter=user) | Q(proxy_applicant=user))
             return qs
-            #queryset =  Proposal.objects.filter(region__isnull=False).filter( Q(applicant_id__in = user_orgs) | Q(submitter = user) )
         return Proposal.objects.none()
     
     def get_external_queryset(self):
         user = self.request.user
         if is_internal(self.request): #user.is_authenticated():
-            #return Proposal.objects.all().order_by('-id')
-            #return Proposal.objects.exclude(processing_status='hidden')
             user_orgs = [org.id for org in user.disturbance_organisations.all()]
             qs = Proposal.objects.exclude(processing_status='hidden').filter(Q(applicant_id__in=user_orgs) | Q(submitter=user) | Q(proxy_applicant=user))
             return qs
         elif is_customer(self.request):
             user_orgs = [org.id for org in user.disturbance_organisations.all()]
-            #return  Proposal.objects.filter( Q(applicant_id__in = user_orgs) | Q(submitter = user) )
-            #return Proposal.objects.filter( Q(applicant_id__in = user_orgs) | Q(submitter = user) | Q(proxy_applicant = user)).order_by('-id')
             qs = Proposal.objects.exclude(processing_status='hidden').filter(Q(applicant_id__in=user_orgs) | Q(submitter=user) | Q(proxy_applicant=user))
             return qs
-            #queryset =  Proposal.objects.filter(region__isnull=False).filter( Q(applicant_id__in = user_orgs) | Q(submitter = user) )
         return Proposal.objects.none()
 
-    @action(methods=['GET',], detail=False)
+    @action(
+        methods=['GET',],
+        detail=False,
+        permission_classes=[InternalProposalPermission],
+    )
     def proposals_internal(self, request, *args, **kwargs):
         """
         Used by the internal dashboard
@@ -364,7 +354,11 @@ class ProposalPaginatedViewSet(viewsets.ReadOnlyModelViewSet):
         #serializer = DTProposalSerializer(result_page, context={'request':request}, many=True)
         return self.paginator.get_paginated_response(serializer.data)
 
-    @action(methods=['GET',], detail=False)
+    @action(
+            methods=['GET',],
+            detail=False,
+            permission_classes=[InternalProposalPermission],
+    )
     def referrals_internal(self, request, *args, **kwargs):
         """
         Used by the internal dashboard
@@ -375,7 +369,7 @@ class ProposalPaginatedViewSet(viewsets.ReadOnlyModelViewSet):
         template_group = get_template_group(request)
         if template_group == 'das':
             qs = Referral.objects.filter(referral=request.user) if is_internal(self.request) else Referral.objects.none()
-        #for r in qs_r:
+        #for r in qs_r:        
          #   referral_id_list.append(r.id)
         #qs = self.filter_queryset(self.request, qs, self)
         # Add Apiary Referrals
@@ -406,8 +400,6 @@ class ProposalPaginatedViewSet(viewsets.ReadOnlyModelViewSet):
         template_group = get_template_group(request)
         if template_group == 'das':
             apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
-            # qs = self.get_queryset().exclude(application_type__name__in=apiary_proposal_types
-            #                                  ).exclude(processing_status=Proposal.PROCESSING_STATUS_DISCARDED)
             qs = self.get_external_queryset().exclude(application_type__name__in=apiary_proposal_types
                                              ).exclude(processing_status=Proposal.PROCESSING_STATUS_DISCARDED)
         qs = self.filter_queryset(qs)
@@ -426,6 +418,7 @@ class ProposalPaginatedViewSet(viewsets.ReadOnlyModelViewSet):
         #serializer = DTProposalSerializer(result_page, context={'request':request}, many=True)
         return self.paginator.get_paginated_response(serializer.data)
 
+    # not used
     @action(methods=['GET', ], detail=False)
     def spatial_query_layers_used_datatable_list(self, request, *args, **kwargs):
         """ http://localhost:8003/api/proposal_paginated/spatial_query_layers_used_datatable_list/?format=datatables&draw=1&length=10 """
@@ -2046,7 +2039,7 @@ class ProposalRequirementViewSet(viewsets.ModelViewSet):
     #queryset = ProposalRequirement.objects.all()
     queryset = ProposalRequirement.objects.none()
     serializer_class = ProposalRequirementSerializer
-    permission_classes = [ProposalInternalUserPermission]
+    permission_classes = [InternalProposalPermission]
 
     def get_queryset(self):
         user = self.request.user

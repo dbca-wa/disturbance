@@ -13,7 +13,7 @@ from django.contrib import messages
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
-from rest_framework import viewsets, serializers, status, generics, views
+from rest_framework import viewsets, serializers, status, generics, views, mixins
 from rest_framework.decorators import action, renderer_classes
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
@@ -68,10 +68,14 @@ from disturbance.components.organisations.emails import (
                         send_organisation_id_upload_email_notification,
                         send_organisation_request_email_notification,
                     )
+from disturbance.components.organisations.permissions import (
+    InternalOrganisationPermission,
+    OrganisationRequestAssessorPermission,
+)
 from disturbance.components.main.utils import get_template_group, handle_validation_error
 
 
-class OrganisationViewSet(viewsets.ModelViewSet):
+class OrganisationViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin):
     queryset = Organisation.objects.none()
     serializer_class = OrganisationSerializer
     allow_external = False #TODO: review this - workaround for allowing organisations to be accessed when validating pins
@@ -81,9 +85,6 @@ class OrganisationViewSet(viewsets.ModelViewSet):
         if is_internal(self.request) or self.allow_external:
             return Organisation.objects.all()
         elif is_customer(self.request):
-            #org_contacts = OrganisationContact.objects.filter(is_admin=True).filter(email=user.email) #TODO: is there a better way than email?
-            #user_admin_orgs = [org.organisation.id for org in org_contacts]
-            #return Organisation.objects.filter(id__in=user_admin_orgs)
             return user.disturbance_organisations.all()
         return Organisation.objects.none()
 
@@ -511,7 +512,7 @@ class OrganisationViewSet(viewsets.ModelViewSet):
             raise serializers.ValidationError(str(e))
 
 
-    @action(methods=['GET',], detail=True)
+    @action(methods=['GET',], detail=True, permission_classes=[InternalOrganisationPermission],)
     def action_log(self, request, *args, **kwargs):
         try:
             instance = self.get_object()
@@ -582,7 +583,7 @@ class OrganisationViewSet(viewsets.ModelViewSet):
             print(traceback.print_exc())
             raise serializers.ValidationError(str(e))
 
-    @action(methods=['GET',], detail=True)
+    @action(methods=['GET',], detail=True, permission_classes=[InternalOrganisationPermission],)
     def comms_log(self, request, *args, **kwargs):
         try:
             instance = self.get_object()
@@ -641,7 +642,7 @@ class OrganisationViewSet(viewsets.ModelViewSet):
             print(traceback.print_exc())
             raise serializers.ValidationError(str(e))
 
-    @action(methods=['POST',], detail=True)
+    @action(methods=['POST',], detail=True, permission_classes=[InternalOrganisationPermission],)
     @renderer_classes((JSONRenderer,))
     def add_comms_log(self, request, *args, **kwargs):
         try:
@@ -751,7 +752,7 @@ class OrganisationViewSet(viewsets.ModelViewSet):
             print(traceback.print_exc())
             raise serializers.ValidationError(str(e))
     
-class OrganisationRequestsViewSet(viewsets.ModelViewSet):
+class OrganisationRequestsViewSet(viewsets.ReadOnlyModelViewSet, mixins.RetrieveModelMixin):
     queryset = OrganisationRequest.objects.all()
     serializer_class = OrganisationRequestSerializer
 
@@ -765,7 +766,7 @@ class OrganisationRequestsViewSet(viewsets.ModelViewSet):
         return OrganisationRequest.objects.none()
 
 
-    @action(methods=['GET',], detail=False)
+    @action(methods=['GET',], detail=False, permission_classes=[InternalOrganisationPermission])
     def datatable_list(self, request, *args, **kwargs):
         try:
             template_group = get_template_group(request)
@@ -782,7 +783,7 @@ class OrganisationRequestsViewSet(viewsets.ModelViewSet):
             print(traceback.print_exc())
             raise serializers.ValidationError(str(e))
 
-    @action(methods=['GET',], detail=False)
+    @action(methods=['GET',], detail=False, permission_classes=[InternalOrganisationPermission])
     def user_list(self, request, *args, **kwargs):
         try:
             qs = self.get_queryset().filter(requester = request.user, status='with_assessor')
@@ -832,7 +833,7 @@ class OrganisationRequestsViewSet(viewsets.ModelViewSet):
             raise serializers.ValidationError(str(e))
 
 
-    @action(methods=['GET',], detail=True)
+    @action(methods=['GET',], detail=True, permission_classes=[OrganisationRequestAssessorPermission],)
     def assign_request_user(self, request, *args, **kwargs):
         try:
             instance = self.get_object()
@@ -849,7 +850,7 @@ class OrganisationRequestsViewSet(viewsets.ModelViewSet):
             print(traceback.print_exc())
             raise serializers.ValidationError(str(e))
 
-    @action(methods=['GET',], detail=True)
+    @action(methods=['GET',], detail=True, permission_classes=[OrganisationRequestAssessorPermission],)
     def unassign(self, request, *args, **kwargs):
         try:
             instance = self.get_object()
@@ -866,7 +867,7 @@ class OrganisationRequestsViewSet(viewsets.ModelViewSet):
             print(traceback.print_exc())
             raise serializers.ValidationError(str(e))
 
-    @action(methods=['GET',], detail=True)
+    @action(methods=['GET',], detail=True, permission_classes=[OrganisationRequestAssessorPermission],)
     def accept(self, request, *args, **kwargs):
         try:
             instance = self.get_object()
@@ -883,7 +884,7 @@ class OrganisationRequestsViewSet(viewsets.ModelViewSet):
             print(traceback.print_exc())
             raise serializers.ValidationError(str(e))
 
-    @action(methods=['GET',], detail=True)
+    @action(methods=['GET',], detail=True, permission_classes=[InternalOrganisationPermission],)
     def amendment_request(self, request, *args, **kwargs):
         try:
             instance = self.get_object()
@@ -900,7 +901,7 @@ class OrganisationRequestsViewSet(viewsets.ModelViewSet):
             print(traceback.print_exc())
             raise serializers.ValidationError(str(e))
 
-    @action(methods=['GET',], detail=True)
+    @action(methods=['GET',], detail=True, permission_classes=[OrganisationRequestAssessorPermission],)
     def decline(self, request, *args, **kwargs):
         try:
             instance = self.get_object()
@@ -918,7 +919,7 @@ class OrganisationRequestsViewSet(viewsets.ModelViewSet):
             print(traceback.print_exc())
             raise serializers.ValidationError(str(e))
 
-    @action(methods=['POST',], detail=True)
+    @action(methods=['POST',], detail=True, permission_classes=[OrganisationRequestAssessorPermission],)
     def assign_to(self, request, *args, **kwargs):
         try:
             instance = self.get_object()
@@ -943,7 +944,7 @@ class OrganisationRequestsViewSet(viewsets.ModelViewSet):
             print(traceback.print_exc())
             raise serializers.ValidationError(str(e))
 
-    @action(methods=['GET',], detail=True)
+    @action(methods=['GET',], detail=True, permission_classes=[InternalOrganisationPermission])
     def action_log(self, request, *args, **kwargs):
         try:
             instance = self.get_object()
@@ -996,7 +997,7 @@ class OrganisationRequestsViewSet(viewsets.ModelViewSet):
             print(traceback.print_exc())
             raise serializers.ValidationError(str(e))
 
-    @action(methods=['GET',], detail=True)
+    @action(methods=['GET',], detail=True, permission_classes=[InternalOrganisationPermission])
     def comms_log(self, request, *args, **kwargs):
         try:
             instance = self.get_object()
@@ -1055,7 +1056,7 @@ class OrganisationRequestsViewSet(viewsets.ModelViewSet):
             print(traceback.print_exc())
             raise serializers.ValidationError(str(e))
 
-    @action(methods=['POST',], detail=True)
+    @action(methods=['POST',], detail=True, permission_classes=[InternalOrganisationPermission])
     @renderer_classes((JSONRenderer,))
     def add_comms_log(self, request, *args, **kwargs):
         try:
@@ -1119,7 +1120,7 @@ class OrganisationRequestsViewSet(viewsets.ModelViewSet):
 
 
 class OrganisationAccessGroupMembers(views.APIView):
-
+    permission_classes = [InternalOrganisationPermission]
     renderer_classes = [JSONRenderer,]
     def get(self,request, format=None):
         members = []
@@ -1166,7 +1167,7 @@ class OrganisationContactViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class MyOrganisationsViewSet(viewsets.ModelViewSet):
+class MyOrganisationsViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Organisation.objects.all()
     serializer_class = MyOrganisationsSerializer
 

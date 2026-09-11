@@ -86,7 +86,6 @@ export default {
         vm.spatial_query_metrics_url = helpers.add_endpoint_join(api_endpoints.spatial_query_metrics_paginated, 'spatial_query_metrics_datatable_list/?format=datatables');
         vm.spatial_query_layer_used_url = helpers.add_endpoint_join(api_endpoints.spatial_query_layers_used_paginated, 'spatial_query_layers_used_datatable_list/?format=datatables');
         console.log(vm.spatial_query_metrics_url)
-        console.log(vm.spatial_query_layer_used_url)
 
         return {
             spatial_query_metrics_id: 'spatial_query_metrics-datatable-'+uuidv4(),

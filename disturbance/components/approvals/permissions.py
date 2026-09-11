@@ -4,7 +4,7 @@ from disturbance.helpers import (
     is_internal,
 )
 
-class InternalProposalPermission(BasePermission):
+class InternalApprovalPermission(BasePermission):
 
     def has_permission(self, request, view):
         return is_internal(request)

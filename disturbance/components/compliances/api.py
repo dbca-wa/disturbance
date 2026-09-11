@@ -49,6 +49,9 @@ from disturbance.components.compliances.serializers import (
 )
 from disturbance.components.main.utils import get_template_group,handle_validation_error
 from disturbance.helpers import is_customer, is_internal
+from disturbance.components.compliances.permissions import (
+    InternalCompliancePermission,
+)
 from rest_framework_datatables.pagination import DatatablesPageNumberPagination
 from disturbance.components.proposals.api import ProposalFilterBackend #, ProposalRenderer
 from rest_framework_datatables.filters import DatatablesFilterBackend
@@ -130,14 +133,12 @@ class ComplianceFilterBackend(DatatablesFilterBackend):
 class CompliancePaginatedViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = (ComplianceFilterBackend,)
     pagination_class = DatatablesPageNumberPagination
-    #renderer_classes = (ComplianceRenderer,)
     page_size = 10
     queryset = Compliance.objects.none()
     serializer_class = DTComplianceSerializer
 
     def get_queryset(self):
         if is_internal(self.request):
-            #return Compliance.objects.all()
             return Compliance.objects.all().exclude(processing_status='discarded')
         elif is_customer(self.request):
             user_orgs = [org.id for org in self.request.user.disturbance_organisations.all()]
@@ -153,8 +154,6 @@ class CompliancePaginatedViewSet(viewsets.ReadOnlyModelViewSet):
     
     def get_external_queryset(self):
         if is_internal(self.request):
-            #return Compliance.objects.all()
-            #return Compliance.objects.all().exclude(processing_status='discarded')
             user_orgs = [org.id for org in self.request.user.disturbance_organisations.all()]
             compliance_id_list = []
             
@@ -192,7 +191,6 @@ class CompliancePaginatedViewSet(viewsets.ReadOnlyModelViewSet):
         template_group  =  get_template_group(request)
         if template_group == 'das':
             apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
-            # qs = self.get_queryset().exclude(proposal__application_type__name__in=apiary_proposal_types)
             qs = self.get_external_queryset().exclude(proposal__application_type__name__in=apiary_proposal_types)
         qs = self.filter_queryset(qs)
 
@@ -205,12 +203,16 @@ class CompliancePaginatedViewSet(viewsets.ReadOnlyModelViewSet):
         serializer = DTComplianceSerializer(result_page, context={'request':request}, many=True)
         return self.paginator.get_paginated_response(serializer.data)
     
-    @action(methods=['GET',], detail=False)
+    @action(
+        methods=['GET',],
+        detail=False,
+        permission_classes=[InternalCompliancePermission],
+    )
     def compliances_internal(self, request, *args, **kwargs):
         """
-        Paginated serializer for datatables - used by the external dashboard
+        Paginated serializer for datatables - used by the internal dashboard
         To test:
-            http://localhost:8000/api/compliance_paginated/compliances_external/?format=datatables&draw=1&length=2
+            http://localhost:8000/api/compliance_paginated/compliances_internal/?format=datatables&draw=1&length=2
         """
 
         apiary_proposal_types=['Apiary','Site Transfer','Temporary Use']
