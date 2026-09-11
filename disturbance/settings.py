@@ -60,6 +60,12 @@ SHOW_DAS_MAP = env('SHOW_DAS_MAP', True)
 SHOW_ROOT_API = env('SHOW_ROOT_API', False)
 MAX_LAYERS_PER_SQQ = env('MAX_LAYERS_PER_SQQ', 15)
 
+GDAL_LIBRARY_PATH = os.environ.get(
+    "GDAL_LIBRARY_PATH",
+)
+GEOS_LIBRARY_PATH = os.environ.get(
+    "GEOS_LIBRARY_PATH",
+)
 
 INSTALLED_APPS += [
     'reversion_compare',
