@@ -7,6 +7,7 @@ archive.
 """
 import logging
 import os
+import uuid
 import zipfile
 
 from django.conf import settings
@@ -302,6 +303,9 @@ class SanitiseFileMixin:
         is_internal: whether this Document belongs to an internal-only
             (DBCA staff) upload flow; resolves the internal size limit
             instead of the external/default one (default False).
+
+    New uploads use a model-prefixed UUID filename with the original extension.
+    Files already committed to storage retain their paths on subsequent saves.
     """
 
     sanitise_file_field = "_file"
@@ -330,4 +334,9 @@ class SanitiseFileMixin:
 
     def save(self, *args, **kwargs):
         self._validate_sanitised_file()
+        file_field = getattr(self, self.sanitise_file_field, None)
+        if file_field and not file_field._committed:
+            model_name = self._meta.model_name
+            extension = os.path.splitext(file_field.name)[1].lower()
+            file_field.name = f"{model_name}_{uuid.uuid4().hex}{extension}"
         super().save(*args, **kwargs)
