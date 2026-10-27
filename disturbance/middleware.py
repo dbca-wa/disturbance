@@ -109,25 +109,3 @@ class MemoryTrackingMiddleware:
         
         logger.info(f"Memory used by {request.path}: {mem_diff:.2f} MB")
         return response
-
-class ContentSecurityPolicyMiddleware:
-    def __init__(self, get_response):
-        self.get_response = get_response
-
-    def __call__(self, request):
-        response = self.get_response(request)
-        response['Content-Security-Policy-Report-Only'] = (
-            "default-src 'self'; "
-            "script-src 'self'; "
-            "style-src 'self' 'unsafe-inline'; "
-            "img-src 'self' data: https:; "
-            "font-src 'self' data:; "
-            "connect-src 'self'; "
-            "object-src 'none'; "
-            "base-uri 'self'; "
-            "frame-ancestors 'none'; "
-            "form-action 'self'; "
-            "upgrade-insecure-requests"
-        )
-        return response
-

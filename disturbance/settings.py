@@ -72,6 +72,7 @@ OGR2OGR = os.environ.get(
 )
 
 INSTALLED_APPS += [
+    'csp',
     'reversion_compare',
     'disturbance',
     'disturbance.components.main',
@@ -165,13 +166,41 @@ TEMPLATE_GROUP = "parkswildlife"
 #CRISPY_TEMPLATE_PACK = 'uni_form'
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
-MIDDLEWARE += [
+MIDDLEWARE = ['csp.middleware.CSPMiddleware'] + MIDDLEWARE + [
     'whitenoise.middleware.WhiteNoiseMiddleware',
-    'disturbance.middleware.ContentSecurityPolicyMiddleware',
     'disturbance.middleware.DomainDetectMiddleware',
     'disturbance.middleware.MemoryTrackingMiddleware',
     # 'corsheaders.middleware.CorsMiddleware',
 ]
+
+# Restrict high-risk features without blocking existing scripts and map integrations.
+CONTENT_SECURITY_POLICY = {
+    'DIRECTIVES': {
+        # django-csp otherwise adds default-src 'self', blocking legacy resources.
+        'default-src': None,
+        'object-src': ["'none'"],
+        'base-uri': ["'self'"],
+        'frame-ancestors': ["'none'"],
+    },
+}
+
+# Evaluate resource restrictions before enforcing them across legacy templates.
+CONTENT_SECURITY_POLICY_REPORT_ONLY = {
+    'DIRECTIVES': {
+        'default-src': ["'self'"],
+        'script-src': ["'self'"],
+        'style-src': ["'self'", "'unsafe-inline'"],
+        'img-src': ["'self'", 'data:', 'https:'],
+        'font-src': ["'self'", 'data:'],
+        'connect-src': ["'self'"],
+        'object-src': ["'none'"],
+        'base-uri': ["'self'"],
+        'frame-ancestors': ["'none'"],
+        'form-action': ["'self'"],
+        'upgrade-insecure-requests': True,
+    },
+}
+
 # CORS_ORIGIN_ALLOW_ALL = True
 TEMPLATES[0]['DIRS'].append(os.path.join(BASE_DIR, 'disturbance', 'templates'))
 TEMPLATES[0]['DIRS'].append(os.path.join(BASE_DIR, 'disturbance','components','organisations', 'templates'))
