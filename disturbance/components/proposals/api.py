@@ -38,7 +38,7 @@ from disturbance.components.proposals.utils import (
     gen_shapefile,
 )
 from disturbance.components.proposals.models import ProposalDocument, searchKeyWords, search_reference, \
-    ExportDocument, search_sections, get_search_geojson, private_storage
+    ExportDocument, search_sections, get_search_geojson
 from disturbance.settings import SITE_STATUS_DRAFT, SITE_STATUS_APPROVED, SITE_STATUS_CURRENT, SITE_STATUS_DENIED, \
     SITE_STATUS_NOT_TO_BE_REISSUED, SITE_STATUS_VACANT, SITE_STATUS_TRANSFERRED, SITE_STATUS_DISCARDED
 from disturbance.utils import search_tenure, search_label, get_schema_questions
@@ -119,7 +119,6 @@ from disturbance.components.compliances.models import Compliance
 from disturbance.components.main.serializers import DASMapLayerSqsSerializer
 
 from disturbance.helpers import is_authorised_to_modify, is_customer, is_internal, is_authorised_to_modify_draft
-from django.core.files.base import ContentFile
 from rest_framework.pagination import PageNumberPagination
 from rest_framework_datatables.pagination import DatatablesPageNumberPagination
 from rest_framework_datatables.filters import DatatablesFilterBackend
@@ -722,16 +721,16 @@ class ProposalViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin):
                 instance.save(version_comment='File hidden: {}'.format(document.name)) # to allow revision to be added to reversion history
 
             elif action == 'save' and 'input_name' in request.POST and 'filename' in request.POST:
-                proposal_id = request.POST.get('proposal_id')
                 filename = request.POST.get('filename')
                 _file = request.POST.get('_file')
                 if not _file:
                     _file = request.FILES.get('_file')
+                if _file is None:
+                    raise serializers.ValidationError('An uploaded file is required.')
+                filename = os.path.basename(_file.name)
 
                 document = instance.documents.get_or_create(input_name=section, name=filename)[0]
-                path = private_storage.save('proposals/{}/documents/{}'.format(proposal_id, filename), ContentFile(_file.read()))
-
-                document._file = path
+                document._file = _file
                 document.save()
                 instance.save(version_comment='File Added: {}'.format(filename)) # to allow revision to be added to reversion history
                 #instance.current_proposal.save(version_comment='File Added: {}'.format(filename)) # to allow revision to be added to reversion history
@@ -799,26 +798,24 @@ class ProposalViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin):
                 instance.save(version_comment='Map File hidden: {}'.format(document.name)) # to allow revision to be added to reversion history
 
             elif action == 'save' and 'input_name' in request.POST and 'filename' in request.POST:
-                proposal_id = request.POST.get('proposal_id')
-                filename = request.POST.get('filename').replace(' ', '_')
+                filename = request.POST.get('filename')
                 _file = request.POST.get('_file')
                 if not _file:
                     _file = request.FILES.get('_file')
-                _file._name = filename
+                if _file is None:
+                    raise serializers.ValidationError('An uploaded file is required.')
+                filename = os.path.basename(_file.name)
 
-                #Check if the file with same extension already exists so not to allow multiple shapefiles with same extension.
-                fname, fext=os.path.splitext(filename)
-                doc_qs=instance.map_documents.filter(name__endswith=fext, hidden=False)
-                if doc_qs:
-                    raise serializers.ValidationError('Document with extension {} already exists.'.format(fext))
-                else:
-                    document = instance.map_documents.get_or_create(input_name=section, name=filename)[0]
-                    path = private_storage.save('proposals/{}/documents/map_docs/{}'.format(proposal_id, filename), ContentFile(_file.read()))
-
-                    document._file = path
+                fext = os.path.splitext(filename)[1].lower()
+                with transaction.atomic():
+                    Proposal.objects.select_for_update().values_list('pk', flat=True).get(pk=instance.pk)
+                    doc_qs=instance.map_documents.filter(name__iendswith=fext, hidden=False)
+                    if doc_qs:
+                        raise serializers.ValidationError('Document with extension {} already exists.'.format(fext))
+                    document = instance.map_documents.get_or_create(input_name=section, name=filename, hidden=False)[0]
+                    document._file = _file
                     document.save()
                     instance.save(version_comment='File Added: {}'.format(filename)) # to allow revision to be added to reversion history
-                    #instance.current_proposal.save(version_comment='File Added: {}'.format(filename)) # to allow revision to be added to reversion history
 
             return  Response( [dict(input_name=d.input_name, name=d.name,file=d._file.url, id=d.id, can_delete=d.can_delete, can_hide=d.can_hide) for d in instance.map_documents.filter(input_name=section, hidden=False) if d._file] )
 
