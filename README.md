@@ -14,6 +14,20 @@ Python library requirements should be installed using `pip`:
 
 `pip install -r requirements.txt`
 
+# Shapefile upload filenames
+
+Upload `.shp`, `.shx`, `.dbf` and `.prj` components with the same original
+basename. Proposal map uploads retain that original display name, but store
+the components under a shared `proposalmapdocument_<uuid>` basename with
+lowercase extensions. Upload order does not matter; unrelated documents keep
+their independently generated filenames. Existing stored paths are not renamed.
+
+Previously uploaded sets whose components were independently renamed must be
+removed and uploaded again. When replacing a previously submitted (hidden)
+set, hide all its components before uploading the replacement. Incomplete
+sets are reported without deleting the uploaded components. GDAL conversion
+failures are logged with their diagnostic output.
+
 # Environment settings
 
 A `.env` file should be created in the project root and used to set
@@ -44,6 +58,25 @@ required environment variables at run time. Example content:
     SITE_DOMAIN='domain.com.au
     TENURE_SECTION="Section1-0"
     SUPERVISOR_STOP_CMD="supervisorctl stop disturbance-uat"
+
+### Content Security Policy
+
+`django-csp` 4.x adds CSP headers to Django responses, including redirects and
+production errors. Configure policies in `disturbance/settings.py`.
+
+- **Enforced policy:** blocks plugins, external base URLs, and framing. It does
+  not yet restrict scripts, styles, images, connections, or form submissions.
+- **Report-only policy:** logs stricter policy violations in the browser console
+  without blocking resources. No report collection endpoint is configured.
+
+Check login, maps, payments, and admin workflows before enforcing stricter rules.
+Verify both CSP headers on normal pages, redirects, and 404 responses:
+
+```sh
+curl -sS -D - -o /dev/null https://das-seg-dev.dbca.wa.gov.au/was_404_check
+```
+
+Proxy-generated responses and external SSO services need their own CSP configuration.
 
 #### Application Schema
 

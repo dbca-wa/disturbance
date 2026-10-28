@@ -35,6 +35,11 @@ GIS_ARCHIVE_ALLOWED_EXTENSIONS = DEFAULT_GIS_ARCHIVE_ALLOWED_EXTENSIONS
 
 COMPRESSED_EXTENSIONS = frozenset({".zip"})
 
+SHAPEFILE_COMPONENT_EXTENSIONS = frozenset({
+    ".shp", ".shx", ".dbf", ".prj", ".sbn", ".sbx", ".cpg", ".qix", ".xml", ".shp.xml",
+})
+
+
 DEFAULT_MAX_UPLOAD_SIZE = getattr(settings, "FILE_UPLOAD_MAX_MEMORY_SIZE", 15 * 1024 * 1024)
 
 # Defence in depth against zip/decompression bombs; not part of the literal
@@ -46,6 +51,13 @@ GLOBAL_SETTINGS_ALLOWED_EXTENSIONS_KEY = "allowed_file_extensions"
 GLOBAL_SETTINGS_ALLOWED_GIS_ARCHIVE_EXTENSIONS_KEY = "allowed_gis_archive_extensions"
 GLOBAL_SETTINGS_MAX_UPLOAD_SIZE_MB_KEY = "max_file_upload_size_mb"
 GLOBAL_SETTINGS_MAX_UPLOAD_SIZE_MB_INTERNAL_KEY = "max_file_upload_size_mb_internal"
+
+
+def split_shapefile_filename(filename):
+    if filename.lower().endswith(".shp.xml"):
+        return filename[:-8], ".shp.xml"
+    stem, extension = os.path.splitext(filename)
+    return stem, extension.lower()
 
 
 def _parse_extensions(raw):
@@ -332,11 +344,13 @@ class SanitiseFileMixin:
             super_clean()
         self._validate_sanitised_file()
 
+    def get_sanitised_filename(self, filename):
+        extension = os.path.splitext(filename)[1].lower()
+        return f"{self._meta.model_name}_{uuid.uuid4().hex}{extension}"
+
     def save(self, *args, **kwargs):
         self._validate_sanitised_file()
         file_field = getattr(self, self.sanitise_file_field, None)
         if file_field and not file_field._committed:
-            model_name = self._meta.model_name
-            extension = os.path.splitext(file_field.name)[1].lower()
-            file_field.name = f"{model_name}_{uuid.uuid4().hex}{extension}"
+            file_field.name = self.get_sanitised_filename(file_field.name)
         super().save(*args, **kwargs)

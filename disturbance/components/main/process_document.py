@@ -1,15 +1,10 @@
 import os
-from django.core.files.base import ContentFile
+from django.core.files import File
 import traceback
-from disturbance.components.main.models import TemporaryDocument
-from disturbance.components.approvals import models #TODO: improvable - this should be imported from a common source instead of one of many models
-from django.conf import settings
 
 from disturbance.components.proposals.models import Proposal
 from disturbance.helpers import is_internal as request_is_internal
     
-
-private_storage = models.private_storage
 
 def process_generic_document(request, instance, document_type=None, *args, **kwargs):
     print("process_generic_document")
@@ -105,54 +100,51 @@ def save_document(request, instance, comms_instance, document_type, input_name=N
 
         # example document_type
         if 'filename' in request.data and input_name:
-            filename = request.data.get('filename')
             _file = request.data.get('_file')
+            if _file is None:
+                _file = request.FILES.get('_file')
+            if _file is None:
+                raise ValueError('An uploaded file is required.')
+            filename = os.path.basename(_file.name)
 
             if document_type == SupportingApplicationDocument.DOC_TYPE_NAME:
                 document = instance.supporting_application_documents.get_or_create(input_name=input_name, name=filename)[0]
-                path_format_string = '{}/proposals/{}/supporting_application_documents/{}'
-
             elif isinstance(instance, Proposal):
-                id_number = instance.id
+                document = instance.documents.get_or_create(input_name=input_name, name=filename)[0]
             else:
-                raise('Object type is wrong')
+                raise ValueError('Object type is wrong')
 
-            #path = private_storage.save(path_format_string.format(settings.MEDIA_APIARY_DIR, id_number, filename), ContentFile(_file.read()))
-            path = private_storage.save(path_format_string.format(settings.MEDIA_DIR, id_number, filename), ContentFile(_file.read()))
-            print(path)
-            document._file = path
+            document._file = _file
             document.is_internal = request_is_internal(request)
             document.save()
 
         # comms_log doc store save
         elif comms_instance and 'filename' in request.data:
-            filename = request.data.get('filename')
             _file = request.data.get('_file')
+            if _file is None:
+                _file = request.FILES.get('_file')
+            if _file is None:
+                raise ValueError('An uploaded file is required.')
+            filename = os.path.basename(_file.name)
 
             document = comms_instance.documents.get_or_create(
                 name=filename)[0]
-            path = private_storage.save(
-                '{}/{}/communications/{}/documents/{}'.format(
-                    instance._meta.model_name, instance.id, comms_instance.id, filename), ContentFile(
-                    _file.read()))
-
-            document._file = path
+            document._file = _file
             document.is_internal = request_is_internal(request)
             document.save()
 
         # default doc store save
         elif 'filename' in request.data:
-            filename = request.data.get('filename')
             _file = request.data.get('_file')
+            if _file is None:
+                _file = request.FILES.get('_file')
+            if _file is None:
+                raise ValueError('An uploaded file is required.')
+            filename = os.path.basename(_file.name)
 
             document = instance.documents.get_or_create(
                 name=filename)[0]
-            path = private_storage.save(
-                '{}/{}/documents/{}'.format(
-                    instance._meta.model_name, instance.id, filename), ContentFile(
-                    _file.read()))
-
-            document._file = path
+            document._file = _file
             document.is_internal = request_is_internal(request)
             document.save()
 
@@ -161,33 +153,17 @@ def save_document(request, instance, comms_instance, document_type, input_name=N
 def save_comms_log_document_obj(request, instance, comms_instance, temp_document):
     document = comms_instance.documents.get_or_create(
         name=temp_document.name)[0]
-    path = private_storage.save(
-        '{}/{}/communications/{}/documents/{}'.format(
-            instance._meta.model_name, 
-            instance.id, 
-            comms_instance.id, 
-            temp_document.name
-            ), 
-            temp_document._file
-        )
-
-    document._file = path
     document.is_internal = request_is_internal(request)
-    document.save()
+    _save_document_copy(document, temp_document)
 
 # For transferring files from temp doc objs to default doc objs
 def save_default_document_obj(instance, temp_document):
     document = instance.documents.get_or_create(
         name=temp_document.name)[0]
-    path = private_storage.save(
-        '{}/{}/documents/{}'.format(
-            instance._meta.model_name, 
-            instance.id, 
-            temp_document.name
-            ), 
-            temp_document._file
-        )
+    _save_document_copy(document, temp_document)
 
-    document._file = path
-    document.save()
 
+def _save_document_copy(document, temp_document):
+    with temp_document._file.open('rb') as source:
+        document._file = File(source, name=os.path.basename(temp_document._file.name))
+        document.save()

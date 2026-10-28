@@ -16,7 +16,7 @@ from django.contrib.gis.db.models.fields import PointField, MultiPolygonField, G
 from django.contrib.gis.geos import GEOSGeometry, MultiPolygon
 from django.contrib.gis.measure import Distance
 from django.contrib.postgres.fields import ArrayField
-from django.db import models,transaction
+from django.db import models,transaction,router
 from django.contrib.gis.db import models as gis_models
 from django.db.models import Q, Max, F
 from django.dispatch import receiver
@@ -48,7 +48,10 @@ from disturbance.components.organisations.models import Organisation
 from disturbance.components.main.models import CommunicationsLogEntry, UserAction, Document, Region, District, \
     ApplicationType, DASMapLayer, TaskMonitor, RequestTypeEnum, SanitiseMixin
 from disturbance.components.main.utils import get_department_user
-from disturbance.components.main.file_validation import STANDARD_ALLOWED_EXTENSIONS, GIS_ARCHIVE_ALLOWED_EXTENSIONS
+from disturbance.components.main.file_validation import (
+    STANDARD_ALLOWED_EXTENSIONS, GIS_ARCHIVE_ALLOWED_EXTENSIONS,
+    SHAPEFILE_COMPONENT_EXTENSIONS, split_shapefile_filename,
+)
 from disturbance.components.proposals.email import (
         send_referral_email_notification,
         send_proposal_decline_email_notification,
@@ -91,7 +94,7 @@ def update_proposal_doc_filename(instance, filename):
     return 'proposals/{}/documents/{}'.format(instance.proposal.id,filename)
 
 def update_proposal_map_doc_filename(instance, filename):
-    return 'proposals/{}/documents/map_docs/{}'.format(instance.proposal.id,filename)
+    return 'proposals/{}/documents/map_docs/{}'.format(instance.proposal_id,filename)
 
 def update_proposal_comms_log_filename(instance, filename):
     return 'proposals/{}/communications/{}/{}'.format(instance.log_entry.proposal.id,instance.log_entry.id,filename)
@@ -316,6 +319,52 @@ class ProposalMapDocument(Document):
     hidden=models.BooleanField(default=False) # after initial submit prevent document from being deleted
     allow_compressed = True  # accepts shapefile-bundle .zip archives in addition to individual .shp/.shx/.dbf/.prj uploads
     allowed_extensions = STANDARD_ALLOWED_EXTENSIONS | GIS_ARCHIVE_ALLOWED_EXTENSIONS
+
+    def get_sanitised_filename(self, filename):
+        original_stem, extension = split_shapefile_filename(os.path.basename(self.name or filename))
+        if extension not in SHAPEFILE_COMPONENT_EXTENSIONS:
+            return super().get_sanitised_filename(filename)
+
+        database = self._state.db or router.db_for_write(type(self), instance=self)
+        companions = type(self).objects.using(database).filter(
+            proposal_id=self.proposal_id, hidden=False,
+        ).exclude(pk=self.pk)
+        stored_stems = set()
+        for document in companions:
+            stem, ext = split_shapefile_filename(document.name)
+            if ext not in SHAPEFILE_COMPONENT_EXTENSIONS:
+                continue
+            if ext == extension:
+                raise ValidationError(f'Document with extension {extension} already exists.')
+            if stem.casefold() != original_stem.casefold():
+                raise ValidationError('All shapefile components must have the same original basename.')
+            if document._file:
+                stored_stems.add(split_shapefile_filename(document.filename)[0])
+
+        if len(stored_stems) > 1:
+            raise ValidationError('Existing shapefile components have inconsistent filenames. Remove the set and upload all components again.')
+        if stored_stems:
+            basename = stored_stems.pop()
+            if not re.fullmatch(r'proposalmapdocument_[0-9a-f]{32}', basename):
+                raise ValidationError('Replace the complete legacy shapefile set before uploading new components.')
+            generated_name = basename + extension
+        else:
+            generated_name = os.path.splitext(super().get_sanitised_filename(filename))[0] + extension
+
+        storage_name = self._file.field.generate_filename(self, generated_name)
+        if self._file.storage.exists(storage_name):
+            raise ValidationError('A previous shapefile component still uses this filename. Remove or hide the complete set before uploading its replacement.')
+        return generated_name
+
+    def save(self, *args, **kwargs):
+        if self._file and not self._file._committed:
+            database = kwargs.get('using') or router.db_for_write(type(self), instance=self)
+            # Components arrive in separate requests, sometimes concurrently.
+            with transaction.atomic(using=database):
+                Proposal.objects.using(database).select_for_update().values_list('pk', flat=True).get(pk=self.proposal_id)
+                self._state.db = database
+                return super().save(*args, **kwargs)
+        return super().save(*args, **kwargs)
 
     def delete(self):
         if self.can_delete:
@@ -1470,9 +1519,28 @@ class Proposal(SanitiseMixin, DirtyFieldsMixin, RevisionedMixin):
         return SpatialQueryMetrics.objects.create(proposal=self, when=when, system=system, request_type=request_type, sqs_response=sqs_response, time_taken=time_taken, response_cached=response_cached)
 
     def validate_map_files(self, request):
-        import geopandas as gpd
+        map_documents = list(self.map_documents.filter(hidden=False))
+        shapefiles = [document for document in map_documents if document.name.lower().endswith('.shp')]
+        if len(shapefiles) != 1:
+            raise ValidationError('Please upload exactly one shapefile set.')
+        shp_file_obj = shapefiles[0]
+        required_extensions = {'.shp', '.shx', '.dbf', '.prj'}
+        components = {
+            os.path.splitext(document.name)[1].lower(): document
+            for document in map_documents
+            if document._file and os.path.splitext(document.name)[1].lower() in required_extensions
+        }
+        missing = required_extensions - components.keys()
+        if missing:
+            raise ValidationError(f"Missing shapefile components: {', '.join(sorted(missing))}. Upload all four files before validating.")
+        stored_stem = os.path.splitext(shp_file_obj.path)[0]
+        for extension, document in components.items():
+            if os.path.splitext(document.path)[0] != stored_stem:
+                raise ValidationError('Shapefile components have inconsistent stored filenames. Remove the set and upload all four files again.')
+            if not os.path.isfile(document.path):
+                raise ValidationError(f'Shapefile component {extension} is missing from storage. Upload the set again.')
         try:
-            shp_file_qs=self.map_documents.filter(name__endswith='.shp')
+            shp_file_qs=shapefiles
             MAX_NO_POLYGONS=15
             try:
                 from disturbance.components.main.models import GlobalSettings
@@ -1481,17 +1549,22 @@ class Proposal(SanitiseMixin, DirtyFieldsMixin, RevisionedMixin):
                    MAX_NO_POLYGONS=int(gs_key.value) 
             except:
                 MAX_NO_POLYGONS=15
-            #TODO : validate shapefile and all the other related filese are present
             if shp_file_qs:
-                shp_file_obj= shp_file_qs.last()
+                shp_file_obj= shp_file_qs[0]
                 # shp_file=shp_file_obj._file
                 # shp= gpd.read_file(shp_file_obj.path)
                 # shp_transform=shp.to_crs(crs=4326)
                 # shp_json=shp_transform.to_json()
 
-                #result = subprocess.run(f'{OGR2OGR} -f GeoJSON -lco COORDINATE_PRECISION={GEOM_PRECISION} /vsistdout/ {shp_file_obj.path}', capture_output=True, text=True, check=True, shell=True)
-                #result = subprocess.run(f'{OGR2OGR} -f GeoJSON /vsistdout/ {shp_file_obj.path}', capture_output=True, text=True, check=True, shell=True)
-                result = subprocess.run(f'{OGR2OGR} -t_srs EPSG:4326 -f GeoJSON /vsistdout/ {shp_file_obj.path}', capture_output=True, text=True, check=True, shell=True)
+                try:
+                    result = subprocess.run(
+                        [OGR2OGR, '-t_srs', 'EPSG:4326', '-f', 'GeoJSON', '/vsistdout/', shp_file_obj.path],
+                        capture_output=True, text=True, check=True,
+                    )
+                except subprocess.CalledProcessError as error:
+                    logger.error('ogr2ogr failed for proposal %s: %s', self.pk, error.stderr)
+                    detail = error.stderr.strip() if error.stderr else str(error)
+                    raise ValidationError(f'Unable to convert shapefile: {detail}') from error
                 shp_json = json.loads(result.stdout)
                 shapefile_json=None
                 if type(shp_json)==str:
@@ -1548,7 +1621,7 @@ class Proposal(SanitiseMixin, DirtyFieldsMixin, RevisionedMixin):
                 raise ValidationError('Please upload a valid shapefile') 
         except Exception as e:
             #Delete the uploaded shapefile as it is invalid
-            map_docs=self.map_documents.all()
+            map_docs=self.map_documents.filter(hidden=False)
             if map_docs:
                 for document in map_docs:
                     if document._file and os.path.isfile(document._file.path) and document.can_delete:
@@ -2956,6 +3029,14 @@ def clone_proposal_with_status_reset(proposal):
 
                 proposal.save(no_revision=True)
 
+                # Committed FileFields are validated on save, so copy their files first.
+                source_dir = os.path.join(private_storage.location, f'proposals/{original_proposal_id}')
+                dest_dir = os.path.join(private_storage.location, f'proposals/{proposal.id}')
+                if os.path.exists(source_dir):
+                    shutil.copytree(source_dir, dest_dir, copy_function=shutil.copyfile)
+                else:
+                    os.makedirs(dest_dir)
+
                 # clone documents
                 for proposal_document in ProposalDocument.objects.filter(proposal=original_proposal_id):
                     proposal_document.proposal = proposal
@@ -2973,33 +3054,6 @@ def clone_proposal_with_status_reset(proposal):
                     proposal_map_document.input_name = u'proposal_{}_map_doc'.format(proposal.id)
                     proposal_map_document.can_delete = True
                     proposal_map_document.save()
-
-                # copy documents on file system and reset can_delete flag
-                #subprocess.call('cp -pr media/proposals/{} media/proposals/{}'.format(original_proposal_id, proposal.id), shell=True)
-                source_dir = os.path.join(private_storage.location, f'proposals/{original_proposal_id}')
-                dest_dir = os.path.join(private_storage.location, f'proposals/{proposal.id}')
-
-                # Remove destination if it exists
-                if os.path.exists(dest_dir):
-                    shutil.rmtree(dest_dir)
-
-                # Copy the directory
-                # if os.path.exists(source_dir):
-                #     shutil.copytree(source_dir, dest_dir)
-                
-                # Copy files one by one (content only, no metadata) to avoid permission issues
-                if os.path.exists(source_dir):
-                    for root, dirs, files in os.walk(source_dir):
-                        rel_path = os.path.relpath(root, source_dir)
-                        target_root = os.path.join(dest_dir, rel_path) if rel_path != '.' else dest_dir
-                        os.makedirs(target_root, exist_ok=True)
-                        for file_name in files:
-                            src_file = os.path.join(root, file_name)
-                            dst_file = os.path.join(target_root, file_name)
-                            shutil.copyfile(src_file, dst_file)
-                
-                else:
-                    os.makedirs(dest_dir)
 
                 return proposal
             except:
@@ -4035,4 +4089,3 @@ reversion.register(SpatialQueryQuestion)
 reversion.register(SpatialQueryLayer)
 
 reversion.register(ExportDocument)
-
