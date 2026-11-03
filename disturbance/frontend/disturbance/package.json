@@ -69,11 +69,17 @@
   },
   "engines": {
     "node": ">= 24.14.1",
-    "npm": ">= 10.8.2"
+    "npm": ">= 12.2.1"
   },
   "browserslist": [
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "overrides": {
+    "minimatch": "^11.0.4"
+  },
+  "allowScripts": {
+    "es5-ext@0.10.64": true
+  }  
 }
