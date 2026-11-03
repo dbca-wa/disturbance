@@ -40,32 +40,7 @@ export default defineConfig(() => {
                 defaultImport: 'url',
             }),
             viteStaticCopy({
-                // Had to do this to get the relative paths to work
-                // Probably a better way but I couldn't figure it out
                 targets: [
-                    // Copy the non-svgs to src but leave the svgs in assets
-                    // rename.stripBase: true strips the source directory
-                    // components so files land at dest/<filename> (matching
-                    // the hardcoded /static/boranga_vue/src/ URL in CSS).
-                    // Required because vite-plugin-static-copy v4 preserves
-                    // directory structure by default (v3 used only basename).
-                    
-                    // { src: 'src/assets/*.gif', dest: 'src' },
-                    // {
-                    //     src: 'src/assets/*.jpg',
-                    //     dest: 'src',
-                    //     rename: { stripBase: true },
-                    // },
-                    // {
-                    //     src: 'src/assets/*.json',
-                    //     dest: 'src',
-                    //     rename: { stripBase: true },
-                    // },
-                    // {
-                    //     src: 'src/assets/*.png',
-                    //     dest: 'src',
-                    //     rename: { stripBase: true },
-                    // },
                     {
                         src: 'src/assets/*.gif',
                         dest: 'src',
@@ -103,12 +78,12 @@ export default defineConfig(() => {
                 '@assets': path.resolve(import.meta.dirname, 'src/assets'),
             },
         },
-        esbuild: {
-            drop: ['console', 'debugger'],
-            minify: true,
-            jsxFactory: 'h',
-            jsxFragment: 'Fragment',
-            include: /\.js$/,
+        oxc: {
+            jsx: {
+                runtime: 'classic',
+                pragma: 'h',
+                pragmaFrag: 'Fragment'
+            }
         },
         build: {
             manifest: 'manifest.json',
@@ -126,6 +101,18 @@ export default defineConfig(() => {
                 external: ['moment'],
             },
             emptyOutDir: true,
+            minify: true,
+            rolldownOptions: {
+                input: './src/main.js',
+                output: {
+                    minify: {
+                        compress: {
+                            dropConsole: true,
+                            dropDebugger: true,
+                        }
+                    }
+                }
+            }            
         },
     };
 });
