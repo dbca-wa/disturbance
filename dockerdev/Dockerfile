@@ -1,31 +1,30 @@
 # Prepare the base environment.
-FROM ghcr.io/dbca-wa/disturbance:latest_seg as builder_base_disturbancedev
+FROM ghcr.io/dbca-wa/disturbance:latest_seg AS builder_base_disturbancedev
 USER root
-# Temporary disabled due ubuntu mirror issues
-RUN apt-get update
 
-RUN apt-get install --no-install-recommends -y patch
-RUN apt-get install --no-install-recommends -y libpq-dev git
-RUN apt-get install --no-install-recommends -y screen
-RUN apt-get install --no-install-recommends -y virtualenv
-RUN apt-get install --no-install-recommends -y python3-dev
-RUN openssl req -new -newkey rsa:4096 -days 3650 -nodes -x509 -subj  "/C=AU/ST=Western Australia/L=Perth/O=Development Environment/OU=IT Department/CN=example.com"  -keyout /etc/ssl/private/selfsignedssl.key -out /etc/ssl/private/selfsignedssl.crt
+RUN apt-get update && \
+    apt-get install --no-install-recommends -y \
+    g++ \
+    git \
+    libpq-dev \
+    screen && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN echo 'if ! [ -n "${SUDO_USER}" -a -n "${SUDO_PS1}" ]; then' >> /etc/bash.bashrc
-# RUN echo "export PS1='\[\e[0;31mdev:\e[0;32m \u@\h:~ \e[0;34m\W\$\e\[\e[0m\] '" >> /etc/bash.bashrc
-# fix the line carriage issue
-RUN echo "export PS1='\[\e[;31m\]dev:\[\e[m\] \[\e[;32m\]\u@\h:\w \$ \[\e[m\]'" >> /etc/bash.bashrc
-RUN echo "fi" >> /etc/bash.bashrc
+RUN openssl req -new -newkey rsa:4096 -days 3650 -nodes -x509 -subj "/C=AU/ST=Western Australia/L=Perth/O=Development Environment/OU=IT Department/CN=example.com" -keyout /etc/ssl/private/selfsignedssl.key -out /etc/ssl/private/selfsignedssl.crt
+
+RUN echo 'if ! [ -n "${SUDO_USER}" -a -n "${SUDO_PS1}" ]; then' >> /etc/bash.bashrc && \
+    echo "export PS1='\[\e[;31m\]dev:\[\e[m\] \[\e[;32m\]\u@\h:\w \$ \[\e[m\]'" >> /etc/bash.bashrc && \
+    echo "fi" >> /etc/bash.bashrc
 
 # For Linux
-RUN groupadd -g 20000 container
-RUN useradd -g 20000 -u 200000 container -s /bin/bash
-
-RUN mkdir /home/container
-RUN chown container.container /home/container
-RUN cp /root/.bashrc /home/container
-RUN cp /root/.profile /home/container
-
+RUN groupadd -g 20000 container && \
+    useradd -g 20000 -u 200000 container -s /bin/bash && \
+    mkdir /home/container && \
+    chown container:container /home/container && \
+    cp /root/.bashrc /home/container && \
+    cp /root/.profile /home/container && \
+    chown container:container /home/container/.bashrc /home/container/.profile
 
 USER container
 EXPOSE 8080
