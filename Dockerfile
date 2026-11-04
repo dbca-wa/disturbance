@@ -81,8 +81,8 @@ COPY --chown=oim:oim disturbance ./disturbance
 COPY --chown=oim:oim ledger ./ledger
 RUN mkdir -p /app/disturbance/static/disturbance_vue/static && \
     ls -al /app/disturbance/frontend/disturbance && \
-    cd /app/disturbance/frontend/disturbance && npm ci && npm run build && \
-    python manage_ds.py collectstatic --noinput && \
+    cd /app/disturbance/frontend/disturbance && npm ci && npm run build
+RUN python manage_ds.py collectstatic --noinput && \
     mkdir /app/tmp/ && \
     chmod 777 /app/tmp/
 
