@@ -88,6 +88,7 @@ RUN python manage_ds.py collectstatic --noinput && \
 
 # Cleanup
 USER root
+RUN apt-get update && apt-get install -y --no-install-recommends libnetcdf-dev && apt-mark manual libnetcdf-dev
 RUN wget -q https://raw.githubusercontent.com/dbca-wa/wagov_utils/refs/heads/main/wagov_utils/bin/package_cleanup_2604.sh -O /tmp/package_cleanup_2604.sh || true && \
     chmod 755 /tmp/package_cleanup_2604.sh || true && \
     /tmp/package_cleanup_2604.sh || true
