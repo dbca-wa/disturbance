@@ -1,72 +1,53 @@
-# syntax = docker/dockerfile:1.7
+# syntax = docker/dockerfile:1
+
 ARG IMAGE_TAG
 ARG IMAGE_NAME
+
 # Prepare the base environment.
-FROM ghcr.io/dbca-wa/docker-apps-dev:ubuntu_2604_base_python_node as builder_base_das
-MAINTAINER asi@dbca.wa.gov.au
+FROM ghcr.io/dbca-wa/docker-apps-dev:ubuntu_2604_base_python_node26 AS builder_base_das
+
+LABEL maintainer="asi@dbca.wa.gov.au"
+LABEL org.opencontainers.image.source="https://github.com/dbca-wa/disturbance"
+
 ARG IMAGE_TAG
 ARG IMAGE_NAME
+
 RUN echo "Building version: $IMAGE_TAG for $IMAGE_NAME"
-ENV CONTAINER_IMAGE_TAG=${IMAGE_TAG}
-ENV CONTAINER_IMAGE_NAME=${IMAGE_NAME}
-ENV DEBIAN_FRONTEND=noninteractive
-ENV DEBUG=True
-ENV TZ=Australia/Perth
-ENV EMAIL_HOST="smtp.corporateict.domain"
-ENV DEFAULT_FROM_EMAIL='no-reply@dbca.wa.gov.au'
-ENV NOTIFICATION_EMAIL=''
-ENV NON_PROD_EMAIL=''
-ENV PRODUCTION_EMAIL=True
-ENV EMAIL_INSTANCE='DEV'
-ENV SECRET_KEY="ThisisNotRealKey"
-ENV SITE_PREFIX='das-apiary'
-ENV SITE_DOMAIN='dbca.wa.gov.au'
-ENV OSCAR_SHOP_NAME='Parks & Wildlife'
-ENV BPAY_ALLOWED=False
-ENV APIARY_SUPPORT_EMAIL="apiary@dbca.wa.gov.au"
-ENV SUPPORT_EMAIL="das@dbca.wa.gov.au"
-ENV SYSTEM_NAME_SHORT="apiary"
-ENV SITE_DOMAIN="localhost"
-ENV APIARY_URL=[u'apiary-uat-internal.dbca.wa.gov.au',u'apiary-uat.dbca.wa.gov.au',u'localhost:8071']
-ENV SYSTEM_NAME="Disturbance Assessment System"
-ENV APIARY_SYSTEM_NAME="Apiary System"
-ENV PAYMENT_OFFICERS_GROUP="Apiary Payments Officers"
-ENV NODE_MAJOR=24
-ENV VIRTUAL_ENV=/app/venv
+
+ENV CONTAINER_IMAGE_TAG=${IMAGE_TAG} \
+    CONTAINER_IMAGE_NAME=${IMAGE_NAME} \
+    DEBIAN_FRONTEND=noninteractive \
+    DEBUG=True \
+    TZ=Australia/Perth \
+    EMAIL_HOST="smtp.corporateict.domain" \
+    DEFAULT_FROM_EMAIL='no-reply@dbca.wa.gov.au' \
+    NOTIFICATION_EMAIL='' \
+    NON_PROD_EMAIL='' \
+    PRODUCTION_EMAIL=True \
+    EMAIL_INSTANCE='DEV' \
+    SECRET_KEY="ThisisNotRealKey" \
+    SITE_PREFIX='das-apiary' \
+    SITE_DOMAIN='localhost' \
+    OSCAR_SHOP_NAME='Parks & Wildlife' \
+    BPAY_ALLOWED=False \
+    APIARY_SUPPORT_EMAIL="apiary@dbca.wa.gov.au" \
+    SUPPORT_EMAIL="das@dbca.wa.gov.au" \
+    SYSTEM_NAME_SHORT="apiary" \
+    APIARY_URL="['apiary-uat-internal.dbca.wa.gov.au', 'apiary-uat.dbca.wa.gov.au', 'localhost:8071']" \
+    SYSTEM_NAME="Disturbance Assessment System" \
+    APIARY_SYSTEM_NAME="Apiary System" \
+    PAYMENT_OFFICERS_GROUP="Apiary Payments Officers" \
+    VIRTUAL_ENV=/app/venv
+
 ENV PATH=$VIRTUAL_ENV/bin:$PATH
 
-# Use Australian Mirrors
-#RUN sed 's/archive.ubuntu.com/au.archive.ubuntu.com/g' /etc/apt/sources.list > /etc/apt/sourcesau.list
-#RUN mv /etc/apt/sourcesau.list /etc/apt/sources.list
-# Use Australian Mirrors
-
-#ARG build_tag=None
-#ENV BUILD_TAG=$build_tag
-#RUN echo "*************************************************** Build TAG = $build_tag ***************************************************"
-
-RUN apt-get update
-# RUN apt-get install -y software-properties-common
-
-RUN apt-get clean
-RUN apt-get upgrade -y 
-RUN apt-get install -y run-one imagemagick libspatialindex-dev
-# RUN apt-get install --no-install-recommends -y \
-# libgdal-dev \
-# software-properties-common \
-# imagemagick \
-# libspatialindex-dev
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends run-one imagemagick libspatialindex-dev && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 RUN update-ca-certificates
-
-# Install Node.js and clean up in the same layer.
-# RUN mkdir -p /etc/apt/keyrings && \
-#     curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
-#     echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" \
-#     | tee /etc/apt/sources.list.d/nodesource.list && \
-#     apt-get update && \
-#     apt-get install --no-install-recommends -y nodejs && \
-#     apt-get clean && \
-#     rm -rf /var/lib/apt/lists/*
 
 COPY startup.sh /
 COPY ./timezone /etc/timezone
@@ -74,27 +55,21 @@ RUN chmod 755 /startup.sh && \
     chmod +s /startup.sh && \
     groupadd -g 5000 oim && \
     useradd -g 5000 -u 5000 oim -s /bin/bash -d /app && \
-    mkdir /app && \
-    chown -R oim.oim /app && \
-    mkdir /container-config/ && \
-    chown -R oim.oim /container-config/ && \
+    mkdir /app /container-config/ && \
+    chown -R oim:oim /app /container-config/ && \
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
     touch /app/rand_hash
 
-# GDAL
-#RUN wget -O /tmp/GDAL-3.8.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl https://github.com/girder/large_image_wheels/raw/wheelhouse/GDAL-3.8.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl#sha256=e2fe6cfbab02d535bc52c77cdbe1e860304347f16d30a4708dc342a231412c57
-#RUN pip install /tmp/GDAL-3.8.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
-
 # Install Python libs from requirements.txt.
-FROM builder_base_das as python_libs_das
+FROM builder_base_das AS python_libs_das
 WORKDIR /app
 USER oim
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH=/app/venv/bin:$PATH
 RUN git config --global --add safe.directory /app
 COPY --chown=oim:oim requirements.txt ./
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
 # Install the project (ensure that frontend projects have been built prior to this step).
 FROM python_libs_das
@@ -104,30 +79,20 @@ COPY --chown=oim:oim .git ./.git
 COPY --chown=oim:oim python-cron python-cron
 COPY --chown=oim:oim disturbance ./disturbance
 COPY --chown=oim:oim ledger ./ledger
-RUN mkdir -p /app/disturbance/static/disturbance_vue/static
-RUN ls -al /app/disturbance/frontend/disturbance
-RUN cd /app/disturbance/frontend/disturbance/; npm install
-RUN cd /app/disturbance/frontend/disturbance/; npm run build
-RUN python manage_ds.py collectstatic --noinput
-RUN mkdir /app/tmp/
-RUN chmod 777 /app/tmp/
-
-# IPYTHONDIR - Will allow shell_plus (in Docker) to remember history between sessions
-# 1. will create dir, if it does not already exist
-# 2. will create profile, if it does not already exist
-# RUN mkdir /app/logs/.ipython
-# RUN export IPYTHONDIR=/app/logs/.ipython/
-#RUN python profile create 
+RUN mkdir -p /app/disturbance/static/disturbance_vue/static && \
+    ls -al /app/disturbance/frontend/disturbance && \
+    cd /app/disturbance/frontend/disturbance && npm ci && npm run build
+RUN python manage_ds.py collectstatic --noinput && \
+    mkdir /app/tmp/ && \
+    chmod 777 /app/tmp/
 
 # Cleanup
 USER root
-RUN wget -q https://raw.githubusercontent.com/dbca-wa/wagov_utils/refs/heads/main/wagov_utils/bin/package_cleanup_2604.sh -O /tmp/package_cleanup_2604.sh || true
-RUN chmod 755 /tmp/package_cleanup_2604.sh || true
-RUN /tmp/package_cleanup_2604.sh || true
+RUN wget -q https://raw.githubusercontent.com/dbca-wa/wagov_utils/refs/heads/main/wagov_utils/bin/package_cleanup_2604.sh -O /tmp/package_cleanup_2604.sh || true && \
+    chmod 755 /tmp/package_cleanup_2604.sh || true && \
+    /tmp/package_cleanup_2604.sh || true
 USER oim
-
 
 EXPOSE 8080
 HEALTHCHECK --interval=1m --timeout=5s --start-period=10s --retries=3 CMD ["wget", "-q", "-O", "-", "http://localhost:8080/"]
 CMD ["/startup.sh"]
-#CMD ["gunicorn", "commercialoperator.wsgi", "--bind", ":8080", "--config", "gunicorn.ini"]
