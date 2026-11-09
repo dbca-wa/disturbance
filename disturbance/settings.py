@@ -1,11 +1,11 @@
-from django.core.exceptions import ImproperlyConfigured
-import sys
-import os, hashlib
-import confy
-import decouple
+import hashlib
 import json
 import logging
-import shutil
+import os
+import sys
+
+import confy
+import decouple
 
 logger = logging.getLogger(__name__)
 
@@ -15,13 +15,13 @@ os.environ.setdefault("BASE_DIR", BASE_DIR)
 
 from ledger.settings_base import *
 
-
 ROOT_URLCONF = 'disturbance.urls'
 SITE_ID = 1
 DEPT_DOMAINS = env('DEPT_DOMAINS', ['dpaw.wa.gov.au', 'dbca.wa.gov.au'])
 SUPERVISOR_STOP_CMD = env('SUPERVISOR_STOP_CMD')
 SYSTEM_MAINTENANCE_WARNING = env('SYSTEM_MAINTENANCE_WARNING', 24) # hours
 DISABLE_EMAIL = env('DISABLE_EMAIL', False)
+EMAIL_DELIVERY = env("EMAIL_DELIVERY", "off")
 MEDIA_APP_DIR = env('MEDIA_APP_DIR', 'das')
 MEDIA_APIARY_DIR = env('MEDIA_APIARY_DIR', 'apiary')
 SPATIAL_DATA_DIR = env('SPATIAL_DATA_DIR', 'spatial_data')
@@ -461,10 +461,10 @@ VUE3_ENTRY_SCRIPT = env(
 # Use git commit hash for purging cache in browser for deployment changes
 GIT_COMMIT_HASH = os.popen(
     f"cd {BASE_DIR}; git log -1 --format=%H"
-).read()  # noqa: S605
+).read()
 GIT_COMMIT_DATE = os.popen(
     f"cd {BASE_DIR}; git log -1 --format=%cd"
-).read()  # noqa: S605
+).read()
 if len(GIT_COMMIT_HASH) == 0:
     GIT_COMMIT_HASH = os.popen("cat /app/git_hash").read()
     if len(GIT_COMMIT_HASH) == 0:
