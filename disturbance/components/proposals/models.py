@@ -1559,13 +1559,15 @@ class Proposal(SanitiseMixin, DirtyFieldsMixin, RevisionedMixin):
                 try:
                     result = subprocess.run(
                         [OGR2OGR, '-t_srs', 'EPSG:4326', '-f', 'GeoJSON', '/vsistdout/', shp_file_obj.path],
-                        capture_output=True, text=True, check=True,
+                        capture_output=True, check=True,
                     )
                 except subprocess.CalledProcessError as error:
-                    logger.error('ogr2ogr failed for proposal %s: %s', self.pk, error.stderr)
-                    detail = error.stderr.strip() if error.stderr else str(error)
+                    stderr_str = error.stderr.decode('utf-8', errors='replace') if error.stderr else str(error)
+                    logger.error('ogr2ogr failed for proposal %s: %s', self.pk, stderr_str)
+                    detail = stderr_str.strip() if stderr_str else str(error)
                     raise ValidationError(f'Unable to convert shapefile: {detail}') from error
-                shp_json = json.loads(result.stdout)
+                stdout_str = result.stdout.decode('utf-8', errors='replace')
+                shp_json = json.loads(stdout_str)
                 shapefile_json=None
                 if type(shp_json)==str:
                     shapefile_json=json.loads(shp_json)
