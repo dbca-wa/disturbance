@@ -128,6 +128,7 @@ def is_internal(request):
         and request.user.is_authenticated
         and (
             request.user.is_superuser
+            or is_departmentUser(request)
             or is_disturbance_admin(request)
             or is_das_approver(request)
             or is_das_assessor(request)
