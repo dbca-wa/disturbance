@@ -390,10 +390,9 @@ export default {
                     processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
-                serverSide: true,
                 ajax: {
                     "url": helpers.add_endpoint_json(api_endpoints.organisations,vm.$route.params.org_id+'/contacts'),
-                    "dataSrc": 'data'
+                    "dataSrc": ''
                 },
                 columns: [
                     {
