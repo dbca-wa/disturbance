@@ -3034,10 +3034,16 @@ def clone_proposal_with_status_reset(proposal):
                 # Committed FileFields are validated on save, so copy their files first.
                 source_dir = os.path.join(private_storage.location, f'proposals/{original_proposal_id}')
                 dest_dir = os.path.join(private_storage.location, f'proposals/{proposal.id}')
+                # Copy file contents only. shutil.copytree() also calls copystat() on
+                # every directory, which the shared storage rejects with EPERM.
                 if os.path.exists(source_dir):
-                    shutil.copytree(source_dir, dest_dir, copy_function=shutil.copyfile)
+                    for root, dirs, files in os.walk(source_dir):
+                        target_root = os.path.join(dest_dir, os.path.relpath(root, source_dir))
+                        os.makedirs(target_root, exist_ok=True)
+                        for file_name in files:
+                            shutil.copyfile(os.path.join(root, file_name), os.path.join(target_root, file_name))
                 else:
-                    os.makedirs(dest_dir)
+                    os.makedirs(dest_dir, exist_ok=True)
 
                 # clone documents
                 for proposal_document in ProposalDocument.objects.filter(proposal=original_proposal_id):

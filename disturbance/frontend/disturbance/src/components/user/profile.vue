@@ -123,9 +123,9 @@
                 </FormSection> 
             </div>
         </div> -->
-        <!-- <div class="row">
+        <div class="row">
             <div class="col-sm-12">
-                <FormSection :form-collapse="true" label="Contact Details" Index="contact_details" subtitle="Provide your contact details">
+                <FormSection :form-collapse="true" label="Organisation Contact Details" Index="contact_details" subtitle="Provide your organisation contact details">
                     <form class="form-horizontal" action="index.html" method="post">
                         <alert v-if="showContactError" type="danger" style="color:red">
                             <div v-for="item in errorListContact" v-bind:key="item">
@@ -145,18 +145,7 @@
                         </div>
                         <div class="form-group">
                             <div class="row mb-3">
-                                <label for="" class="col-sm-3 col-form-label" >Mobile</label>
-                                <div v-if="profile.is_department_user" class="col-sm-6">
-                                    <input :readonly="mobileNumberReadonly" type="text" class="form-control" id="mobile" name="Mobile" placeholder="" v-model="profile.mobile_number">
-                                </div>
-                                <div v-else class="col-sm-6">
-                                    <input type="text" class="form-control" id="mobile" name="Mobile" placeholder="" v-model="profile.mobile_number">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="row mb-3">
-                                <label for="" class="col-sm-3 col-form-label" >Email</label>
+                                <label for="" class="col-sm-3 col-form-label" >Email (work)</label>
                                 <div class="col-sm-6">
                                     <input type="email" class="form-control" id="email" name="Email" placeholder="" v-model="profile.email">
                                 </div>
@@ -171,7 +160,7 @@
                     </form>
                 </FormSection>
             </div>
-        </div> -->
+        </div>
         <div class="row">
             <div class="col-sm-12">
                 <FormSection :form-collapse="true" label="Organisation" Index="organisation_details" :subtitle="organisationSectionTitleText">
