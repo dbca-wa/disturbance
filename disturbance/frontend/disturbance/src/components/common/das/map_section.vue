@@ -38,7 +38,7 @@
                                 The shapefile can be made up of one multi-part polygon.
                             </li>
                             <li>
-                                It is preferable that the Shapefile is in GDA94 latitude/longitude only.
+                                It is preferable that the Shapefile is in GDA2020 latitude/longitude only.
                             </li>
                             <li>
                                 Max file size is {{ max_file_size_mb }}MB.
