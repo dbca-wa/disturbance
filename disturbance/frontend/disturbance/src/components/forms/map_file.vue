@@ -9,7 +9,7 @@
             <div v-if="files">
                 <div v-for="v in documents" :key="v.id">
                     <p>
-                        File: <a :href="v.file" target="_blank">{{v.name}}</a> &nbsp;
+                        File: <a :href="v.file" :download="v.name" target="_blank">{{v.name}}</a> &nbsp;
                         <span v-if="!readonly && v.can_delete">
                             <a @click="delete_document(v)" class="fa fa-trash-o" title="Remove file" :filename="v.name" style="cursor: pointer; color:red;"></a>
                         </span>
