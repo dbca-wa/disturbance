@@ -260,9 +260,10 @@ export default {
                     processing: constants.DATATABLE_PROCESSING_HTML,
                 },
                 responsive: true,
+                serverSide: true,
                 ajax: {
                     "url": vm.contactsURL,
-                    "dataSrc": ''
+                    "dataSrc": 'data'
                 },
                 columns: [
                     {
