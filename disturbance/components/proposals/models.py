@@ -1534,9 +1534,13 @@ class Proposal(SanitiseMixin, DirtyFieldsMixin, RevisionedMixin):
                 crs = CRS.from_wkt(prj.read())
             if crs.geodetic_crs is None or 'GDA94' not in (crs.geodetic_crs.name or '').upper():
                 return default_args
-            for transformer in TransformerGroup(crs, 4326, always_xy=True).transformers:
-                if any('GDA94 to WGS 84 (2)' in (op.name or '') for op in (transformer.operations or [])):
-                    return ['-ct', transformer.definition]
+            epsg = crs.to_epsg()
+            if epsg is not None:
+                crs = CRS.from_epsg(epsg)
+            for transformer in TransformerGroup(crs, 4326).transformers:
+                if (transformer.description == 'GDA94 to WGS 84 (2)'
+                        or any(op.name == 'GDA94 to WGS 84 (2)' for op in transformer.operations)):
+                    return ['-t_srs', 'EPSG:4326', '-ct', transformer.definition]
         except Exception as error:
             logger.warning('Unable to pin GDA94 transformation for %s, using default: %s', shp_path, error)
         return default_args
