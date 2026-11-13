@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 DEFAULT_STANDARD_ALLOWED_EXTENSIONS = frozenset({
     ".pdf", ".png", ".jpg", ".jpeg", ".doc", ".docx",
-    ".xls", ".xlsx", ".csv", ".txt", ".msg", ".eml",
+    ".xls", ".xlsx", ".csv", ".txt", ".msg", ".eml", ".zip"
 })
 
 # Backward-compatible alias; existing callers (e.g. ProposalMapDocument's
@@ -322,7 +322,7 @@ class SanitiseFileMixin:
 
     sanitise_file_field = "_file"
     allowed_extensions = None
-    allow_compressed = False
+    allow_compressed = True
     max_upload_size = None
     is_internal = False
 

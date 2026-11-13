@@ -694,69 +694,70 @@ class ProposalViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin):
     @renderer_classes((JSONRenderer,))
     def process_document(self, request, *args, **kwargs):
         try:
-            instance = self.get_object()
-            action = request.POST.get('action')
-            section = request.POST.get('input_name')
+            with transaction.atomic():
+                instance = self.get_object()
+                action = request.POST.get('action')
+                section = request.POST.get('input_name')
 
-            if action == 'list' and 'input_name' in request.POST:
-                pass
+                if action == 'list' and 'input_name' in request.POST:
+                    pass
 
-            elif action == 'delete' and 'document_id' in request.POST:
-                document_id = request.POST.get('document_id')
-                document = instance.documents.get(id=document_id)
+                elif action == 'delete' and 'document_id' in request.POST:
+                    document_id = request.POST.get('document_id')
+                    document = instance.documents.get(id=document_id)
 
-                if document._file and os.path.isfile(document._file.path) and document.can_delete:
-                    os.remove(document._file.path)
+                    if document._file and os.path.isfile(document._file.path) and document.can_delete:
+                        os.remove(document._file.path)
 
-                document.delete()
-                instance.save(version_comment='Approval File Deleted: {}'.format(document.name)) # to allow revision to be added to reversion history
-                #instance.current_proposal.save(version_comment='File Deleted: {}'.format(document.name)) # to allow revision to be added to reversion history
+                    document.delete()
+                    instance.save(version_comment='Approval File Deleted: {}'.format(document.name)) # to allow revision to be added to reversion history
+                    #instance.current_proposal.save(version_comment='File Deleted: {}'.format(document.name)) # to allow revision to be added to reversion history
 
-            elif action == 'hide' and 'document_id' in request.POST:
-                document_id = request.POST.get('document_id')
-                document = instance.documents.get(id=document_id)
+                elif action == 'hide' and 'document_id' in request.POST:
+                    document_id = request.POST.get('document_id')
+                    document = instance.documents.get(id=document_id)
 
-                document.hidden=True
-                document.save()
-                instance.save(version_comment='File hidden: {}'.format(document.name)) # to allow revision to be added to reversion history
+                    document.hidden=True
+                    document.save()
+                    instance.save(version_comment='File hidden: {}'.format(document.name)) # to allow revision to be added to reversion history
 
-            elif action == 'save' and 'input_name' in request.POST and 'filename' in request.POST:
-                filename = request.POST.get('filename')
-                _file = request.POST.get('_file')
-                if not _file:
-                    _file = request.FILES.get('_file')
-                if _file is None:
-                    raise serializers.ValidationError('An uploaded file is required.')
-                filename = os.path.basename(_file.name)
+                elif action == 'save' and 'input_name' in request.POST and 'filename' in request.POST:
+                    filename = request.POST.get('filename')
+                    _file = request.POST.get('_file')
+                    if not _file:
+                        _file = request.FILES.get('_file')
+                    if _file is None:
+                        raise serializers.ValidationError('An uploaded file is required.')
+                    filename = os.path.basename(_file.name)
 
-                document = instance.documents.get_or_create(input_name=section, name=filename)[0]
-                document._file = _file
-                document.save()
-                instance.save(version_comment='File Added: {}'.format(filename)) # to allow revision to be added to reversion history
-                #instance.current_proposal.save(version_comment='File Added: {}'.format(filename)) # to allow revision to be added to reversion history
+                    document = instance.documents.get_or_create(input_name=section, name=filename)[0]
+                    document._file = _file
+                    document.save()
+                    instance.save(version_comment='File Added: {}'.format(filename)) # to allow revision to be added to reversion history
+                    #instance.current_proposal.save(version_comment='File Added: {}'.format(filename)) # to allow revision to be added to reversion history
 
-            proposal_lodgement_date = request.POST.get('proposal_lodgement_date')
-            # Only go through the overhead of finding older proposal documents when viewing a version other than current
-            if proposal_lodgement_date:
-                if(parser.parse(str(instance.lodgement_date))!=parser.parse(proposal_lodgement_date)):
-                    # For viewing older versions of a proposal we need to build a list of documents that were not hidden at that time
-                    documents = instance.documents.filter(input_name=section, uploaded_date__lte=proposal_lodgement_date).order_by('input_name', 'uploaded_date')
-                    older_version_documents = []
-                    for document in documents:
-                        older_document_version = Version.objects.get_for_object(document)\
-                        .select_related('revision').filter(revision__date_created__lte=proposal_lodgement_date).order_by('-revision__date_created').first()
-                        if not older_document_version:
-                            continue
-                        older_document = ProposalDocument(**older_document_version.field_dict)
-                        if not older_document.hidden:
+                proposal_lodgement_date = request.POST.get('proposal_lodgement_date')
+                # Only go through the overhead of finding older proposal documents when viewing a version other than current
+                if proposal_lodgement_date:
+                    if(parser.parse(str(instance.lodgement_date))!=parser.parse(proposal_lodgement_date)):
+                        # For viewing older versions of a proposal we need to build a list of documents that were not hidden at that time
+                        documents = instance.documents.filter(input_name=section, uploaded_date__lte=proposal_lodgement_date).order_by('input_name', 'uploaded_date')
+                        older_version_documents = []
+                        for document in documents:
+                            older_document_version = Version.objects.get_for_object(document)\
+                            .select_related('revision').filter(revision__date_created__lte=proposal_lodgement_date).order_by('-revision__date_created').first()
+                            if not older_document_version:
+                                continue
                             older_document = ProposalDocument(**older_document_version.field_dict)
-                            older_version_documents.append(older_document)
+                            if not older_document.hidden:
+                                older_document = ProposalDocument(**older_document_version.field_dict)
+                                older_version_documents.append(older_document)
 
-                    return  Response( [dict(input_name=d.input_name, name=d.name,file=d._file.url, id=d.id, can_delete=d.can_delete, can_hide=d.can_hide) for d in older_version_documents if d._file] )
+                        return  Response( [dict(input_name=d.input_name, name=d.name,file=d._file.url, id=d.id, can_delete=d.can_delete, can_hide=d.can_hide) for d in older_version_documents if d._file] )
+                    else:
+                        return  Response( [dict(input_name=d.input_name, name=d.name,file=d._file.url, id=d.id, can_delete=d.can_delete, can_hide=d.can_hide) for d in instance.documents.filter(input_name=section, hidden=False) if d._file] )
                 else:
                     return  Response( [dict(input_name=d.input_name, name=d.name,file=d._file.url, id=d.id, can_delete=d.can_delete, can_hide=d.can_hide) for d in instance.documents.filter(input_name=section, hidden=False) if d._file] )
-            else:
-                return  Response( [dict(input_name=d.input_name, name=d.name,file=d._file.url, id=d.id, can_delete=d.can_delete, can_hide=d.can_hide) for d in instance.documents.filter(input_name=section, hidden=False) if d._file] )
 
         except serializers.ValidationError:
             print(traceback.print_exc())
