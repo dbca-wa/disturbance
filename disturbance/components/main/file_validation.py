@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 DEFAULT_STANDARD_ALLOWED_EXTENSIONS = frozenset({
     ".pdf", ".png", ".jpg", ".jpeg", ".doc", ".docx",
-    ".xls", ".xlsx", ".csv", ".txt", ".msg", ".eml", ".zip"
+    ".xls", ".xlsx", ".csv", ".txt", ".msg", ".eml", ".zip",".shx"
 })
 
 # Backward-compatible alias; existing callers (e.g. ProposalMapDocument's
