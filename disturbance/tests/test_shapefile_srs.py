@@ -57,16 +57,16 @@ class ShapefileSrsTests(SimpleTestCase):
                     transformer for transformer in TransformerGroup(
                         source_crs, 4326, always_xy=True,
                     ).transformers
-                    if transformer.description == 'GDA94 to WGS 84 (2)'
-                    or any(op.name == 'GDA94 to WGS 84 (2)' for op in transformer.operations)
+                    if transformer.description == 'GDA94 to WGS 84 (1)'
+                    or any(op.name == 'GDA94 to WGS 84 (1)' for op in transformer.operations)
                 )
                 expected_lon, expected_lat = transformer.transform(*point)
                 lon, lat = geojson['features'][0]['geometry']['coordinates'][0][0]
                 self.assertAlmostEqual(lon, expected_lon, places=9)
                 self.assertAlmostEqual(lat, expected_lat, places=9)
                 if source_crs == 28350:
-                    self.assertAlmostEqual(lon, 119.0245425889661, places=9)
-                    self.assertAlmostEqual(lat, -33.28431749835277, places=9)
+                    self.assertAlmostEqual(lon, 119.024532259797766, places=9)
+                    self.assertAlmostEqual(lat, -33.284331039782678, places=9)
 
     def test_non_gda94_keeps_default_target(self):
         args, geojson = self.convert_shapefile(7850, (688530.153167, 6315362.967412))

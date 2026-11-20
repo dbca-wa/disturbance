@@ -1522,28 +1522,29 @@ class Proposal(SanitiseMixin, DirtyFieldsMixin, RevisionedMixin):
     def _shapefile_srs_args(shp_path):
         """ogr2ogr CRS arguments for converting a shapefile to EPSG:4326.
 
-        GDA94 data is pinned to EPSG:9688 ("GDA94 to WGS 84 (2)", Helmert) so results do not depend on
-        which equal-accuracy operation the installed GDAL/PROJ picks (EPSG:1150 is a no-op and differs by ~1.8m).
-        Any other CRS, or any failure, keeps the default PROJ selection.
+        GDA94 data is pinned to "GDA94 to WGS 84 (1)" (no shift) to match the
+        expected EPSG:1150 conversion rather than applying the Helmert offset.
+        Any other CRS keeps the default PROJ selection.
         """
         default_args = ['-t_srs', 'EPSG:4326']
-        try:
-            from pyproj import CRS
-            from pyproj.transformer import TransformerGroup
-            with open(os.path.splitext(shp_path)[0] + '.prj') as prj:
-                crs = CRS.from_wkt(prj.read())
-            if crs.geodetic_crs is None or 'GDA94' not in (crs.geodetic_crs.name or '').upper():
-                return default_args
-            epsg = crs.to_epsg()
-            if epsg is not None:
-                crs = CRS.from_epsg(epsg)
-            for transformer in TransformerGroup(crs, 4326).transformers:
-                if (transformer.description == 'GDA94 to WGS 84 (2)'
-                        or any(op.name == 'GDA94 to WGS 84 (2)' for op in transformer.operations)):
-                    return ['-t_srs', 'EPSG:4326', '-ct', transformer.definition]
-        except Exception as error:
-            logger.warning('Unable to pin GDA94 transformation for %s, using default: %s', shp_path, error)
-        return default_args
+        from pyproj import CRS
+        from pyproj.transformer import TransformerGroup
+        with open(os.path.splitext(shp_path)[0] + '.prj') as prj:
+            crs = CRS.from_wkt(prj.read())
+        if crs.geodetic_crs is None or 'GDA94' not in (crs.geodetic_crs.name or '').upper():
+            return default_args
+        epsg = crs.to_epsg()
+        if epsg is not None:
+            crs = CRS.from_epsg(epsg)
+        for transformer in TransformerGroup(crs, 4326).transformers:
+            # Previous behavior pinned the Helmert operation, which shifted these coordinates:
+            # if (transformer.description == 'GDA94 to WGS 84 (2)'
+            #         or any(op.name == 'GDA94 to WGS 84 (2)' for op in transformer.operations)):
+            #     return ['-t_srs', 'EPSG:4326', '-ct', transformer.definition]
+            if (transformer.description == 'GDA94 to WGS 84 (1)'
+                    or any(op.name == 'GDA94 to WGS 84 (1)' for op in transformer.operations)):
+                return ['-t_srs', 'EPSG:4326', '-ct', transformer.definition]
+        raise ValueError('GDA94 to WGS 84 (1) no-shift transformation is unavailable')
 
     def validate_map_files(self, request):
         map_documents = list(self.map_documents.filter(hidden=False))
