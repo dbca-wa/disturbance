@@ -114,8 +114,10 @@ export default {
         box-shadow:none;
     }
     .tab {
-      display: inline-block;
-      margin-left: 4em;
+      display: inline;
+      margin-left: 1.5em;
       font-weight: normal !important;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
 </style>
