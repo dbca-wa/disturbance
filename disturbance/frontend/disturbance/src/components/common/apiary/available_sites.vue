@@ -105,6 +105,7 @@
 <script>
     import FormSection from "@/components/forms/section_toggle.vue"
     import ContactLicenceHolderModal from "@/components/common/apiary/contact_licence_holder_modal.vue"
+    import { helpers } from "@/utils/hooks"
     import uuid from 'uuid'
     import Vue from 'vue'
 
@@ -634,6 +635,7 @@
                 let vm = this
 
                 $("#app").on('click', 'a[data-contact-licence-holder]', this.contactLicenceHolder)
+                $("#app").on('click', 'a[data-make-vacant]', this.makeVacantClicked)
 
                 let search_input_elem = $('#' + vm.search_input_id)
                 search_input_elem.on('input', function(ev){
@@ -686,22 +688,15 @@
                 }).then(
                     () => {
                         vm.$http.patch('/api/apiary_site/' + apiary_site_id + '/', { 'status': 'vacant' }).then(
-                            async function(accept){
-                                // Remove the row from the table
-                                // TODO: Update table
-                                $(e.target).closest('tr').fadeOut('slow', function(){
-                                    // Remove the site table which the table is based on
-                                    vm.removeApiarySiteById(apiary_site_id)
-                                })
-
-                                // TODO: Update map
-                                // Remove the site from the map
-                                this.$refs.component_map.removeApiarySiteById(apiary_site_id)
+                            accept => {
+                                // Reload the sites so that the map shows the new status
+                                vm.closePopup()
+                                vm.showHideApiarySites()
                             },
-                            reject=>{
+                            reject => {
                                 swal(
                                     'Submit Error',
-                                    helpers.apiVueResourceError(err),
+                                    helpers.apiVueResourceError(reject),
                                     'error'
                                 )
                             }
