@@ -1386,6 +1386,10 @@
                                   '<th scope="row">Submitter</th>' +
                                   '<td>' + submitter_str + '</td>' +
                                 '</tr>' + 
+                                '<tr>' +
+                                  '<th scope="row">Link</th>' +
+                                  '<td>' + `<a href='/internal/proposal/${proposal.id}'>View</a>` + '</td>' +
+                                '</tr>' +
                                 approval_rows +
                               '</tbody>' +
                             '</table>'
@@ -1416,6 +1420,10 @@
                                   '<th scope="row">Submitter</th>' +
                                   '<td>' + submitter_str + '</td>' +
                                 '</tr>' + 
+                                '<tr>' +
+                                  '<th scope="row">Link</th>' +
+                                  '<td>' + `<a href='/external/proposal/${proposal.id}'>View</a>` + '</td>' +
+                                '</tr>'
                                 approval_rows +
                               '</tbody>' +
                             '</table>'
