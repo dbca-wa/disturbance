@@ -70,7 +70,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <FormSection :formCollapse="true" label="Address Details" Index="address_details">
+                            <FormSection :formCollapse="true" label="Organisation Address Details" Index="address_details">
                                 <form class="form-horizontal" action="index.html" method="post">
                                     <div class="row mb-3">
                                         <label for="" class="col-sm-3 col-form-label">Street</label>

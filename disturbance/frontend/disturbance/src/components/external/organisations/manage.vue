@@ -36,7 +36,7 @@
             </form>
         </FormSection>
         <!-- <FormSection v-if="org && show_address" :formCollapse="address_collapse" label="Address Details" Index="add_details" subheading="View and update the organisation's address details"> -->
-        <FormSection v-if="org && show_address" label="Address Details" Index="add_details" subheading="View and update the organisation's address details">
+        <FormSection v-if="org && show_address" label="Organisation Address Details" Index="add_details" subheading="View and update the organisation's address details">
             <form class="form-horizontal" action="index.html" method="post">
               <div class="form-group">
                 <div class="row mb-3">
