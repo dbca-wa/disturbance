@@ -114,7 +114,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <FormSection :formCollapse="true" label="Contact Details" Index="contact_details">
+                            <FormSection :formCollapse="true" label="Organisation Contact Details" Index="contact_details">
                                 <form class="form-horizontal" action="index.html" method="post">
                                     <div class="col-sm-12">
                                         <button @click.prevent="addContact()" style="margin-bottom:10px;" class="btn btn-primary pull-right">Add Contact</button>
