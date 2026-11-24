@@ -5,7 +5,7 @@
             <form class="form-horizontal" name="personal_form" method="post">
               <div class="form-group">
                 <div class="row mb-3">
-                    <label for="" class="col-sm-3 col-form-label">Name</label>
+                    <label for="" class="col-sm-3 col-form-label">Organisation name</label>
                     <div class="col-sm-6">
                         <input type="text" class="form-control" name="first_name" placeholder="" v-model="org.name">
                     </div>
@@ -21,7 +21,7 @@
               </div>
               <div class="form-group">
                 <div class="row mb-3">
-                    <label for="" class="col-sm-3 col-form-label" >Email</label>
+                    <label for="" class="col-sm-3 col-form-label" >Organisation Central email</label>
                     <div class="col-sm-6">
                         <input type="text" class="form-control" name="email" placeholder="" v-model="org.email">
                     </div>
