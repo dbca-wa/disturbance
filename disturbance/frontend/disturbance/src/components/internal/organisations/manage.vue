@@ -41,7 +41,7 @@
                             <FormSection :formCollapse="false" label="Organisation Details" Index="organisation_details">
                                 <form class="form-horizontal" name="personal_form" method="post">
                                     <div class="row mb-3">
-                                        <label for="" class="col-sm-3 col-form-label">Name</label>
+                                        <label for="" class="col-sm-3 col-form-label">Organisation name</label>
                                         <div class="col-sm-6">
                                             <input type="text" class="form-control" name="first_name" placeholder="" v-model="org.name">
                                         </div>
@@ -53,7 +53,7 @@
                                         </div>
                                     </div>
                                     <div class="row mb-3">
-                                        <label for="" class="col-sm-3 col-form-label" >Email</label>
+                                        <label for="" class="col-sm-3 col-form-label" >Organisation Central email</label>
                                         <div class="col-sm-6">
                                             <input type="text" class="form-control" name="last_name" placeholder="" v-model="org.email">
                                         </div>
@@ -70,7 +70,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <FormSection :formCollapse="true" label="Address Details" Index="address_details">
+                            <FormSection :formCollapse="true" label="Organisation Address Details" Index="address_details">
                                 <form class="form-horizontal" action="index.html" method="post">
                                     <div class="row mb-3">
                                         <label for="" class="col-sm-3 col-form-label">Street</label>
@@ -114,7 +114,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <FormSection :formCollapse="true" label="Contact Details" Index="contact_details">
+                            <FormSection :formCollapse="true" label="Organisation Contact Details" Index="contact_details">
                                 <form class="form-horizontal" action="index.html" method="post">
                                     <div class="col-sm-12">
                                         <button @click.prevent="addContact()" style="margin-bottom:10px;" class="btn btn-primary pull-right">Add Contact</button>
