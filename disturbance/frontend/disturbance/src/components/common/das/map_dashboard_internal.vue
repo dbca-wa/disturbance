@@ -1692,6 +1692,8 @@
                                         
                                     // }
                                     vm.loadFeatures(vm.proposals);
+                                    // Re-apply all filters to maintain filter state
+                                    vm.applyFiltersFrontEnd();
                                 }
                             },
                             error: function (jqXhr, textStatus, errorMessage) { // error callback
